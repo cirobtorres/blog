@@ -27,8 +27,6 @@ const signIn = async (state: {}, formData: FormData) => {
     }
   }
 
-  console.log(errors);
-
   if (Object.keys(errors).length) return { ...errors };
 
   revalidatePath("/", "layout");

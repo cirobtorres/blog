@@ -15,7 +15,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
         relative 
         flex flex-shrink-0 justify-center items-center 
         rounded-full size-10 duration-700 cursor-pointer 
-        bg-white dark:bg-slate-700 
+        bg-base-100 dark:bg-dark-base-100 
     `}
     >
       <div
@@ -26,7 +26,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
           transform: theme === "dark" ? "rotate(360deg)" : "rotate(0deg)",
         }}
       >
-        <IoMoon className="text-2xl text-emerald-400" />
+        <IoMoon className="text-2xl text-base-green" />
       </div>
       <div
         className="absolute pointer-events-none duration-[600ms]"
@@ -36,7 +36,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
           transform: theme !== "dark" ? "rotate(0deg)" : "rotate(360deg)",
         }}
       >
-        <IoSunny className="text-2xl text-yellow-500" />
+        <IoSunny className="text-2xl text-base-yellow" />
       </div>
     </label>
   );

@@ -21,15 +21,15 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body
-        className={`${inter.className} ${userTheme} min-h-svh flex flex-col justify-center items-center bg-main dark:bg-dark-main`}
+        className={`${inter.className} ${userTheme} min-h-svh flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
-        <header className="w-full h-20 bg-header dark:bg-dark-header">
+        <header className="w-full h-20 bg-base-200 dark:bg-dark-base-200">
           <div className="h-full flex items-center max-w-webpage mx-auto">
             <NightThemeSwitcher theme={userTheme} />
           </div>
         </header>
         <main className="w-full h-full flex-1 flex flex-col">{children}</main>
-        <footer className="w-full h-40 bg-footer dark:bg-dark-footer"></footer>
+        <footer className="w-full h-40 bg-base-300 dark:bg-dark-base-300"></footer>
       </body>
     </html>
   );
