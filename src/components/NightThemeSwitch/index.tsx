@@ -1,14 +1,11 @@
 "use client";
 
 import { IoMoon, IoSunny } from "react-icons/io5";
-import useTheme from "../../hooks/useTheme";
+import setTheme from "../../lib/setTheme";
 
-export default function NightThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
-
+export default function NightThemeSwitcher({ theme }: { theme: string }) {
   const handleToggleTheme = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setTheme();
+    setTheme(theme === "dark" ? "" : "dark");
   };
 
   return (
