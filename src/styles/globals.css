@@ -2,12 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background-header-color: #bfc4c7;
+  --background-main-color: #f0f0f0;
+  --background-footer-color: #e2e4e6;
+  --dark-background-header-color: #0c0e0f;
+  --dark-background-main-color: #151718;
+  --dark-background-footer-color: #0f1011;
+
+  --webpage-max-width: 1440px;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
-
-body {
-  background: #e8ebeb;
 }

@@ -1,11 +1,12 @@
 "use server";
 
 import AdminSignInForm from "@/components/AdminSignInForm";
+import Body from "../../components/Body";
 
 export default async function AdminPage() {
   return (
-    <main className="h-svh flex flex-col justify-center items-center">
+    <Body>
       <AdminSignInForm />
-    </main>
+    </Body>
   );
 }
