@@ -12,20 +12,20 @@ export default function AdminSignInForm() {
       className="w-96 h-full mx-auto flex flex-1 flex-col justify-center items-center gap-3"
     >
       <div className="w-full">
-        <h1 className="text-neutral dark:text-dark-neutral text-3xl font-extrabold">
+        <h1 className="text-base-neutral dark:text-dark-base-neutral text-3xl font-extrabold">
           Entrar
         </h1>
       </div>
       <div className="w-full">
-        <div className="relative rounded border border-neutral dark:border-dark-neutral">
+        <div className="relative rounded border border-base-neutral dark:border-dark-base-neutral">
           <input
             id="email"
             name="email"
             type="email"
             placeholder="email"
-            className="dark:text-dark-neutral text-neutral bg-transparent outline-none w-full h-full px-4 py-3 placeholder:text-placeholder dark:placeholder:text-dark-placeholder"
+            className="dark:text-dark-base-neutral text-base-neutral bg-transparent outline-none w-full h-full px-4 py-3 placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
           />
-          <label className="bg-base-100 dark:bg-dark-base-100 px-2 text-neutral dark:text-dark-neutral absolute start-3 -top-3 left-0">
+          <label className="bg-base-100 dark:bg-dark-base-100 px-2 text-base-neutral dark:text-dark-base-neutral absolute start-3 -top-3 left-0">
             E-mail
           </label>
         </div>
@@ -36,15 +36,15 @@ export default function AdminSignInForm() {
         )}
       </div>
       <div className="w-full">
-        <div className="relative rounded border border-neutral dark:border-dark-neutral">
+        <div className="relative rounded border border-base-neutral dark:border-dark-base-neutral">
           <input
             id="password"
             name="password"
             type="password"
             placeholder="password"
-            className="dark:text-dark-neutral text-neutral bg-transparent outline-none w-full h-full px-4 py-3 placeholder:text-placeholder dark:placeholder:text-dark-placeholder"
+            className="dark:text-dark-base-neutral text-base-neutral bg-transparent outline-none w-full h-full px-4 py-3 placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
           />
-          <label className="bg-base-100 dark:bg-dark-base-100 px-2 text-neutral dark:text-dark-neutral absolute start-3 -top-3 left-0">
+          <label className="bg-base-100 dark:bg-dark-base-100 px-2 text-base-neutral dark:text-dark-base-neutral absolute start-3 -top-3 left-0">
             Senha
           </label>
         </div>

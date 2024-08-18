@@ -16,10 +16,10 @@ const config: Config = {
         "dark-base-100": "#2a303c",
         "dark-base-200": "#232731",
         "dark-base-300": "#1d2129",
-        neutral: "#291334",
-        "dark-neutral": "#a6adbb",
-        placeholder: "#a6adbb",
-        "dark-placeholder": "#585c66",
+        "base-neutral": "#291334",
+        "dark-base-neutral": "#a6adbb",
+        "base-placeholder": "#a6adbb",
+        "dark-base-placeholder": "#585c66",
         // green
         "base-green": "#2ec78f",
         "base-green-hover": "#5bebb6",
@@ -45,6 +45,47 @@ const config: Config = {
       },
       maxWidth: {
         webpage: "var(--webpage-max-width)",
+      },
+      gridTemplateColumns: {
+        header: "200px repeat(6, 110px) repeat(2, max-content)",
+      },
+      animation: {
+        header: "header-entrance 1s ease-in-out forwards",
+        rotate: "rotate 1s linear infinite",
+        prixClipFix: "prixClipFix 2s linear infinite",
+        "skeleton-admin-pannel":
+          "skeleton-loading 1s linear infinite alternate",
+      },
+      keyframes: {
+        "header-entrance": { "100%": { transform: "translateY(0%)" } },
+        rotate: {
+          "100%": { transform: "rotate(360deg)" },
+        },
+        prixClipFix: {
+          "0%": {
+            "clip-path": "polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)",
+          },
+          "25%": {
+            "clip-path":
+              "polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)",
+          },
+          "50%": {
+            "clip-path":
+              "polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)",
+          },
+          "75%": {
+            "clip-path":
+              "polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%)",
+          },
+          "100%": {
+            "clip-path":
+              "polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0)",
+          },
+        },
+        "skeleton-loading": {
+          "0%": { backgroundColor: "hsl(200, 20%, 70%)" },
+          "100%": { backgroundColor: "hsl(200, 20%, 95%)" },
+        },
       },
     },
   },
