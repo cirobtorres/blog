@@ -24,7 +24,7 @@ export default function MegaMenu() {
         <IoChatbubbleEllipses
           className={`
           text-4xl 
-          transition-all duration-300 group-active:scale-[0.95]
+          transition-all duration-300 group-active:scale-[0.90]
           ${
             isOpen
               ? "text-base-blue dark:text-dark-base-blue"
@@ -37,9 +37,13 @@ export default function MegaMenu() {
       <section
         className={`
           w-full h-96 fixed top-20 left-0 py-8 
-          transition-all duration-300 
+          transition-all duration-500 
           bg-base-200 dark:bg-dark-base-200 
-          ${isOpen ? "opacity-100" : "opacity-0"} 
+          ${
+            isOpen
+              ? "opacity-100 mega-menu-clip-path-enter"
+              : "opacity-0 mega-menu-clip-path-leave"
+          } 
         `}
         style={{ visibility: isOpen ? "visible" : "hidden" }}
       >
@@ -47,7 +51,7 @@ export default function MegaMenu() {
           <span
             className={`transition-all duration-200 ${
               isOpen
-                ? "delay-75 translate-x-0 opacity-100"
+                ? "delay-150 translate-x-0 opacity-100"
                 : "opacity-0 -translate-x-4"
             }`}
           >
@@ -56,7 +60,7 @@ export default function MegaMenu() {
           <span
             className={`transition-all duration-200 ${
               isOpen
-                ? "delay-150 translate-x-0 opacity-100"
+                ? "delay-[225ms] translate-x-0 opacity-100"
                 : "opacity-0 -translate-x-4"
             }`}
           >
@@ -65,7 +69,7 @@ export default function MegaMenu() {
           <span
             className={`transition-all duration-200 ${
               isOpen
-                ? "delay-[225ms] translate-x-0 opacity-100"
+                ? "delay-300 translate-x-0 opacity-100"
                 : "opacity-0 -translate-x-4"
             }`}
           >
