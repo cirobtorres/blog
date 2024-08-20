@@ -1,9 +1,7 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Inter } from "next/font/google";
-import NightThemeSwitcher from "../components/NightThemeSwitch";
-import MegaMenu from "../components/MegaMenu";
+import Header from "../components/Header";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
@@ -25,75 +23,8 @@ export default async function RootLayout({
       <body
         className={`${inter.className} ${theme} min-h-svh flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
-        <header className="h-20 w-full z-10 bg-base-200 dark:bg-dark-base-200 border-b border-base-100 dark:border-dark-base-100">
-          <div className="h-full -translate-y-full animate-header">
-            <nav className="h-full flex items-center justify-between max-w-webpage mx-auto">
-              <ul className="grid grid-cols-header items-center justify-between">
-                <li>
-                  <Link
-                    href="/"
-                    className="text-base-neutral dark:text-dark-base-neutral uppercase font-extrabold"
-                  >
-                    Ciro Torres
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Front-end
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Back-end
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Javascript
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Python
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Java
-                  </Link>
-                </li>
-                <li className="text-center">
-                  <Link
-                    href="/"
-                    className="font-[500] text-base-neutral dark:text-dark-base-neutral"
-                  >
-                    Kotlin
-                  </Link>
-                </li>
-                <li className="h-full">
-                  <MegaMenu />
-                </li>
-              </ul>
-              <NightThemeSwitcher theme={theme} />
-            </nav>
-          </div>
-        </header>
-        <main className="w-full h-full flex-1 flex flex-col">{children}</main>
+        <Header theme={theme} />
+        <div className="w-full h-full flex-1 mt-20">{children}</div>
         <footer className="w-full h-40 bg-base-300 dark:bg-dark-base-300"></footer>
       </body>
     </html>
