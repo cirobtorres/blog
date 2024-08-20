@@ -29,6 +29,21 @@
   --webpage-max-width: 1440px;
 }
 
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer utilities {
+  .mega-menu-clip-path-leave {
+    clip-path: circle(0 at 50% 0%);
+  }
+  .mega-menu-clip-path-enter {
+    clip-path: circle(100% at 50% 0%);
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
