@@ -1,30 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import MegaMenu from "../MegaMenu";
 import NightThemeSwitcher from "../NightThemeSwitch";
 
 export default function Header({ theme }: { theme: string }) {
-  const [scrollPosition, setScrollPosition] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
+
+  const hidelNavbar = () => {
+    const threshold = 1048; // threshold to maintain header on top, beyond which it is allowed to hide
+    let prevScrollPos = window.scrollY;
+    window.addEventListener("scroll", () => {
+      window.onscroll = () => {
+        const currScrollPos = window.scrollY;
+        if (currScrollPos < threshold || currScrollPos < prevScrollPos) {
+          if (headerRef.current) headerRef.current.style.top = "0";
+        } else {
+          if (headerRef.current) headerRef.current.style.top = "-80px"; // 80px = header height
+        }
+        prevScrollPos = currScrollPos;
+      };
+    });
+  };
+
   useEffect(() => {
-    const currentScrollPosition = window.scrollY;
-    const controlNavbar = () => {
-      if (scrollPosition > currentScrollPosition) {
-        if (headerRef.current) headerRef.current.style.top = "0";
-        setScrollPosition(currentScrollPosition);
-      } else {
-        if (headerRef.current) headerRef.current.style.top = "-80px"; // 80px = header height
-        setScrollPosition(currentScrollPosition);
-      }
-    };
-    window.addEventListener("scroll", controlNavbar);
+    hidelNavbar();
     // cleanup function
     return () => {
-      window.removeEventListener("scroll", controlNavbar);
+      window.removeEventListener("scroll", hidelNavbar);
     };
-  });
+  }, []);
 
   return (
     <header
