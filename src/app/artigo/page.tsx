@@ -41,8 +41,9 @@ const links = [
 ];
 
 export default function ArticlePage() {
+  console.log("Remount");
   const handleScroll = () => {
-    window.addEventListener("scroll-through-anchors", () => {
+    window.addEventListener("scroll", () => {
       const sections: NodeListOf<HTMLHeadingElement> =
         document.querySelectorAll("section h3[id]");
       let currentSection: string | null = "";
@@ -81,7 +82,7 @@ export default function ArticlePage() {
   useEffect(() => {
     handleScroll();
     return () => {
-      window.removeEventListener("scroll-through-anchors", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -146,12 +147,12 @@ export default function ArticlePage() {
             ))}
           </ul>
         </nav>
-        <article className="flex-grow">
+        <article className="w-[700px]">
           {Array.from({ length: 10 }, (_, index) => (
             <section key={index}>
               <h3
                 id={`anchor-${index + 1}`}
-                className="font-extrabold text-4xl mb-6"
+                className="pt-20 font-extrabold text-4xl mb-6"
               >
                 Hello World
               </h3>
@@ -200,6 +201,7 @@ export default function ArticlePage() {
             </section>
           ))}
         </article>
+        <div>Hello World</div>
       </section>
     </main>
   );
