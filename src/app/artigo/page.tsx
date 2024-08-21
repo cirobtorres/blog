@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GoClock } from "react-icons/go";
 import { PiChatsCircleThin } from "react-icons/pi";
 import Breadcrumbs from "../../components/Breadcrumbs";
@@ -41,13 +41,10 @@ const links = [
 ];
 
 export default function ArticlePage() {
-  const [activeSection, setActiveSection] = useState("");
-
-  useEffect(() => {
-    console.log("Renderizei");
-    const handleScroll = () => {
+  const handleScroll = () => {
+    window.addEventListener("scroll-through-anchors", () => {
       const sections: NodeListOf<HTMLHeadingElement> =
-        document.querySelectorAll("h2[id]");
+        document.querySelectorAll("section h3[id]");
       let currentSection: string | null = "";
 
       sections.forEach((section) => {
@@ -57,15 +54,36 @@ export default function ArticlePage() {
         }
       });
 
-      setActiveSection(currentSection);
-    };
+      sections.forEach((section) => {
+        const id = section.getAttribute("id");
+        const link = document.querySelector(`a[href="#${id}"]`);
+        if (id === currentSection) {
+          link?.classList.add("text-base-blue", "dark:text-dark-base-blue");
+          link?.classList.remove(
+            "text-base-neutral",
+            "hover:text-base-blue-hover",
+            "dark:text-dark-base-neutral",
+            "hover:dark:text-dark-base-blue-hover"
+          );
+        } else {
+          link?.classList.add(
+            "text-base-neutral",
+            "hover:text-base-blue-hover",
+            "dark:text-dark-base-neutral",
+            "hover:dark:text-dark-base-blue-hover"
+          );
+          link?.classList.remove("text-base-blue", "dark:text-dark-base-blue");
+        }
+      });
+    });
+  };
 
-    window.addEventListener("scroll", handleScroll);
-
+  useEffect(() => {
+    handleScroll();
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll-through-anchors", handleScroll);
     };
-  });
+  }, []);
 
   return (
     <main className="w-full h-full mx-0 before:content-[''] before:-z-[1] before:fixed before:-left-full before:bottom-0 before:top-0 before:right-[calc(100%_-_610px)] before:bg-base-200 dark:before:bg-dark-base-200">
@@ -123,17 +141,7 @@ export default function ArticlePage() {
             </h2>
             {links.map((link, index) => (
               <li key={index} className="mb-1">
-                <Link
-                  href={`#anchor-${index + 1}`}
-                  aria-current={activeSection === `anchor-${index + 1}`}
-                  className={`${
-                    activeSection === `anchor-${index + 1}`
-                      ? "text-base-blue dark:text-dark-base-blue"
-                      : "text-base-neutral hover:text-base-blue-hover dark:text-dark-base-neutral hover:dark:text-dark-base-blue-hover"
-                  }`}
-                >
-                  {link.text}
-                </Link>
+                <Link href={`#anchor-${index + 1}`}>{link.text}</Link>
               </li>
             ))}
           </ul>
@@ -141,12 +149,12 @@ export default function ArticlePage() {
         <article className="flex-grow">
           {Array.from({ length: 10 }, (_, index) => (
             <section key={index}>
-              <h2
+              <h3
                 id={`anchor-${index + 1}`}
                 className="font-extrabold text-4xl mb-6"
               >
                 Hello World
-              </h2>
+              </h3>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
                 facere repellat adipisci earum, beatae, consequatur vitae quas,
