@@ -90,7 +90,7 @@ export default function ArticlePage() {
       <div className="bg-base-300 dark:bg-dark-base-300">
         <div className="relative w-full h-[600px]">
           <Image
-            src="/images/coding-language-1920x1080.jpg"
+            src="https://placehold.co/1920x1080/png"
             alt="exemplo"
             fill
             className="object-cover"
