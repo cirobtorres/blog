@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { IoChatbubbleEllipses } from "react-icons/io5";
+import { FaEllipsisH } from "react-icons/fa";
 
 export default function MegaMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +20,23 @@ export default function MegaMenu() {
 
   return (
     <div ref={menuRef} className="h-full flex items-center">
-      <button onClick={() => setIsOpen(!isOpen)} className="group">
-        <IoChatbubbleEllipses
-          className={`
+      <MegaMenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
+      <MegaMenuContent isOpen={isOpen} />
+    </div>
+  );
+}
+
+const MegaMenuButton = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+}) => {
+  return (
+    <button onClick={() => setIsOpen(!isOpen)} className="group">
+      <FaEllipsisH
+        className={`
           text-4xl 
           transition-all duration-300 group-active:scale-[0.90]
           ${
@@ -30,53 +44,56 @@ export default function MegaMenu() {
               ? "text-base-blue dark:text-dark-base-blue"
               : "group-hover:text-[#442255] group-hover:dark:text-[#b8bdc9] text-base-neutral dark:text-dark-base-neutral"
           }
-            
         `}
-        />
-      </button>
-      <section
-        className={`
-          w-full h-96 fixed top-20 left-0 py-8 
-          transition-all duration-500 
-          bg-base-200 dark:bg-dark-base-200 
+      />
+    </button>
+  );
+};
+
+const MegaMenuContent = ({ isOpen }: { isOpen: boolean }) => {
+  return (
+    <section
+      className={`
+          w-full h-96 fixed top-20 left-0 py-8
+          transition-all duration-500
+          bg-base-200/95 dark:bg-dark-base-200/95
           ${
             isOpen
-              ? "opacity-100 mega-menu-clip-path-enter"
-              : "opacity-0 mega-menu-clip-path-leave"
-          } 
+              ? "opacity-100" // mega-menu-clip-path-enter
+              : "opacity-0" // mega-menu-clip-path-leave
+          }
         `}
-        style={{ visibility: isOpen ? "visible" : "hidden" }}
-      >
-        <article className="max-w-webpage mx-auto flex flex-col gap-10">
-          <span
-            className={`transition-all duration-200 ${
-              isOpen
-                ? "delay-150 translate-x-0 opacity-100"
-                : "opacity-0 -translate-x-4"
-            }`}
-          >
-            Hello World 1
-          </span>
-          <span
-            className={`transition-all duration-200 ${
-              isOpen
-                ? "delay-[225ms] translate-x-0 opacity-100"
-                : "opacity-0 -translate-x-4"
-            }`}
-          >
-            Hello World 2
-          </span>
-          <span
-            className={`transition-all duration-200 ${
-              isOpen
-                ? "delay-300 translate-x-0 opacity-100"
-                : "opacity-0 -translate-x-4"
-            }`}
-          >
-            Hello World 3
-          </span>
-        </article>
-      </section>
-    </div>
+      style={{ visibility: isOpen ? "visible" : "hidden" }}
+    >
+      <article className="max-w-webpage mx-auto flex flex-col gap-10">
+        <span
+          className={`transition-all duration-200 ${
+            isOpen
+              ? "delay-150 translate-x-0 opacity-100"
+              : "opacity-0 -translate-x-4"
+          }`}
+        >
+          Hello World 1
+        </span>
+        <span
+          className={`transition-all duration-200 ${
+            isOpen
+              ? "delay-[225ms] translate-x-0 opacity-100"
+              : "opacity-0 -translate-x-4"
+          }`}
+        >
+          Hello World 2
+        </span>
+        <span
+          className={`transition-all duration-200 ${
+            isOpen
+              ? "delay-300 translate-x-0 opacity-100"
+              : "opacity-0 -translate-x-4"
+          }`}
+        >
+          Hello World 3
+        </span>
+      </article>
+    </section>
   );
-}
+};
