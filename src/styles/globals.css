@@ -6,6 +6,7 @@
   /*-----------------------------LightTheme------------------------------*/
   --neutral: #291334;
   --base-100: #faf7f5;
+  --base-150: #f8f3f0;
   --base-200: #efeae6;
   --base-300: #e7d6d1;
   --blue: #3abff8;
@@ -17,6 +18,7 @@
   /*------------------------------DarkTheme------------------------------*/
   --dark-neutral: #a6adbb;
   --dark-base-100: #2a303c;
+  --dark-base-150: #2d333f;
   --dark-base-200: #232731;
   --dark-base-300: #1d2129;
   --dark-blue: #3abff8;
@@ -41,6 +43,22 @@
   }
   .mega-menu-clip-path-enter {
     clip-path: circle(100% at 50% 0%);
+  }
+  .scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 20px;
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #f7f4ed;
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #e0cbcb;
+    border-radius: 100vh;
+    border: 3px solid #f6f7ed;
+  }
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #c0a0b9;
   }
 }
 

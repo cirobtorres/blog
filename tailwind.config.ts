@@ -11,9 +11,11 @@ const config: Config = {
     extend: {
       colors: {
         "base-100": "#faf7f5",
+        "base-150": "#f8f3f0",
         "base-200": "#efeae6",
         "base-300": "#e7d6d1",
         "dark-base-100": "#2a303c",
+        "dark-base-150": "#2d333f",
         "dark-base-200": "#232731",
         "dark-base-300": "#1d2129",
         "base-neutral": "#291334",
@@ -47,7 +49,7 @@ const config: Config = {
         webpage: "var(--webpage-max-width)",
       },
       gridTemplateColumns: {
-        header: "200px repeat(6, 110px) repeat(2, max-content)",
+        header: "max-content 200px repeat(6, 110px) max-content",
       },
       animation: {
         header: "header-entrance 1s ease-in-out forwards",

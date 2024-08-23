@@ -55,7 +55,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
           before:border-b-base-300 before:dark:border-b-dark-base-300 
         `}
       >
-        Hello World
+        Tema escuro
       </p>
     </div>
   );

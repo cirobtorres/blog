@@ -9,7 +9,7 @@ export default function Header({ theme }: { theme: string }) {
   const headerRef = useRef<HTMLElement>(null);
 
   const hidelNavbar = () => {
-    const threshold = 1048; // threshold to maintain header on top, beyond which it is allowed to hide
+    const threshold = 384; // threshold to maintain header on top, beyond which it is allowed to hide
     let prevScrollPos = window.scrollY;
     window.addEventListener("scroll", () => {
       window.onscroll = () => {
@@ -40,8 +40,11 @@ export default function Header({ theme }: { theme: string }) {
     >
       <div className="h-full -translate-y-full animate-header">
         <nav className="h-full flex items-center justify-between max-w-webpage mx-auto">
-          <ul className="grid grid-cols-header items-center justify-between">
-            <li>
+          <ul className="h-full grid grid-cols-header items-center justify-between">
+            <li className="h-full">
+              <MegaMenu />
+            </li>
+            <li className="flex justify-center items-center h-full">
               <Link
                 href="/"
                 className="text-base-neutral dark:text-dark-base-neutral uppercase font-extrabold"
@@ -49,48 +52,45 @@ export default function Header({ theme }: { theme: string }) {
                 Ciro Torres
               </Link>
             </li>
-            <li className="text-center">
+            <li className="h-full text-center">
               <Link
                 href="/"
-                className="font-[500] text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
               >
                 Front-end
               </Link>
             </li>
-            <li className="text-center">
+            <li className="h-full text-center">
               <Link
                 href="/"
-                className="font-[500] text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
               >
                 Back-end
               </Link>
             </li>
-            <li className="text-center">
+            <li className="h-full text-center">
               <Link
                 href="/"
-                className="font-[500] text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
               >
                 Javascript
               </Link>
             </li>
-            <li className="text-center">
+            <li className="h-full text-center">
               <Link
                 href="/"
-                className="font-[500] text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
               >
                 Python
               </Link>
             </li>
-            <li className="text-center">
+            <li className="h-full text-center">
               <Link
                 href="/"
-                className="font-[500] text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
               >
                 Java
               </Link>
-            </li>
-            <li className="h-full">
-              <MegaMenu />
             </li>
           </ul>
           <NightThemeSwitcher theme={theme} />
