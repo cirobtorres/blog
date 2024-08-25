@@ -10,7 +10,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             NextJS
           </Link>
@@ -18,7 +18,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Javascript
           </Link>
@@ -26,7 +26,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             HTML
           </Link>
@@ -34,7 +34,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             CSS
           </Link>
@@ -42,7 +42,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Python
           </Link>
@@ -50,7 +50,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Java
           </Link>
@@ -58,7 +58,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Análise de Algoritmo
           </Link>
@@ -66,7 +66,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Sistemas Digitais
           </Link>
@@ -74,7 +74,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             NextJS
           </Link>
@@ -82,7 +82,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Javascript
           </Link>
@@ -90,7 +90,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             HTML
           </Link>
@@ -98,7 +98,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             CSS
           </Link>
@@ -106,7 +106,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Python
           </Link>
@@ -114,7 +114,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Java
           </Link>
@@ -122,7 +122,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Análise de Algoritmo
           </Link>
@@ -130,7 +130,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Sistemas Digitais
           </Link>
@@ -138,7 +138,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             NextJS
           </Link>
@@ -146,7 +146,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Javascript
           </Link>
@@ -154,7 +154,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             HTML
           </Link>
@@ -162,7 +162,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             CSS
           </Link>
@@ -170,7 +170,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Python
           </Link>
@@ -178,7 +178,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Java
           </Link>
@@ -186,7 +186,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Análise de Algoritmo
           </Link>
@@ -194,7 +194,7 @@ export default function Tags() {
         <li className="text-sm italic text-base-neutral dark:text-dark-base-neutral hover:text-base-100">
           <Link
             href="/"
-            className="leading-6 px-3 py-1 rounded hover:bg-base-blue dark:hover:bg-dark-base-blue-hover"
+            className="leading-6 px-3 py-1 rounded hover:text-base-green dark:hover:text-dark-base-green-hover"
           >
             Sistemas Digitais
           </Link>

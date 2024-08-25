@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import MegaMenu from "../MegaMenu";
+import { GiHamburgerMenu } from "react-icons/gi";
 import NightThemeSwitcher from "../NightThemeSwitch";
+import MegaMenu from "../MegaMenu";
 
 export default function Header({ theme }: { theme: string }) {
   const headerRef = useRef<HTMLElement>(null);
@@ -41,21 +42,21 @@ export default function Header({ theme }: { theme: string }) {
       <div className="h-full -translate-y-full animate-header">
         <nav className="h-full flex items-center justify-between max-w-webpage mx-auto">
           <ul className="h-full grid grid-cols-header items-center justify-between">
-            <li className="h-full">
+            <li>
               <MegaMenu />
             </li>
-            <li className="flex justify-center items-center h-full">
+            <li className="flex justify-center group">
               <Link
                 href="/"
-                className="text-base-neutral dark:text-dark-base-neutral uppercase font-extrabold"
+                className="text-xl uppercase font-extrabold text-base-neutral dark:text-dark-base-neutral group-hover:text-[#442255] group-hover:dark:text-[#b8bdc9]"
               >
-                Ciro Torres
+                HOME
               </Link>
             </li>
             <li className="h-full text-center">
               <Link
                 href="/"
-                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
               >
                 Front-end
               </Link>
@@ -63,7 +64,7 @@ export default function Header({ theme }: { theme: string }) {
             <li className="h-full text-center">
               <Link
                 href="/"
-                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
               >
                 Back-end
               </Link>
@@ -71,7 +72,7 @@ export default function Header({ theme }: { theme: string }) {
             <li className="h-full text-center">
               <Link
                 href="/"
-                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
               >
                 Javascript
               </Link>
@@ -79,7 +80,7 @@ export default function Header({ theme }: { theme: string }) {
             <li className="h-full text-center">
               <Link
                 href="/"
-                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
               >
                 Python
               </Link>
@@ -87,13 +88,31 @@ export default function Header({ theme }: { theme: string }) {
             <li className="h-full text-center">
               <Link
                 href="/"
-                className="h-full flex items-center font-[500] hover:text-base-blue dark:hover:text-dark-base-blue text-base-neutral dark:text-dark-base-neutral"
+                className="h-full flex items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
               >
                 Java
               </Link>
             </li>
           </ul>
-          <NightThemeSwitcher theme={theme} />
+          <ul className="h-full flex items-center justify-between gap-8">
+            <li className="flex justify-center items-center h-full">
+              <Link
+                href="/"
+                className="text-xl uppercase font-extrabold text-base-neutral dark:text-dark-base-neutral hover:text-[#442255] hover:dark:text-[#b8bdc9]"
+              >
+                Quem Sou?
+              </Link>
+            </li>
+            <Link
+              href="entrar"
+              className="w-24 flex flex-1 justify-center items-center text-xl px-2 py-1 font-[500] rounded text-dark-base-green hover:text-dark-base-green-hover"
+            >
+              Entrar
+            </Link>
+            <li className="flex justify-center items-center h-full">
+              <NightThemeSwitcher theme={theme} />
+            </li>
+          </ul>
         </nav>
       </div>
     </header>

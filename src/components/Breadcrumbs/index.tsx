@@ -11,7 +11,7 @@ export default function Breadcrumbs() {
   pathname[0] = "home";
 
   return (
-    <ul className="flex gap-1 items-center py-1 border-b-2 border-base-300 dark:border-dark-base-100 w-fit mb-6">
+    <ul className="flex gap-1 items-center py-1 mb-6">
       {pathname.map((path: string, index: number) => (
         <li
           key={index}
@@ -22,7 +22,7 @@ export default function Breadcrumbs() {
             href={
               index === 0 ? "/" : `/${pathname.slice(1, index + 1).join("/")}`
             }
-            className="hover:underline"
+            className="hover:text-base-green-hover dark:hover:text-dark-base-green-hover"
           >
             {path}
           </Link>
