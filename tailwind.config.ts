@@ -10,40 +10,40 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "base-100": "#faf7f5",
-        "base-150": "#f8f3f0",
-        "base-200": "#efeae6",
-        "base-300": "#e7d6d1",
-        "dark-base-100": "#2a303c",
-        "dark-base-150": "#2d333f",
-        "dark-base-200": "#232731",
-        "dark-base-300": "#1d2129",
-        "base-neutral": "#291334",
-        "dark-base-neutral": "#a6adbb",
+        "base-100": "var(--base-100)",
+        "base-150": "var(--base-150)",
+        "base-200": "var(--base-200)",
+        "base-300": "var(--base-300)",
+        "dark-base-100": "var(--dark-base-100)",
+        "dark-base-150": "var(--dark-base-150)",
+        "dark-base-200": "var(--dark-base-200)",
+        "dark-base-300": "var(--dark-base-300)",
+        "base-neutral": "var(--base-neutral)",
+        "dark-base-neutral": "var(--dark-base-neutral)",
         "base-placeholder": "#a6adbb",
         "dark-base-placeholder": "#585c66",
         // green
-        "base-green": "#2ec78f",
-        "base-green-hover": "#5bebb6",
-        "dark-base-green": "#40b88c",
-        "dark-base-green-hover": "#51bb94",
+        "base-green": "var(--base-green)",
+        "base-green-hover": "var(--base-green-hover)",
+        "dark-base-green": "var(--dark-base-green)",
+        "dark-base-green-hover": "var(--dark-base-green-hover)",
         // blue
-        "base-blue": "#3abff8",
-        "base-blue-hover": "#15b7fd",
-        "dark-base-blue": "#3abff8",
-        "dark-base-blue-hover": "#15b7fd",
+        "base-blue": "var(--base-blue)",
+        "base-blue-hover": "var(--base-blue-hover)",
+        "dark-base-blue": "var(--dark-base-blue)",
+        "dark-base-blue-hover": "var(--dark-base-blue-hover)",
         // yellow
-        "base-yellow": "#eeaf3a",
-        "dark-base-yellow": "#fbbf24",
+        "base-yellow": "var(--base-yellow)",
+        "dark-base-yellow": "var(--dark-base-yellow)",
         // red
-        "base-red": "#f87272",
-        "dark-base-red": "#f87272",
+        "base-red": "var(--base-red)",
+        "dark-base-red": "var(--dark-base-red)",
         // pink
-        "base-pink": "#ef9fbc",
-        "dark-base-pink": "#d926a9",
+        "base-pink": "var(--base-pink)",
+        "dark-base-pink": "var(--dark-base-pink)",
         // purple
-        "base-purple": "#8560c5",
-        "dark-base-purple": "#661ae6",
+        "base-purple": "var(--base-purple)",
+        "dark-base-purple": "var(--dark-base-purple)",
       },
       maxWidth: {
         webpage: "var(--webpage-max-width)",
@@ -53,15 +53,47 @@ const config: Config = {
       },
       animation: {
         header: "header-entrance 1s ease-in-out forwards",
+        body: "body-entrance 1s ease-in-out forwards",
+        "article-hero": "article-hero-entrance 1s ease-in-out forwards",
+        "jump-link-tracker":
+          "jump-link-tracker-entrance 1s ease-in-out forwards",
+        "article-body": "article-body-entrance 1s ease-in-out forwards",
         rotate: "rotate 1s linear infinite",
         prixClipFix: "prixClipFix 2s linear infinite",
         "skeleton-admin-pannel":
           "skeleton-loading 1s linear infinite alternate",
+        "back-to-top-button": "bounce-back-to-top-button 1s infinite",
       },
       keyframes: {
         "header-entrance": { "100%": { transform: "translateY(0%)" } },
+        "body-entrance": {
+          "100%": { transform: "translateY(0%)", opacity: "1" },
+        },
+        "article-hero-entrance": {
+          "100%": { transform: "translateX(0%)", opacity: "1" },
+        },
+        "jump-link-tracker-entrance": {
+          "100%": { transform: "translateX(0%)", opacity: "1" },
+        },
+        "article-body-entrance": {
+          "100%": { transform: "translateY(0%)", opacity: "1" },
+        },
         rotate: {
           "100%": { transform: "rotate(360deg)" },
+        },
+        "bounce-back-to-top-button": {
+          "0%, 100%": {
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -65%)",
+            "animation-timing-function": "cubic-bezier(0,0,0.2,1)",
+          },
+          "50%": {
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -35%)",
+            "animation-timing-function": "cubic-bezier(0.8,0,1,1)",
+          },
         },
         prixClipFix: {
           "0%": {

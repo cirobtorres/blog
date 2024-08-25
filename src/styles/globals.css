@@ -4,31 +4,49 @@
 
 :root {
   /*-----------------------------LightTheme------------------------------*/
-  --neutral: #291334;
+  --base-neutral: #291334;
   --base-100: #faf7f5;
   --base-150: #f8f3f0;
   --base-200: #efeae6;
   --base-300: #e7d6d1;
-  --blue: #3abff8;
-  --green: #2ec78f;
-  --yellow: #eeaf3a;
-  --red: #f87272;
-  --pink: #ef9fbc;
-  --purple: #8560c5;
+  --base-blue: #3abff8;
+  --base-blue-hover: #15b7fd;
+  --base-green: #2ec78f;
+  --base-green-hover: #5bebb6;
+  --base-yellow: #eeaf3a;
+  --base-red: #f87272;
+  --base-pink: #ef9fbc;
+  --base-purple: #8560c5;
   /*------------------------------DarkTheme------------------------------*/
-  --dark-neutral: #a6adbb;
-  --dark-base-100: #2a303c;
-  --dark-base-150: #2d333f;
-  --dark-base-200: #232731;
-  --dark-base-300: #1d2129;
-  --dark-blue: #3abff8;
-  --dark-green: #40b88c;
-  --dark-yellow: #fbbf24;
-  --dark-red: #f87272;
-  --dark-pink: #d926a9;
-  --dark-purple: #661ae6;
+  --dark-base-neutral: #a6adbb;
+  --dark-base-100: #222222;
+  --dark-base-150: #1b1b1b;
+  --dark-base-200: #131313;
+  --dark-base-300: #0a0a0a;
+  --dark-base-blue: #3abff8;
+  --dark-base-blue-hover: #15b7fd;
+  --dark-base-green: #40b88c;
+  --dark-base-green-hover: #51bb94;
+  --dark-base-yellow: #fbbf24;
+  --dark-base-red: #f87272;
+  --dark-base-pink: #d926a9;
+  --dark-base-purple: #661ae6;
   /*--------------------------------Widths-------------------------------*/
   --webpage-max-width: 1440px;
+}
+
+/* Get rid off reveal button (eye icon) from password input type */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Remove default close icon from search input */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
 }
 
 @layer base {
@@ -38,27 +56,39 @@
 }
 
 @layer utilities {
-  .mega-menu-clip-path-leave {
-    clip-path: circle(0 at 50% 0%);
-  }
-  .mega-menu-clip-path-enter {
-    clip-path: circle(100% at 50% 0%);
-  }
+  /*------------------------------Scrollbar------------------------------*/
   .scrollbar::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
     height: 20px;
   }
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
-    background: #f7f4ed;
+    background: none;
   }
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #e0cbcb;
+    background: var(--base-green);
     border-radius: 100vh;
-    border: 3px solid #f6f7ed;
+    border: none;
   }
   .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #c0a0b9;
+    background: var(--base-green);
+  }
+  /*------------------------------Dark-Mode-Scrollbar------------------------------*/
+  .dark-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 20px;
+  }
+  .dark-scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: none;
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--dark-base-green);
+    border-radius: 100vh;
+    border: none;
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-base-green);
   }
 }
 
