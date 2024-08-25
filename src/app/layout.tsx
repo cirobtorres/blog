@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Inter } from "next/font/google";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
@@ -21,11 +22,11 @@ export default async function RootLayout({
   return (
     <html lang="pt">
       <body
-        className={`${inter.className} ${theme} min-h-svh flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
+        className={`${inter.className} ${theme} scrollbar dark:dark-scrollbar min-h-svh flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
         <Header theme={theme} />
         <div className="w-full h-full flex-1 mt-20">{children}</div>
-        <footer className="w-full h-40 bg-base-300 dark:bg-dark-base-300"></footer>
+        <Footer />
       </body>
     </html>
   );
