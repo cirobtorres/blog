@@ -9,19 +9,32 @@ const config: Config = {
   darkMode: "selector",
   theme: {
     extend: {
+      backgroundImage: {
+        "profile-image-border-1":
+          "conic-gradient(from var(--angle), #ff4545, #00ff99, #006aff, #ff0095, #ff4545)",
+        "profile-image-border-2":
+          "conic-gradient(from var(--angle), transparent, var(--base-green), var(--base-green))",
+      },
       colors: {
         "base-100": "var(--base-100)",
         "base-150": "var(--base-150)",
         "base-200": "var(--base-200)",
+        "base-200/90": "rgba(239, 234, 230, 0.8)",
         "base-300": "var(--base-300)",
         "dark-base-100": "var(--dark-base-100)",
         "dark-base-150": "var(--dark-base-150)",
         "dark-base-200": "var(--dark-base-200)",
         "dark-base-300": "var(--dark-base-300)",
+        "dark-base-300/90": "rgba(10, 10, 10, 0.8)",
         "base-neutral": "var(--base-neutral)",
+        "base-neutral-hover": "var(--base-neutral-hover)",
         "dark-base-neutral": "var(--dark-base-neutral)",
+        "dark-base-neutral-hover": "var(--dark-base-neutral-hover)",
         "base-placeholder": "#a6adbb",
         "dark-base-placeholder": "#585c66",
+        // border
+        "base-border": "var(--base-border)",
+        "dark-base-border": "var(--dark-base-border)",
         // green
         "base-green": "var(--base-green)",
         "base-green-hover": "var(--base-green-hover)",
@@ -49,7 +62,7 @@ const config: Config = {
         webpage: "var(--webpage-max-width)",
       },
       gridTemplateColumns: {
-        header: "max-content 200px repeat(6, 110px) max-content",
+        header: "200px repeat(3, 110px) repeat(2, max-content)",
       },
       animation: {
         header: "header-entrance 1s ease-in-out forwards",
@@ -63,6 +76,7 @@ const config: Config = {
         "skeleton-admin-pannel":
           "skeleton-loading 1s linear infinite alternate",
         "back-to-top-button": "bounce-back-to-top-button 1s infinite",
+        "border-spin": "profile-border-spin 3s linear infinite",
       },
       keyframes: {
         "header-entrance": { "100%": { transform: "translateY(0%)" } },
@@ -119,6 +133,14 @@ const config: Config = {
         "skeleton-loading": {
           "0%": { backgroundColor: "hsl(200, 20%, 70%)" },
           "100%": { backgroundColor: "hsl(200, 20%, 95%)" },
+        },
+        "profile-border-spin": {
+          from: {
+            "--angle": "0deg",
+          },
+          to: {
+            "--angle": "360deg",
+          },
         },
       },
     },

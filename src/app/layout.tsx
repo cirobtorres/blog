@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Inter } from "next/font/google";
-import Header from "../components/Header";
+import FloatingHeader from "../components/Headers/FloatingHeader";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
+import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,15 +18,24 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
   const theme = cookies().get("theme")?.value || "";
 
   return (
     <html lang="pt">
       <body
-        className={`${inter.className} ${theme} scrollbar dark:dark-scrollbar min-h-svh flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
+        className={`${inter.className} ${theme} scrollbar dark:dark-scrollbar flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
-        <Header theme={theme} />
-        <div className="w-full h-full flex-1 mt-20">{children}</div>
+        <FloatingHeader user={user} theme={theme} />
+        <div
+          className="w-full h-full flex-1 mt-16" // FloatingHeader: add "mt-16" to the main div
+        >
+          {children}
+        </div>
         <Footer />
       </body>
     </html>
