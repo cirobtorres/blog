@@ -11,7 +11,7 @@ export default function Search() {
       </button>
       <input
         type="search"
-        placeholder="Pesquise tópicos antigos"
+        placeholder="Pesquise artigos antigos"
         className="w-full h-full px-16 text-base-neutral dark:text-dark-base-neutral border-none outline-none bg-transparent"
       />
       <button

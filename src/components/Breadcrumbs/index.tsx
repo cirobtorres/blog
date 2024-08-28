@@ -6,9 +6,14 @@ import { RiArrowDropRightLine } from "react-icons/ri";
 
 export default function Breadcrumbs() {
   const fullPathname = usePathname();
-  const pathname = fullPathname.split("/");
+  let pathname = fullPathname.split("/");
 
   pathname[0] = "home";
+
+  const artigosIndex = pathname.indexOf("artigos");
+  if (artigosIndex !== -1) {
+    pathname = pathname.slice(0, artigosIndex + 1);
+  }
 
   return (
     <ul className="flex gap-1 items-center py-1 mb-6">
