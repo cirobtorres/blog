@@ -80,4 +80,25 @@ const signInWithFacebook = async () => {
   }
 };
 
-export { signIn, signOut, signInWithGoogle, signInWithFacebook };
+const signInWithGithub = async () => {
+  const supabase = createClient();
+
+  let { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "github",
+    options: {
+      redirectTo: "http://localhost:3000/auth/callback",
+    },
+  });
+
+  if (data.url) {
+    redirect(data.url); // use the redirect API for your server framework
+  }
+};
+
+export {
+  signIn,
+  signOut,
+  signInWithGoogle,
+  signInWithFacebook,
+  signInWithGithub,
+};
