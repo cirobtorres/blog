@@ -66,49 +66,6 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 @layer utilities {
-  /*---------------------------ArticleEditor-----------------------------*/
-  .article-editor-heading {
-    width: 100%;
-    font-size: 1.5rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-  .article-editor-bold {
-    font-weight: 700;
-    color: var(--base-green);
-  }
-  .article-editor-bullet-list {
-    width: 100%;
-    list-style: disc;
-    padding-left: 2rem;
-    margin-bottom: 1rem;
-  }
-  .article-editor-bullet-list li {
-    padding-left: 1rem;
-  }
-  .article-editor-ordered-list {
-    width: 100%;
-    list-style: decimal;
-    padding-left: 2rem;
-    margin-bottom: 1rem;
-  }
-  .article-editor-ordered-list li {
-    padding-left: 1rem;
-  }
-  .article-editor-code-block {
-    width: 100%;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 16px;
-    color: var(--dark-base-neutral);
-    background: var(--dark-base-300);
-  }
-  .article-editor-highlight {
-    padding: 2px 4px;
-    border-radius: 8px;
-    background: #81dfbc;
-  }
   /*------------------------------MainMenu-------------------------------*/
   .main-menu-open-animation {
     clip-path: inset(-100% -100% -100% -100%);
@@ -119,35 +76,39 @@ input[type="search"]::-webkit-search-results-decoration {
   /*------------------------------Scrollbar------------------------------*/
   .scrollbar::-webkit-scrollbar {
     width: 6px;
-    height: 20px;
+    height: 6px;
   }
   .scrollbar::-webkit-scrollbar-track {
-    border-radius: 100vh;
+    cursor: default;
+    /* border-radius: 100vh; */
     background: none;
   }
   .scrollbar::-webkit-scrollbar-thumb {
     background: var(--base-neutral);
-    border-radius: 100vh;
+    /* border-radius: 100vh; */
     border: none;
   }
   .scrollbar::-webkit-scrollbar-thumb:hover {
+    cursor: default;
     background: var(--base-neutral-hover);
   }
   /*------------------------------Dark-Mode-Scrollbar------------------------------*/
   .dark-scrollbar::-webkit-scrollbar {
     width: 6px;
-    height: 20px;
+    height: 6px;
   }
   .dark-scrollbar::-webkit-scrollbar-track {
-    border-radius: 100vh;
+    cursor: default;
+    /* border-radius: 100vh; */
     background: var(--dark-base-300);
   }
   .dark-scrollbar::-webkit-scrollbar-thumb {
     background: var(--dark-base-neutral);
-    border-radius: 100vh;
+    /* border-radius: 100vh; */
     border: none;
   }
   .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    cursor: default;
     background: var(--dark-base-neutral-hover);
   }
 }

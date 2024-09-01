@@ -9,6 +9,9 @@ const config: Config = {
   darkMode: "selector",
   theme: {
     extend: {
+      aria: {
+        current: "current=page",
+      },
       backgroundImage: {
         "profile-image-border-1":
           "conic-gradient(from var(--angle), #ff4545, #00ff99, #006aff, #ff0095, #ff4545)",
