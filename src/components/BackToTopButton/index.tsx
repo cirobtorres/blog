@@ -18,7 +18,8 @@ export default function BackToTopButton({
     const elementHeight = document.getElementById("main-article")?.scrollHeight;
     const progressCircle = document.getElementById("progress-circle");
     const scrollTop = window.scrollY;
-    const headerHeight = 430; // header + article hero
+    const headerHeight =
+      (document.getElementById("article-hero")?.offsetHeight || 278) + 80; // header + hero
     const correctedScrollTop =
       scrollTop - headerHeight < 0 ? 0 : scrollTop - headerHeight;
     if (elementHeight && progressCircle) {

@@ -89,13 +89,13 @@ const MainMenuContent = ({
                 {user.email}
               </Link>
             ) : (
-              <Link
-                href="/entrar"
-                onClick={() => setIsOpen(!isOpen)}
-                className="truncate max-w-full font-extrabold text-base text-base-neutral dark:text-dark-base-neutral transition-colors duration-300 hover:text-base-green-hover dark:hover:text-dark-base-green-hover"
+              <span
+                // href="/entrar"
+                // onClick={() => setIsOpen(!isOpen)}
+                className="truncate max-w-full font-extrabold text-base text-base-neutral dark:text-dark-base-neutral transition-colors duration-300" // hover:text-base-green-hover dark:hover:text-dark-base-green-hover
               >
                 Olá, visitante
-              </Link>
+              </span>
             )}
             <button onClick={() => setIsOpen(!isOpen)} className="mr-0 ml-auto">
               <IoClose className="text-2xl dark:text-dark-base-neutral dark:hover:text-dark-base-neutral-hover p-1 rounded-lg border border-base-border dark:border-dark-base-border" />
@@ -105,7 +105,8 @@ const MainMenuContent = ({
             {user ? (
               <>
                 <Link
-                  href="criar-artigo"
+                  href="/artigos/criar-artigo"
+                  onClick={() => setIsOpen(!isOpen)}
                   className="transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
                 >
                   Criar artigo
@@ -119,6 +120,7 @@ const MainMenuContent = ({
                 <button
                   onClick={(event) => {
                     event.preventDefault();
+                    setIsOpen(!isOpen);
                     signOut();
                   }}
                   className="text-left transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
@@ -128,7 +130,7 @@ const MainMenuContent = ({
               </>
             ) : (
               <Link
-                href="entrar"
+                href="/entrar"
                 onClick={() => setIsOpen(!isOpen)}
                 className="transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
               >

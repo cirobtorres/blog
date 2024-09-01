@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import NightThemeSwitcher from "../../NightThemeSwitch";
-import MainMenu from "../../MainMenu";
+import NightThemeSwitcher from "../NightThemeSwitch";
+import MainMenu from "../MainMenu";
 import { User } from "@supabase/supabase-js";
 import { usePathname } from "next/navigation";
 
-export default function FloatingHeader({
+export default function Header({
   user,
   theme,
 }: {

@@ -1,41 +1,61 @@
+"use server";
+
 import Image from "next/image";
 import Link from "next/link";
 import { FaClock } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
 import Breadcrumbs from "../Breadcrumbs";
+import { createClient } from "../../utils/supabase/server";
+import formatDate from "../../functions/formatDate";
 
-const ArticleHero = () => {
+const ArticleHero = async ({
+  auth_users_id,
+  title,
+  sub_title,
+  updated_at,
+  created_at,
+}: {
+  auth_users_id: string;
+  title: string;
+  sub_title: string;
+  updated_at: string;
+  created_at: string;
+}) => {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.admin.getUserById(auth_users_id);
   return (
     <div id="article-hero" className="bg-base-200 dark:bg-dark-base-200">
       <div className="max-w-webpage mx-auto py-16">
-        <div className="mx-20 opacity-0 translate-x-8 transition-all duration-300 animate-article-hero">
+        <div className="w-full pl-[calc(280px_+_64px)] pr-[calc(64px_+_75px_+_64px)]">
           <Breadcrumbs />
           <h1 className="text-base-neutral dark:text-dark-base-neutral font-extrabold text-5xl mb-4">
-            Lorem, ipsum dolor sit amet consectetur adipisicing.
+            {title}
           </h1>
           <h2 className="text-base-neutral dark:text-dark-base-neutral text-3xl font-[500] mb-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas a
-            cum ea, nisi doloribus eaque enim ex ipsam inventore doloremque
-            voluptatem quia alias perferendis illum totam deleniti
-            necessitatibus quam. Modi.
+            {sub_title}
           </h2>
           <div className="flex items-center gap-20">
-            <button className="flex items-center gap-2 pr-3">
-              <div className="relative size-10 rounded-full">
-                <Image
-                  src="/images/user-placeholder.png"
-                  alt="Imagem de perfil do usuário"
-                  fill
-                  sizes="40px"
-                  className="object-cover"
-                />
-              </div>
-              <span className="font-extrabold text-2xl text-base-green dark:text-dark-base-green">
-                Fulano de Tal
-              </span>
-            </button>
+            {data.user && (
+              <button className="flex items-center gap-2 pr-3">
+                <div className="relative size-10 rounded-full overflow-hidden">
+                  <Image
+                    src={
+                      data.user.user_metadata.picture ||
+                      "/images/user-placeholder.png"
+                    }
+                    alt={"Imagem de perfil de " + data.user.user_metadata.name}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                </div>
+                <span className="font-extrabold text-2xl text-base-green dark:text-dark-base-green">
+                  {data.user.user_metadata.name}
+                </span>
+              </button>
+            )}
             <small className="flex items-center gap-2 text-base font-[700] text-base-neutral dark:text-dark-base-neutral">
-              <FaClock /> 19/08/2024 às 21:43
+              <FaClock /> {formatDate(created_at)}
             </small>
             <Link
               href="#"

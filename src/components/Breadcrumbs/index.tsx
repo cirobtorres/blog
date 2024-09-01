@@ -12,7 +12,8 @@ export default function Breadcrumbs() {
 
   const artigosIndex = pathname.indexOf("artigos");
   if (artigosIndex !== -1) {
-    pathname = pathname.slice(0, artigosIndex + 1);
+    pathname = pathname.slice(0, artigosIndex + 2);
+    pathname[2] = decodeURIComponent(pathname[2]);
   }
 
   return (
@@ -24,9 +25,7 @@ export default function Breadcrumbs() {
         >
           {index !== 0 && <RiArrowDropRightLine className="text-3xl" />}
           <Link
-            href={
-              index === 0 ? "/" : `/${pathname.slice(1, index + 1).join("/")}`
-            }
+            href={index === 0 ? "/" : `/${pathname.slice(1).join("/")}`}
             className="hover:text-base-green-hover dark:hover:text-dark-base-green-hover"
           >
             {path}

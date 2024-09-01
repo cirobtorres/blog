@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { FaGoogle, FaFacebookF, FaGithub } from "react-icons/fa";
 import {
   signInWithFacebook,
+  signInWithGithub,
   signInWithGoogle,
 } from "../../../lib/authentication";
 
@@ -111,6 +112,7 @@ export function GithubSubmitButton() {
     <button
       type="submit"
       disabled={pending}
+      formAction={signInWithGithub}
       className={`
         w-full h-12 
         flex justify-center items-center 
