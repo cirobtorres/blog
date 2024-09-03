@@ -1,3 +1,5 @@
+import Tags from "../Tags";
+
 const ArticleBody = ({ body }: { body: string }) => {
   const returnBodyWithAnchorHeading = (content: string) => {
     let index = 0; // Inicia o índice em 0
@@ -11,11 +13,12 @@ const ArticleBody = ({ body }: { body: string }) => {
   };
 
   return (
-    <div id="main-article" className="w-full">
+    <div id="main-article" className="w-full min-w-[300px]">
       <section
         dangerouslySetInnerHTML={{ __html: returnBodyWithAnchorHeading(body) }}
-        className="[&_h3]:text-xl [&_h3]:pt-20"
+        className="[&_h3]:text-xl [&_h3]:pt-4 tablet:[&_h3:first-child]:pt-20"
       />
+      <Tags />
     </div>
   );
 };

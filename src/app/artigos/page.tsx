@@ -8,7 +8,10 @@ import formatDate from "../../functions/formatDate";
 
 export default async function ArticlesPage() {
   const supabase = createClient();
-  const { data: articles, error } = await supabase.from("topics").select("*");
+  const { data: articles, error } = await supabase
+    .from("topics")
+    .select("*")
+    .order("created_at", { ascending: false });
   return (
     <main>
       <div className="my-16">
@@ -32,7 +35,7 @@ export default async function ArticlesPage() {
                   <div className="absolute border-l top-4 left-1/2 -translate-x-1/2 -bottom-4 border-base-300 dark:border-[#2e2f31]" />
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 flex justify-center items-center size-6 rounded-lg  bg-base-200 dark:bg-dark-base-200 border border-base-300 dark:border-[#2e2f31]">
                     <span className="text-xs text-base-neutral dark:text-dark-base-neutral">
-                      {index + 1}
+                      {articles.length - index}
                     </span>
                   </div>
                 </div>

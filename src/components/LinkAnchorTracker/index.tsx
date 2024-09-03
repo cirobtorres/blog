@@ -46,10 +46,10 @@ const LinkAnchorTracker = ({ body }: { body: string }) => {
   }, []);
 
   return (
-    <nav className="w-[280px] h-full flex-shrink-0 sticky top-16 bottom-16 my-20">
+    <nav className="self-start w-full tablet:sticky tablet:top-16 tablet:bottom-16 mt-4 smartphone:my-10 tablet:my-20">
       <button
         onClick={() => setHide(!hide)}
-        className="flex ml-auto mr-0 items-center font-extrabold uppercase text-xl pr-1 text-base-neutral dark:text-dark-base-neutral"
+        className="flex tablet:ml-auto tablet:mr-0 items-center font-extrabold uppercase text-base smartphone:text-lg tablet:text-xl pr-1 text-base-neutral dark:text-dark-base-neutral"
       >
         Conteúdo
         <MdKeyboardArrowDown
@@ -57,23 +57,24 @@ const LinkAnchorTracker = ({ body }: { body: string }) => {
           style={{ transform: hide ? "" : "rotate(-180deg)" }}
         />
       </button>
-      <ul
-        id="link-anchor-tracker"
-        className="max-h-[70vh] text-right pb-6 transition-colors duration-300 overflow-auto scrollbar dark:dark-scrollbar pr-1"
-        style={{ visibility: hide ? "hidden" : "visible" }}
-      >
-        {h3Body?.map((text, index) => (
-          <li key={index} className="mb-1">
-            <Link
-              href={`#anchor-${index}`}
-              aria-current={index === 0 ? "page" : "false"}
-              className="text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-green-hover hover:dark:text-dark-base-green-hover aria-current:text-base-green dark:aria-current:text-dark-base-green"
-            >
-              {text}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {hide && (
+        <ul
+          id="link-anchor-tracker"
+          className="tablet:max-h-[70vh] tablet:text-right tablet:pb-6 transition-colors duration-300 overflow-auto scrollbar dark:dark-scrollbar tablet:pr-1"
+        >
+          {h3Body?.map((text, index) => (
+            <li key={index} className="mb-1">
+              <Link
+                href={`#anchor-${index}`}
+                aria-current={index === 0 ? "page" : "false"}
+                className="text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-green-hover hover:dark:text-dark-base-green-hover aria-current:text-base-green dark:aria-current:text-dark-base-green"
+              >
+                {text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </nav>
   );
 };

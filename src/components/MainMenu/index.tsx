@@ -102,6 +102,24 @@ const MainMenuContent = ({
             </button>
           </div>
           <div className="w-full flex flex-col">
+            <Link
+              href="/artigos"
+              className="transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
+            >
+              Artigos
+            </Link>
+            <Link
+              href="/contato"
+              className="transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
+            >
+              Contato
+            </Link>
+            <Link
+              href="/sobre-mim"
+              className="transition-all px-4 py-1 text-base text-base-neutral dark:text-dark-base-neutral hover:bg-base-100 dark:hover:bg-dark-base-100"
+            >
+              Sobre mim
+            </Link>
             {user ? (
               <>
                 <Link

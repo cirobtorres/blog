@@ -1,6 +1,7 @@
 "use server";
 
 import { User } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 import { createClient } from "../utils/supabase/server";
 import slugify from "../functions/slugify";
 
@@ -23,11 +24,11 @@ const submitArticle = async (
     });
 
   if (topicsError) {
-    console.log("topicsError", topicsError);
     throw topicsError;
   }
 
-  console.log("Funciona!");
+  revalidatePath("/artigos", "layout");
+  return true;
 };
 
 export { submitArticle };

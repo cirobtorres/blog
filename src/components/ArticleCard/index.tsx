@@ -31,14 +31,14 @@ export default async function ArticleCard({
           <h2 className="truncate text-base font-extrabold uppercase text-base-green dark:text-dark-base-green mb-2">
             {title}
           </h2>
-          <h3 className="truncate text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-2">
+          <h3 className="line-clamp-2 text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-2">
             {sub_title}
           </h3>
           {/* {(data || !error) && <CategoryTag tag={data} />} */}
-          <p
+          {/* <p
             dangerouslySetInnerHTML={{ __html: body }}
             className="line-clamp-3 text-xs text-base-neutral dark:text-dark-base-neutral [&_h3]:normal-case [&_h3]:mb-2"
-          />
+          /> */}
           <span className="flex items-center gap-1 text-sm font-[500] text-base-blue dark:text-dark-base-blue mt-2">
             Saiba mais
             <MdKeyboardArrowRight className="transition-all duration-300 text-xl opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />

@@ -5,6 +5,7 @@ import ArticleEditor from "./ArticleEditor";
 import { useState } from "react";
 import { submitArticle } from "../../lib/article";
 import { User } from "@supabase/supabase-js";
+import { redirect, useRouter } from "next/navigation";
 
 const ArticleEditorLabel = ({
   id,
@@ -50,10 +51,14 @@ const ArticleEditorForm = ({ user }: { user: User }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [body, setBody] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await submitArticle(user, title, subtitle, body);
+    const form = await submitArticle(user, title, subtitle, body);
+    if (form) {
+      router.push("/artigos");
+    }
   };
 
   return (

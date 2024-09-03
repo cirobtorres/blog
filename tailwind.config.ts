@@ -9,6 +9,10 @@ const config: Config = {
   darkMode: "selector",
   theme: {
     extend: {
+      screens: {
+        tablet: "900px",
+        smartphone: "700px",
+      },
       aria: {
         current: "current=page",
       },
@@ -65,7 +69,7 @@ const config: Config = {
         webpage: "var(--webpage-max-width)",
       },
       gridTemplateColumns: {
-        header: "200px repeat(3, 110px) repeat(2, max-content)",
+        header: "100px repeat(3, 110px) repeat(2, max-content)",
       },
       animation: {
         header: "header-entrance 1s ease-in-out forwards",
