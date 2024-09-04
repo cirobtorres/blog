@@ -17,7 +17,8 @@ export default function SubmitButton() {
       disabled={pending}
       className={`
         w-full h-[44px] flex justify-center items-center 
-        rounded transition-colors group 
+        rounded group 
+        border dark:border-[#9af1b1] 
         bg-base-green hover:bg-base-green-hover 
         dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover 
       `}
@@ -48,7 +49,8 @@ export function GoogleSubmitButton() {
       className={`
         w-full h-12 
         flex justify-center items-center 
-        rounded transition-colors group 
+        border dark:border-[#494949] 
+        rounded group 
         bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
       `}
     >
@@ -82,7 +84,8 @@ export function FacebookSubmitButton() {
       className={`
         w-full h-12 
         flex justify-center items-center 
-        rounded transition-colors group 
+        border dark:border-[#494949] 
+        rounded group 
         bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
       `}
     >
@@ -116,7 +119,8 @@ export function GithubSubmitButton() {
       className={`
         w-full h-12 
         flex justify-center items-center 
-        rounded transition-colors group 
+        border dark:border-[#494949] 
+        rounded group 
         bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
       `}
     >

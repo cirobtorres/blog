@@ -15,8 +15,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
+  loginModal,
 }: Readonly<{
   children: React.ReactNode;
+  loginModal: React.ReactNode;
 }>) {
   const supabase = createClient();
   const {
@@ -28,10 +30,11 @@ export default async function RootLayout({
   return (
     <html lang="pt">
       <body
-        className={`${inter.className} ${theme} scrollbar dark:dark-scrollbar flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
+        className={`${inter.className} ${theme} min-h-svh scrollbar dark:dark-scrollbar flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
         <Header user={user} theme={theme} />
-        <div className="w-full h-full flex-1 mt-16">{children}</div>
+        <div className="w-full h-full flex-[2_2_0] mt-16">{children}</div>
+        {loginModal}
         <Footer />
       </body>
     </html>
