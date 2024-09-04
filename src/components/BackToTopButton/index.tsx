@@ -18,15 +18,9 @@ export default function BackToTopButton({
     const elementHeight = document.getElementById("main-article")?.scrollHeight;
     const progressCircle = document.getElementById("progress-circle");
     const scrollTop = window.scrollY;
-    const headerHeight =
-      (document.getElementById("article-hero")?.offsetHeight || 278) + 80; // header + hero
-    const correctedScrollTop =
-      scrollTop - headerHeight < 0 ? 0 : scrollTop - headerHeight;
     if (elementHeight && progressCircle) {
       const percentage =
-        correctedScrollTop < elementHeight
-          ? (correctedScrollTop / elementHeight) * 100
-          : 100;
+        scrollTop < elementHeight ? (scrollTop / elementHeight) * 100 : 100;
       progressCircle.style.strokeDashoffset = `${
         circunference.current - (circunference.current * percentage) / 100
       }`;
