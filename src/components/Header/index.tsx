@@ -111,7 +111,7 @@ export default function Header({
               </li>
             </ul>
           </div>
-          <ul className="h-full flex items-center justify-between gap-8">
+          <ul className="h-full flex items-center justify-between gap-4 smartphone:gap-8">
             <li className="h-full">
               <MainMenu user={user} />
             </li>
