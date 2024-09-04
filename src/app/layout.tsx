@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Inter } from "next/font/google";
+import { createClient } from "@/utils/supabase/server";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
-import { createClient } from "@/utils/supabase/server";
 
 export const metadata: Metadata = {
   title: "Create Next App",

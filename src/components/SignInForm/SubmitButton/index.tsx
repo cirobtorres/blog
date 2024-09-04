@@ -7,7 +7,7 @@ import {
   signInWithFacebook,
   signInWithGithub,
   signInWithGoogle,
-} from "../../../lib/authentication";
+} from "@/lib/authentication";
 
 export default function SubmitButton() {
   const { pending } = useFormStatus();
@@ -16,15 +16,15 @@ export default function SubmitButton() {
       type="submit"
       disabled={pending}
       className={`
-        w-full h-[44px] flex justify-center items-center 
+        w-full h-10 flex justify-center items-center 
         rounded group 
-        border dark:border-[#9af1b1] 
+        border border-[#359b50] dark:border-[#9af1b1] 
         bg-base-green hover:bg-base-green-hover 
         dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover 
       `}
     >
       {pending ? (
-        <Loading size={24} />
+        <Loading color="before:border-[#faf7f5]" size={24} />
       ) : (
         <p
           className={`
@@ -47,11 +47,10 @@ export function GoogleSubmitButton() {
       disabled={pending}
       formAction={signInWithGoogle}
       className={`
-        w-full h-12 
+        w-full h-10 
         flex justify-center items-center 
-        border dark:border-[#494949] 
-        rounded group 
-        bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
+        border border-[#cacaca] dark:border-[#494949] rounded group 
+        bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] 
       `}
     >
       {pending ? (
@@ -60,8 +59,7 @@ export function GoogleSubmitButton() {
         <p
           className={`
           flex items-center gap-2 
-          font-extrabold 
-          text-base-neutral dark:text-base-100 
+          font-extrabold text-base-neutral dark:text-base-100 
         `}
         >
           Entrar com{" "}
@@ -82,11 +80,10 @@ export function FacebookSubmitButton() {
       disabled={pending}
       formAction={signInWithFacebook}
       className={`
-        w-full h-12 
+        w-full h-10 
         flex justify-center items-center 
-        border dark:border-[#494949] 
-        rounded group 
-        bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
+        border border-[#cacaca] dark:border-[#494949] rounded group 
+        bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] 
       `}
     >
       {pending ? (
@@ -117,11 +114,10 @@ export function GithubSubmitButton() {
       disabled={pending}
       formAction={signInWithGithub}
       className={`
-        w-full h-12 
+        w-full h-10 
         flex justify-center items-center 
-        border dark:border-[#494949] 
-        rounded group 
-        bg-base-200 dark:bg-[#2c2c2c] hover:bg-base-300 dark:hover:bg-[#292929] 
+        border border-[#cacaca] dark:border-[#494949] rounded group 
+        bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] 
       `}
     >
       {pending ? (
@@ -130,8 +126,7 @@ export function GithubSubmitButton() {
         <p
           className={`
           flex items-center gap-2
-          font-extrabold 
-          text-base-neutral dark:text-base-100 
+          font-extrabold text-base-neutral dark:text-base-100 
         `}
         >
           Entrar com{" "}

@@ -7,14 +7,33 @@ import { redirect } from "next/navigation";
 const signIn = async (state: {}, formData: FormData) => {
   // let errors = { ...state };
   let errors = {};
+
+  if (Object.keys(errors).length) return { ...errors };
   const supabase = createClient();
 
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const captchaToken = (formData.get("captcha-token") as string) || undefined;
+  const privacyPolicy = formData.get("privacy-policy");
 
-  const { error: backendError } = await supabase.auth.signInWithPassword(data);
+  if (!privacyPolicy) {
+    Object.assign(errors, {
+      privacyPolicies:
+        "Preciso que concorde com nossas políticas de dados e privacidade. Não se preocupe, não enchemos sua caixa com e-mails idiotas!",
+    });
+  }
+
+  if (!captchaToken) {
+    Object.assign(errors, {
+      captchaToken: "Prove que você é humano! 🤖",
+    });
+  }
+
+  const { error: backendError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+    options: { captchaToken },
+  });
 
   if (backendError) {
     if (

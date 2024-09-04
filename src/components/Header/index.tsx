@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import NightThemeSwitcher from "../NightThemeSwitch";
-import MainMenu from "../MainMenu";
-import { User } from "@supabase/supabase-js";
 import { usePathname } from "next/navigation";
+import { User } from "@supabase/supabase-js";
+import { FaPlus } from "react-icons/fa";
+import MainMenu from "../MainMenu";
+import ProgressBar from "../ProgressBar";
+import NightThemeSwitcher from "../NightThemeSwitch";
 
 export default function Header({
   user,
@@ -68,8 +70,8 @@ export default function Header({
                 className="h-full"
                 style={{
                   borderBottom: pathname.startsWith("/artigos")
-                    ? "3px solid var(--base-green)"
-                    : "3px solid transparent",
+                    ? "2px solid var(--base-green)"
+                    : "2px solid transparent",
                 }}
               >
                 <Link
@@ -83,8 +85,8 @@ export default function Header({
                 className="h-full"
                 style={{
                   borderBottom: pathname.startsWith("/contato")
-                    ? "3px solid var(--base-green)"
-                    : "3px solid transparent",
+                    ? "2px solid var(--base-green)"
+                    : "2px solid transparent",
                 }}
               >
                 <Link
@@ -98,8 +100,8 @@ export default function Header({
                 className="h-full"
                 style={{
                   borderBottom: pathname.startsWith("/sobre-mim")
-                    ? "3px solid var(--base-green)"
-                    : "3px solid transparent",
+                    ? "2px solid var(--base-green)"
+                    : "2px solid transparent",
                 }}
               >
                 <Link
@@ -121,7 +123,7 @@ export default function Header({
           </ul>
         </nav>
       </div>
-      {/* <div className="fixed top-full left-0 w-full h-1 bg-base-green dark:bg-dark-base-green block xl:hidden" /> */}
+      <ProgressBar />
     </header>
   );
 }
