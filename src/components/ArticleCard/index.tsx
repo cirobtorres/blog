@@ -35,7 +35,7 @@ export default async function ArticleCard({
             {sub_title}
           </h3>
           {/* {(data || !error) && <CategoryTag tag={data} />} */}
-          <p
+          <div
             dangerouslySetInnerHTML={{ __html: body.substring(0, 255) + "..." }}
             className="line-clamp-3 text-xs [&_h3]:text-sm [&_h3]:font-bold text-base-neutral dark:text-dark-base-neutral"
           />
