@@ -25,21 +25,21 @@ export default async function ArticleCard({
   return (
     <Link href={`/artigos/${slug}/${id}`} className="group">
       <article
-        className="rounded-2xl w-full overflow-hidden hover:shadow-md hover:bg-base-150 dark:hover:dark:bg-[#2a2e35]" // transition-transform hover:-translate-y-2
+        className="rounded-2xl overflow-hidden hover:shadow-md hover:bg-base-150 dark:hover:dark:bg-[#2a2e35]" // transition-transform hover:-translate-y-2
       >
         <div className="flex flex-col h-1/2 p-4">
-          <h2 className="truncate text-base font-extrabold uppercase text-base-green dark:text-dark-base-green mb-2">
+          <h2 className="truncate text-base font-extrabold text-base-green dark:text-dark-base-green mb-1">
             {title}
           </h2>
-          <h3 className="line-clamp-2 text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-2">
+          <h3 className="line-clamp-2 text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-1">
             {sub_title}
           </h3>
           {/* {(data || !error) && <CategoryTag tag={data} />} */}
-          {/* <p
-            dangerouslySetInnerHTML={{ __html: body }}
-            className="line-clamp-3 text-xs text-base-neutral dark:text-dark-base-neutral [&_h3]:normal-case [&_h3]:mb-2"
-          /> */}
-          <span className="flex items-center gap-1 text-sm font-[500] text-base-blue dark:text-dark-base-blue mt-2">
+          <p
+            dangerouslySetInnerHTML={{ __html: body.substring(0, 255) + "..." }}
+            className="line-clamp-3 text-xs [&_h3]:text-sm [&_h3]:font-bold text-base-neutral dark:text-dark-base-neutral"
+          />
+          <span className="flex items-center gap-1 text-sm font-[500] text-base-blue dark:text-dark-base-blue mt-1">
             Saiba mais
             <MdKeyboardArrowRight className="transition-all duration-300 text-xl opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
           </span>
@@ -101,7 +101,7 @@ const CategoryTag = ({ tag }: { tag: any[] }) => {
         return (
           <span
             key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white blue-500 dark:bg-blue-500"
+            className="relative group/tailwind text-base p-1 rounded-lg text-base-neutral dark:text-white blue-500 dark:bg-blue-500"
           >
             <SiTailwindcss />
           </span>

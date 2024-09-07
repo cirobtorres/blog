@@ -47,7 +47,11 @@ const ArticleEditorLabel = ({
   );
 };
 
-const ArticleEditorForm = ({ user }: { user: User }) => {
+const ArticleEditorForm = ({
+  blogUser,
+}: {
+  blogUser: { id: string; privileges: number };
+}) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [body, setBody] = useState("");
@@ -55,9 +59,9 @@ const ArticleEditorForm = ({ user }: { user: User }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = await submitArticle(user, title, subtitle, body);
+    const form = await submitArticle(blogUser, title, subtitle, body);
     if (form) {
-      router.push("/artigos");
+      router.push("/");
     }
   };
 

@@ -24,7 +24,7 @@ export default function MainMenu({ user }: { user: User | null }) {
   }, [isOpen]);
 
   return (
-    <div ref={menuRef} className="relative h-full flex items-center">
+    <div ref={menuRef} className="h-full flex items-center">
       <MainMenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
       <MainMenuContent user={user} isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
@@ -42,7 +42,7 @@ const MainMenuButton = ({
     <button onClick={() => setIsOpen(!isOpen)} className="h-full group">
       <HiEllipsisHorizontal
         className={`
-          text-4xl 
+          text-2xl smartphone:text-3xl tablet:text-4xl 
           transition-all duration-300 group-active:scale-[0.90]
           ${
             isOpen
@@ -67,13 +67,13 @@ const MainMenuContent = ({
   return (
     <section
       className={`
-          absolute top-[calc(100%_+_4px)] right-0 w-72 
-          rounded-xl border border-base-100 dark:border-dark-base-border
-          bg-base-150 dark:bg-dark-base-150 overflow-hidden
+          fixed top-0 bottom-0 left-0 w-96 
+          border-r border-base-100 dark:border-dark-base-border 
+          bg-base-150 dark:bg-dark-base-150 overflow-hidden 
           ${
             isOpen
-              ? "transition-all ease-in-out duration-[250ms] opacity-100 scale-100 translate-x-0 translate-y-0" // transition-all duration-500 delay-[100ms] main-menu-open-animation
-              : "transition-all ease-in-out duration-[250ms] opacity-0 scale-75 translate-x-4 -translate-y-8" // transition-all duration-500 delay-[300ms] main-menu-close-animation
+              ? "transition-all ease-in-out duration-[250ms] translate-x-0" // transition-all duration-500 delay-[100ms] main-menu-open-animation
+              : "transition-all ease-in-out duration-[250ms] -translate-x-96" // transition-all duration-500 delay-[300ms] main-menu-close-animation
           }
         `}
       style={{ visibility: isOpen ? "visible" : "hidden" }}

@@ -18,7 +18,7 @@ export default function Breadcrumbs() {
   }
 
   return (
-    <ul className="flex gap-1 items-center py-1 mb-6">
+    <ul className="flex gap-1 items-center py-1 mb-2 smartphone:mb-4 tablet:mb-6">
       {pathname.map((path: string, index: number) => (
         <li
           key={index}

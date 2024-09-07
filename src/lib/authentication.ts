@@ -4,6 +4,19 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+const signOut = async () => {
+  const supabase = createClient();
+
+  const { error: backendError } = await supabase.auth.signOut();
+
+  if (backendError) {
+    throw new Error(`${backendError.status} ${backendError.message}`);
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/");
+};
+
 const signIn = async (state: {}, formData: FormData) => {
   // let errors = { ...state };
   let errors = {};
@@ -19,7 +32,7 @@ const signIn = async (state: {}, formData: FormData) => {
   if (!privacyPolicy) {
     Object.assign(errors, {
       privacyPolicies:
-        "Preciso que concorde com nossas políticas de dados e privacidade. Não se preocupe, não enchemos sua caixa com e-mails idiotas!",
+        "Preciso que concorde com nossas políticas de dados e privacidade. Não se preocupe, não enviamos e-mails!",
     });
   }
 
@@ -47,19 +60,6 @@ const signIn = async (state: {}, formData: FormData) => {
   }
 
   if (Object.keys(errors).length) return { ...errors };
-
-  revalidatePath("/", "layout");
-  redirect("/");
-};
-
-const signOut = async () => {
-  const supabase = createClient();
-
-  const { error: backendError } = await supabase.auth.signOut();
-
-  if (backendError) {
-    throw new Error(`${backendError.status} ${backendError.message}`);
-  }
 
   revalidatePath("/", "layout");
   redirect("/");
@@ -115,8 +115,8 @@ const signInWithGithub = async () => {
 };
 
 export {
-  signIn,
   signOut,
+  signIn,
   signInWithGoogle,
   signInWithFacebook,
   signInWithGithub,

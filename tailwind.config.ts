@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       screens: {
         tablet: "900px",
-        smartphone: "700px",
+        smartphone: "550px",
       },
       aria: {
         current: "current=page",
@@ -69,7 +69,7 @@ const config: Config = {
         webpage: "var(--webpage-max-width)",
       },
       gridTemplateColumns: {
-        header: "100px repeat(3, 110px) repeat(2, max-content)",
+        header: "repeat(2, minmax(80px, 110px))",
       },
       animation: {
         header: "header-entrance 1s ease-in-out forwards",

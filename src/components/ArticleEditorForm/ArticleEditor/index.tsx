@@ -52,19 +52,18 @@ const ArticleEditor = ({ onChange }: { onChange: (value: string) => void }) => {
       StarterKit.configure({
         paragraph: {
           HTMLAttributes: {
-            class: "w-full mb-4 text-base-neutral dark:text-dark-base-neutral",
+            // class: "w-full mb-4 text-base-neutral dark:text-dark-base-neutral",
           },
         },
         heading: {
           HTMLAttributes: {
-            class:
-              "w-full font-extrabold uppercase mb-4 text-base-neutral dark:text-dark-base-neutral",
+            // class: "w-full font-extrabold uppercase mb-4 text-base-neutral dark:text-dark-base-neutral",
           },
           levels: [3],
         },
         bold: {
           HTMLAttributes: {
-            class: "font-extrabold",
+            // class: "font-extrabold",
           },
         },
         italic: {
@@ -74,35 +73,29 @@ const ArticleEditor = ({ onChange }: { onChange: (value: string) => void }) => {
         },
         bulletList: {
           HTMLAttributes: {
-            class:
-              "w-full pl-6 mb-4 [&_li]:pl-4 list-disc [&_li]:marker:text-base-green dark:[&_li]:marker:text-dark-base-green text-base-neutral dark:text-dark-base-neutral",
+            // class: "w-full pl-6 mb-4 [&_li]:pl-4 list-disc [&_li]:marker:text-base-green dark:[&_li]:marker:text-dark-base-green text-base-neutral dark:text-dark-base-neutral",
           },
         },
         orderedList: {
           HTMLAttributes: {
-            class:
-              "w-full pl-6 mb-4 [&_li]:pl-4 list-decimal [&_li]:marker:text-base-green dark:[&_li]:marker:text-dark-base-green text-base-neutral dark:text-dark-base-neutral",
+            // class: "w-full pl-6 mb-4 [&_li]:pl-4 list-decimal [&_li]:marker:text-base-green dark:[&_li]:marker:text-dark-base-green text-base-neutral dark:text-dark-base-neutral",
           },
         },
         codeBlock: {
           defaultLanguage: "javascript",
           HTMLAttributes: {
-            class:
-              "text-wrap w-full max-w-5xl p-4 mb-4 text-dark-base-neutral bg-dark-base-300",
+            // class: "text-wrap w-full max-w-5xl p-4 mb-4 text-dark-base-neutral bg-dark-base-300",
           },
         },
         blockquote: {
           HTMLAttributes: {
-            class: `relative italic mb-4 font-semibold pl-10 [&_p]:indent-10 [&_p]:mb-0 
-              [&_p]:before:absolute [&_p]:before:top-0 [&_p]:before:left-0 [&_p]:before:font-serif [&_p]:before:content-['“'] [&_p]:before:text-5xl [&_p]:before:text-base-green dark:[&_p]:before:text-dark-base-green 
-              [&_p]:after:absolute [&_p]:after:bottom-0 [&_p]:after:indent-2 [&_p]:after:font-serif [&_p]:after:content-['”'] [&_p]:after:text-5xl [&_p]:after:leading-[0.25rem] [&_p]:after:text-base-green dark:[&_p]:after:text-dark-base-green`,
+            // class: `relative italic mb-4 font-semibold pl-10 [&_p]:indent-10 [&_p]:mb-0 [&_p]:before:absolute [&_p]:before:top-0 [&_p]:before:left-0 [&_p]:before:font-serif [&_p]:before:content-['“'] [&_p]:before:text-5xl [&_p]:before:text-base-green dark:[&_p]:before:text-dark-base-green [&_p]:after:absolute [&_p]:after:bottom-0 [&_p]:after:indent-2 [&_p]:after:font-serif [&_p]:after:content-['”'] [&_p]:after:text-5xl [&_p]:after:leading-[0.25rem] [&_p]:after:text-base-green dark:[&_p]:after:text-dark-base-green`,
           },
         },
       }),
       Link.configure({
         HTMLAttributes: {
-          class:
-            "cursor-pointer font-extrabold underline text-base-green hover:text-dark-base-green",
+          // class: "cursor-pointer font-extrabold underline text-base-green hover:text-dark-base-green",
         },
         openOnClick: false,
         autolink: false,
@@ -121,11 +114,11 @@ const ArticleEditor = ({ onChange }: { onChange: (value: string) => void }) => {
     editorProps: {
       attributes: {
         class:
-          "min-h-[500px] w-full p-2 flex flex-col justify-start items-start overflow-x-hidden bg-base-100 dark:bg-dark-base-200 scrollbar dark:dark-scrollbar outline-none outline-2 outline-transparent outline-offset-0 focus:outline-blue-500", // max-h-[600px]
+          "min-h-[500px] w-full p-6 flex flex-col justify-start items-start overflow-x-hidden bg-base-100 dark:bg-dark-base-200 scrollbar dark:dark-scrollbar outline-none outline-2 outline-transparent outline-offset-0 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote ",
       },
     },
-    // content,
-    content: "",
+    content,
+    // content: "",
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },

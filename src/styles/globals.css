@@ -81,6 +81,111 @@ select:-webkit-autofill:focus {
 }
 
 @layer utilities {
+  /*------------------------------TipTapEditor-------------------------------*/
+  .editor-paragraph {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--base-neutral);
+  }
+  .editor-dark-paragraph {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--dark-base-neutral);
+  }
+  .editor-heading {
+    width: 100%;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    color: var(--base-neutral);
+  }
+  .editor-dark-heading {
+    color: var(--dark-base-neutral);
+  }
+  .editor-unordered-list {
+    list-style: disc;
+  }
+  .editor-ordered-list {
+    list-style: decimal;
+  }
+  .editor-list {
+    width: 100%;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .editor-list li {
+    color: var(--base-neutral);
+    padding-left: 1rem;
+  }
+  .editor-list li p {
+    margin-bottom: 0.5rem;
+  }
+  .editor-list li::marker {
+    color: var(--base-green);
+  }
+  .editor-dark-list li {
+    color: var(--dark-base-neutral);
+  }
+  .editor-code {
+    width: 100%;
+    max-width: 1024px;
+    text-wrap: wrap;
+    padding: 1rem;
+    color: var(--dark-base-neutral);
+    background: var(--dark-base-300);
+  }
+  .editor-link {
+    cursor: pointer;
+    font-weight: 900;
+    text-decoration: underline;
+    color: var(--base-green);
+  }
+  .editor-link:hover {
+    color: var(--base-green-hover);
+  }
+  .editor-link:visited {
+    color: #653b7a;
+  }
+  .editor-link:visited:hover {
+    color: #442255;
+  }
+  .editor-blockquote {
+    position: relative;
+    font-style: italic;
+    padding-left: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .editor-blockquote p {
+    text-indent: 2.5rem;
+    margin-bottom: 0;
+  }
+  .editor-blockquote p::before {
+    content: "“";
+    position: absolute;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    top: -1rem;
+    left: 0;
+    font-size: 4rem;
+    color: var(--base-green);
+  }
+  .editor-dark-blockquote p::before {
+    color: var(--dark-base-green);
+  }
+  .editor-blockquote p::after {
+    content: "”";
+    position: absolute;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    bottom: -0.5rem;
+    font-size: 4rem;
+    text-indent: 0.5rem;
+    line-height: 0.25rem;
+    color: var(--base-green);
+  }
+  .editor-dark-blockquote p::after {
+    color: var(--dark-base-green);
+  }
   /*------------------------------MainMenu-------------------------------*/
   .modal-shown {
     width: 100%;

@@ -15,26 +15,36 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
-  loginModal,
 }: Readonly<{
   children: React.ReactNode;
-  loginModal: React.ReactNode;
 }>) {
   const supabase = createClient();
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser();
+
+  const {
+    data: { user: supabaseAuthUser },
+    error: supabaseAuthUserError,
+  } = await supabase.auth.getUser();
+
+  const { data: blogUser } = await supabase
+    .from("blog_author")
+    .select("*")
+    .eq("auth_users_id", supabaseAuthUser?.id)
+    .in("privileges", [2, 3])
+    .single();
+
   const theme = cookies().get("theme")?.value || "";
 
   return (
     <html lang="pt">
       <body
-        className={`${inter.className} ${theme} min-h-svh scrollbar dark:dark-scrollbar flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
+        className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
-        <Header user={user} theme={theme} />
-        <div className="w-full h-full flex-[2_2_0] mt-16">{children}</div>
-        {loginModal}
+        <Header privileges={blogUser.privileges} theme={theme} />
+        <main className="w-full h-full flex-[2_2_0]">{children}</main>
         <Footer />
       </body>
     </html>

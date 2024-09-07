@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-base-100 dark:bg-dark-base-100">
       <div className="mx-4 smartphone:mx-10 tablet:mx-20">
-        <div className="w-full max-w-webpage mx-auto py-16 flex flex-col items-center">
+        <div className="w-full mx-auto py-16 flex flex-col items-center">
           <div className="inline-grid">
             <div className="[grid-column-start:1] [grid-row-start:1] w-28 h-0.5 rounded-full mb-16 bg-gradient-to-r from-pink-500 via-cyan-500 to-emerald-500 blur pointer-events-none" />
             <div className="[grid-column-start:1] [grid-row-start:1] w-28 h-0.5 rounded-full mb-16 bg-gradient-to-r from-pink-500 via-cyan-500 to-emerald-500" />

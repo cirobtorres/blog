@@ -144,8 +144,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         />
         <Balloon text="Riscar" />
       </button>
-      {/*------------------------------HeadingButton------------------------------*/}
+      {/*------------------------------HighlightButton------------------------------*/}
       <button
+        tabIndex={-1}
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         className={`${
           editor.isActive("highlight") ? "is-active" : ""

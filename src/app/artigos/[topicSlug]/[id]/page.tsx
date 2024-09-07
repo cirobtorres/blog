@@ -26,7 +26,7 @@ export default async function ArticlePage({ params }: Params) {
 
   if (!error) {
     return (
-      <main className="w-full h-full mx-0 bg-base-150 dark:bg-dark-base-150">
+      <div className="w-full h-full mx-0 bg-base-150 dark:bg-dark-base-150 mt-16">
         <ArticleHero {...data} />
         <div className="mx-4 smartphone:mx-10 tablet:mx-20">
           <div className="w-full max-w-webpage mx-auto grid grid-cols-[minmax(300px,1fr)] tablet:gap-8 tablet:grid-cols-[minmax(180px,250px)_minmax(500px,1fr)] xl:gap-16 xl:grid-cols-[minmax(180px,250px)_minmax(500px,1fr)_75px]">
@@ -38,7 +38,7 @@ export default async function ArticlePage({ params }: Params) {
           </div>
         </div>
         <RelatedArticles articles={[data, data, data]} />
-      </main>
+      </div>
     );
   } else {
     revalidatePath("/", "layout");

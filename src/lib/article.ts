@@ -1,22 +1,28 @@
 "use server";
 
-import { User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { createClient } from "../utils/supabase/server";
 import slugify from "../functions/slugify";
 
 const submitArticle = async (
-  user: User,
+  blogUser: { id: string; privileges: number },
   title: string,
   subtitle: string,
   body: string
 ) => {
   const supabase = createClient();
 
+  if (!body) {
+    console.log(
+      "src/lig/article.ts: submitArticle error - body cannot be empty"
+    ); // TODO: needs treatment
+    return;
+  }
+
   const { data: topicsData, error: topicsError } = await supabase
     .from("topics")
     .insert({
-      auth_users_id: user.id,
+      blog_author_id: blogUser.id,
       title,
       sub_title: subtitle,
       slug: slugify(title),
