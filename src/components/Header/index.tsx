@@ -52,7 +52,7 @@ export default function Header({
       className={`
         ${
           pathname.startsWith("/artigos") ? "fixed" : "static"
-        } top-0 transition-[top] duration-300 h-16 w-full z-10 backdrop-blur 
+        } top-0 transition-[top] duration-300 h-16 w-full z-10 backdrop-blur-sm 
         border-b border-base-100 dark:border-dark-base-border
         bg-base-200/90 dark:bg-dark-base-300/90 
       `}

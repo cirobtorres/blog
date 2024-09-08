@@ -37,6 +37,10 @@
   --dark-base-purple: #661ae6;
   /*--------------------------------Widths-------------------------------*/
   --webpage-max-width: 1440px;
+  /*--------------------------------Heights-------------------------------*/
+  --floating-header: 4rem;
+  --floating-header-threshold-padding: 4rem;
+  --floating-header-threshold-margin: 1rem;
 }
 
 /* Get rid off reveal button (eye icon) from password input type */
@@ -92,10 +96,18 @@ select:-webkit-autofill:focus {
     margin-bottom: 1rem;
     color: var(--dark-base-neutral);
   }
+  .heading-border-top {
+    border-top: 1px solid var(--base-200);
+  }
+  .heading-dark-border-top {
+    border-top: 1px solid var(--dark-base-border);
+  }
   .editor-heading {
     width: 100%;
     font-weight: 900;
     text-transform: uppercase;
+    padding-top: var(--floating-header-threshold-padding);
+    margin-top: var(--floating-header-threshold-margin);
     margin-bottom: 1rem;
     font-size: 1.25rem;
     line-height: 1.75rem;
@@ -135,6 +147,7 @@ select:-webkit-autofill:focus {
     padding: 1rem;
     color: var(--dark-base-neutral);
     background: var(--dark-base-300);
+    margin-bottom: 1rem;
   }
   .editor-link {
     cursor: pointer;
