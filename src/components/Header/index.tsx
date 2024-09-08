@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { FaPlus } from "react-icons/fa";
-import MainMenu from "../MainMenu";
 import ProgressBar from "../ProgressBar";
 import NightThemeSwitcher from "../NightThemeSwitch";
 import HiddenDashboard from "./HiddenDashboard";
@@ -57,8 +55,8 @@ export default function Header({
         bg-base-200/90 dark:bg-dark-base-300/90 
       `}
     >
-      <div className="h-full max-w-webpage mx-auto">
-        <nav className="h-full flex items-center justify-between mx-4 smartphone:mx-10 tablet:mx-20">
+      <div className="h-full max-w-webpage mx-auto px-4 smartphone:px-10 tablet:px-20 overflow-hidden">
+        <nav className="w-full h-full flex items-center justify-between">
           <div className="h-full flex items-center">
             <div
               className="pt-1 h-full"
@@ -71,9 +69,9 @@ export default function Header({
                 HOME
               </Link>
             </div>
-            <ul className="pt-1 h-full hidden smartphone:grid grid-cols-header items-center justify-between">
+            <ul className="pt-1 h-full hidden smartphone:flex gap-4 items-center justify-between">
               <li
-                className="h-full"
+                className="w-20 h-full"
                 style={{
                   borderBottom: pathname.startsWith("/contato")
                     ? "2px solid var(--base-green)"
@@ -88,7 +86,7 @@ export default function Header({
                 </Link>
               </li>
               <li
-                className="h-full"
+                className="w-20 h-full"
                 style={{
                   borderBottom: pathname.startsWith("/sobre-mim")
                     ? "2px solid var(--base-green)"

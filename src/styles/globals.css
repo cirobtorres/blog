@@ -78,10 +78,17 @@ select:-webkit-autofill:focus {
   }
 }
 
+/*--angle is a property used for animate the profile picture border at about-me page (sobre-mim)*/
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 @layer utilities {
@@ -279,10 +286,4 @@ select:-webkit-autofill:focus {
     stroke-dashoffset: var(--dashOffset, 94);
     transition: stroke-dasharray var(--dur), stroke-dashoffset var(--dur);
   }
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
 }

@@ -10,7 +10,7 @@ import { GoogleMapsIcon } from "../../icons";
 export default async function AboutPage() {
   return (
     <div className="relative mt-16 w-full h-full mx-0 flex justify-center">
-      <div className="absolute w-full h-60 bottom-full translate-y-1/2 bg-base-300 dark:bg-dark-base-300" />
+      <div className="absolute w-full h-60 bottom-full translate-y-1/2 -z-10 bg-base-300 dark:bg-dark-base-300" />
       <div className="relative w-full max-w-5xl mx-12 rounded-3xl border border-base-200 dark:border-dark-base-border mt-12 flex flex-col items-center bg-base-150 dark:bg-dark-base-150">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div
@@ -62,7 +62,7 @@ export default async function AboutPage() {
           </p>
         </div>
         <hr className="w-full dark:border-dark-base-border" />
-        <div className="px-28 flex justify-between w-full p-8 rounded-b-3xl bg-base-200 dark:bg-dark-base-300">
+        <div className="px-28 flex justify-between w-full p-4 bg-base-200 dark:bg-dark-base-300">
           <span className="text-base-placeholder dark:text-dark-base-placeholder text-base flex items-center gap-1">
             <GoogleMapsIcon /> SP, Brasil
           </span>
