@@ -13,10 +13,10 @@ const ArticleBody = ({ body }: { body: string }) => {
   };
 
   return (
-    <div id="main-article" className="w-full min-w-[300px]">
-      <section
+    <div id="main-article">
+      <div
         dangerouslySetInnerHTML={{ __html: returnBodyWithAnchorHeading(body) }}
-        className="my-20 [&_h3]:heading-border-top [&_h3]:dark:heading-dark-border-top [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote"
+        className="overflow-hidden my-20 [&_h3]:heading-border-top [&_h3]:dark:heading-dark-border-top [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote"
       />
       <Tags />
     </div>

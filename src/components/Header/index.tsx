@@ -52,13 +52,13 @@ export default function Header({
       className={`
         ${
           pathname.startsWith("/artigos") ? "fixed" : "static"
-        } top-0 transition-[top] duration-300 h-16 w-full z-10 backdrop-blur-sm 
-        border-b border-base-100 dark:border-dark-base-border
+        } top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm 
+        border-b border-base-100 dark:border-dark-base-border 
         bg-base-200/90 dark:bg-dark-base-300/90 
       `}
     >
-      <div className="h-full mx-4 smartphone:mx-10 tablet:mx-20">
-        <nav className="h-full flex items-center justify-between mx-auto">
+      <div className="h-full max-w-webpage mx-auto">
+        <nav className="h-full flex items-center justify-between mx-4 smartphone:mx-10 tablet:mx-20">
           <div className="h-full flex items-center">
             <div
               className="pt-1 h-full"
@@ -72,21 +72,6 @@ export default function Header({
               </Link>
             </div>
             <ul className="pt-1 h-full hidden smartphone:grid grid-cols-header items-center justify-between">
-              {/* <li
-                className="h-full"
-                style={{
-                  borderBottom: pathname.startsWith("/artigos")
-                    ? "2px solid var(--base-green)"
-                    : "2px solid transparent",
-                }}
-              >
-                <Link
-                  href="/artigos"
-                  className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
-                >
-                  Artigos
-                </Link>
-              </li> */}
               <li
                 className="h-full"
                 style={{

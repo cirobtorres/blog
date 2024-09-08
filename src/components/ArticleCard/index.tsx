@@ -6,6 +6,7 @@ import { FaPython, FaJava, FaHtml5, FaCss3Alt } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoLogoJavascript } from "react-icons/io";
 import { createClient } from "../../utils/supabase/server";
+// import formatDate from "../../functions/formatDate";
 
 export default async function ArticleCard({
   id,
@@ -13,12 +14,14 @@ export default async function ArticleCard({
   title,
   sub_title,
   body,
+  created_at,
 }: {
   id: string;
   slug: string;
   title: string;
   sub_title: string;
   body: string;
+  created_at: string;
 }) {
   const supabase = createClient();
 
@@ -28,13 +31,15 @@ export default async function ArticleCard({
         className="rounded-2xl overflow-hidden hover:shadow-md hover:bg-base-150 dark:hover:dark:bg-[#2a2e35]" // transition-transform hover:-translate-y-2
       >
         <div className="flex flex-col h-1/2 p-4">
-          <h2 className="truncate text-base font-extrabold text-base-green dark:text-dark-base-green mb-1">
+          {/* <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
+            {formatDate(created_at)}
+          </time> */}
+          <h2 className="line-clamp-2 text-base font-extrabold text-base-green dark:text-dark-base-green mb-1">
             {title}
           </h2>
           <h3 className="line-clamp-2 text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-1">
             {sub_title}
           </h3>
-          {/* {(data || !error) && <CategoryTag tag={data} />} */}
           <div
             dangerouslySetInnerHTML={{ __html: body.substring(0, 255) + "..." }}
             className="line-clamp-3 text-xs [&_h3]:text-sm [&_h3]:font-bold text-base-neutral dark:text-dark-base-neutral"

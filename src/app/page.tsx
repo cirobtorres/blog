@@ -2,7 +2,6 @@
 
 import ArticleCard from "@/components/ArticleCard";
 import Pagination from "@/components/Pagination";
-import Search from "@/components/Search";
 import { createClient } from "../utils/supabase/server";
 import formatDate from "../functions/formatDate";
 
@@ -20,7 +19,7 @@ export default async function HomePage() {
             {articles.map((article, index) => (
               <li
                 key={article.id}
-                className="grid grid-cols-[1fr] smartphone:grid-cols-[100px_1fr] tablet:grid-cols-[150px_100px_1fr]"
+                className="grid grid-cols-[minmax(200px,1fr)] smartphone:grid-cols-[100px_minmax(200px,1fr)] tablet:grid-cols-[150px_100px_minmax(200px,1fr)]"
               >
                 <time className="text-center leading-6 text-xs py-4 font-[500] text-base-neutral dark:text-dark-base-neutral hidden tablet:block">
                   {formatDate(article.created_at)}

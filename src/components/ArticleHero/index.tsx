@@ -32,7 +32,7 @@ const ArticleHero = async ({
     blogUser.auth_users_id
   );
   return (
-    <div id="article-hero" className="bg-base-200 dark:bg-dark-base-200">
+    <section id="article-hero" className="bg-base-200 dark:bg-dark-base-200">
       <div className="mx-4 smartphone:mx-10 tablet:mx-20">
         <div className="max-w-webpage mx-auto pb-5 pt-3 smartphone:pb-9 smartphone:pt-7 tablet:pb-16 tablet:pt-12">
           <div className="grid grid-cols-[minmax(300px,1fr)] tablet:gap-8 tablet:grid-cols-[minmax(180px,250px)_minmax(300px,1fr)] xl:gap-16 xl:grid-cols-[minmax(180px,250px)_minmax(300px,1fr)_75px]">
@@ -86,7 +86,7 @@ const ArticleHero = async ({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

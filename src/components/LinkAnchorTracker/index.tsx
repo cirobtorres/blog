@@ -6,7 +6,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import collectH3Contents from "../../functions/collectH3Contents";
 
 const LinkAnchorTracker = ({ body }: { body: string }) => {
-  const [hide, setHide] = useState(false);
+  const [hide, setHide] = useState(true);
   const h3Body = collectH3Contents(body);
 
   const linkAnchorsListener = () => {
