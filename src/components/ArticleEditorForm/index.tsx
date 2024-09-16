@@ -85,7 +85,7 @@ const ArticleEditorForm = ({
           onChange={setSubtitle}
           placeholder="Texto do subheading do artigo"
         />
-        <ArticleEditor onChange={setBody} />
+        {/* <ArticleEditor onChange={setBody} /> */}
       </div>
       <ArticleOnSubmitButton />
     </form>

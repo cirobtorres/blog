@@ -146,13 +146,23 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
       </button>
       {/*------------------------------HighlightButton------------------------------*/}
       <button
+        type="button"
         tabIndex={-1}
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         className={`${
-          editor.isActive("highlight") ? "is-active" : ""
+          editor.isActive("highlight")
+            ? "bg-base-100 dark:bg-dark-base-100"
+            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
-        <FaHighlighter className="transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green" />
+        <FaHighlighter
+          className={`${
+            editor.isActive("highlight")
+              ? "text-base-green dark:text-dark-base-green"
+              : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          } transition-colors duration-300
+        `}
+        />
         <p
           className={`
               transition-opacity duration-200 mb-3 opacity-0 group-hover:opacity-100 pointer-events-none 

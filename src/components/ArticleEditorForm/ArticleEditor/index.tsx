@@ -114,11 +114,11 @@ const ArticleEditor = ({ onChange }: { onChange: (value: string) => void }) => {
     editorProps: {
       attributes: {
         class:
-          "min-h-[500px] w-full p-6 flex flex-col justify-start items-start overflow-x-hidden bg-base-100 dark:bg-dark-base-200 scrollbar dark:dark-scrollbar outline-none outline-2 outline-transparent outline-offset-0 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote ",
+          "min-h-[500px] w-full p-6 flex flex-col justify-start items-start overflow-x-hidden bg-base-100 dark:bg-dark-base-200 scrollbar dark:dark-scrollbar outline-none outline-2 outline-transparent outline-offset-0 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote",
       },
     },
-    content,
-    // content: "",
+    // content,
+    content: "",
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
