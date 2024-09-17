@@ -27,14 +27,14 @@ const signIn = async (state: {}, formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const captchaToken = (formData.get("captcha-token") as string) || undefined;
-  const privacyPolicy = formData.get("privacy-policy");
+  // const privacyPolicy = formData.get("privacy-policy");
 
-  if (!privacyPolicy) {
-    Object.assign(errors, {
-      privacyPolicies:
-        "Preciso que concorde com nossas políticas de dados e privacidade. Não se preocupe, não enviamos e-mails!",
-    });
-  }
+  // if (!privacyPolicy) {
+  //   Object.assign(errors, {
+  //     privacyPolicies:
+  //       "Preciso que concorde com nossas políticas de dados e privacidade. Não se preocupe, não enviamos e-mails!",
+  //   });
+  // }
 
   if (!captchaToken) {
     Object.assign(errors, {

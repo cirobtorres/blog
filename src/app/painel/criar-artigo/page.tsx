@@ -1,6 +1,8 @@
+"use server";
+
 import { redirect } from "next/navigation";
-import { createClient } from "../../../utils/supabase/server";
-import ArticleEditorForm from "../../../components/ArticleEditorForm";
+import { createClient } from "@/utils/supabase/server";
+import ArticleEditorForm from "@/components/ArticleEditorForm";
 
 export default async function CreateArticlePage() {
   const supabase = createClient();
