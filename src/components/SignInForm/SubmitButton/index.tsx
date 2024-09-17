@@ -24,7 +24,7 @@ export default function SubmitButton() {
       `}
     >
       {pending ? (
-        <Loading color="before:border-[#faf7f5]" size={24} />
+        <Loading size={24} />
       ) : (
         <p
           className={`

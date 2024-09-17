@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useFormState } from "react-dom";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { signIn } from "@/lib/authentication";
@@ -29,10 +29,10 @@ export default function SignInForm() {
       {state?.invalidCredentials && (
         <p className="pl-2 text-sm text-red-500">{state.invalidCredentials}</p>
       )}
-      <CheckBox id="privacy-policy" text="Privacidade e uso de dados" />
+      {/* <CheckBox id="privacy-policy" text="Privacidade e uso de dados" />
       {state?.privacyPolicies && (
         <p className="pl-2 text-sm text-red-500">{state.privacyPolicies}</p>
-      )}
+      )} */}
       <Turnstile
         siteKey={
           process.env.CLOUDFLARE_TURNSTILE_SITE_KEY ||
