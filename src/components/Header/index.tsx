@@ -8,9 +8,11 @@ import NightThemeSwitcher from "../NightThemeSwitch";
 import HiddenDashboard from "./HiddenDashboard";
 
 export default function Header({
+  name,
   privileges,
   theme,
 }: {
+  name: string;
   theme: string;
   privileges: number | null;
 }) {
@@ -47,15 +49,11 @@ export default function Header({
     <header
       ref={headerRef}
       id="floating-header"
-      className={`
-        ${
-          pathname.startsWith("/artigos") ? "fixed" : "static"
-        } top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm 
-        border-b border-base-100 dark:border-dark-base-border 
-        bg-base-200/90 dark:bg-dark-base-300/90 
-      `}
+      className={`${
+        pathname.startsWith("/artigos") ? "fixed" : "static"
+      } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-100 dark:border-dark-base-border bg-base-200/90 dark:bg-dark-base-300/90`}
     >
-      <div className="h-full max-w-webpage mx-auto px-4 smartphone:px-10 tablet:px-20 overflow-hidden">
+      <div className="h-full max-w-webpage mx-auto px-10 tablet:px-20">
         <nav className="w-full h-full flex items-center justify-between">
           <div className="h-full flex items-center">
             <div
@@ -103,7 +101,7 @@ export default function Header({
             </ul>
           </div>
           <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
-            <HiddenDashboard privileges={privileges} />
+            <HiddenDashboard name={name} privileges={privileges} />
             <li className="flex justify-center items-center h-full">
               <NightThemeSwitcher theme={theme} />
             </li>
