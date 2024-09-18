@@ -1,18 +1,25 @@
+interface ErrorState {
+  titleEmptyError: boolean;
+}
+
 const ArticleEditorTitle = ({
   id,
   text,
   onChange,
   value,
+  errors = null,
   placeholder = "",
 }: {
   id: string;
   text: string;
   value: string;
   onChange: (value: string) => void;
+  errors?: ErrorState | null;
   placeholder?: string;
 }) => {
   return (
     <div
+      id={`${id}-top`}
       className={`
       w-full h-full flex flex-col justify-start items-start overflow-hidden 
       text-base-neutral dark:text-dark-base-neutral 
@@ -32,8 +39,18 @@ const ArticleEditorTitle = ({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="resize-none overflow-hidden w-full h-full border-2 border-base-200 dark:border-dark-base-border rounded-xl p-2 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
+        className={`resize-none overflow-hidden w-full h-full border-2 ${
+          errors?.titleEmptyError
+            ? "border-base-red dark:border-dark-base-red"
+            : "border-base-200 dark:border-dark-base-border focus:outline-blue-500"
+        } rounded-xl p-2 outline-none outline-2 outline-transparent -outline-offset-2 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder 
+      `}
       />
+      {errors?.titleEmptyError && (
+        <p className="mt-2 ml-2 text-xs text-base-red dark:text-dark-base-red">
+          O campo <span className="font-extrabold">Título</span> é obrigatório!
+        </p>
+      )}
     </div>
   );
 };

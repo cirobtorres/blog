@@ -21,8 +21,13 @@ export default function HiddenDashboard({
           height={30}
           className="rounded-full"
         />
-        <p className="text-sm text-base-neutral dark:text-dark-base-neutral">
-          Olá, <strong>{name}</strong>
+        <p className="max-w-20 truncate text-sm text-base-neutral dark:text-dark-base-neutral">
+          <Link
+            href="/painel/configurar"
+            className="font-extrabold hover:underline"
+          >
+            {name}
+          </Link>
           <br />
           <button
             onClick={(event) => {

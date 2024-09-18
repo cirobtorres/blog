@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useReducer, useState } from "react";
 import { useRouter } from "next/navigation";
 import { submitArticleCreate, submitArticleUpdate } from "@/lib/article";
 import ArticleOnSubmitButton from "./ArticleOnSubmitButton";
@@ -78,7 +78,7 @@ const ArticleEditorCreateForm = ({
         setIsOpen={setIsOpenModal}
         submitForm={handleSubmit}
         title="Deseja criar esse artigo?"
-        helpText=""
+        helpText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at.Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at."
       />
       <form
         onSubmit={handleSubmit}
@@ -136,48 +136,32 @@ const ArticleEditorCreateForm = ({
           </div>
         </div>
         {radioVal === "private" && (
-          <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              className="flex-shrink-0 fill-base-yellow dark:fill-dark-base-yellow"
-            >
-              <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-            </svg>
-            <span className="text-xs text-base-yellow dark:text-dark-base-yellow">
-              Seu artigo está marcado como <b>privado</b>. Artigos privados só
-              podem ser lidos por você. Manter um artigo como privado é muito
+          <HelpText color="fill-base-yellow dark:fill-dark-base-yellow">
+            <p className="text-xs text-base-yellow dark:text-dark-base-yellow">
+              Seu artigo está marcado como{" "}
+              <span className="font-extrabold">privado</span>. Artigos privados
+              só podem ser lidos por você. Manter um artigo como privado é muito
               útil quando o artigo ainda não está finalizado, ou caso queiramos
               remover o conteúdo da internet sem a necessidade de deletá-lo para
               sempre da base de dados.
-            </span>
-          </div>
+            </p>
+          </HelpText>
         )}
         {radioVal === "public" && (
-          <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              className="flex-shrink-0 fill-base-blue dark:fill-dark-base-blue"
-            >
-              <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-            </svg>
-            <span className="text-xs text-base-blue dark:text-dark-base-blue">
-              Seu artigo está marcado como <b>público</b>. Clicando em salvar,
-              você estará publicando seu artigo na internet para que todos
-              possam lê-lo. Certifique-se de que você tenha uma versão final
-              desse artigo.{" "}
-              <b>
+          <HelpText color="fill-base-blue dark:fill-dark-base-blue">
+            <p className="text-xs text-base-blue dark:text-dark-base-blue">
+              Seu artigo está marcado como{" "}
+              <span className="font-extrabold">público</span>. Clicando em
+              salvar, você estará publicando seu artigo na internet para que
+              todos possam lê-lo. Certifique-se de que você tenha uma versão
+              final desse artigo.{" "}
+              <span className="font-extrabold">
                 Todas as modificações a esse artigo a partir de então exibirão o
                 histórico de edições para todos os usuários
-              </b>
+              </span>
               .
-            </span>
-          </div>
+            </p>
+          </HelpText>
         )}
         <div className="mt-4 text-center">
           <ArticleOnSubmitButton
@@ -188,6 +172,37 @@ const ArticleEditorCreateForm = ({
       </form>
     </>
   );
+};
+
+const initialState = {
+  titleEmptyError: false,
+  subtitleEmptyError: false,
+};
+
+interface ErrorState {
+  titleEmptyError: boolean;
+  subtitleEmptyError: boolean;
+}
+
+enum ErrorTypes {
+  TITLE_EMPTY = "TITLE_EMPTY",
+  SUBTITLE_EMPTY = "SUBTITLE_EMPTY",
+}
+
+interface ValidActions {
+  type: ErrorTypes;
+  payload: boolean;
+}
+
+const reducer = (state: ErrorState, action: ValidActions) => {
+  switch (action.type) {
+    case "TITLE_EMPTY":
+      return { ...state, titleEmptyError: action.payload };
+    case "SUBTITLE_EMPTY":
+      return { ...state, subtitleEmptyError: action.payload };
+    default:
+      return state;
+  }
 };
 
 const ArticleEditorUpdateForm = ({
@@ -205,8 +220,8 @@ const ArticleEditorUpdateForm = ({
   private: boolean;
   blocked_for_replies: boolean;
 }) => {
+  const [errors, dispatchErrors] = useReducer(reducer, initialState);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [errors, setErrors] = useState(null);
   const [title, setTitle] = useState(articleTitle);
   const [subtitle, setSubtitle] = useState(articleSubTitle);
   const [body, setBody] = useState(articleBody);
@@ -220,11 +235,34 @@ const ArticleEditorUpdateForm = ({
   const router = useRouter();
 
   const handleSubmit = async () => {
-    setLoading(!loading);
-    await submitArticleUpdate(id, title, subtitle, body, radioVal, checkVal);
-    setLoading(!loading);
-    // TODO: Open FlashMessage
-    router.push("/painel");
+    setLoading(true);
+    if (!title) {
+      dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
+    } else {
+      dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: false });
+    }
+    if (!subtitle) {
+      dispatchErrors({ type: ErrorTypes.SUBTITLE_EMPTY, payload: true });
+    } else {
+      dispatchErrors({ type: ErrorTypes.SUBTITLE_EMPTY, payload: false });
+    }
+    if (!title) {
+      const heading = document.getElementById("article-title-top");
+      heading?.scrollIntoView({ behavior: "smooth" });
+      setLoading(false);
+      return;
+    } else if (!subtitle) {
+      const heading = document.getElementById("article-subtitle-top");
+      heading?.scrollIntoView({ behavior: "smooth" });
+      setLoading(false);
+      return;
+    } else {
+      // if (!Object.keys(errors).length) {
+      await submitArticleUpdate(id, title, subtitle, body, radioVal, checkVal);
+      // TODO: Open FlashMessage
+      router.push("/painel");
+    }
+    setLoading(false);
   };
 
   return (
@@ -247,6 +285,7 @@ const ArticleEditorUpdateForm = ({
             placeholder="Título do artigo"
             value={title}
             onChange={setTitle}
+            errors={errors}
           />
           <ArticleEditorSubtitle
             id="article-subtitle"
@@ -254,6 +293,7 @@ const ArticleEditorUpdateForm = ({
             placeholder="Texto do subheading do artigo"
             value={subtitle}
             onChange={setSubtitle}
+            errors={errors}
           />
           <div className="flex justify-center">
             <ArticleEditor content={body} onChange={setBody} />
@@ -292,48 +332,32 @@ const ArticleEditorUpdateForm = ({
           </div>
         </div>
         {radioVal === "private" && (
-          <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              className="flex-shrink-0 fill-base-yellow dark:fill-dark-base-yellow"
-            >
-              <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-            </svg>
-            <span className="text-xs text-base-yellow dark:text-dark-base-yellow">
-              Seu artigo está marcado como <b>privado</b>. Artigos privados só
-              podem ser lidos por você. Manter um artigo como privado é muito
+          <HelpText color="fill-base-yellow dark:fill-dark-base-yellow">
+            <p className="text-xs text-base-yellow dark:text-dark-base-yellow">
+              Seu artigo está marcado como{" "}
+              <span className="font-extrabold">privado</span>. Artigos privados
+              só podem ser lidos por você. Manter um artigo como privado é muito
               útil quando o artigo ainda não está finalizado, ou caso queiramos
               remover o conteúdo da internet sem a necessidade de deletá-lo para
               sempre da base de dados.
-            </span>
-          </div>
+            </p>
+          </HelpText>
         )}
         {radioVal === "public" && (
-          <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              className="flex-shrink-0 fill-base-blue dark:fill-dark-base-blue"
-            >
-              <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-            </svg>
-            <span className="text-xs text-base-blue dark:text-dark-base-blue">
-              Seu artigo está marcado como <b>público</b>. Clicando em salvar,
-              você estará publicando seu artigo na internet para que todos
-              possam lê-lo. Certifique-se de que você tenha uma versão final
-              desse artigo.{" "}
-              <b>
+          <HelpText color="fill-base-blue dark:fill-dark-base-blue">
+            <p className="text-xs text-base-blue dark:text-dark-base-blue">
+              Seu artigo está marcado como{" "}
+              <span className="font-extrabold">público</span>. Clicando em
+              salvar, você estará publicando seu artigo na internet para que
+              todos possam lê-lo. Certifique-se de que você tenha uma versão
+              final desse artigo.{" "}
+              <span className="font-extrabold">
                 Todas as modificações a esse artigo a partir de então exibirão o
                 histórico de edições para todos os usuários
-              </b>
+              </span>
               .
-            </span>
-          </div>
+            </p>
+          </HelpText>
         )}
         <div className="mt-4 text-center">
           <ArticleOnSubmitButton
@@ -343,6 +367,29 @@ const ArticleEditorUpdateForm = ({
         </div>
       </form>
     </>
+  );
+};
+
+const HelpText = ({
+  children,
+  color,
+}: {
+  children: React.ReactNode;
+  color: string;
+}) => {
+  return (
+    <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        className={`flex-shrink-0 ${color}`}
+      >
+        <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+      </svg>
+      {children}
+    </div>
   );
 };
 
