@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { FaGithub, FaRegCopyright } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaRegCopyright } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -18,15 +17,6 @@ export default function Footer() {
               className="text-base-green dark:text-dark-base-green hover:underline"
             >
               Propose a fix to it on GitHub
-            </Link>
-          </span>
-          <span className="text-sm flex items-center gap-3 text-base-neutral dark:text-dark-base-neutral">
-            You may find me on
-            <Link href="/">
-              <FaGithub />
-            </Link>
-            <Link href="/">
-              <FaXTwitter />
             </Link>
           </span>
           <span className="text-sm flex items-center gap-1 text-base-neutral dark:text-dark-base-neutral">

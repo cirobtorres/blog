@@ -9,10 +9,12 @@ import HiddenDashboard from "./HiddenDashboard";
 
 export default function Header({
   name,
+  picture,
   privileges,
   theme,
 }: {
   name: string;
+  picture: string;
   theme: string;
   privileges: number | null;
 }) {
@@ -101,7 +103,11 @@ export default function Header({
             </ul>
           </div>
           <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
-            <HiddenDashboard name={name} privileges={privileges} />
+            <HiddenDashboard
+              name={name}
+              picture={picture}
+              privileges={privileges}
+            />
             <li className="flex justify-center items-center h-full">
               <NightThemeSwitcher theme={theme} />
             </li>
