@@ -273,6 +273,12 @@ select:-webkit-autofill:focus {
     cursor: default;
     background: var(--dark-base-neutral-hover);
   }
+  /*------------------------------Modal-Shown-(Fixed-Body)------------------------------*/
+  .modal-shown {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
   /*------------------------------Checkbox------------------------------*/
   .checkbox-wrapper-30 .checkbox {
     --brdr: var(--base-neutral);

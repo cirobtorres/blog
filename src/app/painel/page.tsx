@@ -46,16 +46,40 @@ export default async function DashboardPage() {
         </Link>
         <Search />
       </div>
-      <div className="py-4">
+      <div className="flex justify-between py-4">
         <h1 className="text-xl text-base-neutral dark:text-dark-base-neutral">
           Artigos de: <strong>{user?.user_metadata.name}</strong>
         </h1>
+        <div className="flex gap-1 items-center">
+          <div className="px-2">
+            <span className="flex gap-1 items-center text-xs text-base-neutral dark:text-dark-base-neutral">
+              <RoundNotification color="#ef4444" />
+              Artigos privados
+            </span>
+          </div>
+          <div className="px-2">
+            <span className="flex gap-1 items-center text-xs text-base-neutral dark:text-dark-base-neutral">
+              <RoundNotification color="#eab308" />
+              Comentários bloqueados
+            </span>
+          </div>
+        </div>
       </div>
       {articles && (
         <ul className="grid grid-cols-3 max-[800px]:grid-cols-2 gap-3">
           {articles.map(
             (
-              { id, title, sub_title, slug, body, created_at, updated_at },
+              {
+                id,
+                title,
+                sub_title,
+                slug,
+                body,
+                created_at,
+                updated_at,
+                private: privateArticle,
+                blocked_for_replies,
+              },
               index
             ) => (
               <li
@@ -66,7 +90,17 @@ export default async function DashboardPage() {
                   href={`/painel/criar-artigo/${slug}/${id}`}
                   className="h-full"
                 >
-                  <article className="h-full flex flex-col p-4">
+                  <article className="relative h-full flex flex-col p-4">
+                    {(privateArticle || blocked_for_replies) && (
+                      <div className="flex gap-1 items-center absolute right-4 top-4">
+                        {privateArticle && (
+                          <RoundNotification color="#ef4444" />
+                        )}
+                        {blocked_for_replies && (
+                          <RoundNotification color="#eab308" />
+                        )}
+                      </div>
+                    )}
                     <h2 className="line-clamp-2 text-base font-extrabold text-base-green dark:text-dark-base-green mb-2">
                       {title}
                     </h2>
@@ -101,3 +135,7 @@ export default async function DashboardPage() {
     </section>
   );
 }
+
+const RoundNotification = ({ color }: { color: string }) => {
+  return <div className="size-2 rounded-full" style={{ background: color }} />;
+};

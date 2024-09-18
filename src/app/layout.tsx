@@ -41,6 +41,7 @@ export default async function RootLayout({
   return (
     <html lang="pt">
       <body
+        id="body"
         className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
         <Header
