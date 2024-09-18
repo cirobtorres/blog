@@ -3,11 +3,9 @@
 import Link from "next/link";
 import Search from "../../components/Search";
 import { createClient } from "../../utils/supabase/server";
-import { IoClose } from "react-icons/io5";
 import { redirect } from "next/navigation";
 import formatDate from "../../functions/formatDate";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import ArticleCard from "../../components/ArticleCard";
 
 export default async function DashboardPage() {
   const supabase = createClient();

@@ -39,13 +39,44 @@ const publicIcon = () => {
   );
 };
 
+const initialState = {
+  titleEmptyError: false,
+  subtitleEmptyError: false,
+};
+
+interface ErrorState {
+  titleEmptyError: boolean;
+  subtitleEmptyError: boolean;
+}
+
+enum ErrorTypes {
+  TITLE_EMPTY = "TITLE_EMPTY",
+  SUBTITLE_EMPTY = "SUBTITLE_EMPTY",
+}
+
+interface ValidActions {
+  type: ErrorTypes;
+  payload: boolean;
+}
+
+const createReducer = (state: ErrorState, action: ValidActions) => {
+  switch (action.type) {
+    case "TITLE_EMPTY":
+      return { ...state, titleEmptyError: action.payload };
+    case "SUBTITLE_EMPTY":
+      return { ...state, subtitleEmptyError: action.payload };
+    default:
+      return state;
+  }
+};
+
 const ArticleEditorCreateForm = ({
   blogUser,
 }: {
   blogUser: { id: string; privileges: number };
 }) => {
+  const [errors, dispatchErrors] = useReducer(createReducer, initialState);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [errors, setErrors] = useState(null);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [body, setBody] = useState("");
@@ -57,18 +88,40 @@ const ArticleEditorCreateForm = ({
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(!loading);
-    await submitArticleCreate(
-      blogUser,
-      title,
-      subtitle,
-      body,
-      radioVal,
-      checkVal
-    );
-    setLoading(!loading);
-    // TODO: Open FlashMessage
-    router.push("/painel");
+    setLoading(true);
+    if (!title) {
+      dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
+    } else {
+      dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: false });
+    }
+    if (!subtitle) {
+      dispatchErrors({ type: ErrorTypes.SUBTITLE_EMPTY, payload: true });
+    } else {
+      dispatchErrors({ type: ErrorTypes.SUBTITLE_EMPTY, payload: false });
+    }
+    if (!title) {
+      const heading = document.getElementById("article-title-top");
+      heading?.scrollIntoView({ behavior: "smooth" });
+      setLoading(false);
+      return;
+    } else if (!subtitle) {
+      const heading = document.getElementById("article-subtitle-top");
+      heading?.scrollIntoView({ behavior: "smooth" });
+      setLoading(false);
+      return;
+    } else {
+      await submitArticleCreate(
+        blogUser,
+        title,
+        subtitle,
+        body,
+        radioVal,
+        checkVal
+      );
+      // TODO: Open FlashMessage
+      router.push("/painel");
+    }
+    setLoading(false);
   };
 
   return (
@@ -91,6 +144,7 @@ const ArticleEditorCreateForm = ({
             placeholder="Título do artigo"
             value={title}
             onChange={setTitle}
+            errors={errors}
           />
           <ArticleEditorSubtitle
             id="article-subtitle"
@@ -98,6 +152,7 @@ const ArticleEditorCreateForm = ({
             placeholder="Texto do subheading do artigo"
             value={subtitle}
             onChange={setSubtitle}
+            errors={errors}
           />
           <div className="flex justify-center">
             <ArticleEditor onChange={setBody} />
@@ -174,27 +229,7 @@ const ArticleEditorCreateForm = ({
   );
 };
 
-const initialState = {
-  titleEmptyError: false,
-  subtitleEmptyError: false,
-};
-
-interface ErrorState {
-  titleEmptyError: boolean;
-  subtitleEmptyError: boolean;
-}
-
-enum ErrorTypes {
-  TITLE_EMPTY = "TITLE_EMPTY",
-  SUBTITLE_EMPTY = "SUBTITLE_EMPTY",
-}
-
-interface ValidActions {
-  type: ErrorTypes;
-  payload: boolean;
-}
-
-const reducer = (state: ErrorState, action: ValidActions) => {
+const updateReducer = (state: ErrorState, action: ValidActions) => {
   switch (action.type) {
     case "TITLE_EMPTY":
       return { ...state, titleEmptyError: action.payload };
@@ -220,7 +255,7 @@ const ArticleEditorUpdateForm = ({
   private: boolean;
   blocked_for_replies: boolean;
 }) => {
-  const [errors, dispatchErrors] = useReducer(reducer, initialState);
+  const [errors, dispatchErrors] = useReducer(updateReducer, initialState);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [title, setTitle] = useState(articleTitle);
   const [subtitle, setSubtitle] = useState(articleSubTitle);
@@ -257,7 +292,6 @@ const ArticleEditorUpdateForm = ({
       setLoading(false);
       return;
     } else {
-      // if (!Object.keys(errors).length) {
       await submitArticleUpdate(id, title, subtitle, body, radioVal, checkVal);
       // TODO: Open FlashMessage
       router.push("/painel");
