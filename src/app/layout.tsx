@@ -45,6 +45,7 @@ export default async function RootLayout({
       >
         <Header
           name={user?.user_metadata.name}
+          picture={user?.user_metadata.picture}
           privileges={blogUser?.privileges}
           theme={theme}
         />

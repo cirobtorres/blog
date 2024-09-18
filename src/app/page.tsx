@@ -10,6 +10,7 @@ export default async function HomePage() {
   const { data: articles, error } = await supabase
     .from("topics")
     .select("*")
+    .eq("private", false)
     .order("created_at", { ascending: false });
   return (
     <>

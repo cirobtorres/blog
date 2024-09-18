@@ -4,20 +4,15 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "../utils/supabase/server";
 import slugify from "../functions/slugify";
 
-const submitArticle = async (
+const submitArticleCreate = async (
   blogUser: { id: string; privileges: number },
   title: string,
   subtitle: string,
-  body: string
+  body: string,
+  radioVal: string,
+  checkVal: string
 ) => {
   const supabase = createClient();
-
-  if (!body) {
-    console.log(
-      "src/lig/article.ts: submitArticle error - body cannot be empty"
-    ); // TODO: needs treatment
-    return;
-  }
 
   const { data: topicsData, error: topicsError } = await supabase
     .from("topics")
@@ -27,9 +22,12 @@ const submitArticle = async (
       sub_title: subtitle,
       slug: slugify(title),
       body,
+      private: radioVal === "private",
+      blocked_for_replies: checkVal === "blocked",
     });
 
   if (topicsError) {
+    console.log(topicsError);
     throw topicsError;
   }
 
@@ -37,4 +35,35 @@ const submitArticle = async (
   return true;
 };
 
-export { submitArticle };
+const submitArticleUpdate = async (
+  id: string,
+  title: string,
+  subtitle: string,
+  body: string,
+  radioVal: string,
+  checkVal: string
+) => {
+  const supabase = createClient();
+
+  const { data: topicsData, error: topicsError } = await supabase
+    .from("topics")
+    .update({
+      title,
+      sub_title: subtitle,
+      slug: slugify(title),
+      body,
+      private: radioVal === "private",
+      blocked_for_replies: checkVal === "blocked",
+    })
+    .eq("id", id);
+
+  if (topicsError) {
+    console.log(topicsError);
+    throw topicsError;
+  }
+
+  revalidatePath("/artigos", "layout");
+  return true;
+};
+
+export { submitArticleCreate, submitArticleUpdate };

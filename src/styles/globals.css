@@ -172,16 +172,19 @@ select:-webkit-autofill:focus {
     color: #442255;
   }
   .editor-blockquote {
+    width: 100%;
     position: relative;
     font-style: italic;
     padding-left: 2.5rem;
+    padding-right: 1rem;
     margin-bottom: 1rem;
   }
   .editor-blockquote p {
     text-indent: 1.5rem;
+    word-break: break-all;
     margin-bottom: 0;
   }
-  .editor-blockquote p::before {
+  .editor-blockquote p:first-child::before {
     content: "“";
     position: absolute;
     font-family: Georgia, "Times New Roman", Times, serif;
@@ -190,10 +193,10 @@ select:-webkit-autofill:focus {
     font-size: 2.5rem;
     color: var(--base-green);
   }
-  .editor-dark-blockquote p::before {
+  .editor-dark-blockquote p:first-child::before {
     color: var(--dark-base-green);
   }
-  .editor-blockquote p::after {
+  .editor-blockquote p:last-child::after {
     content: "”";
     position: absolute;
     font-family: Georgia, "Times New Roman", Times, serif;
@@ -203,8 +206,34 @@ select:-webkit-autofill:focus {
     line-height: 0.25rem;
     color: var(--base-green);
   }
-  .editor-dark-blockquote p::after {
+  .editor-dark-blockquote p:last-child::after {
     color: var(--dark-base-green);
+  }
+  .editor-cite {
+    color: var(--base-neutral);
+    position: relative;
+    font-style: normal;
+    width: 100%;
+    padding-left: 2.5rem;
+    text-indent: 1.5rem;
+    padding-right: 1rem;
+    margin-bottom: 1rem;
+  }
+  .editor-cite::before {
+    content: "";
+    height: 2px;
+    width: 16px;
+    position: absolute;
+    left: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--base-green);
+  }
+  .editor-dark-cite {
+    color: var(--dark-base-neutral);
+  }
+  .editor-dark-cite::before {
+    background: var(--dark-base-green);
   }
   /*------------------------------Scrollbar------------------------------*/
   .scrollbar::-webkit-scrollbar {
@@ -249,7 +278,7 @@ select:-webkit-autofill:focus {
     --brdr: var(--base-neutral);
     --brdr-actv: var(--base-neutral);
     --brdr-hovr: var(--base-neutral-hover);
-    --stroke: var(--base-neutral);
+    --stroke: var(--base-green);
     --dur: calc((var(--size, 2) / 2) * 0.6s);
     width: calc(var(--size, 1) * 22px);
   }
@@ -257,7 +286,7 @@ select:-webkit-autofill:focus {
     --brdr: var(--dark-base-neutral);
     --brdr-actv: var(--dark-base-neutral);
     --brdr-hovr: var(--dark-base-neutral-hover);
-    --stroke: var(--dark-base-neutral);
+    --stroke: var(--dark-base-green);
   }
   .checkbox-wrapper-30 .checkbox input {
     border-radius: calc(var(--size, 1) * 4px);

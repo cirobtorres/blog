@@ -1,4 +1,16 @@
-export default function CheckBox({ id, text }: { id: string; text: string }) {
+import { MouseEventHandler } from "react";
+
+export default function CheckBox<T extends string>({
+  id,
+  text,
+  setValue,
+  checked = false,
+}: {
+  id: string;
+  text: string;
+  setValue: MouseEventHandler;
+  checked?: boolean;
+}) {
   return (
     <label
       htmlFor={id}
@@ -9,9 +21,10 @@ export default function CheckBox({ id, text }: { id: string; text: string }) {
       >
         <input
           id={id}
-          value={id}
           name={id}
           type="checkbox"
+          onClick={setValue}
+          checked={checked}
           className="block w-full h-full m-0 p-0 outline-none cursor-pointer bg-base-100 dark:bg-dark-base-100 [-webkit-appearance:none] [-moz-appearance:none] [-webkit-tap-highlight-color:transparent]"
         />
         <svg className="block w-full h-full fill-none left-0 top-0 pointer-events-none stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">

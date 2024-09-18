@@ -15,6 +15,7 @@ import {
 import { Editor } from "@tiptap/core";
 import { useCallback } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
+import { BsChatSquareQuoteFill } from "react-icons/bs";
 
 const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -85,10 +86,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         }}
         className={`${
           editor.isActive("bold")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaBold
           className={`${
@@ -107,10 +107,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`${
           editor.isActive("italic")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaItalic
           className={`${
@@ -129,10 +128,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`${
           editor.isActive("strike")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaStrikethrough
           className={`${
@@ -151,7 +149,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         className={`${
           editor.isActive("highlight")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
@@ -183,10 +181,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={`${
           editor.isActive("heading", { level: 3 })
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaHeading
           className={`${
@@ -204,7 +201,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         tabIndex={-1}
         onClick={setLink}
         className={`${
-          editor.isActive("link") ? "bg-base-100 dark:bg-dark-base-100" : ""
+          editor.isActive("link") ? "bg-base-100 dark:bg-dark-base-150" : ""
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaLink
@@ -233,10 +230,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`${
           editor.isActive("bulletList")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaList
           className={`${
@@ -255,10 +251,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`${
           editor.isActive("orderedList")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaListOl
           className={`${
@@ -270,18 +265,53 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         />
         <Balloon text="Lista ordenada" />
       </button>
-      {/*------------------------------Quote------------------------------*/}
+      {/*------------------------------Blockquote------------------------------*/}
       <button
         type="button"
         tabIndex={-1}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`${
-          editor.isActive("bold") ? "is-active" : ""
+          editor.isActive("blockquote")
+            ? "bg-base-100 dark:bg-dark-base-150"
+            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
-        <FaQuoteLeft className="absolute top-[30%] left-[20%] text-xs transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green" />
-        <FaQuoteRight className="absolute bottom-[30%] right-[20%] text-xs transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green" />
-        <Balloon text="Citar" />
+        <FaQuoteLeft
+          className={`${
+            editor.isActive("blockquote")
+              ? "text-base-green dark:text-dark-base-green"
+              : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          } absolute top-[30%] left-[20%] text-xs transition-colors duration-300`}
+        />
+        <FaQuoteRight
+          className={`${
+            editor.isActive("blockquote")
+              ? "text-base-green dark:text-dark-base-green"
+              : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          } absolute bottom-[30%] right-[20%] text-xs transition-colors duration-300`}
+        />
+        <Balloon text="Citação" />
+      </button>
+      {/*------------------------------Cite------------------------------*/}
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().setNode("cite").run()}
+        className={`${
+          editor.isActive("cite")
+            ? "bg-base-100 dark:bg-dark-base-150"
+            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+      >
+        <BsChatSquareQuoteFill
+          className={`${
+            editor.isActive("cite")
+              ? "text-base-green dark:text-dark-base-green"
+              : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          } transition-colors duration-300
+        `}
+        />
+        <Balloon text="Autor" />
       </button>
       {/*------------------------------CodeBlockButton------------------------------*/}
       <button
@@ -290,10 +320,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`${
           editor.isActive("codeBlock")
-            ? "bg-base-100 dark:bg-dark-base-100"
+            ? "bg-base-100 dark:bg-dark-base-150"
             : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
-      `}
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
       >
         <FaCode
           className={`${

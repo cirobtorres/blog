@@ -1,138 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { submitArticleCreate, submitArticleUpdate } from "@/lib/article";
 import ArticleOnSubmitButton from "./ArticleOnSubmitButton";
 import ArticleEditor from "./ArticleEditor";
-import { useState } from "react";
-import { submitArticle } from "../../lib/article";
-import { User } from "@supabase/supabase-js";
-import { redirect, useRouter } from "next/navigation";
 import CheckBox from "../CheckBox";
-
-const ArticleEditorLabel = ({
-  id,
-  text,
-  value,
-  onChange,
-  placeholder = "",
-}: {
-  id: string;
-  text: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}) => {
-  return (
-    <div
-      className={`
-      w-full h-full flex flex-col justify-start items-start overflow-hidden 
-      text-base-neutral dark:text-dark-base-neutral 
-      outline-none border-none 
-    `}
-    >
-      <label
-        htmlFor={id}
-        className="w-full cursor-pointer font-extrabold text-xl p-2"
-      >
-        {text}
-      </label>
-      <input
-        id={id}
-        name={id}
-        type="text"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="w-full h-full border-2 border-base-200 dark:border-dark-base-border rounded-xl p-2 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
-      />
-    </div>
-  );
-};
-
-const SubArticleEditorLabel = ({
-  id,
-  text,
-  value,
-  onChange,
-  placeholder = "",
-}: {
-  id: string;
-  text: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}) => {
-  return (
-    <div
-      className={`
-      w-full h-full flex flex-col justify-start items-start overflow-hidden 
-      text-base-neutral dark:text-dark-base-neutral 
-      outline-none border-none 
-    `}
-    >
-      <label
-        htmlFor={id}
-        className="w-full cursor-pointer font-extrabold text-xl p-2"
-      >
-        {text}
-      </label>
-      <textarea
-        id={id}
-        name={id}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        rows={2}
-        placeholder={placeholder}
-        className="w-full h-full border-2 border-base-200 dark:border-dark-base-border rounded-xl p-2 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
-      />
-    </div>
-  );
-};
-
-const RadioInput = ({
-  id,
-  name,
-  label,
-  helpText,
-  Icon,
-  onChange,
-  defaultChecked = false,
-}: {
-  id: string;
-  name: string;
-  label: string;
-  helpText: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  onChange: (value: string) => void;
-  defaultChecked?: boolean;
-}) => {
-  const handleOnChange = () => {
-    onChange(id);
-  };
-  return (
-    <div className="flex items-center gap-4">
-      <input
-        type="radio"
-        name={name}
-        id={id}
-        onChange={handleOnChange}
-        defaultChecked={defaultChecked}
-        className="hidden peer"
-      />
-      <div className="relative size-4 rounded-full outline outline-2 outline-offset-2 outline-base-neutral dark:outline-dark-base-neutral peer-checked:[&_div]:size-full overflow-hidden ">
-        <div className="transition-all absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-0 rounded-full bg-base-green dark:bg-dark-base-green" />
-      </div>
-      <label htmlFor={id} className="flex items-center gap-4 cursor-pointer">
-        <Icon />
-        <p className="flex flex-col text-base-neutral dark:text-dark-base-neutral">
-          <span className="font-extrabold text-base-green dark:text-dark-base-green">
-            {label}
-          </span>
-          <span className="text-xs">{helpText}</span>
-        </p>
-      </label>
-    </div>
-  );
-};
+import ArticleEditorTitle from "./ArticleEditorTitle";
+import ArticleEditorSubtitle from "./ArticleEditorSubtitle";
+import RadioInput from "../RadioInput";
 
 const privateIcon = () => {
   return (
@@ -162,24 +38,34 @@ const publicIcon = () => {
   );
 };
 
-const ArticleEditorForm = ({
+const ArticleEditorCreateForm = ({
   blogUser,
 }: {
   blogUser: { id: string; privileges: number };
 }) => {
+  const [errors, setErrors] = useState(null);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [body, setBody] = useState("");
-  const [privateArticle, setPrivateArticle] = useState("private-radio");
-  // const [blockReplies, setBlockReplies] = useState("");
+  const [radioVal, setRadioVal] = useState<"private" | "public">("private");
+  const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">(
+    "unblocked"
+  );
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = await submitArticle(blogUser, title, subtitle, body);
-    if (form) {
-      router.push("/");
-    }
+  const handleSubmit = async () => {
+    setLoading(!loading);
+    await submitArticleCreate(
+      blogUser,
+      title,
+      subtitle,
+      body,
+      radioVal,
+      checkVal
+    );
+    setLoading(!loading);
+    router.push("/");
   };
 
   return (
@@ -188,19 +74,19 @@ const ArticleEditorForm = ({
       className="w-full max-w-3xl mx-auto my-4 flex flex-col items-center"
     >
       <div className="w-full flex flex-col gap-3">
-        <ArticleEditorLabel
+        <ArticleEditorTitle
           id="article-title"
           text="Título"
+          placeholder="Título do artigo"
           value={title}
           onChange={setTitle}
-          placeholder="Título do artigo"
         />
-        <SubArticleEditorLabel
+        <ArticleEditorSubtitle
           id="article-subtitle"
           text="Subtítulo"
+          placeholder="Texto do subheading do artigo"
           value={subtitle}
           onChange={setSubtitle}
-          placeholder="Texto do subheading do artigo"
         />
         <div className="flex justify-center">
           <ArticleEditor onChange={setBody} />
@@ -208,28 +94,38 @@ const ArticleEditorForm = ({
         <div className="flex justify-center items-center gap-4 ml-1">
           <RadioInput
             id="private-radio"
-            name="private-or-public-radio-check"
+            name="article-privacy"
             label="Privado"
             helpText="Mantenha o artigo em segredo."
-            onChange={setPrivateArticle}
+            value={radioVal}
+            checked="private"
             Icon={privateIcon}
-            defaultChecked
+            setValue={setRadioVal}
           />
           <RadioInput
             id="public-radio"
-            name="private-or-public-radio-check"
+            name="article-privacy"
             label="Público"
             helpText="Publique o artigo globalmente."
-            onChange={setPrivateArticle}
+            value={radioVal}
+            checked="public"
             Icon={publicIcon}
+            setValue={setRadioVal}
           />
         </div>
         <div className="flex justify-center mb-3">
-          <CheckBox id="block-replies" text="Bloquear comentários?" />
+          <CheckBox
+            id="block-replies"
+            text="Bloquear comentários?"
+            checked={checkVal === "blocked"}
+            setValue={() =>
+              setCheckVal(checkVal === "blocked" ? "unblocked" : "blocked")
+            }
+          />
         </div>
       </div>
-      {privateArticle === "private-radio" && (
-        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y border-base-border dark:border-dark-base-border">
+      {radioVal === "private" && (
+        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -248,8 +144,8 @@ const ArticleEditorForm = ({
           </span>
         </div>
       )}
-      {privateArticle === "public-radio" && (
-        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y border-base-border dark:border-dark-base-border">
+      {radioVal === "public" && (
+        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -273,10 +169,153 @@ const ArticleEditorForm = ({
         </div>
       )}
       <div className="mt-4 text-center">
-        <ArticleOnSubmitButton />
+        <ArticleOnSubmitButton loading={loading} />
       </div>
     </form>
   );
 };
 
-export default ArticleEditorForm;
+const ArticleEditorUpdateForm = ({
+  id,
+  title: articleTitle,
+  sub_title: articleSubTitle,
+  body: articleBody,
+  private: privateArticle,
+  blocked_for_replies,
+}: {
+  id: string;
+  title: string;
+  sub_title: string;
+  body: string;
+  private: boolean;
+  blocked_for_replies: boolean;
+}) => {
+  const [errors, setErrors] = useState(null);
+  const [title, setTitle] = useState(articleTitle);
+  const [subtitle, setSubtitle] = useState(articleSubTitle);
+  const [body, setBody] = useState(articleBody);
+  const [radioVal, setRadioVal] = useState<"private" | "public">(
+    privateArticle ? "private" : "public"
+  );
+  const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">(
+    blocked_for_replies ? "blocked" : "unblocked"
+  );
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    setLoading(!loading);
+    await submitArticleUpdate(id, title, subtitle, body, radioVal, checkVal);
+    setLoading(!loading);
+    router.push("/");
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-3xl mx-auto my-4 flex flex-col items-center"
+    >
+      <div className="w-full flex flex-col gap-3">
+        <ArticleEditorTitle
+          id="article-title"
+          text="Título"
+          placeholder="Título do artigo"
+          value={title}
+          onChange={setTitle}
+        />
+        <ArticleEditorSubtitle
+          id="article-subtitle"
+          text="Subtítulo"
+          placeholder="Texto do subheading do artigo"
+          value={subtitle}
+          onChange={setSubtitle}
+        />
+        <div className="flex justify-center">
+          <ArticleEditor content={body} onChange={setBody} />
+        </div>
+        <div className="flex justify-center items-center gap-4 ml-1">
+          <RadioInput
+            id="private-radio"
+            name="article-privacy"
+            label="Privado"
+            helpText="Mantenha o artigo em segredo."
+            value={radioVal}
+            checked="private"
+            Icon={privateIcon}
+            setValue={setRadioVal}
+          />
+          <RadioInput
+            id="public-radio"
+            name="article-privacy"
+            label="Público"
+            helpText="Publique o artigo globalmente."
+            value={radioVal}
+            checked="public"
+            Icon={publicIcon}
+            setValue={setRadioVal}
+          />
+        </div>
+        <div className="flex justify-center mb-3">
+          <CheckBox
+            id="block-replies"
+            text="Bloquear comentários?"
+            checked={checkVal === "blocked"}
+            setValue={() =>
+              setCheckVal(checkVal === "blocked" ? "unblocked" : "blocked")
+            }
+          />
+        </div>
+      </div>
+      {radioVal === "private" && (
+        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            className="flex-shrink-0 fill-base-yellow dark:fill-dark-base-yellow"
+          >
+            <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+          </svg>
+          <span className="text-xs text-base-yellow dark:text-dark-base-yellow">
+            Seu artigo está marcado como <b>privado</b>. Artigos privados só
+            podem ser lidos por você. Manter um artigo como privado é muito útil
+            quando o artigo ainda não está finalizado, ou caso queiramos remover
+            o conteúdo da internet sem a necessidade de deletá-lo para sempre da
+            base de dados.
+          </span>
+        </div>
+      )}
+      {radioVal === "public" && (
+        <div className="flex justify-center items-center gap-2 w-full my-1 py-2 border-y-2 border-base-200 dark:border-dark-base-border">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            className="flex-shrink-0 fill-base-blue dark:fill-dark-base-blue"
+          >
+            <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+          </svg>
+          <span className="text-xs text-base-blue dark:text-dark-base-blue">
+            Seu artigo está marcado como <b>público</b>. Clicando em salvar,
+            você estará publicando seu artigo na internet para que todos possam
+            lê-lo. Certifique-se de que você tenha uma versão final desse
+            artigo.{" "}
+            <b>
+              Todas as modificações a esse artigo a partir de então exibirão o
+              histórico de edições para todos os usuários
+            </b>
+            .
+          </span>
+        </div>
+      )}
+      <div className="mt-4 text-center">
+        <ArticleOnSubmitButton loading={loading} />
+      </div>
+    </form>
+  );
+};
+
+export default ArticleEditorCreateForm;
+export { ArticleEditorUpdateForm };
