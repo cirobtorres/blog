@@ -31,7 +31,7 @@ const submitArticleCreate = async (
     throw topicsError;
   }
 
-  revalidatePath("/artigos", "layout");
+  revalidatePath("/painel", "layout");
   return true;
 };
 
@@ -62,8 +62,25 @@ const submitArticleUpdate = async (
     throw topicsError;
   }
 
-  revalidatePath("/artigos", "layout");
+  revalidatePath("/painel", "layout");
   return true;
 };
 
-export { submitArticleCreate, submitArticleUpdate };
+const articleDelete = async (id: string) => {
+  const supabase = createClient();
+
+  const { error: topicsError } = await supabase
+    .from("topics")
+    .delete()
+    .eq("id", id);
+
+  if (topicsError) {
+    console.log(topicsError);
+    throw topicsError;
+  }
+
+  revalidatePath("/painel", "layout");
+  return true;
+};
+
+export { submitArticleCreate, submitArticleUpdate, articleDelete };

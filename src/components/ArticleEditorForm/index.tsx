@@ -2,14 +2,21 @@
 
 import { useReducer, useState } from "react";
 import { useRouter } from "next/navigation";
-import { submitArticleCreate, submitArticleUpdate } from "@/lib/article";
-import ArticleOnSubmitButton from "./ArticleOnSubmitButton";
+import {
+  articleDelete,
+  submitArticleCreate,
+  submitArticleUpdate,
+} from "@/lib/article";
+import {
+  ArticleDeleteButton,
+  ArticleOnSubmitButton,
+} from "./ArticleOnSubmitButton";
 import ArticleEditor from "./ArticleEditor";
 import CheckBox from "../CheckBox";
 import ArticleEditorTitle from "./ArticleEditorTitle";
 import ArticleEditorSubtitle from "./ArticleEditorSubtitle";
 import RadioInput from "../RadioInput";
-import ConfirmationModal from "../Modals";
+import { SubmitConfirmationModal, DeleteConfirmationModal } from "../Modals";
 
 const privateIcon = () => {
   return (
@@ -126,7 +133,7 @@ const ArticleEditorCreateForm = ({
 
   return (
     <>
-      <ConfirmationModal
+      <SubmitConfirmationModal
         isOpen={isOpenModal}
         setIsOpen={setIsOpenModal}
         submitForm={handleSubmit}
@@ -256,7 +263,8 @@ const ArticleEditorUpdateForm = ({
   blocked_for_replies: boolean;
 }) => {
   const [errors, dispatchErrors] = useReducer(updateReducer, initialState);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [title, setTitle] = useState(articleTitle);
   const [subtitle, setSubtitle] = useState(articleSubTitle);
   const [body, setBody] = useState(articleBody);
@@ -266,11 +274,12 @@ const ArticleEditorUpdateForm = ({
   const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">(
     blocked_for_replies ? "blocked" : "unblocked"
   );
-  const [loading, setLoading] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setLoadingUpdate(true);
     if (!title) {
       dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
     } else {
@@ -284,29 +293,42 @@ const ArticleEditorUpdateForm = ({
     if (!title) {
       const heading = document.getElementById("article-title-top");
       heading?.scrollIntoView({ behavior: "smooth" });
-      setLoading(false);
+      setLoadingUpdate(false);
       return;
     } else if (!subtitle) {
       const heading = document.getElementById("article-subtitle-top");
       heading?.scrollIntoView({ behavior: "smooth" });
-      setLoading(false);
+      setLoadingUpdate(false);
       return;
     } else {
       await submitArticleUpdate(id, title, subtitle, body, radioVal, checkVal);
       // TODO: Open FlashMessage
       router.push("/painel");
     }
-    setLoading(false);
+    setLoadingUpdate(false);
+  };
+
+  const handleDelete = async () => {
+    setLoadingDelete(true);
+    await articleDelete(id);
+    // TODO: Open FlashMessage
+    router.push("/painel");
+    // setLoadingDelete(false);
   };
 
   return (
     <>
-      <ConfirmationModal
-        isOpen={isOpenModal}
-        setIsOpen={setIsOpenModal}
+      <SubmitConfirmationModal
+        isOpen={isOpenUpdateModal}
+        setIsOpen={setIsOpenUpdateModal}
         submitForm={handleSubmit}
         title="Deseja salvar esse artigo?"
         helpText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at.Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at."
+      />
+      <DeleteConfirmationModal
+        isOpen={isOpenDeleteModal}
+        setIsOpen={setIsOpenDeleteModal}
+        submitForm={handleDelete}
       />
       <form
         onSubmit={handleSubmit}
@@ -393,10 +415,14 @@ const ArticleEditorUpdateForm = ({
             </p>
           </HelpText>
         )}
-        <div className="mt-4 text-center">
+        <div className="flex items-center gap-1 mt-4 text-center">
+          <ArticleDeleteButton
+            modalConfirmation={setIsOpenDeleteModal}
+            loading={loadingDelete}
+          />
           <ArticleOnSubmitButton
-            modalConfirmation={setIsOpenModal}
-            loading={loading}
+            modalConfirmation={setIsOpenUpdateModal}
+            loading={loadingUpdate}
           />
         </div>
       </form>
