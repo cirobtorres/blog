@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useReducer, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -16,7 +17,9 @@ import CheckBox from "../CheckBox";
 import ArticleEditorTitle from "./ArticleEditorTitle";
 import ArticleEditorSubtitle from "./ArticleEditorSubtitle";
 import RadioInput from "../RadioInput";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { SubmitConfirmationModal, DeleteConfirmationModal } from "../Modals";
+import formatDate from "../../functions/formatDate";
 
 const privateIcon = () => {
   return (
@@ -91,8 +94,8 @@ const ArticleEditorCreateForm = ({
   const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">(
     "unblocked"
   );
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -128,7 +131,7 @@ const ArticleEditorCreateForm = ({
       // TODO: Open FlashMessage
       router.push("/painel");
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   return (
@@ -137,8 +140,9 @@ const ArticleEditorCreateForm = ({
         isOpen={isOpenModal}
         setIsOpen={setIsOpenModal}
         submitForm={handleSubmit}
+        radioVal={radioVal}
+        checkVal={checkVal}
         title="Deseja criar esse artigo?"
-        helpText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at.Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at."
       />
       <form
         onSubmit={handleSubmit}
@@ -225,7 +229,16 @@ const ArticleEditorCreateForm = ({
             </p>
           </HelpText>
         )}
-        <div className="mt-4 text-center">
+        <div className="w-full flex items-center gap-2 mt-3 text-center">
+          <Link
+            href="/painel"
+            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover dark:hover:text-dark-base-neutral-hover border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
+          >
+            <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
+            <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
+              Voltar
+            </span>
+          </Link>
           <ArticleOnSubmitButton
             modalConfirmation={setIsOpenModal}
             loading={loading}
@@ -254,6 +267,8 @@ const ArticleEditorUpdateForm = ({
   body: articleBody,
   private: privateArticle,
   blocked_for_replies,
+  updated_at,
+  created_at,
 }: {
   id: string;
   title: string;
@@ -261,6 +276,8 @@ const ArticleEditorUpdateForm = ({
   body: string;
   private: boolean;
   blocked_for_replies: boolean;
+  updated_at: string;
+  created_at: string;
 }) => {
   const [errors, dispatchErrors] = useReducer(updateReducer, initialState);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
@@ -305,7 +322,7 @@ const ArticleEditorUpdateForm = ({
       // TODO: Open FlashMessage
       router.push("/painel");
     }
-    setLoadingUpdate(false);
+    // setLoadingUpdate(false);
   };
 
   const handleDelete = async () => {
@@ -322,8 +339,9 @@ const ArticleEditorUpdateForm = ({
         isOpen={isOpenUpdateModal}
         setIsOpen={setIsOpenUpdateModal}
         submitForm={handleSubmit}
+        radioVal={radioVal}
+        checkVal={checkVal}
         title="Deseja salvar esse artigo?"
-        helpText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at.Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores doloribus quam praesentium provident laborum labore sequi autem a recusandae? Voluptate deserunt vel corporis, debitis est suscipit consectetur nulla tempore at."
       />
       <DeleteConfirmationModal
         isOpen={isOpenDeleteModal}
@@ -387,6 +405,14 @@ const ArticleEditorUpdateForm = ({
             />
           </div>
         </div>
+        <div className="flex gap-4">
+          <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
+            Atualizado: {formatDate(updated_at)}
+          </time>
+          <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
+            Criado: {formatDate(created_at)}
+          </time>
+        </div>
         {radioVal === "private" && (
           <HelpText color="fill-base-yellow dark:fill-dark-base-yellow">
             <p className="text-xs text-base-yellow dark:text-dark-base-yellow">
@@ -415,7 +441,24 @@ const ArticleEditorUpdateForm = ({
             </p>
           </HelpText>
         )}
-        <div className="flex items-center gap-1 mt-4 text-center">
+        {checkVal === "blocked" && (
+          <HelpText color="fill-base-red dark:fill-dark-base-red">
+            <p className="text-xs text-base-red dark:text-dark-base-red">
+              Os comentários desse artigo estão{" "}
+              <span className="font-extrabold">bloqueados</span> por você.
+            </p>
+          </HelpText>
+        )}
+        <div className="w-full flex items-center gap-2 mt-3 text-center">
+          <Link
+            href="/painel"
+            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover dark:hover:text-dark-base-neutral-hover border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
+          >
+            <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
+            <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
+              Voltar
+            </span>
+          </Link>
           <ArticleDeleteButton
             modalConfirmation={setIsOpenDeleteModal}
             loading={loadingDelete}

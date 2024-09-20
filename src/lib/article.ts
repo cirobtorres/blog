@@ -54,6 +54,7 @@ const submitArticleUpdate = async (
       body,
       private: radioVal === "private",
       blocked_for_replies: checkVal === "blocked",
+      updated_at: new Date(),
     })
     .eq("id", id);
 

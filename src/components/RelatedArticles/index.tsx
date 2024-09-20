@@ -1,11 +1,13 @@
 import { createClient } from "../../utils/supabase/server";
 import ArticleCard from "../ArticleCard";
 
-const RelatedArticles = async () => {
+const RelatedArticles = async ({ id }: { id: string }) => {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("topics")
     .select("*")
+    .eq("private", false)
+    .neq("id", id)
     .order("created_at", { ascending: false });
   const articles = data?.slice(0, 3);
 

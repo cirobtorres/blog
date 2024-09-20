@@ -8,13 +8,15 @@ const SubmitConfirmationModal = ({
   setIsOpen,
   submitForm,
   title,
-  helpText,
+  radioVal,
+  checkVal,
 }: {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   submitForm: () => void;
   title: string;
-  helpText: string;
+  radioVal: "private" | "public";
+  checkVal: "blocked" | "unblocked";
 }) => {
   const handleClickOutside = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -30,7 +32,7 @@ const SubmitConfirmationModal = ({
         onClick={handleClickOutside}
         className="flex items-center justify-center z-50 fixed inset-0 size-full backdrop-blur-sm bg-black/25"
       >
-        <div className="mix-w-[300px] max-w-[400px] rounded-xl overflow-hidden bg-base-100 dark:bg-dark-base-100">
+        <div className="min-w-[300px] max-w-[450px] rounded-xl overflow-hidden bg-base-100 dark:bg-dark-base-100">
           <div className="flex justify-between gap-1 items-center p-4 bg-base-200 dark:bg-dark-base-300">
             <h1 className="truncate font-extrabold text-base-green dark:text-dark-base-green">
               {title}
@@ -47,23 +49,93 @@ const SubmitConfirmationModal = ({
               <IoClose className="text-2xl" />
             </button>
           </div>
-          <div className="p-4">
-            <p className="text-base-neutral dark:text-dark-base-neutral">
-              {helpText}
-            </p>
+          {radioVal === "private" && (
+            <div className="border-y-[1px] border-base-border dark:border-dark-base-placeholder flex gap-2 items-center p-2 px-8 my-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                className="fill-base-yellow flex-shrink-0"
+              >
+                <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+              </svg>
+              <p className="text-xs text-base-yellow dark:text-dark-base-yellow">
+                Seu artigo está marcado como{" "}
+                <span className="font-extrabold">privado</span>. Artigos
+                privados só podem ser lidos por você. Manter um artigo como
+                privado é muito útil quando o artigo ainda não está finalizado,
+                ou caso queiramos remover o conteúdo da internet sem a
+                necessidade de deletá-lo para sempre da base de dados.
+              </p>
+            </div>
+          )}
+          {radioVal === "public" && (
+            <div className="border-y-[1px] border-base-border dark:border-dark-base-placeholder flex gap-2 items-center p-2 px-8 my-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                className="fill-base-blue flex-shrink-0"
+              >
+                <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+              </svg>
+              <p className="text-xs text-base-blue dark:text-dark-base-blue">
+                Seu artigo está marcado como{" "}
+                <span className="font-extrabold">público</span>. Clicando em
+                salvar, você estará publicando seu artigo na internet para que
+                todos possam lê-lo. Certifique-se de que você tenha uma versão
+                final desse artigo.{" "}
+                <span className="font-extrabold">
+                  Todas as modificações a esse artigo a partir de então exibirão
+                  o histórico de edições para todos os usuários
+                </span>
+                .
+              </p>
+            </div>
+          )}
+          {checkVal === "blocked" && (
+            <div className="border-y-[1px] border-base-border dark:border-dark-base-placeholder flex gap-2 items-center p-2 px-8 my-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                className="fill-base-red flex-shrink-0"
+              >
+                <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+              </svg>
+              <p className="text-xs text-base-red dark:text-dark-base-red">
+                Comentários <span className="font-extrabold">BLOQUEADOS</span>
+              </p>
+            </div>
+          )}
+          <div className="flex items-center justify-between mb-8 px-8">
+            <button
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault();
+                document.body.classList.remove("modal-shown");
+                setIsOpen(false);
+              }}
+              className="w-full h-full flex justify-center items-center px-2 py-1 font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover dark:hover:text-dark-base-neutral-hover"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault();
+                document.body.classList.remove("modal-shown");
+                submitForm();
+                setIsOpen(false);
+              }}
+              className="w-full h-full ml-auto mr-0 flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
+            >
+              Confirmar
+            </button>
           </div>
-          <button
-            type="submit"
-            onClick={(event) => {
-              event.preventDefault();
-              document.body.classList.remove("modal-shown");
-              submitForm();
-              setIsOpen(false);
-            }}
-            className="h-full min-w-32 mx-auto flex justify-center items-center mb-4 px-2 py-1 rounded-xl font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
-          >
-            Confirmar
-          </button>
         </div>
       </dialog>
     )
@@ -100,7 +172,7 @@ const DeleteConfirmationModal = ({
       >
         <div
           ref={ref}
-          className="mix-w-[300px] max-w-[450px] rounded-xl overflow-hidden bg-base-100 dark:bg-dark-base-100"
+          className="min-w-[300px] max-w-[450px] rounded-xl overflow-hidden bg-base-100 dark:bg-dark-base-100"
         >
           <div className="flex justify-between gap-1 items-center py-4 px-8 border-b dark:border-dark-base-placeholder bg-base-200 dark:bg-dark-base-300">
             <h1 className="truncate font-extrabold text-base-green dark:text-dark-base-green">

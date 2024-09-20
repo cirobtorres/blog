@@ -37,7 +37,7 @@ export default async function ArticlePage({ params }: Params) {
             </div>
           </div>
         </section>
-        <RelatedArticles />
+        <RelatedArticles id={data.id} />
       </div>
     );
   } else {
