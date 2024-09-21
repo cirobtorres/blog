@@ -14,7 +14,7 @@ export default async function RootLayout({
   return (
     <div className="relative w-full h-full flex border-b border-base-200 dark:border-dark-base-border">
       <NavBar />
-      <div className="w-full h-full max-w-webpage mx-auto bg-base-100 dark:bg-dark-base-100">
+      <div className="w-full h-full bg-base-100 dark:bg-dark-base-100">
         {children}
       </div>
     </div>

@@ -57,7 +57,7 @@ export default function Header({
     `}
     >
       <div
-        className="h-full px-4" // max-w-webpage mx-auto px-10 tablet:px-20
+        className="h-full pl-4 pr-6" // max-w-webpage mx-auto px-10 tablet:px-20
       >
         <nav className="w-full h-full flex items-center justify-between">
           <div className="h-full flex items-center">

@@ -27,7 +27,7 @@ export default async function CreateArticlePage() {
   }
 
   return (
-    <div className="w-full h-full mx-0">
+    <div className="w-full h-full mx-0 pl-20 pr-6">
       <ArticleEditorCreateForm blogUser={blogUser} />
     </div>
   );

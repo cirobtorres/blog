@@ -169,7 +169,7 @@ const ArticleEditorCreateForm = ({
           <div className="flex justify-center">
             <ArticleEditor onChange={setBody} />
           </div>
-          <div className="flex justify-center items-center gap-4 ml-1">
+          <div className="flex justify-center max-[650px]:flex-col max-[650px]:items-start items-center gap-4 ml-1">
             <RadioInput
               id="private-radio"
               name="article-privacy"
@@ -191,7 +191,7 @@ const ArticleEditorCreateForm = ({
               setValue={setRadioVal}
             />
           </div>
-          <div className="flex justify-center mb-3">
+          <div className="flex justify-center max-[650px]:justify-start mb-3">
             <CheckBox
               id="block-replies"
               text="Bloquear comentários?"
