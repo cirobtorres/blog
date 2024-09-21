@@ -43,7 +43,7 @@ const ArticleEditorSubtitle = ({
           errors?.subtitleEmptyError
             ? "border-base-red dark:border-dark-base-red"
             : "border-base-200 dark:border-dark-base-border focus:outline-blue-500"
-        } rounded-xl p-2 outline-none outline-2 outline-transparent -outline-offset-2 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder 
+        } rounded-xl p-2 transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder 
       `}
       />
       {errors?.subtitleEmptyError && (

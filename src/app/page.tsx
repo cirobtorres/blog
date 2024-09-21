@@ -27,13 +27,13 @@ export default async function HomePage() {
                 </time>
                 <div className="h-full relative hidden smartphone:block">
                   <div className="absolute border-l top-4 left-1/2 -translate-x-1/2 -bottom-4 border-base-300 dark:border-[#2e2f31]" />
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 flex justify-center items-center p-1 min-w-6 rounded-lg  bg-base-200 dark:bg-dark-base-200 border border-base-300 dark:border-[#2e2f31]">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 flex justify-center items-center p-1 min-w-6 rounded-lg bg-base-200 dark:bg-dark-base-200 border border-base-300 dark:border-[#2e2f31]">
                     <span className="text-xs text-base-neutral dark:text-dark-base-neutral">
                       {articles.length - index}
                     </span>
                   </div>
                 </div>
-                <div className="relative">
+                <div className="rounded-2xl transition-[outline] duration-200 outline outline-2 outline-transparent -outline-offset-2 focus-within:outline-blue-500 relative">
                   <ArticleCard {...article} />
                 </div>
               </li>

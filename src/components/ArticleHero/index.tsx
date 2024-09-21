@@ -65,19 +65,23 @@ const ArticleHero = async ({
                     {data.user?.user_metadata.name || "unknown"}
                   </span>
                 </button>
-                <small className="flex flex-nowrap items-center gap-1 smartphone:gap-2 text-xs smartphone:text-base tablet:text-xl font-[700] text-base-neutral dark:text-dark-base-neutral">
-                  <FaClock className="text-sm smartphone:text-base tablet:text-xl" />{" "}
-                  {formatDate(created_at)}
-                </small>
+                <div className="flex flex-col">
+                  <small className="flex flex-nowrap items-center gap-1 smartphone:gap-2 text-xs tablet:text-sm font-[700] text-base-neutral dark:text-dark-base-neutral">
+                    Criado: {formatDate(created_at)}
+                  </small>
+                  <small className="flex flex-nowrap items-center gap-1 smartphone:gap-2 text-xs tablet:text-sm font-[700] text-base-neutral dark:text-dark-base-neutral">
+                    Atualizado: {formatDate(updated_at)}
+                  </small>
+                </div>
                 <Link
                   href="#"
-                  className="flex items-center gap-2 text-xs smartphone:text-base tablet:text-xl font-[700] text-base-neutral dark:text-dark-base-neutral"
+                  className="flex items-center gap-2 text-xs smartphone:text-sm font-[700] text-base-neutral dark:text-dark-base-neutral"
                 >
-                  <IoIosChatbubbles className="text-lg smartphone:text-xl tablet:text-2xl" />{" "}
+                  <IoIosChatbubbles className="text-base smartphone:text-lg" />{" "}
                   4
                 </Link>
-                <button className="flex items-center gap-2 text-xs smartphone:text-base tablet:text-xl font-[700] text-base-neutral dark:text-dark-base-neutral">
-                  <GoHeart className="text-lg smartphone:text-xl tablet:text-2xl" />
+                <button className="flex items-center gap-2 text-xs smartphone:text-sm font-[700] text-base-neutral dark:text-dark-base-neutral">
+                  <GoHeart className="text-base smartphone:text-lg" />
                   {/* <GoHeartFill className="text-lg smartphone:text-xl tablet:text-2xl" /> */}
                   6
                 </button>

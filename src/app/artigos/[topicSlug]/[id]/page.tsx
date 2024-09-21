@@ -22,6 +22,7 @@ export default async function ArticlePage({ params }: Params) {
     .from("topics")
     .select("*")
     .eq("id", params.id)
+    .neq("private", true)
     .single();
 
   if (!error) {

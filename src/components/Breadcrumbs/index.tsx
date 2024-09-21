@@ -12,9 +12,7 @@ export default function Breadcrumbs() {
 
   const artigosIndex = pathname.indexOf("artigos");
   if (artigosIndex !== -1) {
-    pathname = pathname.slice(0, artigosIndex + 1);
-    // pathname = pathname.slice(0, artigosIndex + 2);
-    // pathname[2] = decodeURIComponent(pathname[2]);
+    pathname = pathname.slice(0, artigosIndex + 2);
   }
 
   return (
@@ -25,12 +23,7 @@ export default function Breadcrumbs() {
           className="flex items-center text-base-neutral dark:text-dark-base-neutral"
         >
           {index !== 0 && <RiArrowDropRightLine className="text-3xl" />}
-          <Link
-            href={index === 0 ? "/" : `/${pathname.slice(1).join("/")}`}
-            className="text-sm smartphone:text-base hover:text-base-green-hover dark:hover:text-dark-base-green-hover"
-          >
-            {path}
-          </Link>
+          <p className="text-sm smartphone:text-base">{path}</p>
         </li>
       ))}
     </ul>

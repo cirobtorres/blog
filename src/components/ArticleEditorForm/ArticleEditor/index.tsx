@@ -85,13 +85,13 @@ const ArticleEditor = ({
         },
       }),
     ],
-    autofocus: true,
+    // autofocus: true,
     editable: true,
     injectCSS: false,
     editorProps: {
       attributes: {
         class:
-          "min-h-[200px] max-h-[500px] w-full py-3 px-4 flex flex-col justify-start items-start overflow-x-hidden border-2 border-base-200 dark:border-dark-base-border rounded-xl scrollbar dark:dark-scrollbar outline-none outline-2 outline-transparent outline-offset-0 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite",
+          "min-h-[200px] max-h-[500px] w-full py-3 px-4 flex flex-col justify-start items-start overflow-x-hidden border-2 border-base-200 dark:border-dark-base-border rounded-xl scrollbar dark:dark-scrollbar transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite",
       },
     },
     content,

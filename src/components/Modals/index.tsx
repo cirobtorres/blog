@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import Loading from "../Loading";
 
 const SubmitConfirmationModal = ({
   isOpen,
@@ -10,13 +11,15 @@ const SubmitConfirmationModal = ({
   title,
   radioVal,
   checkVal,
+  loading,
 }: {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  submitForm: () => void;
+  submitForm: () => Promise<void> | void;
   title: string;
   radioVal: "private" | "public";
   checkVal: "blocked" | "unblocked";
+  loading: boolean;
 }) => {
   const handleClickOutside = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -125,15 +128,16 @@ const SubmitConfirmationModal = ({
             </button>
             <button
               type="submit"
-              onClick={(event) => {
+              disabled={loading}
+              onClick={async (event) => {
                 event.preventDefault();
                 document.body.classList.remove("modal-shown");
-                submitForm();
-                setIsOpen(false);
+                await submitForm();
+                // setIsOpen(false);
               }}
-              className="w-full h-full ml-auto mr-0 flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
+              className="w-full h-8 ml-auto mr-0 flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
             >
-              Confirmar
+              {loading ? <Loading size={24} /> : "Confirmar"}
             </button>
           </div>
         </div>
@@ -146,10 +150,12 @@ const DeleteConfirmationModal = ({
   isOpen,
   setIsOpen,
   submitForm,
+  loading,
 }: {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   submitForm: () => void;
+  loading: boolean;
 }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [error, setError] = useState(false);
@@ -270,9 +276,9 @@ const DeleteConfirmationModal = ({
                   setError(true);
                 }
               }}
-              className="w-full h-full ml-auto mr-0 flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-red-500 dark:border-red-100 bg-base-red hover:bg-[#ff8181] dark:bg-dark-base-red dark:hover:bg-[#fd7d7d]"
+              className="w-full h-8 ml-auto mr-0 flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-red-500 dark:border-red-100 bg-base-red hover:bg-[#ff8181] dark:bg-dark-base-red dark:hover:bg-[#fd7d7d]"
             >
-              Confirmar
+              {loading ? <Loading size={24} /> : "Confirmar"}
             </button>
           </div>
         </div>

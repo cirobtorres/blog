@@ -6,6 +6,7 @@ import { FaPython, FaJava, FaHtml5, FaCss3Alt } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoLogoJavascript } from "react-icons/io";
 import { createClient } from "../../utils/supabase/server";
+import formatDate from "@/functions/formatDate";
 // import formatDate from "../../functions/formatDate";
 
 export default async function ArticleCard({
@@ -14,26 +15,26 @@ export default async function ArticleCard({
   title,
   sub_title,
   body,
-  created_at,
+  updated_at,
 }: {
   id: string;
   slug: string;
   title: string;
   sub_title: string;
   body: string;
-  created_at: string;
+  updated_at: string;
 }) {
   const supabase = createClient();
 
   return (
-    <Link href={`/artigos/${slug}/${id}`} className="group">
+    <Link href={`/artigos/${slug}/${id}`} className="outline-none group">
       <article
         className="rounded-2xl overflow-hidden hover:shadow-md hover:bg-base-150 dark:hover:dark:bg-[#2a2e35]" // transition-transform hover:-translate-y-2
       >
         <div className="flex flex-col h-1/2 p-4">
-          {/* <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
-            {formatDate(created_at)}
-          </time> */}
+          <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
+            Última atualização: {formatDate(updated_at)}
+          </time>
           <h2 className="line-clamp-2 text-base font-extrabold text-base-green dark:text-dark-base-green mb-1">
             {title}
           </h2>

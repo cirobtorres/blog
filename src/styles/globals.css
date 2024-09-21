@@ -280,42 +280,47 @@ select:-webkit-autofill:focus {
     overflow: hidden;
   }
   /*------------------------------Checkbox------------------------------*/
-  .checkbox-wrapper-30 .checkbox {
+  .checkbox-wrapper-16 .checkbox {
+    width: calc(var(--size, 1) * 16px);
+  }
+  .checkbox-wrapper-22 .checkbox {
+    width: calc(var(--size, 1) * 22px);
+  }
+  .checkbox-wrapper .checkbox {
     --brdr: var(--base-neutral);
     --brdr-actv: var(--base-neutral);
     --brdr-hovr: var(--base-neutral-hover);
     --stroke: var(--base-green);
     --dur: calc((var(--size, 2) / 2) * 0.6s);
-    width: calc(var(--size, 1) * 22px);
   }
-  .checkbox-wrapper-30 .dark-checkbox {
+  .checkbox-wrapper .dark-checkbox {
     --brdr: var(--dark-base-neutral);
     --brdr-actv: var(--dark-base-neutral);
     --brdr-hovr: var(--dark-base-neutral-hover);
     --stroke: var(--dark-base-green);
   }
-  .checkbox-wrapper-30 .checkbox input {
+  .checkbox-wrapper .checkbox input {
     border-radius: calc(var(--size, 1) * 4px);
     border: calc(var(--newBrdr, var(--size, 1)) * 1px) solid;
     color: var(--newBrdrClr, var(--brdr));
     transition: all calc(var(--dur) / 3) linear;
   }
-  .checkbox-wrapper-30 .checkbox input:hover,
-  .checkbox-wrapper-30 .checkbox input:checked {
+  .checkbox-wrapper .checkbox input:hover,
+  .checkbox-wrapper .checkbox input:checked {
     --newBrdr: calc(var(--size, 1) * 1);
   }
-  .checkbox-wrapper-30 .checkbox input:hover {
+  .checkbox-wrapper .checkbox input:hover {
     --newBrdrClr: var(--brdr-hovr);
   }
-  .checkbox-wrapper-30 .checkbox input:checked {
+  .checkbox-wrapper .checkbox input:checked {
     --newBrdrClr: var(--brdr-actv);
     transition-delay: calc(var(--dur) / 1.3);
   }
-  .checkbox-wrapper-30 .checkbox input:checked + svg {
+  .checkbox-wrapper .checkbox input:checked + svg {
     --dashArray: 16 93;
     --dashOffset: 109;
   }
-  .checkbox-wrapper-30 .checkbox svg {
+  .checkbox-wrapper .checkbox svg {
     stroke: var(--stroke, var(--border-active));
     stroke-dasharray: var(--dashArray, 93);
     stroke-dashoffset: var(--dashOffset, 94);

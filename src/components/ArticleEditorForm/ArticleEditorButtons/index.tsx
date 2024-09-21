@@ -86,9 +86,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         }}
         className={`${
           editor.isActive("bold")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaBold
           className={`${
@@ -107,9 +107,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`${
           editor.isActive("italic")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaItalic
           className={`${
@@ -128,9 +128,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`${
           editor.isActive("strike")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaStrikethrough
           className={`${
@@ -149,9 +149,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         className={`${
           editor.isActive("highlight")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaHighlighter
           className={`${
@@ -181,9 +181,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={`${
           editor.isActive("heading", { level: 3 })
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaHeading
           className={`${
@@ -201,8 +201,10 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         tabIndex={-1}
         onClick={setLink}
         className={`${
-          editor.isActive("link") ? "bg-base-100 dark:bg-dark-base-150" : ""
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+          editor.isActive("link")
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaLink
           className={`transition-colors duration-300 ${
@@ -218,7 +220,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         type="button"
         tabIndex={-1}
         onClick={addImage}
-        className="relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group"
+        className="relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-200 dark:hover:bg-dark-base-100 group"
       >
         <FaImages className="transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green" />
         <Balloon text="Imagem" />
@@ -230,9 +232,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`${
           editor.isActive("bulletList")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaList
           className={`${
@@ -251,9 +253,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`${
           editor.isActive("orderedList")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaListOl
           className={`${
@@ -272,9 +274,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`${
           editor.isActive("blockquote")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaQuoteLeft
           className={`${
@@ -299,9 +301,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().setNode("cite").run()}
         className={`${
           editor.isActive("cite")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <BsChatSquareQuoteFill
           className={`${
@@ -320,9 +322,9 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`${
           editor.isActive("codeBlock")
-            ? "bg-base-100 dark:bg-dark-base-150"
-            : "hover:bg-base-100 dark:hover:bg-dark-base-100"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-150 dark:hover:bg-dark-base-150 group`}
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaCode
           className={`${

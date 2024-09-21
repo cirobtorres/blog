@@ -53,9 +53,12 @@ export default function Header({
       id="floating-header"
       className={`${
         pathname.startsWith("/artigos") ? "fixed" : "static"
-      } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-100 dark:border-dark-base-border bg-base-200/90 dark:bg-dark-base-300/90`}
+      } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-200 dark:border-dark-base-border bg-base-100/80 dark:bg-dark-base-100/80
+    `}
     >
-      <div className="h-full max-w-webpage mx-auto px-10 tablet:px-20">
+      <div
+        className="h-full px-4" // max-w-webpage mx-auto px-10 tablet:px-20
+      >
         <nav className="w-full h-full flex items-center justify-between">
           <div className="h-full flex items-center">
             <div

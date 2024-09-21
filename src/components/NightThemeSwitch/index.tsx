@@ -16,7 +16,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
         className={`
         flex flex-shrink-0 justify-center items-center 
         rounded-full size-8 duration-700 cursor-pointer 
-        bg-base-100 dark:bg-dark-base-100 
+        bg-white dark:bg-dark-base-200 
       `}
       >
         <div

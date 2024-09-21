@@ -19,7 +19,7 @@ import ArticleEditorSubtitle from "./ArticleEditorSubtitle";
 import RadioInput from "../RadioInput";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { SubmitConfirmationModal, DeleteConfirmationModal } from "../Modals";
-import formatDate from "../../functions/formatDate";
+import formatDate from "@/functions/formatDate";
 
 const privateIcon = () => {
   return (
@@ -142,6 +142,7 @@ const ArticleEditorCreateForm = ({
         submitForm={handleSubmit}
         radioVal={radioVal}
         checkVal={checkVal}
+        loading={loading}
         title="Deseja criar esse artigo?"
       />
       <form
@@ -229,10 +230,18 @@ const ArticleEditorCreateForm = ({
             </p>
           </HelpText>
         )}
+        {checkVal === "blocked" && (
+          <HelpText color="fill-base-red dark:fill-dark-base-red">
+            <p className="text-xs text-base-red dark:text-dark-base-red">
+              Os comentários desse artigo estão{" "}
+              <span className="font-extrabold">bloqueados</span> por você.
+            </p>
+          </HelpText>
+        )}
         <div className="w-full flex items-center gap-2 mt-3 text-center">
           <Link
             href="/painel"
-            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover dark:hover:text-dark-base-neutral-hover border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
+            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
           >
             <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
             <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
@@ -241,7 +250,7 @@ const ArticleEditorCreateForm = ({
           </Link>
           <ArticleOnSubmitButton
             modalConfirmation={setIsOpenModal}
-            loading={loading}
+            // loading={loading}
           />
         </div>
       </form>
@@ -309,12 +318,14 @@ const ArticleEditorUpdateForm = ({
     }
     if (!title) {
       const heading = document.getElementById("article-title-top");
+      heading?.focus();
       heading?.scrollIntoView({ behavior: "smooth" });
       setLoadingUpdate(false);
       return;
     } else if (!subtitle) {
-      const heading = document.getElementById("article-subtitle-top");
-      heading?.scrollIntoView({ behavior: "smooth" });
+      const subHeading = document.getElementById("article-subtitle-top");
+      subHeading?.focus();
+      subHeading?.scrollIntoView({ behavior: "smooth" });
       setLoadingUpdate(false);
       return;
     } else {
@@ -341,12 +352,14 @@ const ArticleEditorUpdateForm = ({
         submitForm={handleSubmit}
         radioVal={radioVal}
         checkVal={checkVal}
+        loading={loadingUpdate}
         title="Deseja salvar esse artigo?"
       />
       <DeleteConfirmationModal
         isOpen={isOpenDeleteModal}
         setIsOpen={setIsOpenDeleteModal}
         submitForm={handleDelete}
+        loading={loadingDelete}
       />
       <form
         onSubmit={handleSubmit}
@@ -452,21 +465,15 @@ const ArticleEditorUpdateForm = ({
         <div className="w-full flex items-center gap-2 mt-3 text-center">
           <Link
             href="/painel"
-            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover dark:hover:text-dark-base-neutral-hover border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
+            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
           >
             <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
             <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
               Voltar
             </span>
           </Link>
-          <ArticleDeleteButton
-            modalConfirmation={setIsOpenDeleteModal}
-            loading={loadingDelete}
-          />
-          <ArticleOnSubmitButton
-            modalConfirmation={setIsOpenUpdateModal}
-            loading={loadingUpdate}
-          />
+          <ArticleDeleteButton modalConfirmation={setIsOpenDeleteModal} />
+          <ArticleOnSubmitButton modalConfirmation={setIsOpenUpdateModal} />
         </div>
       </form>
     </>
