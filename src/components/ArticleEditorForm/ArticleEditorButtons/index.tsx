@@ -11,12 +11,13 @@ import {
   FaListOl,
   FaCode,
   FaHighlighter,
+  FaUndo,
+  FaRedo,
+  FaMinus,
 } from "react-icons/fa";
 import { Editor } from "@tiptap/core";
 import { useCallback } from "react";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
-import { BsChatSquareQuoteFill } from "react-icons/bs";
-
 const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
     if (!editor) {
@@ -87,7 +88,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("bold")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaBold
@@ -108,7 +109,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("italic")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaItalic
@@ -129,7 +130,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("strike")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaStrikethrough
@@ -150,7 +151,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("highlight")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaHighlighter
@@ -182,7 +183,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("heading", { level: 3 })
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaHeading
@@ -203,7 +204,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("link")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaLink
@@ -220,7 +221,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         type="button"
         tabIndex={-1}
         onClick={addImage}
-        className="relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-200 dark:hover:bg-dark-base-100 group"
+        className="relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 hover:bg-base-200 dark:hover:bg-dark-base-150 group"
       >
         <FaImages className="transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green" />
         <Balloon text="Imagem" />
@@ -233,7 +234,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("bulletList")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaList
@@ -254,7 +255,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("orderedList")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaListOl
@@ -275,7 +276,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("blockquote")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaQuoteLeft
@@ -302,10 +303,10 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("cite")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
-        <BsChatSquareQuoteFill
+        <FaMinus
           className={`${
             editor.isActive("cite")
               ? "text-base-green dark:text-dark-base-green"
@@ -323,7 +324,7 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         className={`${
           editor.isActive("codeBlock")
             ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-100"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
         } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
       >
         <FaCode
@@ -335,6 +336,59 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         `}
         />
         <Balloon text="Code" />
+      </button>
+      {/*------------------------------UndoRedo------------------------------*/}
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().undo()}
+        className={`
+          ${
+            !editor.can().undo()
+              ? ""
+              : "hover:bg-base-200 dark:hover:bg-dark-base-150"
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <FaUndo
+          className={`
+          ${
+            !editor.can().undo()
+              ? "text-base-placeholder dark:text-dark-base-placeholder"
+              : "group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          }
+          transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral 
+        `}
+        />
+        {editor.can().undo() && <Balloon text="Desfazer" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().redo()}
+        className={`
+          ${
+            !editor.can().redo()
+              ? ""
+              : "hover:bg-base-200 dark:hover:bg-dark-base-150"
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <FaRedo
+          className={`
+          ${
+            !editor.can().redo()
+              ? "text-base-placeholder dark:text-dark-base-placeholder"
+              : "group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          }
+          transition-colors duration-300 text-base-neutral dark:text-dark-base-neutral 
+        `}
+        />
+        {editor.can().redo() && <Balloon text="Refazer" />}
       </button>
     </>
   );
