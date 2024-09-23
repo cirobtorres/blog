@@ -11,6 +11,11 @@ import Highlight from "@tiptap/extension-highlight";
 import CustomImage from "../CustomImage";
 import Loading from "../../Loading";
 import ArticleEditorButtons from "../ArticleEditorButtons";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
+import Gapcursor from "@tiptap/extension-gapcursor";
 
 const CiteExtension = Node.create({
   name: "cite",
@@ -81,9 +86,17 @@ const ArticleEditor = ({
       CustomImage,
       Highlight.configure({
         HTMLAttributes: {
-          class: "font-semibold bg-dark-base-green p-1 rounded-xl",
+          class: "bg-base-green dark:bg-dark-base-green p-1 rounded-xl",
         },
       }),
+      // Gapcursor,
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {},
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     // autofocus: true,
     editable: true,
@@ -91,7 +104,8 @@ const ArticleEditor = ({
     editorProps: {
       attributes: {
         class:
-          "min-h-[200px] max-h-[500px] w-full py-3 px-4 flex flex-col justify-start items-start overflow-x-hidden border-2 border-base-200 dark:border-dark-base-border rounded-xl scrollbar dark:dark-scrollbar transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite",
+          "[&_.resize-cursor] caret-base-neutral dark:caret-dark-base-neutral h-[500px] w-full py-3 px-4 flex flex-col justify-start items-start overflow-x-hidden border-2 border-base-200 dark:border-dark-base-border rounded-xl scrollbar dark:dark-scrollbar transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite [&_.tableWrapper]:max-w-full [&_table]:editor-table [&_table]:dark:editor-dark-table",
+        // min-h-[200px] max-h-[500px]
       },
     },
     content,

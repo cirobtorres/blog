@@ -42,7 +42,7 @@ export default async function EditArticlePage({
   return !article ? (
     <Loading />
   ) : (
-    <div className="w-full h-full mx-0 pl-20 pr-10">
+    <div className="w-full h-full mx-0 pl-20 tablet:pl-10 pr-10">
       <ArticleEditorUpdateForm {...article} />
     </div>
   );

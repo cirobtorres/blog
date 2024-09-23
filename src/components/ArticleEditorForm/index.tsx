@@ -363,7 +363,7 @@ const ArticleEditorUpdateForm = ({
       />
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-3xl mx-auto my-4 flex flex-col items-center"
+        className="w-full max-w-3xl my-4 flex flex-col items-center" // mx-auto
       >
         <div className="w-full flex flex-col gap-3">
           <ArticleEditorTitle

@@ -11,13 +11,25 @@ import {
   FaListOl,
   FaCode,
   FaHighlighter,
+  FaMinus,
   FaUndo,
   FaRedo,
-  FaMinus,
 } from "react-icons/fa";
 import { Editor } from "@tiptap/core";
 import { useCallback } from "react";
+import {
+  BsTable,
+  BsArrowBarLeft,
+  BsArrowBarRight,
+  BsArrowBarDown,
+  BsArrowBarUp,
+  BsArrowsCollapse,
+  BsArrowsExpand,
+} from "react-icons/bs";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
+import { AiOutlineDeleteColumn, AiOutlineDeleteRow } from "react-icons/ai";
+import { IoMdCloseCircle } from "react-icons/io";
+import { GoSquareFill } from "react-icons/go";
 const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
     if (!editor) {
@@ -268,6 +280,27 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         />
         <Balloon text="Lista ordenada" />
       </button>
+      {/*------------------------------CodeBlockButton------------------------------*/}
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        className={`${
+          editor.isActive("codeBlock")
+            ? "bg-base-200 dark:bg-dark-base-150"
+            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
+        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
+      >
+        <FaCode
+          className={`${
+            editor.isActive("codeBlock")
+              ? "text-base-green dark:text-dark-base-green"
+              : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+          } transition-colors duration-300
+        `}
+        />
+        <Balloon text="Code" />
+      </button>
       {/*------------------------------Blockquote------------------------------*/}
       <button
         type="button"
@@ -316,26 +349,283 @@ const ArticleEditorButtons = ({ editor }: { editor: Editor | null }) => {
         />
         <Balloon text="Autor" />
       </button>
-      {/*------------------------------CodeBlockButton------------------------------*/}
+      {/*------------------------------Table------------------------------*/}
       <button
         type="button"
         tabIndex={-1}
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={`${
-          editor.isActive("codeBlock")
-            ? "bg-base-200 dark:bg-dark-base-150"
-            : "hover:bg-base-200 dark:hover:bg-dark-base-150"
-        } relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group`}
+        onClick={() => {
+          if (!editor.isActive("table"))
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+              .run();
+        }}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "bg-base-200 dark:bg-dark-base-150"
+              : "hover:bg-base-200 dark:hover:bg-dark-base-150"
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
       >
-        <FaCode
+        <BsTable
           className={`${
-            editor.isActive("codeBlock")
+            editor.isActive("table")
               ? "text-base-green dark:text-dark-base-green"
               : "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
           } transition-colors duration-300
         `}
         />
-        <Balloon text="Code" />
+        <Balloon text="Criar tabela" />
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().deleteTable().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsTable
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        <IoMdCloseCircle
+          className={`${
+            editor.isActive("table")
+              ? "text-red-500"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } text-xs absolute top-[3px] right-[3px]`}
+        />
+        {editor.isActive("table") && <Balloon text="Deletar tabela" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().addColumnBefore().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowBarLeft
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Criar coluna à esquerda" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().addColumnAfter().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowBarRight
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Criar coluna à direita" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().deleteColumn().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <AiOutlineDeleteColumn
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } text-xl transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Deletar coluna" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().addRowBefore().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowBarDown
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Criar linha acima" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().addRowAfter().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowBarUp
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Criar linha abaixo" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().deleteRow().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <AiOutlineDeleteRow
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Deletar linha" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().mergeCells().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowsCollapse
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Unir células" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().splitCell().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <BsArrowsExpand
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Separar células" />}
+      </button>
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => editor.chain().focus().toggleHeaderCell().run()}
+        disabled={!editor.isActive("table")}
+        className={`
+          ${
+            editor.isActive("table")
+              ? "hover:bg-base-200 dark:hover:bg-dark-base-150"
+              : ""
+          }
+          relative flex justify-center items-center size-10 rounded-xl transition-colors duration-300 group
+        `}
+      >
+        <GoSquareFill
+          className={`${
+            editor.isActive("table")
+              ? "text-base-neutral dark:text-dark-base-neutral group-hover:text-base-green dark:group-hover:text-dark-base-green"
+              : "text-base-placeholder dark:text-dark-base-placeholder"
+          } transition-colors duration-300
+        `}
+        />
+        {editor.isActive("table") && <Balloon text="Tornar célula cabeçalho" />}
       </button>
       {/*------------------------------UndoRedo------------------------------*/}
       <button

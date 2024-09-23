@@ -92,17 +92,16 @@ select:-webkit-autofill:focus {
 }
 
 @layer utilities {
-  /*------------------------------TipTapEditor-------------------------------*/
+  /*------------------------------TipTapParagraph-------------------------------*/
   .editor-paragraph {
     width: 100%;
     margin-bottom: 1rem;
     color: var(--base-neutral);
   }
   .editor-dark-paragraph {
-    width: 100%;
-    margin-bottom: 1rem;
     color: var(--dark-base-neutral);
   }
+  /*------------------------------TipTapHeading------------------------------*/
   .heading-border-top {
     border-top: 1px solid var(--base-200);
   }
@@ -123,6 +122,7 @@ select:-webkit-autofill:focus {
   .editor-dark-heading {
     color: var(--dark-base-neutral);
   }
+  /*------------------------------TipTapLists------------------------------*/
   .editor-unordered-list {
     list-style: disc;
   }
@@ -147,6 +147,7 @@ select:-webkit-autofill:focus {
   .editor-dark-list li {
     color: var(--dark-base-neutral);
   }
+  /*------------------------------TipTapCode------------------------------*/
   .editor-code {
     width: 100%;
     max-width: 1024px;
@@ -155,33 +156,38 @@ select:-webkit-autofill:focus {
     color: var(--dark-base-neutral);
     background: var(--dark-base-300);
     margin-bottom: 1rem;
+    caret-color: var(--dark-base-neutral);
   }
+  /*------------------------------TipTapLink------------------------------*/
   .editor-link {
     cursor: pointer;
-    font-weight: 900;
+    font-weight: 500;
     text-decoration: underline;
     color: var(--base-green);
   }
   .editor-link:hover {
     color: var(--base-green-hover);
   }
+  /*
   .editor-link:visited {
     color: #653b7a;
   }
   .editor-link:visited:hover {
     color: #442255;
   }
+  */
+  /*------------------------------TipTapBlockquote------------------------------*/
   .editor-blockquote {
     width: 100%;
     position: relative;
     font-style: italic;
     padding-left: 2.5rem;
-    padding-right: 1rem;
+    padding-right: 1.5rem;
     margin-bottom: 1rem;
   }
   .editor-blockquote p {
     text-indent: 1.5rem;
-    word-break: break-all;
+    word-break: keep-all;
     margin-bottom: 0;
   }
   .editor-blockquote p:first-child::before {
@@ -209,6 +215,7 @@ select:-webkit-autofill:focus {
   .editor-dark-blockquote p:last-child::after {
     color: var(--dark-base-green);
   }
+  /*------------------------------TipTapCite------------------------------*/
   .editor-cite {
     color: var(--base-neutral);
     position: relative;
@@ -234,6 +241,89 @@ select:-webkit-autofill:focus {
   }
   .editor-dark-cite::before {
     background: var(--dark-base-green);
+  }
+  /*------------------------------TipTapGapCursor------------------------------*/
+  .ProseMirror-gapcursor {
+    white-space: normal;
+    caret-color: transparent;
+    display: none;
+    pointer-events: none;
+  }
+  /*------------------------------TipTapTable------------------------------*/
+  .tiptap.resize-cursor {
+    cursor: col-resize;
+  }
+  .editor-table .column-resize-handle {
+    /* Column resize border */
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    right: -2px;
+    width: 4px;
+    pointer-events: none;
+    background: #291334;
+  }
+  .editor-dark-table .column-resize-handle {
+    background: #a6adbb;
+  }
+  .editor-table .selectedCell:after {
+    /* Highlight selected cells */
+    background: rgba(198, 93, 255, 0.25);
+    content: "";
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+  .selectedCell *::selection {
+    /* Remove text selection inside table */
+    background: rgba(255, 255, 255, 0);
+  }
+  .editor-table {
+    width: 100%;
+    margin-bottom: 1rem;
+    outline: 2px solid transparent;
+  }
+  .editor-table:hover {
+    transition: outline 200ms ease-in-out;
+    outline-color: #2ec78f;
+  }
+  .editor-table,
+  .editor-table th,
+  .editor-table td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dcc8e6;
+    border-collapse: collapse;
+  }
+  .editor-table th,
+  .editor-table td {
+    position: relative;
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+  }
+  .editor-table th p,
+  .editor-table td p {
+    margin-bottom: 0px;
+  }
+  .editor-table th {
+    font-weight: 900;
+    background: #ede1f3;
+  }
+  .editor-dark-table,
+  .editor-dark-table th,
+  .editor-dark-table td {
+    border-color: var(--dark-base-border);
+  }
+  .editor-dark-table:hover {
+    outline-color: #40b88c;
+  }
+  .editor-dark-table th {
+    background: var(--dark-base-150);
   }
   /*------------------------------Scrollbar------------------------------*/
   .scrollbar::-webkit-scrollbar {

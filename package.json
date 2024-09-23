@@ -12,6 +12,7 @@
     "@marsidev/react-turnstile": "^1.0.1",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.1",
+    "@tiptap/extension-gapcursor": "^2.7.2",
     "@tiptap/extension-highlight": "^2.6.6",
     "@tiptap/extension-history": "^2.7.2",
     "@tiptap/extension-image": "^2.6.6",
