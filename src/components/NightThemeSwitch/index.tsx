@@ -40,7 +40,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
           <IoSunny className="text-xl text-base-yellow" />
         </div>
       </label>
-      <p
+      {/* <p
         className={`
           transition-opacity duration-200 mt-3 opacity-0 group-hover:opacity-100 pointer-events-none 
           absolute top-full left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 rounded 
@@ -51,7 +51,7 @@ export default function NightThemeSwitcher({ theme }: { theme: string }) {
         `}
       >
         Tema escuro
-      </p>
+      </p> */}
     </div>
   );
 }

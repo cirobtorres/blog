@@ -16,7 +16,7 @@ const ArticleBody = ({ body }: { body: string }) => {
     <div id="main-article">
       <div
         dangerouslySetInnerHTML={{ __html: returnBodyWithAnchorHeading(body) }}
-        className="overflow-hidden my-20 [&_h3]:heading-border-top [&_h3]:dark:heading-dark-border-top [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_pre]:editor-code [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote"
+        className="overflow-hidden my-20 [&_h3]:heading-border-top [&_h3]:dark:heading-dark-border-top [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite [&_.tableWrapper]:max-w-full [&_table]:editor-table [&_table]:dark:editor-dark-table"
       />
       <Tags />
     </div>
