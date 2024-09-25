@@ -1,22 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "@/lib/authentication";
+import { User } from "@supabase/supabase-js";
 
 export default function HiddenDashboard({
-  name,
+  user,
   privileges,
-  picture,
 }: {
-  name: string;
-  picture: string;
+  user: User | null;
   privileges: number | null;
 }) {
-  return privileges === 2 || privileges === 3 ? (
+  return user ? (
     <>
       <li className="flex items-center gap-2">
         <Image
-          src={picture}
-          alt={`Avatar do usuário${picture ? " " + name : ""}`}
+          src={user.user_metadata.picture || "/images/user-placeholder.png"}
+          alt={`Avatar do usuário${
+            user.user_metadata.picture ? " " + user.user_metadata.name : ""
+          }`}
           width={30}
           height={30}
           className="rounded-full"
@@ -26,7 +27,7 @@ export default function HiddenDashboard({
             href="/painel/configurar"
             className="font-extrabold hover:underline"
           >
-            {name}
+            {user.user_metadata.name || user.email}
           </Link>
           <br />
           <button
@@ -40,14 +41,16 @@ export default function HiddenDashboard({
           </button>
         </p>
       </li>
-      <li>
-        <Link
-          href="/painel"
-          className="flex justify-center items-center px-2 py-1 rounded-xl font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
-        >
-          Painel
-        </Link>
-      </li>
+      {(privileges === 2 || privileges === 3) && (
+        <li>
+          <Link
+            href="/painel"
+            className="flex justify-center items-center px-2 py-1 rounded-xl font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
+          >
+            Painel
+          </Link>
+        </li>
+      )}
     </>
   ) : (
     <li className="h-full">

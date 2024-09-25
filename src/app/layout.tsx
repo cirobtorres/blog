@@ -44,12 +44,7 @@ export default async function RootLayout({
         id="body"
         className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
-        <Header
-          name={user?.user_metadata.name}
-          picture={user?.user_metadata.picture}
-          privileges={blogUser?.privileges}
-          theme={theme}
-        />
+        <Header user={user} privileges={blogUser?.privileges} theme={theme} />
         <main className="w-full h-full flex-[2_2_0]">{children}</main>
         <Footer />
       </body>

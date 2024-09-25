@@ -15,7 +15,7 @@ const NavBar = () => {
   return (
     <nav
       id="dashboard-navbar"
-      className="z-[5] absolute tablet:static top-0 left-0 bottom-0 flex flex-col w-14 tablet:w-64 h-full hover:w-64 overflow-hidden transition-all duration-300 border-r border-base-200 dark:border-dark-base-border bg-base-100 dark:bg-dark-base-100"
+      className="flex-shrink-0 z-[5] absolute tablet:static top-0 left-0 bottom-0 flex flex-col w-14 tablet:w-64 h-full hover:w-64 overflow-hidden transition-all duration-300 border-r border-base-200 dark:border-dark-base-border bg-base-100 dark:bg-dark-base-100"
     >
       <div className="border-b borde-base-200 dark:border-dark-base-border tablet:pt-7 tablet:pb-8 max-[900px]:p-2">
         <div className="invisible hidden opacity-0 w-0 tablet:visible tablet:block tablet:opacity-100 tablet:w-auto pl-4 mb-2">
@@ -43,7 +43,7 @@ const NavBar = () => {
           >
             <Link href="/painel/criar-artigo">
               <PiArticleNyTimesFill className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
-              <span>Editar artigo</span>
+              <span>Criar artigo</span>
             </Link>
           </li>
         </ul>
@@ -77,6 +77,39 @@ const NavBar = () => {
             <Link href="/painel/criar-rascunho">
               <BsPencilSquare className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
               <span>Criar rascunho</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <div className="border-b borde-base-200 dark:border-dark-base-border tablet:pt-7 tablet:pb-8 max-[900px]:p-2">
+        <div className="invisible hidden opacity-0 w-0 tablet:visible tablet:block tablet:opacity-100 tablet:w-auto pl-4 mb-2">
+          <span className="text-base-neutral dark:text-[#747474] text-xs">
+            Tags
+          </span>
+        </div>
+        <ul className="w-full sticky top-0 self-start text-nowrap list-none flex flex-col gap-2 [&_li_svg]:flex-shrink-0 [&_li_a]:flex [&_li_a]:items-center [&_li_a]:gap-4 [&_li_a]:p-2 tablet:[&_li_a]:px-4 tablet:[&_li_a:hover]:text-base-neutral-hover tablet:[&_li_a:hover]:dark:text-[#fff] tablet:[&_li_a]:py-0 max-[900px]:[&_li_a:hover]:bg-base-150 max-[900px]:[&_li_a:hover]:dark:bg-dark-base-150 [&_li_a]:transition-colors [&_li_a]:duration-200 [&_li]:text-2xl [&_li_a_span]:block [&_li_a_span]:text-sm [&_li]:text-base-neutral [&_li]:dark:text-dark-base-neutral [&_li]:rounded [&_li.dashboard-active]:text-base-green [&_li.dashboard-active]:dark:text-dark-base-green">
+          <li
+            className={
+              pathname.match(/^\/painel\/todas-as-tags.*/)
+                ? "dashboard-active"
+                : undefined
+            }
+          >
+            <Link href="/painel">
+              <ImBooks className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
+              <span>Todas as tags</span>
+            </Link>
+          </li>
+          <li
+            className={
+              pathname.match(/^\/painel\/criar-tag.*/)
+                ? "dashboard-active"
+                : undefined
+            }
+          >
+            <Link href="/painel/criar-tag">
+              <BsPencilSquare className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
+              <span>Criar tag</span>
             </Link>
           </li>
         </ul>

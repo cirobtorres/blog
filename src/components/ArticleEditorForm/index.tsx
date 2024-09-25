@@ -11,6 +11,7 @@ import {
 import {
   ArticleDeleteButton,
   ArticleOnSubmitButton,
+  ReturnButton,
 } from "./ArticleOnSubmitButton";
 import ArticleEditor from "./ArticleEditor";
 import CheckBox from "../CheckBox";
@@ -147,7 +148,7 @@ const ArticleEditorCreateForm = ({
       />
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-3xl mx-auto my-4 flex flex-col items-center"
+        className="w-full my-4 flex flex-col items-center" // max-w-3xl mx-auto
       >
         <div className="w-full flex flex-col gap-3">
           <ArticleEditorTitle
@@ -238,16 +239,8 @@ const ArticleEditorCreateForm = ({
             </p>
           </HelpText>
         )}
-        <div className="w-full flex items-center gap-2 mt-3 text-center">
-          <Link
-            href="/painel"
-            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
-          >
-            <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
-            <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
-              Voltar
-            </span>
-          </Link>
+        <div className="w-full flex justify-center items-center gap-2 mt-3">
+          <ReturnButton />
           <ArticleOnSubmitButton
             modalConfirmation={setIsOpenModal}
             // loading={loading}
@@ -462,16 +455,8 @@ const ArticleEditorUpdateForm = ({
             </p>
           </HelpText>
         )}
-        <div className="w-full flex items-center gap-2 mt-3 text-center">
-          <Link
-            href="/painel"
-            className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-neutral dark:text-dark-base-neutral border border-[#cacaca] dark:border-[#494949] bg-base-200 dark:bg-[#2c2c2c] hover:bg-[#e6e6e6] dark:hover:bg-[#292929] group"
-          >
-            <MdKeyboardArrowLeft className="text-xl opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
-            <span className="transition-all duration-200 -translate-x-1 group-hover:translate-x-0">
-              Voltar
-            </span>
-          </Link>
+        <div className="w-full flex justify-center items-center gap-2 mt-3">
+          <ReturnButton />
           <ArticleDeleteButton modalConfirmation={setIsOpenDeleteModal} />
           <ArticleOnSubmitButton modalConfirmation={setIsOpenUpdateModal} />
         </div>

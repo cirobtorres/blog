@@ -6,15 +6,14 @@ import { usePathname } from "next/navigation";
 import ProgressBar from "../ProgressBar";
 import NightThemeSwitcher from "../NightThemeSwitch";
 import HiddenDashboard from "./HiddenDashboard";
+import { User } from "@supabase/supabase-js";
 
 export default function Header({
-  name,
-  picture,
+  user,
   privileges,
   theme,
 }: {
-  name: string;
-  picture: string;
+  user: User | null;
   theme: string;
   privileges: number | null;
 }) {
@@ -106,11 +105,7 @@ export default function Header({
             </ul>
           </div>
           <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
-            <HiddenDashboard
-              name={name}
-              picture={picture}
-              privileges={privileges}
-            />
+            <HiddenDashboard user={user} privileges={privileges} />
             <li className="flex justify-center items-center h-full">
               <NightThemeSwitcher theme={theme} />
             </li>
