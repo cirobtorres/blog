@@ -11,7 +11,7 @@ import ArticleBody from "@/components/ArticleBody";
 
 interface Params {
   params: {
-    topicSlug: string;
+    slug: string;
     id: string;
   };
 }

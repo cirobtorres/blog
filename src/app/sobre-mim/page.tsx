@@ -11,7 +11,7 @@ export default async function AboutPage() {
   return (
     <div className="relative mt-16 w-full h-full mx-0 flex justify-center pb-16">
       <div className="absolute w-full h-60 bottom-full translate-y-1/2 -z-10 bg-base-300 dark:bg-dark-base-300" />
-      <div className="relative w-full max-w-5xl mx-12 rounded-3xl border border-base-200 dark:border-dark-base-border mt-12 flex flex-col items-center bg-base-150 dark:bg-dark-base-150">
+      <div className="relative w-full max-w-5xl mx-12 rounded-3xl border border-base-border dark:border-dark-base-border mt-12 flex flex-col items-center bg-base-150 dark:bg-dark-base-150">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div
             className={`

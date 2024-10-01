@@ -1,6 +1,7 @@
 import { MouseEventHandler } from "react";
 
-export default function CheckBox<T extends string>({
+// export default function CheckBox<T extends string>({
+export default function CheckBox({
   id,
   text,
   setValue,

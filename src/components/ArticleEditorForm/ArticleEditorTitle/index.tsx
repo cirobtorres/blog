@@ -21,7 +21,7 @@ const ArticleEditorTitle = ({
     <div
       id={`${id}-top`}
       className={`
-      w-full h-full flex flex-col justify-start items-start overflow-hidden 
+      w-full flex flex-col justify-start items-start overflow-hidden 
       text-base-neutral dark:text-dark-base-neutral 
       outline-none border-none 
     `}
@@ -43,7 +43,7 @@ const ArticleEditorTitle = ({
         className={`resize-none overflow-hidden w-full h-full border ${
           errors?.titleEmptyError
             ? "border-base-red dark:border-dark-base-red"
-            : "border-base-200 dark:border-dark-base-border focus:outline-blue-500"
+            : "border-base-border dark:border-dark-base-border focus:outline-blue-500"
         } rounded p-2 transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder 
       `}
       />

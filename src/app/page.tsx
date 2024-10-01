@@ -1,8 +1,9 @@
 "use server";
 
+import { BiRadioCircle } from "react-icons/bi";
+import { createClient } from "../utils/supabase/server";
 import ArticleCard from "@/components/ArticleCard";
 import Pagination from "@/components/Pagination";
-import { createClient } from "../utils/supabase/server";
 import formatDate from "../functions/formatDate";
 
 export default async function HomePage() {
@@ -15,7 +16,7 @@ export default async function HomePage() {
   return (
     <>
       <div className="max-w-5xl mx-auto mb-28">
-        {articles || !error ? (
+        {articles && (
           <ul className="mx-4 smartphone:mx-10 tablet:mx-20 my-16">
             {articles.map((article, index) => (
               <li
@@ -26,12 +27,8 @@ export default async function HomePage() {
                   {formatDate(article.created_at)}
                 </time>
                 <div className="h-full relative hidden smartphone:block">
-                  <div className="absolute border-l top-4 left-1/2 -translate-x-1/2 -bottom-4 border-base-300 dark:border-[#2e2f31]" />
-                  <div className="absolute top-4 left-1/2 -translate-x-1/2 flex justify-center items-center p-1 min-w-6 rounded-lg bg-base-200 dark:bg-dark-base-200 border border-base-300 dark:border-[#2e2f31]">
-                    <span className="text-xs text-base-neutral dark:text-dark-base-neutral">
-                      {articles.length - index}
-                    </span>
-                  </div>
+                  <div className="absolute w-[1px] top-8 left-1/2 -translate-x-1/2 -bottom-5 bg-base-300 dark:bg-dark-base-border" />
+                  <BiRadioCircle className="absolute top-3 left-1/2 -translate-x-1/2 flex justify-center items-center p-1 min-w-6 rounded-lg text-3xl text-base-neutral dark:text-dark-base-neutral" />
                 </div>
                 <div className="rounded-2xl transition-[outline] duration-200 outline outline-2 outline-transparent -outline-offset-2 focus-within:outline-blue-500 relative">
                   <ArticleCard {...article} />
@@ -39,7 +36,7 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
-        ) : null}
+        )}
       </div>
       <Pagination />
     </>

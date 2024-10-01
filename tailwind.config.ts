@@ -73,33 +73,14 @@ const config: Config = {
         header: "repeat(2, minmax(80px, 110px))",
       },
       animation: {
-        header: "header-entrance 1s ease-in-out forwards",
-        body: "body-entrance 1s ease-in-out forwards",
-        "article-hero": "article-hero-entrance 1s ease-in-out forwards",
-        "jump-link-tracker":
-          "jump-link-tracker-entrance 1s ease-in-out forwards",
-        "article-body": "article-body-entrance 1s ease-in-out forwards",
+        skeleton: "skeleton-loading 1s linear infinite alternate",
+        "dark-skeleton": "dark-skeleton-loading 1s linear infinite alternate",
         rotate: "rotate 1s linear infinite",
         prixClipFix: "prixClipFix 2s linear infinite",
-        "skeleton-admin-pannel":
-          "skeleton-loading 1s linear infinite alternate",
         "back-to-top-button": "bounce-back-to-top-button 1s infinite",
         "border-spin": "profile-border-spin 3s linear infinite",
       },
       keyframes: {
-        "header-entrance": { "100%": { transform: "translateY(0%)" } },
-        "body-entrance": {
-          "100%": { transform: "translateY(0%)", opacity: "1" },
-        },
-        "article-hero-entrance": {
-          "100%": { transform: "translateX(0%)", opacity: "1" },
-        },
-        "jump-link-tracker-entrance": {
-          "100%": { transform: "translateX(0%)", opacity: "1" },
-        },
-        "article-body-entrance": {
-          "100%": { transform: "translateY(0%)", opacity: "1" },
-        },
         rotate: {
           "100%": { transform: "rotate(360deg)" },
         },
@@ -141,6 +122,10 @@ const config: Config = {
         "skeleton-loading": {
           "0%": { backgroundColor: "hsl(200, 20%, 70%)" },
           "100%": { backgroundColor: "hsl(200, 20%, 95%)" },
+        },
+        "dark-skeleton-loading": {
+          "0%": { backgroundColor: "hsl(0, 0%, 30%)" },
+          "100%": { backgroundColor: "hsl(220, 5%, 40%)" },
         },
         "profile-border-spin": {
           from: {

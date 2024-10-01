@@ -10,7 +10,7 @@
   --base-150: #f8f3f0;
   --base-200: #efeae6;
   --base-300: #d4d3d2;
-  --base-border: #fcf8f2;
+  --base-border: #d3d3d3;
   --base-blue: #3abff8;
   --base-blue-hover: #15b7fd;
   --base-green: #2ec78f;
@@ -26,7 +26,7 @@
   --dark-base-150: #1b1b1b;
   --dark-base-200: #131313;
   --dark-base-300: #0a0a0a;
-  --dark-base-border: #292929;
+  --dark-base-border: #333333;
   --dark-base-blue: #3abff8;
   --dark-base-blue-hover: #15b7fd;
   --dark-base-green: #40b88c;
@@ -35,12 +35,6 @@
   --dark-base-red: #f87272;
   --dark-base-pink: #d926a9;
   --dark-base-purple: #661ae6;
-  /*--------------------------------Widths-------------------------------*/
-  --webpage-max-width: 1440px;
-  /*--------------------------------Heights-------------------------------*/
-  --floating-header: 4rem;
-  --floating-header-threshold-padding: 4rem;
-  --floating-header-threshold-margin: 1rem;
 }
 
 /* Get rid off reveal button (eye icon) from password input type */
@@ -101,9 +95,9 @@ select:-webkit-autofill:focus {
   .editor-dark-paragraph {
     color: var(--dark-base-neutral);
   }
-  /*------------------------------TipTapHeading------------------------------*/
+  /*------------------------------TipTapHeading-3------------------------------*/
   .heading-border-top {
-    border-top: 1px solid var(--base-200);
+    border-top: 1px solid var(--base-border);
   }
   .heading-dark-border-top {
     border-top: 1px solid var(--dark-base-border);
@@ -112,14 +106,26 @@ select:-webkit-autofill:focus {
     width: 100%;
     font-weight: 900;
     text-transform: uppercase;
-    padding-top: var(--floating-header-threshold-padding);
-    margin-top: var(--floating-header-threshold-margin);
+    padding-top: 4rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
     font-size: 1.25rem;
     line-height: 1.75rem;
     color: var(--base-neutral);
   }
   .editor-dark-heading {
+    color: var(--dark-base-neutral);
+  }
+  /*------------------------------TipTapHeading-4------------------------------*/
+  .editor-heading-h4 {
+    width: 100%;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: var(--base-neutral);
+  }
+  .editor-dark-heading-h4 {
     color: var(--dark-base-neutral);
   }
   /*------------------------------TipTapLists------------------------------*/

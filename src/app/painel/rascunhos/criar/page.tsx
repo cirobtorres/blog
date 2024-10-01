@@ -2,14 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { ArticleEditorUpdateForm } from "@/components/ArticleEditorForm";
-import Loading from "@/components/Loading";
+import CreateSummary from "@/components/ArticleEditorForm";
 
-export default async function EditArticlePage({
-  params: { slug, id },
-}: {
-  params: { slug: string; id: string };
-}) {
+export default async function CreateSummaryPage() {
   const supabase = createClient();
   const {
     data: { user: supabaseAuthUser },
@@ -31,19 +26,9 @@ export default async function EditArticlePage({
     redirect("/");
   }
 
-  const { data: article, error: articleError } = await supabase
-    .from("topics")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (articleError) redirect("/");
-
-  return !article ? (
-    <Loading />
-  ) : (
-    <div className="w-full h-full mx-0 pl-20 tablet:pl-10 pr-10">
-      <ArticleEditorUpdateForm {...article} />
+  return (
+    <div className="max-w-[700px] w-full h-full mx-auto py-6 px-20 tablet:px-10">
+      <CreateSummary blogUser={blogUser} />
     </div>
   );
 }

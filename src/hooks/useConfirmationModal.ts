@@ -1,6 +1,6 @@
+import ConfirmationModalContext from "@/contexts/ConfirmationModalContext";
 import { useContext } from "react";
-import confirmationModalContext from "../contexts/confirmationModalContext";
 
-const useConfirmationModal = () => useContext(confirmationModalContext);
+const useConfirmationModal = () => useContext(ConfirmationModalContext);
 
 export default useConfirmationModal;

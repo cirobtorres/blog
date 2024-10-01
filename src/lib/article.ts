@@ -39,7 +39,6 @@ const submitArticleUpdate = async (
   id: string,
   title: string,
   subtitle: string,
-  body: string,
   radioVal: string,
   checkVal: string
 ) => {
@@ -51,10 +50,28 @@ const submitArticleUpdate = async (
       title,
       sub_title: subtitle,
       slug: slugify(title),
-      body,
       private: radioVal === "private",
       blocked_for_replies: checkVal === "blocked",
       updated_at: new Date(),
+    })
+    .eq("id", id);
+
+  if (topicsError) {
+    console.log(topicsError);
+    throw topicsError;
+  }
+
+  revalidatePath("/painel", "layout");
+  return true;
+};
+
+const submitArticleBodyUpdate = async (id: string, body: string) => {
+  const supabase = createClient();
+
+  const { data: topicsData, error: topicsError } = await supabase
+    .from("topics")
+    .update({
+      body,
     })
     .eq("id", id);
 
@@ -84,4 +101,9 @@ const articleDelete = async (id: string) => {
   return true;
 };
 
-export { submitArticleCreate, submitArticleUpdate, articleDelete };
+export {
+  submitArticleCreate,
+  submitArticleUpdate,
+  submitArticleBodyUpdate,
+  articleDelete,
+};

@@ -32,8 +32,8 @@ export default function FilterButton() {
         className={`${
           check1 === "private" || check2 === "blocked"
             ? "bg-base-neutral dark:bg-dark-base-neutral"
-            : "dark:bg-dark-base-150"
-        } rounded-lg p-2.5 transition-all duration-200 outline outline-2 outline-transparent focus-visible:outline-blue-500 border border-base-200 dark:border-dark-base-border`}
+            : ""
+        } rounded-lg p-2.5 transition-all duration-200 outline outline-2 outline-transparent focus-visible:outline-blue-500 border border-base-border dark:border-dark-base-border`}
       >
         <FaFilter
           className={`${
@@ -44,7 +44,7 @@ export default function FilterButton() {
         />
       </button>
       <div
-        className={`absolute top-[calc(100%_+_2px)] left-1/2 -translate-x-1/2 p-4 z-10 rounded-xl flex flex-col gap-2 transition-all duration-200 border border-base-200 dark:border-dark-base-border bg-base-200 dark:bg-dark-base-150 ${
+        className={`absolute top-[calc(100%_+_2px)] left-1/2 -translate-x-1/2 p-4 z-10 rounded-xl flex flex-col gap-2 transition-all duration-200 border border-base-border dark:border-dark-base-border bg-base-100 dark:bg-dark-base-100 ${
           isOpen
             ? "translate-y-0 pointer-events-auto visible opacity-100"
             : "-translate-y-2 pointer-events-none invisible opacity-0"
@@ -64,7 +64,7 @@ export default function FilterButton() {
                 setCheck1(check1 === "private" ? "public" : "private")
               }
             />
-            <span className="text-[10px] text-base-neutral dark:text-dark-base-neutral px-1 py-0.5 rounded-lg pointer-events-none border border-base-200 dark:border-dark-base-border opacity-0 group-hover:opacity-100">
+            <span className="text-[10px] text-base-neutral dark:text-dark-base-neutral px-1 py-0.5 rounded-lg pointer-events-none border border-base-border dark:border-dark-base-border opacity-0 group-hover:opacity-100">
               Selecionar
             </span>
           </div>
@@ -78,7 +78,7 @@ export default function FilterButton() {
                 setCheck2(check2 === "blocked" ? "unblocked" : "blocked")
               }
             />
-            <span className="text-[10px] text-base-neutral dark:text-dark-base-neutral px-1 py-0.5 rounded-lg pointer-events-none border border-base-200 dark:border-dark-base-border opacity-0 group-hover:opacity-100">
+            <span className="text-[10px] text-base-neutral dark:text-dark-base-neutral px-1 py-0.5 rounded-lg pointer-events-none border border-base-border dark:border-dark-base-border opacity-0 group-hover:opacity-100">
               Selecionar
             </span>
           </div>

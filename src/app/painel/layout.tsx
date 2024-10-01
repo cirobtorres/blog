@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
+import { ArticleSideBarContextProvider } from "@/contexts/ArticleSideBarContext";
+import { FlashMessageContextProvider } from "../../contexts/FlashMessageContext";
+import { FaRegCopyright } from "react-icons/fa";
 import NavBar from "@/components/NavBar";
+import FlashMessage from "@/components/FlashMessage";
+import ArticleSideBar from "@/components/ArticleSideBar";
+import { HeaderDashboard } from "@/components/Header";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,12 +20,57 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  const {
+    data: { user: supabaseAuthUser },
+    error: supabaseAuthUserError,
+  } = await supabase.auth.getUser();
+
+  const { data: blogUser } = await supabase
+    .from("blog_author")
+    .select("*")
+    .eq("auth_users_id", supabaseAuthUser?.id)
+    .in("privileges", [2, 3])
+    .single();
+
+  const theme = cookies().get("theme")?.value || "";
+
+  if (!blogUser) redirect("/");
+
   return (
-    <div className="relative w-full h-full flex border-b border-base-200 dark:border-dark-base-border">
-      <NavBar />
-      <div className="w-full h-full bg-base-100 dark:bg-dark-base-100">
-        {children}
-      </div>
+    <div className="relative flex flex-col w-full h-full">
+      <FlashMessageContextProvider>
+        <FlashMessage />
+        <div className="w-full h-full">
+          <div className="relative w-full h-full flex">
+            <NavBar />
+            <div className="relative w-full h-full flex flex-col">
+              <HeaderDashboard user={user} theme={theme} />
+              <div className="w-full h-full bg-base-100 dark:bg-dark-base-100">
+                {children}
+              </div>
+            </div>
+          </div>
+        </div>
+      </FlashMessageContextProvider>
+      <FooterDashboard />
     </div>
   );
 }
+
+const FooterDashboard = () => {
+  return (
+    <div className="w-full flex justify-center items-center h-16 border-t border-base-border dark:border-dark-base-border mt-auto mb-0">
+      <div className="ml-14 tablet:ml-64">
+        <span className="text-nowrap text-xs smartphone:text-sm flex items-center gap-1 text-base-neutral dark:text-dark-base-neutral">
+          Copyright <FaRegCopyright /> 2024 • Ciro Torres
+        </span>
+      </div>
+    </div>
+  );
+};

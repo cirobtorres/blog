@@ -1,23 +1,21 @@
-import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
+import { NodeViewContent, NodeViewWrapper, NodeViewProps } from "@tiptap/react";
 
 export default function CustomCodeBlock({
-  node: {
-    attrs: { language: defaultLanguage },
-  },
+  node,
   updateAttributes,
   extension,
-}: {
-  node: { attrs: { language: string } }; // TODO: reformat this
-  updateAttributes: ({}) => void; // TODO: reformat this
-  extension: any; // TODO: reformat this
-}) {
+  view,
+  getPos,
+}: NodeViewProps) {
+  const { language = "javascript" } = node.attrs;
+
   return (
     <NodeViewWrapper>
-      <pre lang="javascript" className="relative">
+      <pre lang={language} className="relative">
         <div>
           <select
             contentEditable={false}
-            defaultValue={defaultLanguage}
+            defaultValue={language}
             onChange={(event) =>
               updateAttributes({ language: event.target.value })
             }

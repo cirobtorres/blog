@@ -7,8 +7,10 @@ import ProgressBar from "../ProgressBar";
 import NightThemeSwitcher from "../NightThemeSwitch";
 import HiddenDashboard from "./HiddenDashboard";
 import { User } from "@supabase/supabase-js";
+import Image from "next/image";
+import { signOut } from "@/lib/authentication";
 
-export default function Header({
+const Header = ({
   user,
   privileges,
   theme,
@@ -16,7 +18,7 @@ export default function Header({
   user: User | null;
   theme: string;
   privileges: number | null;
-}) {
+}) => {
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
 
@@ -47,72 +49,138 @@ export default function Header({
   }, []);
 
   return (
-    <header
-      ref={headerRef}
-      id="floating-header"
-      className={`${
-        pathname.startsWith("/artigos") ? "fixed" : "static"
-      } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-200 dark:border-dark-base-border bg-base-100/80 dark:bg-dark-base-100/80
+    !pathname.includes("painel") && (
+      <header
+        ref={headerRef}
+        id="floating-header"
+        className={`${
+          pathname.startsWith("/artigos")
+            ? "fixed bg-base-100/80 dark:bg-dark-base-100/80"
+            : "static bg-base-100 dark:bg-dark-base-100"
+        } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-border dark:border-dark-base-border
     `}
-    >
-      <div
-        className="h-full pl-4 pr-6" // max-w-webpage mx-auto px-10 tablet:px-20
       >
-        <nav className="w-full h-full flex items-center justify-between">
-          <div className="h-full flex items-center">
-            <div
-              className="pt-1 h-full"
-              style={{ borderBottom: "3px solid transparent" }}
-            >
-              <Link
-                href="/"
-                className="w-24 tablet:w-28 text-lg tablet:text-xl uppercase font-extrabold h-full flex items-center text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover hover:dark:text-[#b8bdc9]"
+        <div
+          className="h-full pl-4 pr-6" // max-w-webpage mx-auto px-10 tablet:px-20
+        >
+          <nav className="w-full h-full flex items-center justify-between">
+            <div className="h-full flex items-center">
+              <div
+                className="pt-1 h-full"
+                style={{ borderBottom: "3px solid transparent" }}
               >
-                HOME
-              </Link>
+                <Link
+                  href="/"
+                  className="w-24 tablet:w-28 text-lg tablet:text-xl uppercase font-extrabold h-full flex items-center text-base-neutral dark:text-dark-base-neutral hover:text-base-neutral-hover hover:dark:text-[#b8bdc9]"
+                >
+                  HOME
+                </Link>
+              </div>
+              <ul className="pt-1 h-full hidden smartphone:flex gap-4 items-center justify-between">
+                <li
+                  className="w-20 h-full"
+                  style={{
+                    borderBottom: pathname.startsWith("/contato")
+                      ? "2px solid var(--base-green)"
+                      : "2px solid transparent",
+                  }}
+                >
+                  <Link
+                    href="/contato"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
+                  >
+                    Contato
+                  </Link>
+                </li>
+                <li
+                  className="w-20 h-full"
+                  style={{
+                    borderBottom: pathname.startsWith("/sobre-mim")
+                      ? "2px solid var(--base-green)"
+                      : "2px solid transparent",
+                  }}
+                >
+                  <Link
+                    href="/sobre-mim"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
+                  >
+                    Sobre mim
+                  </Link>
+                </li>
+              </ul>
             </div>
-            <ul className="pt-1 h-full hidden smartphone:flex gap-4 items-center justify-between">
-              <li
-                className="w-20 h-full"
-                style={{
-                  borderBottom: pathname.startsWith("/contato")
-                    ? "2px solid var(--base-green)"
-                    : "2px solid transparent",
-                }}
-              >
-                <Link
-                  href="/contato"
-                  className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
-                >
-                  Contato
-                </Link>
-              </li>
-              <li
-                className="w-20 h-full"
-                style={{
-                  borderBottom: pathname.startsWith("/sobre-mim")
-                    ? "2px solid var(--base-green)"
-                    : "2px solid transparent",
-                }}
-              >
-                <Link
-                  href="/sobre-mim"
-                  className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
-                >
-                  Sobre mim
-                </Link>
+            <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
+              <HiddenDashboard user={user} privileges={privileges} />
+              <li className="flex justify-center items-center h-full">
+                <NightThemeSwitcher theme={theme} />
               </li>
             </ul>
-          </div>
-          <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
-            <HiddenDashboard user={user} privileges={privileges} />
-            <li className="flex justify-center items-center h-full">
-              <NightThemeSwitcher theme={theme} />
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <ProgressBar />
+          </nav>
+        </div>
+        <ProgressBar />
+      </header>
+    )
+  );
+};
+
+const HeaderDashboard = ({
+  user,
+  theme,
+}: {
+  user: User | null;
+  theme: string;
+}) => {
+  return (
+    <header className="flex-shrink-0 flex items-center w-full h-12 px-6 border-b border-base-border dark:border-dark-base-border">
+      <nav className="w-full h-full flex items-center justify-between">
+        <Link
+          href="/painel/rascunhos/criar"
+          className="w-32 text-nowrap transition-[outline] duration-300 outline outline-4 outline-offset-1 outline-transparent focus:outline-[#7be296] h-fit flex justify-center items-center px-2 py-1 rounded font-extrabold text-xs text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
+        >
+          Criar Rascunho
+        </Link>
+        <ul className="h-full flex items-center justify-between gap-2 smartphone:gap-4 tablet:gap-8">
+          <li className="flex items-center gap-2">
+            <Image
+              src={
+                user?.user_metadata.picture || "/images/user-placeholder.png"
+              }
+              alt={`Avatar do usuário${
+                user?.user_metadata.picture
+                  ? " " + user?.user_metadata.name
+                  : ""
+              }`}
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
+            <p className="max-w-20 truncate text-sm text-base-neutral dark:text-dark-base-neutral">
+              <Link
+                href="/painel/configurar"
+                className="font-extrabold hover:underline"
+              >
+                {user?.user_metadata.name || user?.email}
+              </Link>
+              <br />
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  signOut();
+                }}
+                className="hover:underline"
+              >
+                Sair
+              </button>
+            </p>
+          </li>
+          <li className="flex justify-center items-center h-full">
+            <NightThemeSwitcher theme={theme} />
+          </li>
+        </ul>
+      </nav>
     </header>
   );
-}
+};
+
+export default Header;
+export { HeaderDashboard };

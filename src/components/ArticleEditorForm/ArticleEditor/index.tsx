@@ -8,12 +8,12 @@ import {
   useEditor,
 } from "@tiptap/react";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { createHTMLDocument } from "zeed-dom";
-import { createLowlight } from "lowlight";
+import { createHTMLDocument, VNode } from "zeed-dom";
+import { all, createLowlight } from "lowlight";
+import { EditorLoadingSleketon } from "../../Loading";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import CustomImage from "../CustomImage";
-import Loading from "../../Loading";
 import ArticleEditorButtons from "../ArticleEditorButtons";
 import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
@@ -21,24 +21,9 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableCell from "@tiptap/extension-table-cell";
 import CustomCite from "../CustomCite";
 import CustomCodeBlock from "../CustomCodeBlock";
-import css from "highlight.js/lib/languages/css";
-import bash from "highlight.js/lib/languages/bash";
-import java from "highlight.js/lib/languages/java";
-import py from "highlight.js/lib/languages/python";
-import js from "highlight.js/lib/languages/javascript";
-import ts from "highlight.js/lib/languages/typescript";
-import html from "highlight.js/lib/languages/xml";
 import hljs from "highlight.js";
 
-const lowlight = createLowlight();
-
-lowlight.register("bash", bash);
-lowlight.register("java", java);
-lowlight.register("py", py);
-lowlight.register("js", js);
-lowlight.register("ts", ts);
-lowlight.register("html", html);
-lowlight.register("css", css);
+const lowlight = createLowlight(all);
 
 const ArticleEditor = ({
   content = "",
@@ -55,7 +40,7 @@ const ArticleEditor = ({
         },
         heading: {
           HTMLAttributes: {},
-          levels: [3],
+          levels: [3, 4],
         },
         bold: {
           HTMLAttributes: {},
@@ -113,7 +98,7 @@ const ArticleEditor = ({
               this.options.languageClassPrefix + node.attrs.language
             );
           }
-          pre.appendChild(code);
+          pre.appendChild(code as unknown as VNode & Node);
           code.innerHTML = gen;
           return pre as HTMLElement;
         },
@@ -132,7 +117,7 @@ const ArticleEditor = ({
     editorProps: {
       attributes: {
         class:
-          "[&_.resize-cursor] caret-base-neutral dark:caret-dark-base-neutral h-[500px] px-1 py-0.5 pr-3 w-full flex flex-col justify-start items-start overflow-x-hidden scrollbar dark:dark-scrollbar border-transparent outline-none [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite [&_.tableWrapper]:max-w-full [&_table]:editor-table [&_table]:dark:editor-dark-table [&_.react-renderer.node-codeBlock]:w-full",
+          "[&_.resize-cursor] caret-base-neutral dark:caret-dark-base-neutral w-full h-full max-h-[40rem] px-1 py-0.5 pr-3 flex flex-col justify-start items-start overflow-x-hidden scrollbar dark:dark-scrollbar border-transparent outline-none [&_h3]:editor-heading [&_h3]:dark:editor-dark-heading [&_h4]:editor-heading-h4 [&_h4]:dark:editor-dark-heading-h4 [&_p]:editor-paragraph [&_p]:dark:editor-dark-paragraph [&_strong]:font-extrabold [&_ol]:editor-ordered-list [&_ol]:editor-list [&_ol]:dark:editor-dark-list [&_ul]:editor-unordered-list [&_ul]:editor-list [&_ul]:dark:editor-dark-list [&_a]:editor-link [&_blockquote]:editor-blockquote [&_blockquote]:dark:editor-dark-blockquote [&_cite]:editor-cite [&_cite]:dark:editor-dark-cite [&_.tableWrapper]:max-w-full [&_table]:editor-table [&_table]:dark:editor-dark-table [&_.react-renderer.node-codeBlock]:w-full",
       },
     },
     content,
@@ -142,7 +127,7 @@ const ArticleEditor = ({
   });
 
   if (!editor) {
-    return <Loading size={30} />; // TODO: change this loading to a skeleton loading
+    return <EditorLoadingSleketon />;
   }
 
   return (
@@ -153,7 +138,7 @@ const ArticleEditor = ({
         </div>
         <ArticleEditorContent
           editor={editor}
-          className="border border-base-200 dark:border-dark-base-border rounded transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 focus-within:outline-blue-500 m-1 py-3 pl-4 pr-3"
+          className="border border-base-border dark:border-dark-base-border rounded transition-[outline] duration-200 outline-none outline-2 outline-transparent -outline-offset-2 focus-within:outline-blue-500 m-1 py-3 pl-4 pr-3"
         />
       </div>
     )
