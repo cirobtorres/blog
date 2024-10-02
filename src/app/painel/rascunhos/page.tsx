@@ -35,6 +35,12 @@ export default async function ListummariesPage() {
 
   return (
     <section className="pl-20 pr-7 tablet:pl-6 py-6">
+      <Link
+        href="/painel/rascunhos/criar"
+        className="w-32 text-nowrap transition-[outline] duration-300 outline outline-4 outline-offset-1 outline-transparent focus:outline-[#7be296] h-fit flex justify-center items-center px-2 py-1 rounded font-extrabold text-xs text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
+      >
+        Criar Rascunho
+      </Link>
       <div className="py-4">
         <h1 className="text-xl text-base-neutral dark:text-dark-base-neutral">
           Rascunhos de: <strong>{user?.user_metadata.name}</strong>

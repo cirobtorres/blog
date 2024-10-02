@@ -1,11 +1,7 @@
 "use server";
 
 import Link from "next/link";
-import { SiTailwindcss, SiNextdotjs } from "react-icons/si";
-import { FaPython, FaJava, FaHtml5, FaCss3Alt } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { IoLogoJavascript } from "react-icons/io";
-import { createClient } from "@/utils/supabase/server";
 import formatDate from "@/functions/formatDate";
 
 export default async function ArticleCard({
@@ -35,10 +31,6 @@ export default async function ArticleCard({
         <h3 className="line-clamp-2 text-sm font-extrabold text-base-neutral dark:text-dark-base-neutral mb-1">
           {sub_title}
         </h3>
-        {/* <div
-          dangerouslySetInnerHTML={{ __html: body.substring(0, 255) + "..." }}
-          className="line-clamp-3 text-xs [&_h3]:text-sm [&_h3]:font-bold text-base-neutral dark:text-dark-base-neutral"
-        /> */}
         <span className="flex items-center gap-1 text-sm font-[500] text-base-blue dark:text-dark-base-blue mt-1">
           Saiba mais
           <MdKeyboardArrowRight className="transition-all duration-300 text-xl opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
@@ -47,78 +39,3 @@ export default async function ArticleCard({
     </Link>
   );
 }
-
-const CategoryTag = ({ tag }: { tag: any[] }) => {
-  const mountTagComponent = (id: string, tagArray: string) => {
-    switch (tagArray) {
-      case "javascript":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white bg-base-yellow dark:bg-dark-base-yellow"
-          >
-            <IoLogoJavascript />
-          </span>
-        );
-      case "python":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white bg-base-blue dark:bg-dark-base-blue"
-          >
-            <FaPython />
-          </span>
-        );
-      case "html":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white bg-base-purple dark:bg-dark-base-purple"
-          >
-            <FaHtml5 />
-          </span>
-        );
-      case "css":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white bg-base-pink dark:bg-dark-base-pink"
-          >
-            <FaCss3Alt />
-          </span>
-        );
-      case "java":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-white bg-base-red dark:bg-dark-base-red"
-          >
-            <FaJava />
-          </span>
-        );
-      case "tailwind":
-        return (
-          <span
-            key={id}
-            className="relative group/tailwind text-base p-1 rounded-lg text-base-neutral dark:text-white blue-500 dark:bg-blue-500"
-          >
-            <SiTailwindcss />
-          </span>
-        );
-      case "nextjs":
-        return (
-          <span
-            key={id}
-            className="text-base p-1 rounded-lg text-base-neutral dark:text-[#272727] bg-base-100 flex justify-center items-center"
-          >
-            <SiNextdotjs />
-          </span>
-        );
-    }
-  };
-  return (
-    <div className="flex gap-1">
-      {tag.map(({ id, title }) => mountTagComponent(id, title))}
-    </div>
-  );
-};

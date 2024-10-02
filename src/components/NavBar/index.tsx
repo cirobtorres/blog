@@ -92,26 +92,14 @@ const NavBar = () => {
         <ul className="w-full sticky top-0 self-start text-nowrap list-none flex flex-col gap-2 [&_li_svg]:flex-shrink-0 [&_li_a]:flex [&_li_a]:items-center [&_li_a]:gap-4 [&_li_a]:p-2 tablet:[&_li_a]:px-4 tablet:[&_li_a:hover]:text-base-neutral-hover tablet:[&_li_a:hover]:dark:text-[#fff] tablet:[&_li_a]:py-0 max-[900px]:[&_li_a:hover]:bg-base-150 max-[900px]:[&_li_a:hover]:dark:bg-dark-base-150 [&_li_a]:transition-colors [&_li_a]:duration-200 [&_li]:text-2xl [&_li_a_span]:block [&_li_a_span]:text-sm [&_li]:text-base-neutral [&_li]:dark:text-dark-base-neutral [&_li]:rounded [&_li.dashboard-active]:text-base-green [&_li.dashboard-active]:dark:text-dark-base-green">
           <li
             className={
-              pathname.match(/^\/painel\/todas-as-tags.*/)
+              pathname.match(/^\/painel\/tags.*/)
                 ? "dashboard-active"
                 : undefined
             }
           >
-            <Link href="/painel">
+            <Link href="/painel/tags">
               <FaTags className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
               <span>Todas as tags</span>
-            </Link>
-          </li>
-          <li
-            className={
-              pathname.match(/^\/painel\/criar-tag.*/)
-                ? "dashboard-active"
-                : undefined
-            }
-          >
-            <Link href="/painel/criar-tag">
-              <FaTag className="tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
-              <span>Criar tag</span>
             </Link>
           </li>
         </ul>

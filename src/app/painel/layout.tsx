@@ -26,15 +26,10 @@ export default async function RootLayout({
     error,
   } = await supabase.auth.getUser();
 
-  const {
-    data: { user: supabaseAuthUser },
-    error: supabaseAuthUserError,
-  } = await supabase.auth.getUser();
-
   const { data: blogUser } = await supabase
     .from("blog_author")
     .select("*")
-    .eq("auth_users_id", supabaseAuthUser?.id)
+    .eq("auth_users_id", user?.id)
     .in("privileges", [2, 3])
     .single();
 
