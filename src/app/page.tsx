@@ -15,7 +15,7 @@ export default async function HomePage() {
     .order("created_at", { ascending: false });
   return (
     <>
-      <div className="max-w-5xl mx-auto mb-28">
+      <div className="max-w-5xl mx-auto">
         {articles && (
           <ul className="mx-4 smartphone:mx-10 tablet:mx-20 my-16">
             {articles.map((article, index) => (
@@ -38,7 +38,7 @@ export default async function HomePage() {
           </ul>
         )}
       </div>
-      <Pagination />
+      {/* <Pagination /> */}
     </>
   );
 }

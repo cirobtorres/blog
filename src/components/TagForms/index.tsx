@@ -1,15 +1,17 @@
 "use client";
 
-import { submitTagCreate } from "@/lib/tags";
-import { User } from "@supabase/supabase-js";
 import { useFormState } from "react-dom";
+import { User } from "@supabase/supabase-js";
+import { tagCreate } from "@/lib/tag";
+import { IoClose } from "react-icons/io5";
+import CreateTagButton from "./CreateTagButton";
 
 const TagCreate = ({ user }: { user: User }) => {
-  const [state, action] = useFormState<State, FormData>(submitTagCreate, {
+  const [state, action] = useFormState<State, FormData>(tagCreate, {
     errors: null,
   });
   return (
-    <form action={action}>
+    <form action={action} className="my-4">
       <div className="flex flex-col gap-1 mb-4">
         <input
           type="hidden"
@@ -19,38 +21,41 @@ const TagCreate = ({ user }: { user: User }) => {
         />
         <label
           htmlFor="tag-name"
-          className="transition-colors duration-200 text-base-neutral dark:text-dark-base-neutral cursor-pointer hover:text-base-neutral-hover hover:dark:text-[#fff]"
+          className="w-fit text-xl font-extrabold transition-colors duration-200 text-base-neutral dark:text-dark-base-neutral cursor-pointer hover:text-base-neutral-hover hover:dark:text-[#fff]"
         >
-          Nome da tag
+          Criar tag
         </label>
-        <div className="flex gap-1 max-w-96">
+        <div className="flex gap-1 max-w-[400px] max-[450px]:flex-col">
           <div className="w-full">
-            <input
-              type="text"
-              id="tag-name"
-              name="tag-name"
-              className="w-full h-8 rounded px-2 text-sm transition-[outline] duration-200 text-base-neutral dark:text-dark-base-neutral outline-none outline-2 outline-transparent -outline-offset-2 focus:outline-blue-500 border border-base-border dark:border-dark-base-border bg-inherit placeholder:text-base-placeholder dark:placeholder:text-dark-base-placeholder"
-            />
+            <div className="relative w-full max-w-md h-8 rounded overflow-hidden transition-[outline] duration-200 outline outline-2 outline-transparent -outline-offset-1 focus-within:outline-blue-500 border border-base-border dark:border-dark-base-border">
+              <input
+                type="text"
+                id="tag-name"
+                name="tag-name"
+                maxLength={50}
+                className="w-full h-full pr-7 pl-1.5 pt-1 pb-1.5 flex items-center text-xs placeholder:text-xs placeholder:text-dark-base-placeholder text-base-neutral dark:text-dark-base-neutral border-none outline-none bg-transparent"
+              />
+              <button
+                type="reset"
+                tabIndex={-1}
+                onClick={(event) => {
+                  const inputElement = document.getElementById("tag-name");
+                  inputElement?.focus();
+                }}
+                className="absolute top-1/2 -translate-y-1/2 right-2 hover:text-base-red dark:hover:text-dark-base-red text-sm text-base-neutral dark:text-dark-base-neutral"
+              >
+                <IoClose />
+              </button>
+            </div>
             {state.title && (
               <div className="py-2">
-                <p className="text-xs text-base-red dark:text-dark-base-red">
+                <p className="text-xs pl-2 text-base-red dark:text-dark-base-red">
                   {state.title}
                 </p>
               </div>
             )}
           </div>
-          <div
-            className="w-16" // w-full max-w-[100px]
-          >
-            <button
-              type="submit"
-              className="h-8 w-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#359b50] dark:border-[#9af1b1] bg-base-green hover:bg-base-green-hover dark:bg-dark-base-green dark:hover:bg-dark-base-green-hover"
-            >
-              <p className="font-extrabold text-base-100 dark:text-base-100">
-                Criar
-              </p>
-            </button>
-          </div>
+          <CreateTagButton />
         </div>
       </div>
     </form>

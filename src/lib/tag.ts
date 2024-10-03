@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "../utils/supabase/server";
 import slugify from "../functions/slugify";
 
-const submitTagCreate = async (state: {}, formData: FormData) => {
+const tagCreate = async (state: {}, formData: FormData) => {
   let errors = {};
   const user = formData.get("tag-creator") as string;
   const title = formData.get("tag-name") as string;
@@ -40,4 +40,18 @@ const submitTagCreate = async (state: {}, formData: FormData) => {
   return true;
 };
 
-export { submitTagCreate };
+const tagDelete = async (id: string) => {
+  const supabase = createClient();
+
+  const { error: tagError } = await supabase.from("tags").delete().eq("id", id);
+
+  if (tagError) {
+    console.log(tagError);
+    throw tagError;
+  }
+
+  revalidatePath("/");
+  return true;
+};
+
+export { tagCreate, tagDelete };

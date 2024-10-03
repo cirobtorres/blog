@@ -22,24 +22,24 @@ export default function HiddenDashboard({
           height={30}
           className="rounded-full"
         />
-        <p className="max-w-20 truncate text-sm text-base-neutral dark:text-dark-base-neutral">
+        <div className="flex items-center max-w-48 text-sm text-base-neutral dark:text-dark-base-neutral">
           <Link
             href="/painel/configurar"
-            className="font-extrabold hover:underline"
+            className="w-full truncate font-extrabold hover:underline"
           >
             {user.user_metadata.name || user.email}
           </Link>
-          <br />
+          <div className="flex-shrink-0 w-[1px] h-4 mx-2 bg-base-neutral dark:bg-dark-base-neutral" />
           <button
             onClick={(event) => {
               event.preventDefault();
               signOut();
             }}
-            className="hover:underline"
+            className="flex-shrink-0 hover:underline"
           >
             Sair
           </button>
-        </p>
+        </div>
       </li>
       {(privileges === 2 || privileges === 3) && (
         <li>

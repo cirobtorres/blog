@@ -87,7 +87,7 @@ const Header = ({
                 >
                   <Link
                     href="/contato"
-                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
                   >
                     Contato
                   </Link>
@@ -102,7 +102,7 @@ const Header = ({
                 >
                   <Link
                     href="/sobre-mim"
-                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-dark-base-green text-base-neutral dark:text-dark-base-neutral"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
                   >
                     Sobre mim
                   </Link>
@@ -131,7 +131,7 @@ const HeaderDashboard = ({
   theme: string;
 }) => {
   return (
-    <header className="flex-shrink-0 flex items-center w-full h-12 px-6 border-b border-base-border dark:border-dark-base-border">
+    <header className="flex-shrink-0 flex items-center w-full h-12 pl-20 tablet:pl-6 pr-6 border-b border-base-border dark:border-dark-base-border">
       <nav className="w-full h-full flex items-center justify-between">
         <p className="text-xs text-base-placeholder dark:text-dark-base-placeholder">
           Painel de Artigos

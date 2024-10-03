@@ -33,7 +33,7 @@ export default async function DashboardPage({
         <ArticleSideBar />
         <div className="flex flex-row items-center max-[600px]:flex-col max-[600px]:items-start gap-4">
           <div className="w-full flex items-center gap-4">
-            <Search />
+            <Search id="articles-search" placeholder="Pesquise artigos" />
             <FilterButton />
           </div>
         </div>

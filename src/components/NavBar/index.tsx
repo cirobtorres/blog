@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { PiSignOutBold } from "react-icons/pi";
 import { TiPlus } from "react-icons/ti";
-import { IoDocument, IoDocuments } from "react-icons/io5";
-import { FaHome } from "react-icons/fa";
+import { IoHome, IoDocument, IoDocuments } from "react-icons/io5";
 import { BsFileEarmarkRichtextFill } from "react-icons/bs";
 import { FaTag, FaTags, FaGear } from "react-icons/fa6";
 import { redirect, usePathname } from "next/navigation";
@@ -22,7 +21,7 @@ const NavBar = () => {
         className="p-2 h-12 border-b border-base-border dark:border-dark-base-border group"
       >
         <div className="rounded h-full flex items-center gap-4 p-2 text-start w-full tablet:px-2 transition-colors duration-200 hover:text-base-neutral-hover hover:dark:text-[#fff] text-base-neutral dark:text-dark-base-neutral text-xl uppercase font-extrabold max-[900px]:hover:dark:bg-dark-base-150">
-          <FaHome className="flex-shrink-0 text-2xl tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
+          <IoHome className="flex-shrink-0 text-2xl tablet:invisible tablet:hidden tablet:opacity-0 tablet:w-0 visible block opacity-100 w-auto" />
           Home
         </div>
       </Link>

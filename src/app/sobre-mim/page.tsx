@@ -60,8 +60,8 @@ export default async function AboutPage() {
             temporibus deserunt! Accusamus voluptatum atque maiores magni?
           </p>
         </div>
-        <hr className="w-full dark:border-dark-base-border" />
-        <div className="px-28 flex justify-between w-full p-4 bg-base-200 dark:bg-dark-base-300">
+        {/* <hr className="w-full dark:border-dark-base-border" /> */}
+        <div className="border-y border-base-border dark:border-dark-base-border px-28 flex justify-between w-full p-4 bg-base-200 dark:bg-dark-base-300">
           <span className="text-base-placeholder dark:text-dark-base-placeholder text-base flex items-center gap-1">
             <GoogleMapsIcon /> SP, Brasil
           </span>
