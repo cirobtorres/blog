@@ -8,11 +8,12 @@ import formatDate from "../functions/formatDate";
 
 export default async function HomePage() {
   const supabase = createClient();
-  const { data: articles, error } = await supabase
+  const { data: articles, error: articleError } = await supabase
     .from("topics")
     .select("*")
     .eq("private", false)
     .order("created_at", { ascending: false });
+
   return (
     <>
       <div className="max-w-5xl mx-auto">

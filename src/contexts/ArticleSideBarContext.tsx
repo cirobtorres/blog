@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, createContext, useReducer } from "react";
+import { useState, createContext } from "react";
 
 type ArticleSideBarProps = {
   isOpen: boolean;

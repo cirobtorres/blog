@@ -1,22 +1,22 @@
 "use client";
 
-import useArticleSideBar from "@/hooks/useArticleSideBar";
 import RadioInput from "../RadioInput";
 import CheckBox from "../CheckBox";
 import ArticleEditorTitle from "../ArticleEditorForm/ArticleEditorTitle";
 import ArticleEditorSubtitle from "../ArticleEditorForm/ArticleEditorSubtitle";
 import { FaGlobeAmericas, FaLock } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import {
   ArticleDeleteButton,
   ArticleEditBodyButton,
   ArticleUpdateButton,
 } from "../ArticleEditorForm/ArticleOnSubmitButton";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import formatDate from "../../functions/formatDate";
 import { submitArticleUpdate } from "../../lib/article";
+import formatDate from "../../functions/formatDate";
 import useFlashMessage from "../../hooks/useFlashMessage";
+import { MultiValue } from "react-select";
 
 const initialState = {
   titleEmptyError: false,
@@ -49,36 +49,41 @@ const updateReducer = (state: ErrorState, action: ValidActions) => {
   }
 };
 
-export default function ArticleSideBar() {
+interface Tag {
+  value: string;
+  label: string;
+}
+
+export default function ArticleSideBar({
+  article,
+  tags,
+  isOpen,
+  setIsOpen,
+}: {
+  article: any;
+  tags: { id: string; title: string }[] | null;
+  isOpen: boolean;
+  setIsOpen: (value: boolean) => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [errors, dispatchErrors] = useReducer(updateReducer, initialState);
 
-  const {
-    isOpen,
-    setIsOpen,
-    id,
-    title,
-    setTitle,
-    subtitle,
-    setSubtitle,
-    slug,
-    updatedAt,
-    createdAt,
-    privateArticle,
-    blockedForReplies,
-  } = useArticleSideBar();
+  const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
 
-  const [radioVal, setRadioVal] = useState<"private" | "public">(
-    privateArticle ? "private" : "public"
-  );
+  const [radioVal, setRadioVal] = useState<"private" | "public">("private");
 
-  const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">(
-    blockedForReplies ? "blocked" : "unblocked"
-  );
+  const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">("blocked");
+
+  const [tagVal, setTagVal] = useState<MultiValue<Tag>>([]);
 
   const { setShow, setLabel, setType } = useFlashMessage();
 
-  const handleUpdateSubmit = async () => {
+  const handleUpdateSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    // event.preventDefault();
     setLoading(true);
     if (!title) {
       dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
@@ -105,12 +110,20 @@ export default function ArticleSideBar() {
 
   const handleDeleteSubmit = () => {};
 
+  useEffect(() => {
+    setId(article.id);
+    setTitle(article.title);
+    setSubtitle(article.sub_title);
+    setRadioVal(article.private ? "private" : "public");
+    setCheckVal(article.blocked_for_replies ? "blocked" : "unblocked");
+  }, [article]);
+
   return (
     <>
       <div
         className={`z-50 fixed inset-0 transition-colors duration-200 ${
           isOpen
-            ? "pointer-events-auto bg-blue-500/10"
+            ? "pointer-events-auto bg-black/35 dark:bg-blue-500/10"
             : "pointer-events-none bg-inherit"
         }`}
         onClick={() => setIsOpen(false)}
@@ -163,7 +176,7 @@ export default function ArticleSideBar() {
               Texto do Artigo
             </h2>
           </div>
-          <ArticleEditBodyButton id={id} slug={slug} />
+          <ArticleEditBodyButton id={id} slug={article.slug} />
           <div className="flex flex-col py-4 gap-4 ml-1">
             <RadioInput
               id="private-radio"
@@ -171,7 +184,7 @@ export default function ArticleSideBar() {
               label="Privado"
               helpText="Mantenha o artigo em segredo."
               value={radioVal}
-              checked="private"
+              checkedValue="private"
               Icon={FaLock}
               setValue={setRadioVal}
             />
@@ -181,7 +194,7 @@ export default function ArticleSideBar() {
               label="Público"
               helpText="Publique o artigo globalmente."
               value={radioVal}
-              checked="public"
+              checkedValue="public"
               Icon={FaGlobeAmericas}
               setValue={setRadioVal}
             />
@@ -198,10 +211,10 @@ export default function ArticleSideBar() {
           </div>
           <div className="flex flex-col py-4">
             <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
-              Atualizado: {formatDate(updatedAt)}
+              Atualizado: {formatDate(article.updated_at)}
             </time>
             <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
-              Criado: {formatDate(createdAt)}
+              Criado: {formatDate(article.created_at)}
             </time>
           </div>
           {radioVal === "private" && (

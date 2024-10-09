@@ -7,6 +7,7 @@ import Search from "@/components/Search";
 import FilterButton from "@/components/FilterButton";
 import DashboardArticleCard from "@/components/DashboardArticleCard";
 import ArticleSideBar from "@/components/ArticleSideBar";
+import DashboardArticleGrid from "../../components/DashboardArticleGrid";
 
 export default async function DashboardPage({
   searchParams: {
@@ -27,33 +28,32 @@ export default async function DashboardPage({
     .select("*")
     .order("updated_at", { ascending: false });
 
+  const { data: tags, error: tagError } = await supabase
+    .from("tags")
+    .select("*")
+    .order("title");
+
   return (
     <section className="pl-20 pr-7 tablet:pl-6 py-6 overflow-x-hidden">
-      <ArticleSideBarContextProvider>
-        <ArticleSideBar />
-        <div className="flex flex-row items-center max-[600px]:flex-col max-[600px]:items-start gap-4">
-          <div className="w-full flex items-center gap-4">
-            <Search id="articles-search" placeholder="Pesquise artigos" />
-            <FilterButton />
-          </div>
+      {/* <ArticleSideBarContextProvider>
+        <ArticleSideBar tags={tags} /> */}
+      <div className="flex flex-row items-center max-[600px]:flex-col max-[600px]:items-start gap-4">
+        <div className="w-full flex items-center gap-4">
+          <Search id="articles-search" placeholder="Pesquise artigos" />
+          <FilterButton />
         </div>
-        <div className="flex justify-between max-[600px]:flex-col py-4">
-          <h1 className="text-xl text-base-neutral dark:text-dark-base-neutral">
-            Artigos de: <strong>{user?.user_metadata.name}</strong>
-          </h1>
-          <div className="flex gap-1 items-center max-[600px]:pt-2">
-            <Filter text="Artigos privados" color="#ef4444" />
-            <Filter text="Comentários bloqueados" color="#eab308" />
-          </div>
+      </div>
+      <div className="flex justify-between max-[600px]:flex-col py-4">
+        <h1 className="text-xl text-base-neutral dark:text-dark-base-neutral">
+          Artigos de: <strong>{user?.user_metadata.name}</strong>
+        </h1>
+        <div className="flex gap-1 items-center max-[600px]:pt-2">
+          <Filter text="Artigos privados" color="#ef4444" />
+          <Filter text="Comentários bloqueados" color="#eab308" />
         </div>
-        {articles && (
-          <ul className="grid grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1 gap-3">
-            {articles.map((article, index) => (
-              <DashboardArticleCard key={article.id} {...article} />
-            ))}
-          </ul>
-        )}
-      </ArticleSideBarContextProvider>
+      </div>
+      <DashboardArticleGrid articles={articles} tags={tags} />
+      {/* </ArticleSideBarContextProvider> */}
     </section>
   );
 }

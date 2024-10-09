@@ -1,32 +1,17 @@
 "use client";
 
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { submitArticleBodyUpdate } from "@/lib/article";
 import {
-  articleDelete,
-  submitArticleBodyUpdate,
-  submitArticleCreate,
-  submitArticleUpdate,
-} from "@/lib/article";
-import {
-  ArticleDeleteButton,
-  ArticleOnSubmitButton,
   ArticleUpdateButton,
   ReturnButton,
   SummaryCreateButton,
   SummaryUpdateButton,
 } from "./ArticleOnSubmitButton";
-import { FaGlobeAmericas, FaLock, FaPencilAlt } from "react-icons/fa";
 import ArticleEditor from "./ArticleEditor";
-import CheckBox from "../CheckBox";
-import ArticleEditorTitle from "./ArticleEditorTitle";
-import ArticleEditorSubtitle from "./ArticleEditorSubtitle";
-import RadioInput from "../RadioInput";
-import { SubmitConfirmationModal, DeleteConfirmationModal } from "../Modals";
-import formatDate from "@/functions/formatDate";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { submitSummaryCreate, submitSummaryUpdate } from "@/lib/summary";
-import Loading from "../Loading";
 
 const initialState = {
   titleEmptyError: false,

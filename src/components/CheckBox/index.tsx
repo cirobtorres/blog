@@ -1,6 +1,5 @@
-import { MouseEventHandler } from "react";
+import { ChangeEventHandler } from "react";
 
-// export default function CheckBox<T extends string>({
 export default function CheckBox({
   id,
   text,
@@ -10,7 +9,7 @@ export default function CheckBox({
 }: {
   id: string;
   text: string;
-  setValue: MouseEventHandler;
+  setValue: ChangeEventHandler<HTMLInputElement>;
   checked?: boolean;
   size?: string;
 }) {
@@ -30,8 +29,8 @@ export default function CheckBox({
           id={id}
           name={id}
           type="checkbox"
-          onClick={setValue}
-          defaultChecked={checked}
+          onChange={setValue}
+          checked={checked}
           className="block w-full h-full m-0 p-0 outline-none cursor-pointer bg-base-100 dark:bg-dark-base-100 [-webkit-appearance:none] [-moz-appearance:none] [-webkit-tap-highlight-color:transparent]"
         />
         <svg className="block w-full h-full fill-none left-0 top-0 pointer-events-none stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">

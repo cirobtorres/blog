@@ -5,7 +5,7 @@ const RadioInput = <T extends string>({
   helpText,
   value,
   setValue,
-  checked,
+  checkedValue,
   Icon,
 }: {
   id: string;
@@ -14,7 +14,7 @@ const RadioInput = <T extends string>({
   helpText: string;
   value: T;
   setValue: (value: T) => void;
-  checked: T;
+  checkedValue: T;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }) => {
   return (
@@ -24,13 +24,13 @@ const RadioInput = <T extends string>({
         id={id}
         name={name}
         value={value}
-        onClick={() => setValue(checked)}
-        defaultChecked={value === checked}
+        onChange={() => setValue(value)}
+        checked={value === checkedValue}
         className="hidden peer"
       />
       <div
         className={`relative size-3 rounded-full outline outline-1 outline-offset-2 ${
-          value === checked
+          value === checkedValue
             ? "outline-base-green dark:outline-dark-base-green"
             : "outline-base-neutral dark:outline-dark-base-neutral"
         } peer-checked:[&_div]:size-full overflow-hidden`}
