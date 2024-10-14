@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/globals.css";
+import ToastMessagesProvider from "@/components/ToastMessages";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -45,7 +46,9 @@ export default async function RootLayout({
         className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
       >
         <Header user={user} privileges={blogUser?.privileges} theme={theme} />
-        <main className="w-full h-full flex-[2_2_0]">{children}</main>
+        <ToastMessagesProvider>
+          <main className="w-full h-full flex-[2_2_0]">{children}</main>
+        </ToastMessagesProvider>
         <Footer />
       </body>
     </html>

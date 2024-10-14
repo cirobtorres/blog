@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import formatDate from "@/functions/formatDate";
+import { formatDate } from "@/functions/formatDate";
 
 export default async function ArticleCard({
   id,

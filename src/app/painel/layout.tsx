@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { ArticleSideBarContextProvider } from "@/contexts/ArticleSideBarContext";
-import { FlashMessageContextProvider } from "../../contexts/FlashMessageContext";
 import { FaRegCopyright } from "react-icons/fa";
 import NavBar from "@/components/NavBar";
-import FlashMessage from "@/components/FlashMessage";
-import ArticleSideBar from "@/components/ArticleSideBar";
 import { HeaderDashboard } from "@/components/Header";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -39,20 +35,17 @@ export default async function RootLayout({
 
   return (
     <div className="relative flex flex-col w-full h-full">
-      <FlashMessageContextProvider>
-        <FlashMessage />
-        <div className="w-full h-full">
-          <div className="relative w-full h-full flex">
-            <NavBar />
-            <div className="relative w-full h-full flex flex-col">
-              <HeaderDashboard user={user} theme={theme} />
-              <div className="w-full h-full bg-base-100 dark:bg-dark-base-100">
-                {children}
-              </div>
+      <div className="w-full h-full">
+        <div className="relative w-full h-full flex">
+          <NavBar />
+          <div className="relative w-full h-full flex flex-col">
+            <HeaderDashboard user={user} theme={theme} />
+            <div className="w-full h-full bg-base-100 dark:bg-dark-base-100">
+              {children}
             </div>
           </div>
         </div>
-      </FlashMessageContextProvider>
+      </div>
       <FooterDashboard />
     </div>
   );

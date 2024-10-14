@@ -6,7 +6,7 @@ import { FaClock } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { createClient } from "@/utils/supabase/server";
-import formatDate from "@/functions/formatDate";
+import { formatDate } from "@/functions/formatDate";
 import Breadcrumbs from "../Breadcrumbs";
 
 const ArticleHero = async ({

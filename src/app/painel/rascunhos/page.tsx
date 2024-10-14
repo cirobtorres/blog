@@ -1,11 +1,10 @@
 "use server";
 
-import SummaryCard from "@/components/SummaryCard";
-import formatDate from "@/functions/formatDate";
-import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { createClient } from "@/utils/supabase/server";
+import DashboardSummaryCard from "@/components/DashboardSummaryCard";
+import DashboardSummaryGrid from "@/components/DashboardSummaryGrid";
 
 export default async function ListummariesPage() {
   const supabase = createClient();
@@ -33,6 +32,11 @@ export default async function ListummariesPage() {
     .select("*")
     .order("updated_at", { ascending: false });
 
+  const { data: tags, error: tagError } = await supabase
+    .from("tags")
+    .select("*")
+    .order("title");
+
   return (
     <section className="pl-20 pr-7 tablet:pl-6 py-6">
       <Link
@@ -46,18 +50,7 @@ export default async function ListummariesPage() {
           Rascunhos de: <strong>{user?.user_metadata.name}</strong>
         </h1>
       </div>
-      <ul className="min-h-[11rem] relative grid grid-cols-3 max-[1100px]:grid-cols-2 max-[750px]:grid-cols-1 gap-3">
-        {summaries?.map((summary, index) => (
-          <SummaryCard key={index} {...summary} />
-        ))}
-        {!summaries && (
-          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-            <span className="text-3xl font-extrabold text-base-placeholder dark:text-dark-base-placeholder">
-              Nenhum Rascunho
-            </span>
-          </div>
-        )}
-      </ul>
+      <DashboardSummaryGrid summaries={summaries} tags={tags} />
     </section>
   );
 }

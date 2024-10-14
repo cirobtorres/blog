@@ -57,16 +57,14 @@ const Header = ({
           pathname.startsWith("/artigos")
             ? "fixed bg-base-100/80 dark:bg-dark-base-100/80"
             : "static bg-base-100 dark:bg-dark-base-100"
-        } [z-index:10] top-0 transition-[top] duration-300 h-16 w-full backdrop-blur-sm border-b border-base-border dark:border-dark-base-border
+        } [z-index:10] top-0 transition-[top] duration-300 h-12 w-full backdrop-blur-sm border-b border-base-border dark:border-dark-base-border
     `}
       >
-        <div
-          className="h-full pl-4 pr-6" // max-w-webpage mx-auto px-10 tablet:px-20
-        >
+        <div className="h-full pl-4 pr-6">
           <nav className="w-full h-full flex items-center justify-between">
             <div className="h-full flex items-center">
               <div
-                className="pt-1 h-full"
+                className="h-full"
                 style={{ borderBottom: "3px solid transparent" }}
               >
                 <Link
@@ -76,7 +74,7 @@ const Header = ({
                   HOME
                 </Link>
               </div>
-              <ul className="pt-1 h-full hidden smartphone:flex gap-4 items-center justify-between">
+              <ul className="h-full hidden smartphone:flex gap-4 items-center justify-between">
                 <li
                   className="w-20 h-full"
                   style={{
@@ -87,7 +85,7 @@ const Header = ({
                 >
                   <Link
                     href="/contato"
-                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-neutral-hover dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
                   >
                     Contato
                   </Link>
@@ -102,7 +100,7 @@ const Header = ({
                 >
                   <Link
                     href="/sobre-mim"
-                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-green dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
+                    className="text-xs smartphone:text-sm h-full flex justify-center items-center font-[500] hover:text-base-neutral-hover dark:hover:text-[#fff] text-base-neutral dark:text-dark-base-neutral"
                   >
                     Sobre mim
                   </Link>

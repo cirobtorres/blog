@@ -35,7 +35,25 @@
   --dark-base-red: #f87272;
   --dark-base-pink: #d926a9;
   --dark-base-purple: #661ae6;
+
+  --toastify-icon-color-info: #3abff8;
+  --toastify-icon-color-success: #6ee7b7;
+  --toastify-icon-color-warning: #fbbf24;
+  --toastify-icon-color-error: #f87272;
+
+  --toastify-color-progress-info: #93c5fd;
+  --toastify-color-progress-success: #6ee7b7;
+  --toastify-color-progress-warning: #fcd34d;
+  --toastify-color-progress-error: #fca5a5;
 }
+
+/*---------------------------------------ToastMessages-----------------------------------------*/
+/* Close button */
+.Toastify__close-button {
+  color: #fff;
+  opacity: 0.7;
+}
+/*--------------------------------------------------------------------------------*/
 
 /* Get rid off reveal button (eye icon) from password input type */
 input[type="password"]::-ms-reveal,

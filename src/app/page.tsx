@@ -4,7 +4,7 @@ import { BiRadioCircle } from "react-icons/bi";
 import { createClient } from "../utils/supabase/server";
 import ArticleCard from "@/components/ArticleCard";
 import Pagination from "@/components/Pagination";
-import formatDate from "../functions/formatDate";
+import { formatDate } from "../functions/formatDate";
 
 export default async function HomePage() {
   const supabase = createClient();

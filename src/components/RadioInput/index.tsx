@@ -1,3 +1,5 @@
+import { ChangeEventHandler } from "react";
+
 const RadioInput = <T extends string>({
   id,
   name,
@@ -13,7 +15,7 @@ const RadioInput = <T extends string>({
   label: string;
   helpText: string;
   value: T;
-  setValue: (value: T) => void;
+  setValue: ChangeEventHandler<HTMLInputElement>;
   checkedValue: T;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }) => {
@@ -24,7 +26,7 @@ const RadioInput = <T extends string>({
         id={id}
         name={name}
         value={value}
-        onChange={() => setValue(value)}
+        onChange={setValue}
         checked={value === checkedValue}
         className="hidden peer"
       />

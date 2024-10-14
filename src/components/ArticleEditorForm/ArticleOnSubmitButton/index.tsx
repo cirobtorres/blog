@@ -107,10 +107,10 @@ const ArticleUpdateButton = ({ loading }: { loading: boolean }) => {
   );
 };
 
-const ArticleEditBodyButton = ({ id, slug }: { id: string; slug: string }) => {
+const EditBodyButton = ({ path }: { path: string }) => {
   return (
     <Link
-      href={`/painel/artigos/${slug}/${id}`}
+      href={path}
       className="h-8 w-28" // w-full max-w-[100px]
     >
       <button
@@ -146,6 +146,6 @@ export {
   SummaryUpdateButton,
   ArticleOnSubmitButton,
   ArticleUpdateButton,
-  ArticleEditBodyButton,
   ArticleDeleteButton,
+  EditBodyButton,
 };

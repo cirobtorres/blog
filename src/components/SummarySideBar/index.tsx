@@ -1,10 +1,7 @@
 "use client";
 
-import RadioInput from "../RadioInput";
-import CheckBox from "../CheckBox";
 import ArticleEditorTitle from "../ArticleEditorForm/ArticleEditorTitle";
 import ArticleEditorSubtitle from "../ArticleEditorForm/ArticleEditorSubtitle";
-import { FaGlobeAmericas, FaLock } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useReducer, useState } from "react";
 import {
@@ -13,10 +10,9 @@ import {
   ArticleUpdateButton,
 } from "../ArticleEditorForm/ArticleOnSubmitButton";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { submitArticleUpdate } from "../../lib/article";
-import { formatDate } from "../../functions/formatDate";
+import { calculateDaysDiff, formatDate } from "../../functions/formatDate";
 import { MultiValue } from "react-select";
-import { showToast } from "../ToastMessages";
+import { submitSummaryUpdate } from "@/lib/summary";
 
 const initialState = {
   titleEmptyError: false,
@@ -54,13 +50,13 @@ interface Tag {
   label: string;
 }
 
-export default function ArticleSideBar({
-  article,
+export default function SummarySideBar({
+  summary,
   tags,
   isOpen,
   setIsOpen,
 }: {
-  article: any;
+  summary: any;
   tags: { id: string; title: string }[] | null;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -71,14 +67,13 @@ export default function ArticleSideBar({
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const [radioVal, setRadioVal] = useState<"private" | "public">("private");
-  const [checkVal, setCheckVal] = useState<"blocked" | "unblocked">("blocked");
+
   const [tagVal, setTagVal] = useState<MultiValue<Tag>>([]);
 
   const handleUpdateSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    event.preventDefault();
+    // event.preventDefault();
     setLoading(true);
     if (!title) {
       dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
@@ -94,26 +89,18 @@ export default function ArticleSideBar({
       setLoading(false);
       return;
     } else {
-      await submitArticleUpdate(id, title, subtitle, radioVal, checkVal);
-      showToast("success", <p>Artigo atualizado!</p>);
-      showToast("error", <p>Erro!</p>);
-      showToast("info", <p>Info!</p>);
-      showToast("warning", <p>Warning!</p>);
-      showToast("default", <p>Default!</p>);
+      await submitSummaryUpdate(id, title, subtitle);
     }
-    setIsOpen(false);
-    setLoading(false);
+    // setLoading(false);
   };
 
   const handleDeleteSubmit = () => {};
 
   useEffect(() => {
-    setId(article.id);
-    setTitle(article.title);
-    setSubtitle(article.sub_title);
-    setRadioVal(article.private ? "private" : "public");
-    setCheckVal(article.blocked_for_replies ? "blocked" : "unblocked");
-  }, [article]);
+    setId(summary.id);
+    setTitle(summary.title);
+    setSubtitle(summary.sub_title);
+  }, [summary]);
 
   return (
     <>
@@ -173,87 +160,17 @@ export default function ArticleSideBar({
               Texto do Artigo
             </h2>
           </div>
-          <EditBodyButton path={`/painel/artigos/${article.slug}/${id}`} />
-          <div className="flex flex-col py-4 gap-4 ml-1">
-            <RadioInput
-              id="private-radio"
-              name="article-privacy"
-              label="Privado"
-              helpText="Mantenha o artigo em segredo."
-              value={radioVal}
-              checkedValue="private"
-              Icon={FaLock}
-              setValue={() =>
-                setRadioVal(radioVal === "private" ? "public" : "private")
-              }
-            />
-            <RadioInput
-              id="public-radio"
-              name="article-privacy"
-              label="Público"
-              helpText="Publique o artigo globalmente."
-              value={radioVal}
-              checkedValue="public"
-              Icon={FaGlobeAmericas}
-              setValue={() =>
-                setRadioVal(radioVal === "private" ? "public" : "private")
-              }
-            />
-          </div>
-          <div className="flex my-4">
-            <CheckBox
-              id="block-replies"
-              text="Bloquear comentários?"
-              checked={checkVal === "blocked"}
-              setValue={() =>
-                setCheckVal(checkVal === "blocked" ? "unblocked" : "blocked")
-              }
-            />
-          </div>
+          <EditBodyButton path={`/painel/artigos/${summary.slug}/${id}`} />
           <div className="flex flex-col py-4">
             <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
-              Atualizado: {formatDate(article.updated_at)}
+              Última atualização: {formatDate(summary.updated_at)},{" "}
+              {calculateDaysDiff(new Date(summary.updated_at))}
             </time>
             <time className="text-xs text-base-neutral dark:text-dark-base-neutral">
-              Criado: {formatDate(article.created_at)}
+              Criado: {formatDate(summary.created_at)},{" "}
+              {calculateDaysDiff(new Date(summary.created_at))}
             </time>
           </div>
-          {radioVal === "private" && (
-            <HelpText color="fill-base-yellow dark:fill-dark-base-yellow">
-              <p className="text-xs text-base-yellow dark:text-dark-base-yellow">
-                Seu artigo está marcado como{" "}
-                <span className="font-extrabold">privado</span>. Artigos
-                privados só podem ser lidos por você. Manter um artigo como
-                privado é muito útil quando o artigo ainda não está finalizado,
-                ou caso queiramos remover o conteúdo da internet sem a
-                necessidade de deletá-lo para sempre da base de dados.
-              </p>
-            </HelpText>
-          )}
-          {radioVal === "public" && (
-            <HelpText color="fill-base-blue dark:fill-dark-base-blue">
-              <p className="text-xs text-base-blue dark:text-dark-base-blue">
-                Seu artigo está marcado como{" "}
-                <span className="font-extrabold">público</span>. Clicando em
-                salvar, você estará publicando seu artigo na internet para que
-                todos possam lê-lo. Certifique-se de que você tenha uma versão
-                final desse artigo.{" "}
-                <span className="font-extrabold">
-                  Todas as modificações a esse artigo a partir de então exibirão
-                  o histórico de edições para todos os usuários
-                </span>
-                .
-              </p>
-            </HelpText>
-          )}
-          {checkVal === "blocked" && (
-            <HelpText color="fill-base-red dark:fill-dark-base-red">
-              <p className="text-xs text-base-red dark:text-dark-base-red">
-                Os comentários desse artigo estão{" "}
-                <span className="font-extrabold">bloqueados</span> por você.
-              </p>
-            </HelpText>
-          )}
           <div className="flex justify-center gap-2 py-4">
             <button
               type="button"

@@ -1,12 +1,8 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { ArticleSideBarContextProvider } from "@/contexts/ArticleSideBarContext";
 import Search from "@/components/Search";
 import FilterButton from "@/components/FilterButton";
-import DashboardArticleCard from "@/components/DashboardArticleCard";
-import ArticleSideBar from "@/components/ArticleSideBar";
 import DashboardArticleGrid from "../../components/DashboardArticleGrid";
 
 export default async function DashboardPage({
@@ -35,8 +31,6 @@ export default async function DashboardPage({
 
   return (
     <section className="pl-20 pr-7 tablet:pl-6 py-6 overflow-x-hidden">
-      {/* <ArticleSideBarContextProvider>
-        <ArticleSideBar tags={tags} /> */}
       <div className="flex flex-row items-center max-[600px]:flex-col max-[600px]:items-start gap-4">
         <div className="w-full flex items-center gap-4">
           <Search id="articles-search" placeholder="Pesquise artigos" />
@@ -53,7 +47,6 @@ export default async function DashboardPage({
         </div>
       </div>
       <DashboardArticleGrid articles={articles} tags={tags} />
-      {/* </ArticleSideBarContextProvider> */}
     </section>
   );
 }

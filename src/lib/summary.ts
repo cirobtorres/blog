@@ -47,11 +47,36 @@ const submitSummaryCreate = async (state: {}, formData: FormData) => {
     throw summariesError;
   }
 
-  revalidatePath("/painel/rascunhos", "layout");
+  revalidatePath("/");
   redirect(`/painel/rascunhos/criar/${summariesData.slug}/${summariesData.id}`);
 };
 
-const submitSummaryUpdate = async (id: string, body: string) => {
+const submitSummaryUpdate = async (
+  id: string,
+  title: string,
+  subtitle: string
+) => {
+  const supabase = createClient();
+
+  const { data: summariesData, error: summariesError } = await supabase
+    .from("summaries")
+    .update({
+      title,
+      sub_title: subtitle,
+      updated_at: new Date(),
+    })
+    .eq("id", id);
+
+  if (summariesError) {
+    // console.log(summariesError);
+    throw summariesError;
+  }
+
+  revalidatePath("/");
+  redirect("/painel/rascunhos");
+};
+
+const submitSummaryBodyUpdate = async (id: string, body: string) => {
   const supabase = createClient();
 
   const { data: summariesData, error: summariesError } = await supabase
@@ -67,7 +92,7 @@ const submitSummaryUpdate = async (id: string, body: string) => {
     throw summariesError;
   }
 
-  revalidatePath("/painel/rascunhos", "layout");
+  revalidatePath("/");
   redirect("/painel/rascunhos");
 };
 
@@ -84,8 +109,13 @@ const summaryDelete = async (id: string) => {
     throw summariesError;
   }
 
-  revalidatePath("/painel/rascunhos", "layout");
+  revalidatePath("/");
   return true;
 };
 
-export { submitSummaryCreate, submitSummaryUpdate, summaryDelete };
+export {
+  submitSummaryCreate,
+  submitSummaryUpdate,
+  submitSummaryBodyUpdate,
+  summaryDelete,
+};

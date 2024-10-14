@@ -1,7 +1,7 @@
 "use client";
 
 import { MdKeyboardArrowRight } from "react-icons/md";
-import formatDate from "@/functions/formatDate";
+import { formatDate } from "@/functions/formatDate";
 
 const DashboardArticleCard = ({
   article,

@@ -27,7 +27,7 @@ export default async function ArticlePage({ params }: Params) {
 
   if (!error) {
     return (
-      <div className="w-full h-full mx-0 bg-base-150 dark:bg-dark-base-150 mt-16">
+      <div className="w-full h-full mx-0 bg-base-150 dark:bg-dark-base-150 mt-12">
         <ArticleHero {...data} />
         <section className="mx-4 smartphone:mx-10 tablet:mx-20">
           <div className="w-full max-w-webpage mx-auto grid grid-cols-[minmax(300px,1fr)] tablet:gap-8 tablet:grid-cols-[minmax(180px,250px)_minmax(500px,1fr)] xl:gap-16 xl:grid-cols-[minmax(180px,250px)_minmax(500px,1fr)_75px]">
