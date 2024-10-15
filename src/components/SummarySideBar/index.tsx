@@ -8,11 +8,13 @@ import {
   ArticleDeleteButton,
   EditBodyButton,
   ArticleUpdateButton,
+  ArticleCreateButton,
 } from "../ArticleEditorForm/ArticleOnSubmitButton";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { calculateDaysDiff, formatDate } from "../../functions/formatDate";
 import { MultiValue } from "react-select";
 import { submitSummaryUpdate } from "@/lib/summary";
+import { showToast } from "../ToastMessages";
 
 const initialState = {
   titleEmptyError: false,
@@ -73,7 +75,7 @@ export default function SummarySideBar({
   const handleUpdateSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    // event.preventDefault();
+    event.preventDefault();
     setLoading(true);
     if (!title) {
       dispatchErrors({ type: ErrorTypes.TITLE_EMPTY, payload: true });
@@ -90,8 +92,10 @@ export default function SummarySideBar({
       return;
     } else {
       await submitSummaryUpdate(id, title, subtitle);
+      showToast("success", <p>Rascunho atualizado!</p>);
     }
-    // setLoading(false);
+    setIsOpen(false);
+    setLoading(false);
   };
 
   const handleDeleteSubmit = () => {};
@@ -183,6 +187,7 @@ export default function SummarySideBar({
               </span>
             </button>
             <ArticleUpdateButton loading={loading} />
+            <ArticleCreateButton loading={loading} />
             <ArticleDeleteButton />
           </div>
         </form>

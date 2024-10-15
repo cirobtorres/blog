@@ -22,7 +22,6 @@ const FilteredTags = ({
 
   if (tags) {
     if (filter && filter !== "") {
-      console.log(filtering(tags, filter));
       return (
         <Suspense fallback={<Loading />}>
           {filtering(tags, filter).map((tag) => (
@@ -38,7 +37,6 @@ const FilteredTags = ({
 export default function TagFiltering({ tags }: { tags: any[] | null }) {
   const [searchValue, setSearchValue] = useState("");
   const searchId = "tags-search";
-  console.log(searchValue);
   return (
     <>
       <div className="my-4">
@@ -53,6 +51,7 @@ export default function TagFiltering({ tags }: { tags: any[] | null }) {
           />
           <button
             type="button"
+            tabIndex={-1}
             onClick={(event) => {
               event?.preventDefault();
               setSearchValue("");

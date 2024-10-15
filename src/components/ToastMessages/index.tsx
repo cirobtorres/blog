@@ -13,17 +13,31 @@ import {
 
 type ToastType = "success" | "error" | "info" | "warning" | "default";
 
+const contextClass = {
+  success: "text-white border-[#2b813e] bg-dark-base-green",
+  error: "text-white border-dark-base-red bg-[#803d3d]",
+  info: "text-white border-dark-base-blue bg-[#274c5c]",
+  warning: "text-white border-dark-base-yellow bg-[#9e7d29]",
+  default:
+    "text-base-neutral dark:text-dark-base-neutral border-base-border bg-base-100 dark:border-dark-base-border dark:bg-dark-base-100",
+};
+
 export const defaultToastOptions: ToastOptions = {
   position: "top-right",
   autoClose: 8000,
-  hideProgressBar: false,
-  closeOnClick: true,
+  closeOnClick: false,
+  closeButton: false,
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
+  hideProgressBar: false,
   pauseOnFocusLoss: true,
-  theme: "light",
   transition: Bounce,
+  draggablePercent: 20,
+  className: (context) =>
+    contextClass[context?.type || "default"] +
+    " Toastify__toast relative flex py-1 px-3 mb-1 z-50 rounded-xl items-center justify-between border overflow-hidden pointer-events-auto cursor-pointer",
+  bodyClassName: () => "text-xs flex items-center [&_p]:line-clamp-2",
 };
 
 export const showToast = (
@@ -42,8 +56,6 @@ export const showToast = (
       return toast.info(content, optionsToApply);
     case "warning":
       return toast.warn(content, optionsToApply);
-    case "default":
-      return toast(content, optionsToApply);
     default:
       return toast(content, optionsToApply);
   }
@@ -54,28 +66,10 @@ export default function ToastMessagesProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const contextClass = {
-    success: "border-[#2b813e] bg-dark-base-green",
-    error: "border-dark-base-red bg-[#803d3d]",
-    info: "border-dark-base-blue bg-[#274c5c]",
-    warning: "border-dark-base-yellow bg-[#9e7d29]",
-    default:
-      "border-base-border bg-base-100 dark:border-dark-base-border dark:bg-dark-base-100",
-  };
-
   return (
     <>
       {children}
-      <ToastContainer
-        toastClassName={(context) =>
-          contextClass[context?.type || "default"] +
-          " h-full relative flex py-1 px-3 mb-1 min-h-12 rounded-xl items-center justify-between border overflow-hidden cursor-pointer"
-        }
-        draggable
-        bodyClassName={() =>
-          "flex gap-1 items-center text-xs text-white line-clamp-2"
-        }
-      />
+      <ToastContainer />
     </>
   );
 }

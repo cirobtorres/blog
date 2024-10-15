@@ -86,6 +86,25 @@ const ArticleOnSubmitButton = ({
   );
 };
 
+const ArticleCreateButton = ({ loading }: { loading: boolean }) => {
+  return (
+    <div className="h-8 w-28">
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full h-full flex justify-center items-center px-2 py-1 rounded font-extrabold text-sm text-base-100 dark:text-base-100 border border-[#35729b] dark:border-[#b0e4f8] bg-base-blue hover:bg-base-blue-hover dark:bg-dark-base-blue dark:hover:bg-dark-base-blue-hover"
+      >
+        {loading && <Loading size={24} />}
+        {!loading && (
+          <p className="font-extrabold text-base-100 dark:text-base-100">
+            Publicar
+          </p>
+        )}
+      </button>
+    </div>
+  );
+};
+
 const ArticleUpdateButton = ({ loading }: { loading: boolean }) => {
   return (
     <div
@@ -144,6 +163,7 @@ export {
   ReturnButton,
   SummaryCreateButton,
   SummaryUpdateButton,
+  ArticleCreateButton,
   ArticleOnSubmitButton,
   ArticleUpdateButton,
   ArticleDeleteButton,

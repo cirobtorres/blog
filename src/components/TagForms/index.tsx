@@ -25,7 +25,7 @@ const TagCreate = ({ user }: { user: User }) => {
         >
           Criar tag
         </label>
-        <div className="flex gap-1 max-w-[400px] max-[450px]:flex-col">
+        <div className="flex gap-2 max-w-[400px] max-[450px]:flex-col">
           <div className="w-full">
             <div className="relative w-full max-w-md h-8 rounded overflow-hidden transition-[outline] duration-200 outline outline-2 outline-transparent -outline-offset-1 focus-within:outline-blue-500 border border-base-border dark:border-dark-base-border">
               <input

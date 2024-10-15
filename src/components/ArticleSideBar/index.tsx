@@ -96,10 +96,6 @@ export default function ArticleSideBar({
     } else {
       await submitArticleUpdate(id, title, subtitle, radioVal, checkVal);
       showToast("success", <p>Artigo atualizado!</p>);
-      showToast("error", <p>Erro!</p>);
-      showToast("info", <p>Info!</p>);
-      showToast("warning", <p>Warning!</p>);
-      showToast("default", <p>Default!</p>);
     }
     setIsOpen(false);
     setLoading(false);
