@@ -49,6 +49,8 @@
   --toastify-toast-width: 450px;
   --toastify-toast-min-height: 48px;
   --toastify-toast-max-height: 96px;
+
+  --dotSize: 0.1rem;
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -516,5 +518,24 @@ select:-webkit-autofill:focus {
     stroke-dasharray: var(--dashArray, 93);
     stroke-dashoffset: var(--dashOffset, 94);
     transition: stroke-dasharray var(--dur), stroke-dashoffset var(--dur);
+  }
+  /*------------------------------Halftone-Dotted-Background------------------------------*/
+  .halftone::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    background-image: radial-gradient(
+      circle at center,
+      #202020 var(--dotSize),
+      transparent 0
+    );
+    background-size: 0.5rem 0.5rem;
+    background-position: 0 0, 0.65rem 0.65rem;
+  }
+
+  .halftone::after {
+    mask-image: linear-gradient(rgb(0, 0, 0), rgb(0 0 0 / 0));
   }
 }

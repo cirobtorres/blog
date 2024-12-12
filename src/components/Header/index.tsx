@@ -31,7 +31,7 @@ const Header = ({
       if (currScrollPos < threshold || currScrollPos < prevScrollPos) {
         if (headerRef.current) headerRef.current.style.top = "0";
       } else {
-        if (headerRef.current) headerRef.current.style.top = "-64px"; // 64px = header height
+        if (headerRef.current) headerRef.current.style.top = "-48px"; // 48px = header height
       }
       prevScrollPos = currScrollPos;
     };

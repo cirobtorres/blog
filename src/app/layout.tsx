@@ -43,7 +43,7 @@ export default async function RootLayout({
     <html lang="pt">
       <body
         id="body"
-        className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100`}
+        className={`${inter.className} ${theme} relative min-h-svh scrollbar dark:dark-scrollbar overflow-x-hidden flex flex-col justify-center items-center bg-base-100 dark:bg-dark-base-100 halftone`}
       >
         <Header user={user} privileges={blogUser?.privileges} theme={theme} />
         <ToastMessagesProvider>
