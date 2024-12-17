@@ -528,7 +528,7 @@ select:-webkit-autofill:focus {
 
     background-image: radial-gradient(
       circle at center,
-      #202020 var(--dotSize),
+      #f0f0f0 var(--dotSize),
       transparent 0
     );
     background-size: 0.5rem 0.5rem;
@@ -537,5 +537,20 @@ select:-webkit-autofill:focus {
 
   .halftone::after {
     mask-image: linear-gradient(rgb(0, 0, 0), rgb(0 0 0 / 0));
+  }
+
+  .halftone-dark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    background-image: radial-gradient(
+      circle at center,
+      #202020 var(--dotSize),
+      transparent 0
+    );
+    background-size: 0.5rem 0.5rem;
+    background-position: 0 0, 0.65rem 0.65rem;
   }
 }
