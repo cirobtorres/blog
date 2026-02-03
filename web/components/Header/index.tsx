@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { linkVariants } from "../../utils/className";
+import { A } from "../Links";
 
 const header = [
   {
@@ -10,32 +11,24 @@ const header = [
     text: "Cecessitatibus",
   },
   {
-    path: "/",
+    path: "https://google.com.br",
     text: "Consectetur",
-  },
-  {
-    path: "/",
-    text: "Accusamus",
-  },
-  {
-    path: "/",
-    text: "Dignissimos",
   },
 ];
 
-export default function Header() {
+export function Header() {
   return (
-    <header className="flex items-center px-6 border-b border-zinc-900 dark:bg-zinc-950">
+    <header className="flex items-center px-6 border-b border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900">
       <div className="w-full flex items-center justify-between max-w-360 mx-auto">
         <nav className="flex gap-6">
           {header.map(({ path, text }, index) => (
-            <Link
+            <A
               key={index}
               href={path}
-              className="text-sm font-semibold font-sans text-zinc-500 transition-colors hover:text-zinc-50"
+              className={linkVariants({ variant: "internal" })}
             >
               {text}
-            </Link>
+            </A>
           ))}
         </nav>
         <div />
