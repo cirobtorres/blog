@@ -1,0 +1,81 @@
+services:
+  api:
+    build: ./api
+    container_name: api
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILE_ACTIVE=${PROFILE_ACTIVE}
+      - API_PORT=${API_PORT}
+      - ACTUATOR_PORT=${ACTUATOR_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - MERCADO_PAGO_ACCESS_TOKEN=${MERCADO_PAGO_ACCESS_TOKEN}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_EMAIL=${SMTP_EMAIL}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_API_TOKEN=${SMTP_API_TOKEN}
+    depends_on:
+      - database
+    networks:
+      - blog-network
+
+  web:
+    build: ./web
+    container_name: web
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PROFILE_ACTIVE=${PROFILE_ACTIVE}
+      - WEB_PORT=${WEB_PORT}
+      - API_URL=${API_URL}
+    ports:
+      - "3000:3000"
+    networks:
+      - blog-network
+
+  database:
+    image: postgres:17-alpine
+    container_name: database
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - blog-network
+
+  admin:
+    image: dpage/pgadmin4:latest
+    container_name: admin
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
+    networks:
+      - blog-network
+
+networks:
+  blog-network:
+    driver: bridge
+
+volumes:
+  pgdata:

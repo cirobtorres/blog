@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: api
+
+  profiles:
+    active: ${PROFILE_ACTIVE:development}
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
+# Logs (simplistic)
+logging:
+  level:
+    root: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# APP
+server:
+  port: ${API_PORT}
+
+# APP + Actuator = same PORT
+management:
+  server:
+    port: ${ACTUATOR_PORT}
+
+
+# ...
+
+--- # DEVELOPMENT EXCLUSIVES
+spring:
+  config:
+    activate:
+      on-profile: development
+
+  # How Hibernate interacts with the database schema on application startup
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      # none = no DDL operations (fully manual control of DB schema)
+      # update = Spring generates Postgres tables automatically for classes with @Entity annotation
+      # create-drop = The schema is created on startup and dropped when the application stops
+      # Hibernate checks that the existing database schema matches the entity definitions
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Colorful terminal (not every terminal supports it)
+  output:
+    ansi:
+      enabled: always
+
+# Logs (detailed)
+logging:
+  level:
+    root: info
+    org.springframework.web: debug
+    org.hibernate.SQL: debug # query
+    org.hibernate.orm.jdbc.bind: trace # parameters (?)
+  file:
+    name: api.log
+  pattern:
+    console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+# ...
+
+--- # PRODUCTION EXCLUSIVES
+spring:
+  config:
+    activate:
+      on-profile: production
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none # First commit (empty tables will make hibernate validate action to drop the application)
+      # ddl-auto: validate # After the tables have been created
+      # none = no DDL operations (fully manual control of DB schema)
+      # update = Spring generates Postgres tables automatically for classes with @Entity annotation
+      # create-drop = The schema is created on startup and dropped when the application stops
+      # Hibernate checks that the existing database schema matches the entity definitions
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info" # Hide sensitive data
+
+
+# ...
