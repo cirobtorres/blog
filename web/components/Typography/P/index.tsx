@@ -11,7 +11,10 @@ export function P({
   return (
     <p
       {...props}
-      className={cn("font-sans text-black dark:text-neutral-500", className)}
+      className={cn(
+        "text-base font-medium font-sans text-black dark:text-neutral-500",
+        className,
+      )}
     >
       {children}
     </p>

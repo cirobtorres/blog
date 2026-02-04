@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ComponentPropsWithRef } from "react";
-import { cn, linkVariants } from "../../utils/className";
+import { cn, linkVariants } from "../../../utils/className";
 
 interface ExternalLinkProps extends ComponentPropsWithRef<typeof Link> {
   children: React.ReactNode;

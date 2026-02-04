@@ -9,17 +9,15 @@ export function H1({
   className?: string;
 }) {
   return (
-    <div className="mb-8">
-      <h1
-        {...props}
-        className={cn(
-          "text-5xl text-black dark:text-neutral-100 font-semibold",
-          className,
-        )}
-      >
-        {children}
-      </h1>
-    </div>
+    <h1
+      {...props}
+      className={cn(
+        "text-5xl font-semibold text-black dark:text-neutral-100",
+        className,
+      )}
+    >
+      {children}
+    </h1>
   );
 }
 
@@ -32,17 +30,15 @@ export function H2({
   className?: string;
 }) {
   return (
-    <div className="mb-3 pb-3">
-      <h2
-        {...props}
-        className={cn(
-          "text-3xl text-black dark:text-neutral-100 font-semibold",
-          className,
-        )}
-      >
-        {children}
-      </h2>
-    </div>
+    <h2
+      {...props}
+      className={cn(
+        "text-2xl font-semibold text-black dark:text-neutral-100",
+        className,
+      )}
+    >
+      {children}
+    </h2>
   );
 }
 
@@ -55,16 +51,14 @@ export function H3({
   className?: string;
 }) {
   return (
-    <div className="mb-3 pb-3">
-      <h3
-        {...props}
-        className={cn(
-          "text-2xl text-black dark:text-neutral-100 font-semibold",
-          className,
-        )}
-      >
-        {children}
-      </h3>
-    </div>
+    <h3
+      {...props}
+      className={cn(
+        "text-xl font-semibold text-black dark:text-neutral-100",
+        className,
+      )}
+    >
+      {children}
+    </h3>
   );
 }

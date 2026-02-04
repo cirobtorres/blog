@@ -9,7 +9,7 @@ export const cn = (...inputs: ClassValue[]): string => {
 };
 
 export const linkVariants = cva(
-  "w-fit text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-100 font-sans rounded-xs font-semibold transition-[color,box-shadow,background] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-neutral-100 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-black",
+  "w-fit text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-100 font-sans rounded-xs font-bold transition-[color,box-shadow,background] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-neutral-100 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-black",
   {
     variants: {
       variant: {
