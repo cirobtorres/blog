@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { WebGrid } from "../components/Display";
@@ -6,6 +5,7 @@ import { Main } from "../components/Main";
 import { Card } from "../components/Cards";
 import { randomInt } from "../utils/random";
 import { convertToLargeDate } from "../utils/date";
+import { faker } from "@faker-js/faker";
 
 export default function HomePage() {
   return (
@@ -16,7 +16,10 @@ export default function HomePage() {
           {Array.from({ length: 10 }).map((_, index) => (
             <Card
               key={index}
-              href="/"
+              href={
+                "/article/" +
+                faker.word.words(randomInt(5, 12)).split(" ").join("-")
+              }
               title={faker.word.words(randomInt(5, 20))}
               createdAt={convertToLargeDate(faker.date.anytime())}
             />

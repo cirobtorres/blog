@@ -12,7 +12,7 @@ export function H1({
     <h1
       {...props}
       className={cn(
-        "text-5xl font-semibold text-black dark:text-neutral-100",
+        "text-3xl lg:text-5xl font-semibold text-black dark:text-neutral-100",
         className,
       )}
     >
@@ -33,7 +33,7 @@ export function H2({
     <h2
       {...props}
       className={cn(
-        "text-2xl font-semibold text-black dark:text-neutral-100",
+        "text-lg lg:text-2xl font-semibold text-black dark:text-neutral-100",
         className,
       )}
     >

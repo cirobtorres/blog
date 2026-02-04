@@ -12,10 +12,7 @@ export function WebGrid({
   return (
     <div
       {...props}
-      className={cn(
-        "h-full min-h-screen grid grid-rows-[60px_1fr_80px]",
-        className,
-      )}
+      className={cn("h-full min-h-screen grid grid-rows-[1fr_80px]", className)}
     >
       {children}
     </div>

@@ -18,7 +18,7 @@ const content = [
 
 export function Header() {
   return (
-    <header className="h-full max-h-15 flex items-center px-6 border-b border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900">
+    <header className="w-full fixed top-0 h-15 flex items-center px-6 backdrop-blur-sm border-b border-neutral-200 bg-neutral-100/50 dark:border-neutral-800 dark:bg-neutral-900/50">
       <div className="w-full flex items-center justify-between max-w-360 mx-auto">
         <nav className="md:flex flex-1 hidden gap-6">
           {content?.map(({ path, text }, index) => (
