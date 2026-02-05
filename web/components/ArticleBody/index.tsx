@@ -4,8 +4,8 @@ import ArticleContent from "../ArticleContent";
 
 export default function ArticleBody() {
   return (
-    <div className="w-full max-w-360 mx-auto">
-      <section className="grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[350px_1fr_64px] gap-10">
+    <div className="w-full max-w-article-body mx-auto">
+      <section className="relative grid grid-cols-1 md:grid-cols-[300px_1fr] lg:grid-cols-[300px_1fr_300px]">
         <ScrollSummary />
         <ArticleContent />
         <BackToTopButton />

@@ -5,7 +5,7 @@ import { P } from "../Typography/P";
 
 export default function ArticleContent() {
   return (
-    <div>
+    <div className="px-article-content">
       {Array.from({ length: randomInt(10, 30) }).map((_, i) => {
         const a = randomInt(0, 10);
         if (a < 2)

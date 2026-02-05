@@ -1,8 +1,105 @@
-export default function BackToTopButton() {
+"use client";
+
+import { useEffect, useState } from "react";
+import { cn, focusRing } from "../../utils/className";
+
+export default function BackToTopButton({ articleId }: { articleId?: string }) {
+  const diameter = 65;
+  const strokeWidth = 5;
+  const outerRadius = diameter / 2;
+  const innerRadius = diameter / 2 - strokeWidth * 2;
+  const circumference = 2 * Math.PI * innerRadius;
+
+  const [progress, setProgress] = useState(0); // 0 → 100
+
+  useEffect(() => {
+    const onScroll = () => {
+      const totalHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      if (totalHeight <= 0) return;
+
+      const scrollTop = window.scrollY;
+      const percentage = Math.min(100, (scrollTop / totalHeight) * 100);
+
+      setProgress(percentage);
+    };
+
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log("BackToTopButton: MOUNT");
+    } // DEBUG
+
+    return () => {
+      if (process.env.NODE_ENV !== "production") {
+        console.log("BackToTopButton: UNMOUNT");
+      } // DEBUG
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [articleId]);
+
+  const strokeDashoffset = circumference - (circumference * progress) / 100;
+
   return (
-    <>
-      <div className="lg:block hidden sticky top-[calc(50%-60px)] size-14 rounded-full bg-neutral-800" />
-      <div className="lg:hidden sticky left-full right-0 size-10 rounded-full bg-neutral-800" />
-    </>
+    <div className="sticky top-[calc(50%-var(--height-header))] size-fit ml-0 mr-auto">
+      <button
+        id="btt-btn"
+        data-testid="btt-btn"
+        type="button"
+        aria-label="Voltar ao topo da página"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={cn(
+          "relative flex cursor-pointer rounded transition-all duration-300 group",
+          focusRing,
+        )}
+      >
+        <svg
+          className="relative -rotate-90"
+          aria-hidden="true"
+          style={{ width: diameter, height: diameter }}
+        >
+          <circle
+            cx={outerRadius}
+            cy={outerRadius}
+            r={innerRadius}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            className="fill-none stroke-neutral-100 dark:stroke-neutral-800"
+          />
+          <circle
+            cx={outerRadius}
+            cy={outerRadius}
+            r={innerRadius}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            fill="none"
+            className="fill-none stroke-theme"
+          />
+          <circle
+            cx={outerRadius}
+            cy={outerRadius}
+            r={innerRadius}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            fill="none"
+            className="fill-none stroke-theme blur-xs pointer-events-none"
+          />
+        </svg>
+        <svg
+          stroke="currentColor"
+          fill="currentColor"
+          viewBox="0 0 448 512"
+          height="16px"
+          width="16px"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group-hover:animate-bouncing-arrow group-focus-visible:animate-bouncing-arrow"
+        >
+          <path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z" />
+        </svg>
+      </button>
+    </div>
   );
 }
