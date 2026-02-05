@@ -1,25 +1,5 @@
 @import "tailwindcss";
-/* @import "tw-animate-css"; */
-
-/* :root {
-  --background: white;
-  --foreground: black;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: hsla(0, 0%, 4%, 1);
-    --foreground: hsla(0, 0%, 45%, 1);
-  }
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-theme: var(--theme);
-} */
+@import "tw-animate-css";
 
 :root {
   --background: oklch(1 0 0);
@@ -62,8 +42,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
+    --background: oklch(14.5% 0 0);
+    --foreground: oklch(97% 0 0);
     --card: oklch(0.145 0 0);
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.145 0 0);
@@ -141,6 +121,7 @@
   /* APP */
   --height-header: 60px;
   --height-footer: 80px;
+  --top-header: calc(var(--height-header) + 20px);
   --padding-article-content: 5rem; /* 80px */
   --max-width-article-body: 100rem; /* 1600px */
   --max-width-article-title: 68.75rem; /* 1100px */
@@ -155,6 +136,9 @@
     oklch(70.5% 0.213 47.604) 75%,
     transparent 100%
   );
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 @layer base {
@@ -162,7 +146,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground bg-background;
   }
 }
 

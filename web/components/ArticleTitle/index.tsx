@@ -2,11 +2,13 @@ import { H1 } from "../Typography/H";
 import { Avatar } from "../Avatar";
 import { convertToLargeDate } from "../../utils/date";
 import { faker } from "@faker-js/faker";
+import ArticleBreadcrumb from "../ArticleBreadcrumb";
 
 export default function ArticleTitle() {
   return (
     <div className="w-full max-w-article-title mx-auto">
       <section className="pb-4 mb-4">
+        <ArticleBreadcrumb />
         <Title />
         <Subtitle />
         <div className="flex items-center gap-6">

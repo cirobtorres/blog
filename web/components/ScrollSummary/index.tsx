@@ -6,7 +6,7 @@ import { A } from "../Typography/A";
 
 export default function ScrollSummary() {
   return (
-    <div className="md:sticky md:top-20 h-fit ml-auto mr-0">
+    <div className="md:sticky md:top-20 h-fit max-h-[calc(100svh-(var(--top-header)*2))] ml-auto mr-0">
       <div className="mb-3">
         <P className="text-neutral-500 dark:text-neutral-100">Sumário</P>
       </div>
@@ -31,8 +31,8 @@ export default function ScrollSummary() {
             </div>
           );
         })}
-        <div className="md:block hidden absolute inset-y-0 mix-blend-hard-light -right-[calc(var(--padding-article-content)/2)] w-px opacity-50 bg-gradient-linear" />
       </div>
+      <div className="md:block hidden absolute inset-y-0 mix-blend-hard-light -right-[calc(var(--padding-article-content)/2)] w-px opacity-50 bg-gradient-linear" />
     </div>
   );
 }
