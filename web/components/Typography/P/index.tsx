@@ -12,7 +12,7 @@ export function P({
     <p
       {...props}
       className={cn(
-        "text-base font-medium font-sans text-black dark:text-neutral-500",
+        "text-base font-normal font-sans text-black dark:text-neutral-500",
         className,
       )}
     >

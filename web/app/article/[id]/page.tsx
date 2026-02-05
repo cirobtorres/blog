@@ -1,4 +1,3 @@
-import { Main } from "../../../components/Main";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
 import { WebGrid } from "../../../components/Display";
@@ -9,10 +8,12 @@ export default function ArticlePageId() {
   return (
     <WebGrid>
       <Header />
-      <Main className="mt-15 max-w-300">
-        <ArticleTitle />
-        <ArticleBody />
-      </Main>
+      <main className="mt-header-height">
+        <div className="p-6">
+          <ArticleTitle />
+          <ArticleBody />
+        </div>
+      </main>
       <Footer />
     </WebGrid>
   );
