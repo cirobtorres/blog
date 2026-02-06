@@ -43,7 +43,7 @@ export const ProgressBar = () => {
     };
   }, []);
 
-  if (!pathname.startsWith("/article")) return null;
+  if (!pathname.startsWith("/articles")) return null;
 
   return (
     <div
@@ -53,17 +53,17 @@ export const ProgressBar = () => {
       aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className="fixed top-[calc(100%+1px)] left-0 h-1 w-full inline-grid"
+      className="fixed top-full left-0 h-1 w-full lg:hidden inline-grid"
     >
       <div
         ref={progressBarRef}
         style={{ width: "0%" }}
-        className="h-full col-start-1 row-start-1 bg-gradient-linear-right bg-blend-hard-light blur-xl rounded-full"
+        className="h-full col-start-1 row-start-1 bg-gradient-lin-r bg-blend-hard-light blur-xl rounded-full"
       />
       <div
         ref={progressBarBlurRef}
         style={{ width: "0%" }}
-        className="h-full col-start-1 row-start-1 bg-gradient-linear-right bg-blend-hard-light rounded-full"
+        className="h-full col-start-1 row-start-1 bg-gradient-lin-r bg-blend-hard-light rounded-full"
       />
       <span id="progressbar-label" className="sr-only">
         Progresso de rolagem da página

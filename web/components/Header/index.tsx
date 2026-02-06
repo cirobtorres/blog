@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { linkVariants } from "../../utils/className";
+import { cn, linkVariants } from "../../utils/className";
 import { Link } from "../Links";
-import { ProgressBar } from "../ProgressBar";
+import { ProgressBar } from "./ProgressBar";
 
 const content = [
   {
@@ -21,7 +21,7 @@ const content = [
 ];
 
 export function Header({
-  fixed = true,
+  fixed = false,
   progress = false,
 }: {
   fixed?: boolean;
@@ -66,7 +66,7 @@ export function Header({
       console.log("Header: MOUNT");
     } // DEBUG
 
-    if (fixed) return;
+    if (!fixed) return;
 
     const handleScroll = hideNavbarListener();
 
@@ -86,7 +86,10 @@ export function Header({
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 z-10 h-header w-full transition-[top] duration-300 flex items-center px-6 backdrop-blur-sm border-b border-neutral-200 bg-neutral-100/50 dark:border-neutral-900 dark:bg-neutral-950/50"
+      className={cn(
+        "fixed top-0 transition-[top] duration-300 backdrop-blur-sm z-10 h-header w-full flex items-center px-6 bg-background/50",
+        fixed ? "" : "static",
+      )}
       style={{ top: 0 }}
     >
       <div className="w-full flex items-center justify-between max-w-360 mx-auto">

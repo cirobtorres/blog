@@ -1,14 +1,13 @@
-import { H1 } from "../Typography/H";
 import { Avatar } from "../Avatar";
 import { convertToLargeDate } from "../../utils/date";
+import { ArtBreadcrumb } from "./Breadcrumb";
 import { faker } from "@faker-js/faker";
-import ArticleBreadcrumb from "../ArticleBreadcrumb";
 
 export default function ArticleTitle() {
   return (
     <div className="w-full max-w-article-title mx-auto p-6">
       <section className="pb-4 mb-4">
-        <ArticleBreadcrumb />
+        <ArtBreadcrumb />
         <Title />
         <Subtitle />
         <div className="flex items-center gap-6">
@@ -19,13 +18,16 @@ export default function ArticleTitle() {
           </small>
         </div>
       </section>
+      <div className="w-full h-px bg-gradient-lin-r-fading" />
     </div>
   );
 }
 
 const Title = () => (
   <div className="pb-4 mb-4">
-    <H1>{faker.lorem.sentence(15)}</H1>
+    <h1 className="text-3xl lg:text-5xl font-semibold text-foreground">
+      {faker.lorem.sentence(15)}
+    </h1>
   </div>
 );
 

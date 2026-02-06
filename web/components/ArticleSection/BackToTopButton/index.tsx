@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn, focusRing } from "../../utils/className";
+import { cn, focusRing } from "../../../utils/className";
 
-export default function BackToTopButton({ articleId }: { articleId?: string }) {
+export default function BackToTopButton() {
   const diameter = 65;
   const strokeWidth = 5;
   const outerRadius = diameter / 2;
@@ -38,12 +38,12 @@ export default function BackToTopButton({ articleId }: { articleId?: string }) {
       } // DEBUG
       window.removeEventListener("scroll", onScroll);
     };
-  }, [articleId]);
+  }, []);
 
   const strokeDashoffset = circumference - (circumference * progress) / 100;
 
   return (
-    <div className="sticky top-[calc(50%-var(--height-header))] size-fit ml-0 mr-auto">
+    <div className="hidden lg:block sticky top-[calc(50%-var(--height-header))] size-fit ml-0 mr-auto">
       <button
         id="btt-btn"
         data-testid="btt-btn"
@@ -60,6 +60,23 @@ export default function BackToTopButton({ articleId }: { articleId?: string }) {
           aria-hidden="true"
           style={{ width: diameter, height: diameter }}
         >
+          <defs>
+            <linearGradient
+              id="progressGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
+              <stop offset="0%" stopColor="oklch(69.6% 0.17 162.48)" />
+              <stop offset="12%" stopColor="oklch(66% 0.19 190)" />
+              <stop offset="25%" stopColor="oklch(64% 0.2 220)" />
+              <stop offset="35%" stopColor="oklch(62.3% 0.214 259.815)" />
+              <stop offset="50%" stopColor="oklch(62.7% 0.265 303.9)" />
+              <stop offset="75%" stopColor="oklch(70.5% 0.213 47.604)" />
+              <stop offset="100%" stopColor="oklch(64.5% 0.246 16.439)" />
+            </linearGradient>
+          </defs>
           <circle
             cx={outerRadius}
             cy={outerRadius}
@@ -76,7 +93,8 @@ export default function BackToTopButton({ articleId }: { articleId?: string }) {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             fill="none"
-            className="fill-none stroke-theme"
+            stroke="url(#progressGradient)"
+            className="fill-none"
           />
           <circle
             cx={outerRadius}
@@ -86,7 +104,8 @@ export default function BackToTopButton({ articleId }: { articleId?: string }) {
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             fill="none"
-            className="fill-none stroke-theme blur-xs pointer-events-none"
+            stroke="url(#progressGradient)"
+            className="fill-none blur-xs pointer-events-none"
           />
         </svg>
         <svg

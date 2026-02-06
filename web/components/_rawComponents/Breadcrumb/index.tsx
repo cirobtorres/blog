@@ -1,10 +1,10 @@
 "use client";
 
 import type * as React from "react";
+import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { cn } from "../../../utils/className";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
-import { cn } from "../../utils/className";
 
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;

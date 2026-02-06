@@ -1,6 +1,6 @@
-import BackToTopButton from "../BackToTopButton";
-import ScrollSummary from "../ScrollSummary";
-import ArticleContent from "../ArticleContent";
+import BackToTopButton from "./BackToTopButton";
+import ScrollSummary from "./ScrollSummary";
+import ArticleContent from "./ArticleContent";
 
 export default function ArticleBody() {
   return (
