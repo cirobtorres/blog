@@ -6,7 +6,7 @@ import ArticleBreadcrumb from "../ArticleBreadcrumb";
 
 export default function ArticleTitle() {
   return (
-    <div className="w-full max-w-article-title mx-auto">
+    <div className="w-full max-w-article-title mx-auto p-6">
       <section className="pb-4 mb-4">
         <ArticleBreadcrumb />
         <Title />
