@@ -10,7 +10,7 @@ const heightMap: Record<BannerHeight, string> = {
   xl: "h-96",
 };
 
-export function Banner({ h = "lg" }: { h: BannerHeight }) {
+export function Banner({ h = "lg" }: { h?: BannerHeight }) {
   return (
     <div className={cn("relative w-full max-w-full", heightMap[h])}>
       <Image
