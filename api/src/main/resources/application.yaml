@@ -3,10 +3,10 @@ spring:
     name: api
 
   profiles:
-    active: ${PROFILE_ACTIVE:development}
+    active: ${PROFILE_ACTIVE:production}
 
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DATABASE}
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -18,6 +18,19 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+
+api-properties:
+  frontend:
+    url: ${WEB_URL}
+  jwt:
+    issuer: blog-api
+    expiration: 3600000 # 1 hour
 
 # Logs (simplistic)
 logging:
@@ -29,6 +42,9 @@ logging:
 # APP
 server:
   port: ${API_PORT}
+  error:
+    whitelabel:
+      enabled: false
 
 # APP + Actuator = same PORT
 management:
@@ -100,12 +116,19 @@ spring:
       # create-drop = The schema is created on startup and dropped when the application stops
       # Hibernate checks that the existing database schema matches the entity definitions
 
+# Logs (detailed)
+logging:
+  level:
+    root: warn
+    org.springframework.web: warn
+    org.hibernate.SQL: off # query
+    org.hibernate.orm.jdbc.bind: off # parameters (?)
+    org.hibernate.type.descriptor.sql: off
+
 # Actuator
 management:
   endpoints:
     web:
       exposure:
         include: "health,info" # Hide sensitive data
-
-
 # ...

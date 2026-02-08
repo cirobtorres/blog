@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.config;
+package com.cirobtorres.blog.api;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-public class DBConfig {
+public class DatabaseConfiguration {
     @Value("${spring.datasource.url}")
     private String url;
 
