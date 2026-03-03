@@ -1,16 +1,31 @@
 package com.cirobtorres.blog.api.token;
 
-import com.cirobtorres.blog.api.role.Role;
-import com.cirobtorres.blog.api.user.User;
-import io.jsonwebtoken.Claims;
+import com.cirobtorres.blog.api.token.interfaces.AuthorityExtractorRepository;
+import com.cirobtorres.blog.api.user.entities.User;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-public interface AuthorityExtractor {
-    List<String> fromUser(User user);
+@Component
+public class AuthorityExtractor implements AuthorityExtractorRepository {
+    @Override
+    public List<String> fromJwt(Jwt jwt) {
+        List<String> authorities = jwt.getClaimAsStringList("authorities");
+        return authorities != null ? authorities : List.of();
+    }
 
-    List<String> fromRoles(Collection<Role> roles);
+    @Override
+    public List<String> fromUser(User user) {
+        if (user.getAuthorities() == null) {
+            return List.of();
+        }
+        return user.getAuthorities().stream().map(authority -> authority.getName().name()).toList();
+    }
 
-    List<String> fromClaims(Claims claims);
+    @Override
+    public List<String> fromUserId(UUID userId) {
+        return List.of();
+    }
 }

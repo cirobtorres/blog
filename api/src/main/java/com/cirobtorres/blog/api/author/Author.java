@@ -1,7 +1,7 @@
 package com.cirobtorres.blog.api.author;
 
 import com.cirobtorres.blog.api.article.Article;
-import com.cirobtorres.blog.api.user.User;
+import com.cirobtorres.blog.api.user.entities.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;

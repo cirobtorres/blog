@@ -1,0 +1,45 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/certs:ro
+    depends_on:
+      - web
+      - api
+      - admin
+    networks:
+      - local-network
+
+  api:
+    build: ./api
+    container_name: api
+    expose:
+      - "8080"
+    env_file: .env
+    environment:
+      API_PROPERTIES_JWT_PRIVATE_KEY_PATH: /keys/jwt-private.pem
+      API_PROPERTIES_JWT_PUBLIC_KEY_PATH: /keys/jwt-public.pem
+    volumes:
+      - ./keys:/keys:ro
+    depends_on:
+      - database
+    networks:
+      - local-network
+
+  web:
+    build:
+      context: ./web
+      args:
+        - WEB_URL=${WEB_URL}
+        - API_URL=${API_URL}
+        - API_URL_SERVER=${API_URL_SERVER}
+    env_file: .env
+    container_name: web
+    expose:
+      - "3000"
+    networks:
+      - local-network

@@ -20,6 +20,7 @@ Thumbs.db
 # --- Environment & Secrets (CRITICAL) ---
 # Ignora todos os arquivos de ambiente para evitar vazamento de credenciais
 .env
+.env.dev
 .env.key
 .env.secret
 .env.local
@@ -62,6 +63,10 @@ yarn-error.log*
 !.yarn/releases
 !.yarn/versions
 
-# --- Docker ---
-# Se você gerar arquivos de log de containers localmente
-*.log
+# --- APP ---
+nginx.conf
+api.log*
+keys-dev/
+keys/
+certs/
+/api-dev.ps1

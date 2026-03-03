@@ -58,12 +58,12 @@ export const ProgressBar = () => {
       <div
         ref={progressBarRef}
         style={{ width: "0%" }}
-        className="h-full col-start-1 row-start-1 bg-gradient-lin-r bg-blend-hard-light blur-xl rounded-full"
+        className="h-full col-start-1 row-start-1 bg-primary bg-blend-hard-light blur"
       />
       <div
         ref={progressBarBlurRef}
         style={{ width: "0%" }}
-        className="h-full col-start-1 row-start-1 bg-gradient-lin-r bg-blend-hard-light rounded-full"
+        className="h-full col-start-1 row-start-1 bg-primary bg-blend-hard-light"
       />
       <span id="progressbar-label" className="sr-only">
         Progresso de rolagem da página

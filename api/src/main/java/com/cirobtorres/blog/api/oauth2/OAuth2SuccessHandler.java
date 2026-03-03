@@ -1,82 +1,65 @@
 package com.cirobtorres.blog.api.oauth2;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.role.Roles;
-import com.cirobtorres.blog.api.token.AuthorityExtractor;
-import com.cirobtorres.blog.api.token.JwtService;
-import com.cirobtorres.blog.api.user.User;
-import com.cirobtorres.blog.api.user.UserRepository;
-import jakarta.servlet.http.Cookie;
+import com.cirobtorres.blog.api.token.dtos.TokensDTO;
+import com.cirobtorres.blog.api.token.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
+import java.util.UUID;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
-    private final ApiApplicationProperties apiApplicationProperties;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final AuthorityExtractor authorityExtractor;
-
+    private final String webUrl;
     private static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
     public OAuth2SuccessHandler(
             ApiApplicationProperties apiApplicationProperties,
-            JwtService jwtService,
-            UserRepository userRepository,
-            AuthorityExtractor authorityExtractor
+            JwtService jwtService
     ) {
-        this.apiApplicationProperties = apiApplicationProperties;
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.authorityExtractor = authorityExtractor;
+        this.webUrl = apiApplicationProperties.getFrontend().getUrl();
     }
 
     @Override
     public void onAuthenticationSuccess(
             @NonNull HttpServletRequest request,
-            HttpServletResponse response,
+            @NonNull HttpServletResponse response,
             @NonNull Authentication authentication
     ) throws IOException {
-
-        log.info("Authentication successful");
-        log.info(apiApplicationProperties.getFrontend().getUrl());
-
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+        String domainUserId = Objects.requireNonNull(oauthUser).getAttribute("domainUserId");
 
-        assert oauthUser != null;
+        if (domainUserId == null || domainUserId.isBlank()) {
+            log.error("Login OAuth2 fail: domainUserId is missing. oauthUser.getAttributes() = {}", oauthUser.getAttributes());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro na identificação do usuário");
+            return;
+        }
 
-        String email = oauthUser.getAttribute("email");
-        String name = oauthUser.getAttribute("name");
+        UUID userId = UUID.fromString(domainUserId);
 
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(
-                        new User(email, name, Roles.USER)
-                ));
+        try {
+            TokensDTO tokens = jwtService.createTokensForOAuth2User(userId);
+            jwtService.addTokensToCookies(response, tokens);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
 
-        String token = jwtService.generateToken(
-                user.getId().toString(),
-                "ACCESS",
-                authorityExtractor.fromUser(user),
-                null
-        );
-
-        Cookie cookie = new Cookie("access_token", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false); // true em HTTPS
-        cookie.setPath("/");
-        cookie.setMaxAge(3600);
-
-        response.addCookie(cookie);
-        response.sendRedirect(apiApplicationProperties.getFrontend().getUrl());
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
+        String callbackUrl = webUrl + "/local/auth/callback";
+        response.sendRedirect(callbackUrl);
     }
 }
-

@@ -1,56 +1,58 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { cn, linkVariants } from "../../utils/className";
-import { Link } from "../Links";
+import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "./ProgressBar";
+import { Link } from "../Links";
+import { cn, linkVariants } from "../../utils/className";
+import { logout } from "../../services/auth/logout";
+import { Skeleton } from "../Skeleton";
+import getUser from "../../services/auth/session/client/getUser";
+import { webUrls } from "../../urls";
 
 const content = [
   {
-    path: "/",
-    text: "Consectetur",
+    path: "/about",
+    text: "About",
   },
   {
-    path: "/",
-    text: "Cecessitatibus",
-  },
-  {
-    path: "https://github.com/cirobtorres",
+    path: webUrls.myGithub,
     text: "Github",
   },
 ];
 
 export function Header({
-  fixed = false,
+  sticky = false,
   progress = false,
 }: {
-  fixed?: boolean;
+  sticky?: boolean;
   progress?: boolean;
 }) {
+  const [session, setSession] = useState<AuthSession | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const scrollingDownRef = useRef(0);
 
   const hideNavbarListener = () => {
     let prevScrollPos = window.scrollY;
-    const threshold = 1000; // Header is static for the first 1000 px on top
+    const threshold = 1000;
 
     const handleScroll = () => {
       const currScrollPos = window.scrollY;
 
       if (!headerRef.current) return;
-      const headerHeight = headerRef.current.offsetHeight;
 
       if (
-        currScrollPos < threshold || // Show header when on top
-        currScrollPos < prevScrollPos || // Show header when scrolling up
-        (currScrollPos > prevScrollPos && scrollingDownRef.current < 1000) // Hide header after scrolling 1000 px down
+        currScrollPos < threshold || // Bring header back when near the top of the page
+        currScrollPos < prevScrollPos || // Bring header back when scrolling up
+        (currScrollPos > prevScrollPos && scrollingDownRef.current < threshold) // Hide header after scrolling down "threshold"pxs
       ) {
-        headerRef.current.style.top = "0"; // Show
+        // headerRef.current.style.transform = "translateY(0)";
+        headerRef.current.classList.remove("header-hidden");
       } else {
-        headerRef.current.style.top = `-${headerHeight}px`; // Hide
+        // headerRef.current.style.transform = "translateY(-50px)";
+        headerRef.current.classList.add("header-hidden");
       }
       if (currScrollPos > prevScrollPos) {
-        // scrollingDownRef.current keeps header static for a certain amout of scrolling down before hiding it
+        // Keeps header static for a certain amout of scrolling down before hiding it
         scrollingDownRef.current += currScrollPos - prevScrollPos;
       } else {
         // It is restarted when scrolling up
@@ -66,7 +68,7 @@ export function Header({
       console.log("Header: MOUNT");
     } // DEBUG
 
-    if (!fixed) return;
+    if (!sticky) return;
 
     const handleScroll = hideNavbarListener();
 
@@ -81,18 +83,92 @@ export function Header({
 
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [fixed]);
+  }, [sticky]);
+
+  useEffect(() => {
+    getUser().then(setSession);
+  }, []);
+
+  function renderAuthArea() {
+    if (session === null)
+      return (
+        <div className="grid grid-cols-[120px_17px_25px] items-center ml-auto mr-0">
+          <Skeleton className="shrink-0 h-6 w-full" />
+          <div className="w-px h-4 mx-2 bg-neutral-800" />
+          <Skeleton className="shrink-0 h-6 w-full" />
+        </div>
+      );
+
+    if (session.ok) {
+      return (
+        <div className="grid grid-cols-[1fr_17px_25px] items-center ml-auto mr-0">
+          <Link
+            href="/author"
+            className={cn(
+              linkVariants({ variant: "button" }),
+              "max-w-30 cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
+            )}
+          >
+            <p className="truncate text-nowrap justify-start">
+              {session.data.name}
+            </p>
+          </Link>
+          <div className="w-px h-4 mx-2 bg-neutral-800" />
+          <button
+            onClick={async () => {
+              await logout();
+              setSession({ ok: false, data: null });
+            }}
+            className={cn(
+              linkVariants({ variant: "button" }),
+              "w-full max-w-6.25 cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
+            )}
+          >
+            Sair
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex items-center gap-2 ml-auto mr-0">
+        <Link
+          href="/sign-in"
+          className={cn(
+            linkVariants({ variant: "button" }),
+            "size-fit cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
+          )}
+        >
+          Entrar
+        </Link>
+        <div className="w-px h-4 bg-muted" />
+        <Link
+          href="/sign-up"
+          className={cn(
+            linkVariants({ variant: "button" }),
+            "size-fit cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
+          )}
+        >
+          Cadastrar
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <header
       ref={headerRef}
       className={cn(
-        "fixed top-0 transition-[top] duration-300 backdrop-blur-sm z-10 h-header w-full flex items-center px-6 bg-background/50",
-        fixed ? "" : "static",
+        "sticky top-0 left-0 right-0 h-header border-b flex items-center px-6 transition-transform duration-300 will-change-transform bg-background",
+        sticky ? "z-10 backdrop-blur-sm" : "static",
       )}
-      style={{ top: 0 }}
     >
       <div className="w-full flex items-center justify-between max-w-360 mx-auto">
+        <div className="mr-6">
+          <Link href="/" className="no-underline">
+            LOGO
+          </Link>
+        </div>
         <nav className="md:flex flex-1 hidden gap-6">
           {content?.map(({ path, text }, index) => (
             <Link
@@ -104,10 +180,7 @@ export function Header({
             </Link>
           ))}
         </nav>
-        <div className="md:flex hidden gap-6 ml-auto">
-          <Link href="/login">Entrar</Link>
-          <Link href="/cadastro">Cadastrar</Link>
-        </div>
+        {renderAuthArea()}
         <div />
       </div>
       {progress && <ProgressBar />}

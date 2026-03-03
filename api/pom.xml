@@ -107,6 +107,11 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!--ACTUATOR-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -153,7 +158,9 @@
 				</executions>
 			</plugin>
 			<!--MOCKITO-AGENT-->
-			<!--Starting from Java 21, the JDK restricts the ability of libraries to attach a Java agent to their own JVM. As a result, the inline-mock-maker might not be able to function without an explicit setup to enable instrumentation, and the JVM will always display a warning-->
+			<!--Starting from Java 21, the JDK restricts the ability of libraries to attach a Java agent to their own JVM.
+			As a result, the inline-mock-maker might not be able to function without an explicit setup to enable instrumentation,
+			and the JVM will always display a warning-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>

@@ -1,9 +1,12 @@
 package com.cirobtorres.blog.api;
 
-import com.cirobtorres.blog.api.oauth2.CustomOAuth2UserService;
-import com.cirobtorres.blog.api.oauth2.CustomOidcUserService;
+import com.cirobtorres.blog.api.oauth2.BlogOAuth2UserService;
+import com.cirobtorres.blog.api.oauth2.BlogOidcUserService;
 import com.cirobtorres.blog.api.oauth2.OAuth2SuccessHandler;
 import com.cirobtorres.blog.api.token.JwtAuthenticationFilter;
+import jakarta.servlet.http.Cookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,37 +21,57 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
+    private final String frontUrl;
+    private final boolean isProd;
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
+
+    public SecurityConfiguration(
+            ApiApplicationProperties apiApplicationProperties
+    ) {
+        this.isProd = apiApplicationProperties.getApplication().isProduction();
+        this.frontUrl = apiApplicationProperties.getFrontend().getUrl();
+    }
+
     @Bean
     @Order(1)
     public SecurityFilterChain oauth2SecurityFilterChain(
             HttpSecurity http,
-            CustomOidcUserService customOidcUserService,
-            CustomOAuth2UserService customOAuth2UserService,
+            BlogOidcUserService blogOidcUserService,
+            BlogOAuth2UserService blogOAuth2UserService,
             OAuth2SuccessHandler oAuth2SuccessHandler
     ) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
                 .securityMatcher("/oauth2/**", "/login/oauth2/**")
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .sessionManagement(sm ->
+                        sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService)
-                                .userService(customOAuth2UserService)
+                                .oidcUserService(blogOidcUserService)
+                                .userService(blogOAuth2UserService)
                         )
                         .successHandler(oAuth2SuccessHandler)
                 )
                 .build();
     }
-    // BACKEND ACCESS TO OAUTH2
-    // http://localhost:8080/oauth2/authorization/google
-    // http://localhost:8080/oauth2/authorization/github
 
     @Bean
     @Order(2)
@@ -57,15 +80,40 @@ public class SecurityConfiguration {
             JwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .securityMatcher("/**")
+                .cors(cors -> {})
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .ignoringRequestMatchers(
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/refresh",
+                                "/auth/validation",
+                                "/auth/renew-code"
+                        )
                 )
-                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/articles/**").permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/auth/login",
+                                "/auth/logout",
+                                "/auth/register",
+                                "/auth/refresh"
+                        ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/auth/validation",
+                                "/users/me",
+                                "/articles"
+                        ).permitAll()
+                        .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth -> oauth
+                        .bearerTokenResolver(bearerTokenResolver())
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -93,4 +141,32 @@ public class SecurityConfiguration {
         return converter;
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(
+                isProd
+                        ? List.of(frontUrl)
+                        : List.of("http://localhost:3000", "http://localhost:3001")
+        );
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
+    @Bean
+    public BearerTokenResolver bearerTokenResolver() {
+        return request -> {
+            if (request.getCookies() == null) return null;
+            return Arrays.stream(request.getCookies())
+                    .filter(cookie -> "access_token".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+        };
+    }
 }

@@ -1,10 +1,9 @@
-import { WebGrid } from "../../components/Display";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 
 export default function ArticlePage() {
   return (
-    <WebGrid>
+    <div className="h-full min-h-screen grid grid-rows-[var(--header-height)_1fr_80px]">
       <Header />
       <main className="mt-header-height">
         <div className="p-6">
@@ -14,6 +13,6 @@ export default function ArticlePage() {
         </div>
       </main>
       <Footer />
-    </WebGrid>
+    </div>
   );
 }

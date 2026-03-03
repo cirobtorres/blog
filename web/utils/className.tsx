@@ -11,6 +11,12 @@ export const cn = (...inputs: ClassValue[]): string => {
 export const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-neutral-100 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-black";
 
+export const focusRingOTPGroup =
+  "outline-none has-aria-invalid:outline-none has-aria-invalid:ring-2 has-aria-invalid:ring-destructive has-aria-invalid:ring-offset-2 has-aria-invalid:ring-offset-black has-aria-invalid:bg-destructive/15";
+
+export const focusRingOTPSlot =
+  "outline-none data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-2 data-[active=true]:ring-offset-2 data-[active=true]:ring-black data-[active=true]:ring-offset-white dark:data-[active=true]:ring-neutral-100 dark:data-[active=true]:ring-offset-black";
+
 export const linkVariants = cva(
   cn(
     "w-fit text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-100 font-sans rounded-xs font-bold transition-[color,box-shadow,background] duration-300",
@@ -19,8 +25,7 @@ export const linkVariants = cva(
   {
     variants: {
       variant: {
-        title:
-          "text-black dark:text-neutral-100 dark:hover:underline text-xl no-underline",
+        title: "text-black dark:text-neutral-100 text-xl no-underline",
         internal: "no-underline",
         external: "underline underline-offset-2",
         button:

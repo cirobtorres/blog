@@ -43,24 +43,23 @@ export default function BackToTopButton() {
   const strokeDashoffset = circumference - (circumference * progress) / 100;
 
   return (
-    <div className="hidden lg:block sticky top-[calc(50%-var(--height-header))] size-fit ml-0 mr-auto">
-      <button
-        id="btt-btn"
-        data-testid="btt-btn"
-        type="button"
-        aria-label="Voltar ao topo da página"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className={cn(
-          "relative flex cursor-pointer rounded transition-all duration-300 group",
-          focusRing,
-        )}
+    <button
+      id="btt-btn"
+      data-testid="btt-btn"
+      type="button"
+      aria-label="Voltar ao topo da página"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className={cn(
+        "relative flex cursor-pointer rounded transition-all duration-300 group",
+        focusRing,
+      )}
+    >
+      <svg
+        className="relative -rotate-90"
+        aria-hidden="true"
+        style={{ width: diameter, height: diameter }}
       >
-        <svg
-          className="relative -rotate-90"
-          aria-hidden="true"
-          style={{ width: diameter, height: diameter }}
-        >
-          <defs>
+        {/* <defs>
             <linearGradient
               id="progressGradient"
               x1="0%"
@@ -76,49 +75,50 @@ export default function BackToTopButton() {
               <stop offset="75%" stopColor="oklch(70.5% 0.213 47.604)" />
               <stop offset="100%" stopColor="oklch(64.5% 0.246 16.439)" />
             </linearGradient>
-          </defs>
-          <circle
-            cx={outerRadius}
-            cy={outerRadius}
-            r={innerRadius}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            className="fill-none stroke-neutral-100 dark:stroke-neutral-800"
-          />
-          <circle
-            cx={outerRadius}
-            cy={outerRadius}
-            r={innerRadius}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            fill="none"
-            stroke="url(#progressGradient)"
-            className="fill-none"
-          />
-          <circle
-            cx={outerRadius}
-            cy={outerRadius}
-            r={innerRadius}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            fill="none"
-            stroke="url(#progressGradient)"
-            className="fill-none blur-xs pointer-events-none"
-          />
-        </svg>
-        <svg
-          stroke="currentColor"
-          fill="currentColor"
-          viewBox="0 0 448 512"
-          height="16px"
-          width="16px"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group-hover:animate-bouncing-arrow group-focus-visible:animate-bouncing-arrow"
-        >
-          <path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z" />
-        </svg>
-      </button>
-    </div>
+          </defs> */}
+        <circle
+          cx={outerRadius}
+          cy={outerRadius}
+          r={innerRadius}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          className="fill-none stroke-neutral-100 dark:stroke-neutral-800"
+        />
+        <circle
+          cx={outerRadius}
+          cy={outerRadius}
+          r={innerRadius}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          fill="none"
+          stroke="url(#progressGradient)"
+          // className="fill-none"
+          className="stroke-primary"
+        />
+        <circle
+          cx={outerRadius}
+          cy={outerRadius}
+          r={innerRadius}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          fill="none"
+          stroke="url(#progressGradient)"
+          // className="fill-none blur-xs pointer-events-none"
+          className="stroke-primary blur-xs pointer-events-none"
+        />
+      </svg>
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        viewBox="0 0 448 512"
+        height="16px"
+        width="16px"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group-hover:animate-bouncing-arrow group-focus-visible:animate-bouncing-arrow"
+      >
+        <path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z" />
+      </svg>
+    </button>
   );
 }

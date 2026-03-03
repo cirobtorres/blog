@@ -1,86 +1,91 @@
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { WebGrid } from "../components/Display";
 import {
   CardBody,
   CardFooter,
   CardGrid,
-  CardHeader,
-  CardImage,
-  CardImageWrapper,
   CardWrapper,
 } from "../components/Cards";
-import { randomInt } from "../utils/random";
 import { convertToLargeDate } from "../utils/date";
-import { faker } from "@faker-js/faker";
-import { Banner } from "../components/Banner";
+import { cn, linkVariants } from "../utils/className";
 import Link from "next/link";
-import { linkVariants } from "../utils/className";
+import { slugify } from "../utils/strings-transforms";
 
-const cardItems = Array.from({ length: 5 }).map(() => {
-  const src = randomInt(8, 19) * 100;
-  const title = faker.word.words(randomInt(5, 12));
-  const href = title.split(" ").join("-");
-  return {
-    // src: "https://picsum.photos/" + src + "?grayscale",
-    src: "https://picsum.photos/" + src,
-    href,
-    title,
-    createdAt: convertToLargeDate(faker.date.anytime()),
-  };
-});
+// const cardItems = Array.from({ length: 3 }).map(() => {
+//   const title =
+//     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, error.";
+//   const subTitle =
+//     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sunt aspernatur esse! Iure, quae numquam sit totam inventore nihil praesentium quo odit dolorum voluptas iste aliquid excepturi debitis eum quisquam.";
+//   return {
+//     title,
+//     subTitle,
+//     createdAt: new Date(),
+//   };
+// });
 
-export default function HomePage() {
+const cardItems: {
+  href: string;
+  title: string;
+  subTitle: string;
+  createdAt: Date;
+}[] = [];
+
+export default async function HomePage() {
   return (
-    <WebGrid>
+    <div className="min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
       <Header />
-      <main>
-        <Banner h="2xl" />
-        <div className="p-6">
-          <div className="w-full max-w-360 mx-auto">
-            <CardGrid>
-              {cardItems.map((props, index) => (
-                <CardWrapper key={index}>
-                  <CardHeader className="p-0">
-                    <CardImageWrapper h="md" className="rounded-t-lg">
-                      <CardImage
-                        // src="https://placehold.co/1920x480/000000/737373/jpg"
-                        src={props.src}
-                        alt="Lorem ipsum dolor sit amet consectetur."
-                      />
-                    </CardImageWrapper>
-                  </CardHeader>
-                  <CardBody>
-                    <p className="text-base font-normal font-sans text-black dark:text-neutral-500">
-                      {props.createdAt}
-                    </p>
-                    <Link
-                      href={"/articles/" + props.href}
-                      className={linkVariants({ variant: "title" })}
-                    >
-                      {props.title}
-                    </Link>
-                    <p className="text-base font-normal font-sans text-black dark:text-neutral-500">
-                      {faker.word.words(30)}
-                    </p>
-                  </CardBody>
-                  <CardFooter>
-                    <Link
-                      href={"/articles/" + props.href}
-                      className={linkVariants({
-                        variant: "button",
-                      })}
-                    >
-                      Saiba mais
-                    </Link>
-                  </CardFooter>
-                </CardWrapper>
-              ))}
-            </CardGrid>
-          </div>
+      <main className="px-6 my-6">
+        <div className="h-full w-full max-w-200 mx-auto">
+          {cardItems.length === 0 && (
+            <div className="h-full flex justify-center items-center">
+              <span className="font-medium text-neutral-500 pointer-events-none">
+                Nenhum artigo publicado =/
+              </span>
+            </div>
+          )}
+          <CardGrid>
+            {cardItems.length > 0 &&
+              cardItems.map((props, index) => {
+                const year = props.createdAt.getFullYear();
+                const month = props.createdAt.getMonth();
+                const day = props.createdAt.getDay();
+                const slug = slugify(props.title);
+                return (
+                  <CardWrapper key={index}>
+                    <CardBody>
+                      <small className="font-medium font-sans text-black dark:text-neutral-500">
+                        <time>{convertToLargeDate(props.createdAt)}</time>
+                      </small>
+                      <Link
+                        href={`/articles/${year}/${month}/${day}/${slug}`}
+                        className={linkVariants({ variant: "title" })}
+                      >
+                        {props.title}
+                      </Link>
+                      <p className="text-base text-muted-foreground font-normal font-sans">
+                        {props.subTitle}
+                      </p>
+                    </CardBody>
+                    <CardFooter>
+                      <Link
+                        href={`/articles/${year}/${month}/${day}/${slug}`}
+                        className={cn(
+                          linkVariants({
+                            variant: "button",
+                          }),
+                          "max-w-60 mx-auto rounded-md",
+                        )}
+                      >
+                        Saiba mais
+                      </Link>
+                    </CardFooter>
+                  </CardWrapper>
+                );
+              })}
+          </CardGrid>
         </div>
       </main>
       <Footer />
-    </WebGrid>
+    </div>
   );
 }

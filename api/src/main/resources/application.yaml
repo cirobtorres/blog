@@ -3,13 +3,20 @@ spring:
     name: api
 
   profiles:
-    active: ${PROFILE_ACTIVE:production}
+     active: ${PROFILE_ACTIVE:production}
 
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+    hikari:
+      data-source-properties:
+        prepareThreshold: 0
+
+  jpa:
+    open-in-view: false
 
   security:
     oauth2:
@@ -18,77 +25,108 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - read:user
               - user:email
 
+# ApiApplicationProperties
 api-properties:
   frontend:
     url: ${WEB_URL}
+  application:
+    url: ${API_URL}
+  mailer:
+    mailerToken: ${MAILER_TOKEN}
+    fromSMTP: ${MAILER_FROM_SMTP}
   jwt:
-    issuer: blog-api
-    expiration: 3600000 # 1 hour
+    issuer: ${API_URL}
+    expAccToken: 60000 # 900000 = 15 min; 3600000 = 60 min
+    expRefToken: 604800000 # 7 days
+    accTokenPath: "/"
+    refTokenPath: "/"
 
-# Logs (simplistic)
+# Logs
 logging:
-  level:
-    root: info
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
 
 # APP
 server:
-  port: ${API_PORT}
   error:
     whitelabel:
       enabled: false
 
-# APP + Actuator = same PORT
+# Actuator
 management:
   server:
-    port: ${ACTUATOR_PORT}
-
+    port: 9090
 
 # ...
 
---- # DEVELOPMENT EXCLUSIVES
+--- # DEVELOPMENT
 spring:
   config:
     activate:
       on-profile: development
 
-  # How Hibernate interacts with the database schema on application startup
+# datasource.url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?prepareThreshold=0
+
+# How Hibernate interacts with the database schema on application startup
   jpa:
     show-sql: false
     hibernate:
       ddl-auto: update
-      # none = no DDL operations (fully manual control of DB schema)
-      # update = Spring generates Postgres tables automatically for classes with @Entity annotation
-      # create-drop = The schema is created on startup and dropped when the application stops
-      # Hibernate checks that the existing database schema matches the entity definitions
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+# ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
+# ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
+# ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
+# ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
+# ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
+# ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
+# ddl-auto: drop            # Only the database schema is dropped
 
-  # Colorful terminal (not every terminal supports it)
-  output:
-    ansi:
-      enabled: always
+  mail:
+    host: ${MAILER_HOST}
+    port: ${MAILER_PORT}
+    username: ${MAILER_USERNAME}
+    password: ${MAILER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+
+api-properties:
+  application:
+    production: false
+    private-key-path: ${JWT_PRIVATE_KEY_PATH}
+    public-key-path: ${JWT_PUBLIC_KEY_PATH}
+
+# Colorful terminal (not every terminal supports it)
+output:
+  ansi:
+    enabled: always
 
 # Logs (detailed)
 logging:
   level:
     root: info
     org.springframework.web: debug
-    org.hibernate.SQL: debug # query
-    org.hibernate.orm.jdbc.bind: trace # parameters (?)
+    org.hibernate.SQL: warn
+    org.hibernate.orm.jdbc.bind: trace
+    org.springframework.security: debug
+    org.springframework.boot.autoconfigure.jdbc: debug
   file:
     name: api.log
-  pattern:
-    console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
 
 # Actuator
 management:
@@ -97,10 +135,9 @@ management:
       exposure:
         include: "*"
 
-
 # ...
 
---- # PRODUCTION EXCLUSIVES
+--- # PRODUCTION
 spring:
   config:
     activate:
@@ -109,21 +146,42 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: none # First commit (empty tables will make hibernate validate action to drop the application)
-      # ddl-auto: validate # After the tables have been created
-      # none = no DDL operations (fully manual control of DB schema)
-      # update = Spring generates Postgres tables automatically for classes with @Entity annotation
-      # create-drop = The schema is created on startup and dropped when the application stops
-      # Hibernate checks that the existing database schema matches the entity definitions
+      ddl-auto: update
+# ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
+# ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
+# ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
+# ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
+# ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
+# ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
+# ddl-auto: drop            # Only the database schema is dropped
 
-# Logs (detailed)
+  mail:
+    host: ${MAILER_HOST}
+    port: ${MAILER_PORT}
+    username: ${MAILER_USERNAME}
+    password: ${MAILER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+
+# ApiApplicationProperties
+api-properties:
+  application:
+    production: true
+    private-key-path: /keys/jwt-private.pem
+    public-key-path: /keys/jwt-public.pem
+
+# Logs
 logging:
   level:
     root: warn
     org.springframework.web: warn
-    org.hibernate.SQL: off # query
-    org.hibernate.orm.jdbc.bind: off # parameters (?)
-    org.hibernate.type.descriptor.sql: off
+    org.hibernate.SQL: warn # query
+    org.hibernate.orm.jdbc.bind: warn # parameters (?)
+    org.hibernate.type.descriptor.sql: warn
 
 # Actuator
 management:
@@ -131,4 +189,7 @@ management:
     web:
       exposure:
         include: "health,info" # Hide sensitive data
+
+server:
+  forward-headers-strategy: framework
 # ...

@@ -2,21 +2,16 @@ import { cn } from "../../utils/className";
 import Image from "next/image";
 
 export function CardGrid({ ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-      {...props}
-    />
-  );
+  return <div className="grid grid-cols-1 gap-3" {...props} />;
 }
 
 export function CardWrapper({ ...props }: React.ComponentProps<"article">) {
   return (
     <article
-      aria-label=""
-      data-slot=""
+      aria-label="" // TODO
+      data-slot="" // TODO
+      className="max-w-full mx-auto flex flex-col justify-between"
       {...props}
-      className="max-w-full min-h-90 mx-auto flex flex-col justify-between rounded-lg border border-border bg-neutral-950"
     />
   );
 }
@@ -26,7 +21,7 @@ export function CardHeader({ ...props }: React.ComponentProps<"div">) {
 }
 
 export function CardBody({ ...props }: React.ComponentProps<"div">) {
-  return <div {...props} className="flex flex-col p-4 gap-2" />;
+  return <div {...props} className="flex flex-col gap-2" />;
 }
 
 export function CardFooter({ ...props }: React.ComponentProps<"div">) {

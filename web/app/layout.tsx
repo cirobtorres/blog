@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Blog Ciro",
+  title: "Blog",
   description: "", // TODO
 };
 
