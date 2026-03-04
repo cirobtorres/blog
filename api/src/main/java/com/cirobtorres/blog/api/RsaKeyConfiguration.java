@@ -28,8 +28,8 @@ public class RsaKeyConfiguration {
     @Bean
     RSAPrivateKey rsaPrivateKey() throws Exception {
         String key = Files.readString(rsaPrivateKeyFolder)
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("-----BEGIN (.*)-----", "")
+                .replaceAll("-----END (.*)-----", "")
                 .replaceAll("\\s", "");
 
         byte[] decoded = Base64.getDecoder().decode(key);
@@ -41,8 +41,8 @@ public class RsaKeyConfiguration {
     @Bean
     RSAPublicKey rsaPublicKey() throws Exception {
         String key = Files.readString(rsaPublicKeyFolder)
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("-----BEGIN (.*)-----", "")
+                .replaceAll("-----END (.*)-----", "")
                 .replaceAll("\\s", "");
 
         byte[] decoded = Base64.getDecoder().decode(key);

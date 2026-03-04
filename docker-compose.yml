@@ -30,6 +30,7 @@ services:
       sh -c "mkdir -p /keys && 
              echo \"$$RSA_PRIVATE_CONTENT\" > /keys/jwt-private.pem && 
              echo \"$$RSA_PUBLIC_CONTENT\" > /keys/jwt-public.pem && 
+             sed -i 's/ /\\n/g' /keys/jwt-private.pem &&
              exec java -jar app.jar"
     depends_on:
       - database
