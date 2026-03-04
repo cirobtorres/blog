@@ -175,8 +175,6 @@ spring:
 api-properties:
   application:
     production: true
-    private-key-path: /keys/jwt-private.pem
-    public-key-path: /keys/jwt-public.pem
 
 # Logs
 logging:

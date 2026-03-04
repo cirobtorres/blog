@@ -22,11 +22,12 @@ public class RsaKeyConfiguration {
         this.privateKey = apiAppProps.getApplication().getPrivateKey();
         this.publicKey = apiAppProps.getApplication().getPublicKey();
     }
+
     @Bean
     RSAPrivateKey rsaPrivateKey() throws Exception {
         String cleanKey = privateKey.replaceAll("\\s", "");
         byte[] decoded = Base64.getDecoder().decode(cleanKey);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
         return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
     }
 
