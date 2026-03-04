@@ -8,7 +8,6 @@ const getUser = async (): Promise<AuthSession> => {
     const response = await fetch(apiClientUrls.me, {
       method: "GET",
       credentials: "include",
-      mode: "cors",
     });
 
     if (!response.ok) {

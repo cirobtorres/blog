@@ -10,7 +10,6 @@ const webUrls = {
 
 const apiServerUrls = {
   login: API_SERVER + "/auth/login",
-  logout: API_SERVER + "/auth/logout",
   register: API_SERVER + "/auth/register",
   emailCode: API_SERVER + "/auth/validation",
   renewCode: API_SERVER + "/auth/renew-code",
@@ -24,6 +23,7 @@ const apiClientUrls = {
   microsoft: "/", // TODO
   linkedin: "/", // TODO
   me: API_CLIENT + "/users/me",
+  logout: API_SERVER + "/auth/logout",
 };
 
 export { webUrls, apiServerUrls, apiClientUrls };

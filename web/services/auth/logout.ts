@@ -1,7 +1,7 @@
-import { apiServerUrls } from "../../urls";
+import { apiClientUrls } from "../../urls";
 
 const logout = async () => {
-  await fetch(apiServerUrls.logout, {
+  await fetch(apiClientUrls.logout, {
     method: "POST",
     credentials: "include",
   });
