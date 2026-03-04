@@ -26,7 +26,7 @@ public class RsaKeyConfiguration {
     RSAPrivateKey rsaPrivateKey() throws Exception {
         String cleanKey = privateKey.replaceAll("\\s", "");
         byte[] decoded = Base64.getDecoder().decode(cleanKey);
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
         return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
     }
 
