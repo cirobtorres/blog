@@ -40,7 +40,7 @@ services:
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     volumes:
-      - /keys:/keys:ro
+      - .:/keys:ro
     depends_on:
       - database
     networks:
