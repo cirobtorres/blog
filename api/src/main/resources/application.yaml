@@ -40,6 +40,8 @@ api-properties:
     url: ${WEB_URL}
   application:
     url: ${API_URL}
+    privateKey: ${RSA_PRIVATE_CONTENT}
+    publicKey: ${RSA_PUBLIC_CONTENT}
   mailer:
     mailerToken: ${MAILER_TOKEN}
     fromSMTP: ${MAILER_FROM_SMTP}

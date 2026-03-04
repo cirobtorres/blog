@@ -5,10 +5,8 @@ services:
     expose:
       - "8080"
     environment:
-      - API_PROPERTIES_APPLICATION_PRIVATE_KEY=/keys/jwt-private.pem
-      - API_PROPERTIES_APPLICATION_PUBLIC_KEY=/keys/jwt-public.pem
-      - RSA_PRIVATE_KEY_B64=${RSA_PRIVATE_CONTENT}
-      - RSA_PUBLIC_KEY_B64=${RSA_PUBLIC_CONTENT}
+      - RSA_PRIVATE_CONTENT=${RSA_PRIVATE_CONTENT}
+      - RSA_PUBLIC_CONTENT=${RSA_PUBLIC_CONTENT}
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
       - API_URL=${API_URL}
