@@ -122,3 +122,11 @@ POSTGRES_PORT=6543
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 ```
+
+```bash
+$priv = Get-Content jwt-private.pem | Where-Object { $_ -notmatch "-----" }
+$priv -join "" | Set-Content private_final.txt
+
+$pub = Get-Content jwt-public.pem | Where-Object { $_ -notmatch "-----" }
+$pub -join "" | Set-Content public_final.txt
+```
