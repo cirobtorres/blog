@@ -24,22 +24,36 @@ public class RsaKeyConfiguration {
     }
 
     @Bean
-    RSAPrivateKey rsaPrivateKey() throws Exception {
-        log.error("RsaKeyConfiguration.rsaPrivateKey(): privateKey: {}", privateKey);
-        String cleanKey = privateKey.replaceAll("\\s", "");
-        log.error("RsaKeyConfiguration.rsaPrivateKey(): cleanKey: {}", privateKey);
-        byte[] decoded = Base64.getDecoder().decode(cleanKey);
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
-        return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
+    public RSAPublicKey rsaPublicKey() throws Exception {
+        if (publicKey == null || publicKey.isBlank()) {
+            throw new IllegalArgumentException("A chave pública RSA_PUBLIC_CONTENT está vazia ou nula!");
+        }
+
+        try {
+            String cleanKey = publicKey.replaceAll("\\s", "");
+            byte[] decoded = Base64.getDecoder().decode(cleanKey);
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+            return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
+        } catch (Exception e) {
+            log.error("Erro ao decodificar a Chave Pública. Verifique se o conteúdo no Dokploy é um Base64 puro (sem hífens).");
+            throw e;
+        }
     }
 
     @Bean
-    RSAPublicKey rsaPublicKey() throws Exception {
-        log.error("RsaKeyConfiguration.rsaPublicKey(): publicKey: {}", publicKey);
-        String cleanKey = publicKey.replaceAll("\\s", "");
-        log.error("RsaKeyConfiguration.rsaPublicKey(): cleanKey: {}", cleanKey);
-        byte[] decoded = Base64.getDecoder().decode(cleanKey);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
-        return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
+    public RSAPrivateKey rsaPrivateKey() throws Exception {
+        if (privateKey == null || privateKey.isBlank()) {
+            throw new IllegalArgumentException("A chave privada RSA_PRIVATE_CONTENT está vazia ou nula!");
+        }
+
+        try {
+            String cleanKey = privateKey.replaceAll("\\s", "");
+            byte[] decoded = Base64.getDecoder().decode(cleanKey);
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded); // Private usa PKCS8
+            return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
+        } catch (Exception e) {
+            log.error("Erro ao decodificar a Chave Privada.");
+            throw e;
+        }
     }
 }
