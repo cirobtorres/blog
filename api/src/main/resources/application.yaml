@@ -3,7 +3,7 @@ spring:
     name: api
 
   profiles:
-     active: ${PROFILE_ACTIVE:production}
+    active: ${PROFILE_ACTIVE:production}
 
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}
@@ -45,7 +45,7 @@ api-properties:
     fromSMTP: ${MAILER_FROM_SMTP}
   jwt:
     issuer: ${API_URL}
-    expAccToken: 60000 # 900000 = 15 min; 3600000 = 60 min
+    expAccToken: 900000 # 900000 = 15 min; 3600000 = 60 min
     expRefToken: 604800000 # 7 days
     accTokenPath: "/"
     refTokenPath: "/"
@@ -66,6 +66,7 @@ management:
   server:
     port: 9090
 
+
 # ...
 
 --- # DEVELOPMENT
@@ -74,9 +75,9 @@ spring:
     activate:
       on-profile: development
 
-# datasource.url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?prepareThreshold=0
+  # datasource.url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?prepareThreshold=0
 
-# How Hibernate interacts with the database schema on application startup
+  # How Hibernate interacts with the database schema on application startup
   jpa:
     show-sql: false
     hibernate:
@@ -85,13 +86,13 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-# ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
-# ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
-# ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
-# ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
-# ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
-# ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
-# ddl-auto: drop            # Only the database schema is dropped
+  # ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
+  # ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
+  # ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
+  # ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
+  # ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
+  # ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
+  # ddl-auto: drop            # Only the database schema is dropped
 
   mail:
     host: ${MAILER_HOST}
@@ -135,6 +136,7 @@ management:
       exposure:
         include: "*"
 
+
 # ...
 
 --- # PRODUCTION
@@ -147,13 +149,13 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: update
-# ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
-# ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
-# ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
-# ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
-# ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
-# ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
-# ddl-auto: drop            # Only the database schema is dropped
+  # ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
+  # ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
+  # ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables
+  # ddl-auto: create          # The database schema is dropped and completely re-created on every application startup
+  # ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
+  # ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
+  # ddl-auto: drop            # Only the database schema is dropped
 
   mail:
     host: ${MAILER_HOST}
