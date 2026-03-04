@@ -18,8 +18,6 @@ public class MailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
     private final String from;
-    private final String webUrl;
-    private final String apiUrl;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
@@ -32,8 +30,6 @@ public class MailService {
         this.templateEngine = templateEngine;
         this.from = apiApplicationProperties.getMailer().getFromSMTP();
         this.isProd = apiApplicationProperties.getApplication().isProduction();
-        this.webUrl = apiApplicationProperties.getFrontend().getUrl();
-        this.apiUrl = apiApplicationProperties.getApplication().getUrl();
     }
 
     public void sendValidationEmail(
