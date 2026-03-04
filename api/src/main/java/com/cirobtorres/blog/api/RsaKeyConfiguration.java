@@ -25,7 +25,9 @@ public class RsaKeyConfiguration {
 
     @Bean
     RSAPrivateKey rsaPrivateKey() throws Exception {
+        log.error("RsaKeyConfiguration.rsaPrivateKey(): privateKey: {}", privateKey);
         String cleanKey = privateKey.replaceAll("\\s", "");
+        log.error("RsaKeyConfiguration.rsaPrivateKey(): cleanKey: {}", privateKey);
         byte[] decoded = Base64.getDecoder().decode(cleanKey);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
         return (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(spec);
@@ -33,7 +35,9 @@ public class RsaKeyConfiguration {
 
     @Bean
     RSAPublicKey rsaPublicKey() throws Exception {
+        log.error("RsaKeyConfiguration.rsaPublicKey(): publicKey: {}", publicKey);
         String cleanKey = publicKey.replaceAll("\\s", "");
+        log.error("RsaKeyConfiguration.rsaPublicKey(): cleanKey: {}", cleanKey);
         byte[] decoded = Base64.getDecoder().decode(cleanKey);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
         return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
