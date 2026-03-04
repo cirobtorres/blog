@@ -57,7 +57,7 @@ public class SecurityConfiguration {
             OAuth2SuccessHandler oAuth2SuccessHandler
     ) throws Exception {
         return http
-                .securityMatcher("/api/oauth2/**", "/api/login/oauth2/**")
+                .securityMatcher("/oauth2/**", "/login/oauth2/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .sessionManagement(sm ->
