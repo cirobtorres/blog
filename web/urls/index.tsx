@@ -23,7 +23,7 @@ const apiClientUrls = {
   microsoft: "/", // TODO
   linkedin: "/", // TODO
   me: API_CLIENT + "/users/me",
-  logout: API_SERVER + "/auth/logout",
+  logout: API_CLIENT + "/auth/logout",
 };
 
 export { webUrls, apiServerUrls, apiClientUrls };
