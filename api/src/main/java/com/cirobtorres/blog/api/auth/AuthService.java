@@ -52,6 +52,7 @@ public class AuthService {
     private final UserIdentityService userIdentityService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthorityExtractorRepository authorityExtractor;
+    private final String mailerFrom;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
@@ -78,6 +79,7 @@ public class AuthService {
         this.userIdentityService = userIdentityService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.authorityExtractor = authorityExtractor;
+        this.mailerFrom = apiApplicationProperties.getApplication().getMailerFrom();
         this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
@@ -145,7 +147,7 @@ public class AuthService {
 
         // Email code
         String vCode = verificationTokenService.createEmailCode(userIdentity);
-        mailService.sendValidationEmail(user.getEmail(), user.getName(), vCode);
+        mailService.sendValidationEmail(mailerFrom, user.getEmail(), user.getName(), vCode);
 
         // Login
         return loginTokens(user);
@@ -176,7 +178,7 @@ public class AuthService {
         // verificationTokenRepository.deleteByUserIdentity(userIdentity); // Moved into createEmailCode
         String vCode = verificationTokenService.createEmailCode(userIdentity);
         if (!isProd) log.info("AuthService.renewCode(): sending verification token to email");
-        mailService.sendValidationEmail(user.getEmail(), user.getName(), vCode);
+        mailService.sendValidationEmail(mailerFrom, user.getEmail(), user.getName(), vCode);
         if (!isProd) log.info("AuthService.renewCode(): New code generated for user {}", userId);
     }
 

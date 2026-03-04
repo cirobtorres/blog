@@ -34,6 +34,21 @@ spring:
               - read:user
               - user:email
 
+  mail:
+    host: ${MAILER_HOST}
+    port: ${MAILER_PORT} # STARTTLS = 587 (usually)
+    username: ${MAILER_USERNAME}
+    password: ${MAILER_PASSWORD} # API Key
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true # TLS only
+          ssl:
+            trust: "*"
+
 # ApiApplicationProperties
 api-properties:
   frontend:
@@ -41,9 +56,7 @@ api-properties:
   application:
     privateKey: ${RSA_PRIVATE_CONTENT}
     publicKey: ${RSA_PUBLIC_CONTENT}
-  mailer:
-    mailerToken: ${MAILER_TOKEN}
-    fromSMTP: ${MAILER_FROM_SMTP}
+    mailerFrom: ${MAILER_FROM}
   jwt:
     issuer: ${API_URL}
     expAccToken: 900000 # 900000 = 15 min; 3600000 = 60 min

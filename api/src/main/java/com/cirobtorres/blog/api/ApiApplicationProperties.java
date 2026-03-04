@@ -8,14 +8,12 @@ import org.springframework.context.annotation.Configuration;
 public class ApiApplicationProperties {
     private final Frontend frontend = new Frontend();
     private final Application application = new Application();
-    private final Mailer mailer = new Mailer();
     private final Jwt jwt = new Jwt();
 
     public Frontend getFrontend() { return frontend; }
     public Application getApplication() {
         return application;
     }
-    public Mailer getMailer() { return mailer; }
     public Jwt getJwt() { return jwt; }
 
     public static class Frontend {
@@ -34,6 +32,7 @@ public class ApiApplicationProperties {
         private String privateKey;
         private String publicKey;
         private String url;
+        private String mailerFrom;
         private boolean production;
 
         public String getPrivateKey() {
@@ -60,29 +59,20 @@ public class ApiApplicationProperties {
             this.url = url;
         }
 
+        public String getMailerFrom() {
+            return mailerFrom;
+        }
+
+        public void setMailerFrom(String mailerFrom) {
+            this.mailerFrom = mailerFrom;
+        }
+
         public boolean isProduction() {
             return production;
         }
 
         public void setProduction(boolean production) {
             this.production = production;
-        }
-    }
-
-    public static class Mailer {
-        private String mailerToken;
-        private String fromSMTP;
-
-        public String getMailerToken() { return mailerToken; }
-
-        public void setMailerToken(String mailerToken) { this.mailerToken = mailerToken; }
-
-        public String getFromSMTP() {
-            return fromSMTP;
-        }
-
-        public void setFromSMTP(String fromSMTP) {
-            this.fromSMTP = fromSMTP;
         }
     }
 

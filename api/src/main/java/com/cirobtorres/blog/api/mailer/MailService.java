@@ -17,7 +17,6 @@ import java.io.IOException;
 public class MailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final String from;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
@@ -28,11 +27,11 @@ public class MailService {
     ) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
-        this.from = apiApplicationProperties.getMailer().getFromSMTP();
         this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     public void sendValidationEmail(
+            String from,
             String to,
             String name,
             String vToken
