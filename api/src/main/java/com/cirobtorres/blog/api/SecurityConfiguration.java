@@ -145,11 +145,12 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(
-                isProd
-                        ? List.of(frontUrl)
-                        : List.of("http://localhost:3000", "http://localhost:3001")
-        );
+        // config.setAllowedOriginPatterns(
+        //         isProd
+        //                 ? List.of(frontUrl)
+        //                 : List.of("http://localhost:3000", "http://localhost:3001")
+        // );
+        config.setAllowedOrigins(List.of(frontUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
