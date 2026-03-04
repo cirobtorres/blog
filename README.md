@@ -123,10 +123,16 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 ```
 
+## KEYS
+
+#### Spring boot is expecting raw base64 keys, instead .pem directly. This choice made the nightmare of having to decode the key stored in the dokploy .env file much easier to manage and the spring final code much simplier.
+
 ```bash
+# Convert a .pem key inside a .pem file named jwt-private.pem to base64 to a file named private_final.txt
 $priv = Get-Content jwt-private.pem | Where-Object { $_ -notmatch "-----" }
 $priv -join "" | Set-Content private_final.txt
 
+# Convert a .pem key inside a .pem file named jwt-public.pem to base64 to a file named public_final.txt
 $pub = Get-Content jwt-public.pem | Where-Object { $_ -notmatch "-----" }
 $pub -join "" | Set-Content public_final.txt
 ```
