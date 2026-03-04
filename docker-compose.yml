@@ -5,10 +5,10 @@ services:
     expose:
       - "8080"
     environment:
-      - API_PROPERTIES_APPLICATION_PRIVATE_KEY_PATH=/keys/jwt-private.pem
-      - API_PROPERTIES_APPLICATION_PUBLIC_KEY_PATH=/keys/jwt-public.pem
-      - RSA_PRIVATE_CONTENT=${JWT_PRIVATE_KEY_CONTENT}
-      - RSA_PUBLIC_CONTENT=${JWT_PUBLIC_KEY_CONTENT}
+      - API_PROPERTIES_APPLICATION_PRIVATE_KEY=/keys/jwt-private.pem
+      - API_PROPERTIES_APPLICATION_PUBLIC_KEY=/keys/jwt-public.pem
+      - RSA_PRIVATE_KEY_B64=${RSA_PRIVATE_CONTENT}
+      - RSA_PUBLIC_KEY_B64=${RSA_PUBLIC_CONTENT}
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
       - API_URL=${API_URL}
@@ -26,12 +26,6 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-    entrypoint: >
-      sh -c "mkdir -p /keys && 
-             echo \"$$RSA_PRIVATE_CONTENT\" > /keys/jwt-private.pem && 
-             echo \"$$RSA_PUBLIC_CONTENT\" > /keys/jwt-public.pem && 
-             sed -i 's/ /\\n/g' /keys/jwt-private.pem &&
-             exec java -jar app.jar"
     depends_on:
       - database
     networks:

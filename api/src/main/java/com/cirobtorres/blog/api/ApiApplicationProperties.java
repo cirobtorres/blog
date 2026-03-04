@@ -31,25 +31,25 @@ public class ApiApplicationProperties {
     }
 
     public static class Application {
-        private String privateKeyPath;
-        private String publicKeyPath;
+        private String privateKey;
+        private String publicKey;
         private String url;
         private boolean production;
 
-        public String getPrivateKeyPath() {
-            return privateKeyPath;
+        public String getPrivateKey() {
+            return privateKey;
         }
 
-        public void setPrivateKeyPath(String privateKeyPath) {
-            this.privateKeyPath = privateKeyPath;
+        public void setPrivateKey(String privateKey) {
+            this.privateKey = privateKey;
         }
 
-        public String getPublicKeyPath() {
-            return publicKeyPath;
+        public String getPublicKey() {
+            return publicKey;
         }
 
-        public void setPublicKeyPath(String publicKeyPath) {
-            this.publicKeyPath = publicKeyPath;
+        public void setPublicKey(String publicKey) {
+            this.publicKey = publicKey;
         }
 
         public String getUrl() {
