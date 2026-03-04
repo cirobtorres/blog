@@ -40,7 +40,7 @@ services:
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     volumes:
-      - .:/keys:ro
+      - /etc/dokploy/compose/${PROJECT_NAME}/api/keys:/keys:ro
     depends_on:
       - database
     networks:
