@@ -160,12 +160,24 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply text-foreground bg-background selection:bg-ring;
   }
   .header-hidden {
     transform: translateY(calc(-1 * var(--height-header)));
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    border: 2px solid color-mix(in oklab, var(--primary) 75%, transparent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: #000;
+    transition: background-color 50000s ease-in-out 0s;
+    box-shadow: 0 0 0px 1000px
+      color-mix(in oklab, var(--primary) 25%, transparent) inset;
   }
 }
