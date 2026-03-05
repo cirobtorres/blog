@@ -172,12 +172,31 @@
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
-    border: 2px solid color-mix(in oklab, var(--primary) 75%, transparent);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: #000;
+    -webkit-box-shadow: 0 0 0px 1000px
+      color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: none !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
     transition: background-color 50000s ease-in-out 0s;
-    box-shadow: 0 0 0px 1000px
-      color-mix(in oklab, var(--primary) 25%, transparent) inset;
+  }
+
+  fieldset:has(input:-webkit-autofill) {
+    border-color: color-mix(
+      in oklab,
+      var(--primary) 75%,
+      transparent
+    ) !important;
+    background-color: #171717;
+  }
+
+  fieldset:has(input:-webkit-autofill) label {
+    transform: translateY(-1.125rem) scale(0.75) !important;
+    color: var(--primary) !important;
+    background-color: transparent;
+  }
+
+  fieldset.border-red-700:has(input:-webkit-autofill) {
+    border-color: #b91c1c !important;
   }
 }
