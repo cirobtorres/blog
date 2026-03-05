@@ -6,7 +6,6 @@ import { buttonVariants, cn } from "../../utils/className";
 function Button({
   className,
   variant = "default",
-  size = "default",
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -19,8 +18,7 @@ function Button({
     <Comp
       data-slot="button"
       data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, className }))}
       {...props}
     />
   );
