@@ -1,16 +1,21 @@
 import NextLink from "next/link";
 import { ComponentPropsWithRef } from "react";
 import { cn, linkVariants } from "../../utils/className";
+import { type VariantProps } from "class-variance-authority";
+
+type LinkVariant = VariantProps<typeof linkVariants>["variant"];
 
 interface ExternalLinkProps extends ComponentPropsWithRef<typeof NextLink> {
   children: React.ReactNode;
   href: string;
+  variant?: LinkVariant;
   className?: string;
 }
 
 export function Link({
   children,
   href,
+  variant = "external",
   className,
   ...props
 }: ExternalLinkProps) {
@@ -19,8 +24,9 @@ export function Link({
     <NextLink
       {...props}
       href={href}
+      data-variant={variant}
       target={props.target ? props.target : external ? "_blank" : undefined}
-      className={cn(linkVariants(), external && "inline-flex", className)}
+      className={cn(external && "inline-flex", linkVariants({ variant }), className)}
     >
       {children}
       {external && (
@@ -34,7 +40,6 @@ export function Link({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="lucide lucide-arrow-up-right-icon lucide-arrow-up-right"
         >
           <path d="M7 7h10v10" />
           <path d="M7 17 17 7" />

@@ -44,6 +44,10 @@ const signIn = async (
     cache: "no-store",
   });
 
+  if (!isProd) {
+    console.error("response", response);
+  }
+
   if (response.ok) {
     const cookieStore = await cookies();
     const setCookieHeader = response.headers.get("set-cookie");
@@ -86,21 +90,28 @@ const signIn = async (
       cache: "no-store",
     });
 
+    if (!isProd) {
+      console.error("userResponse", userResponse);
+    }
+
     if (userResponse.ok) {
       const userData = await userResponse.json();
       if (!userData.isProviderEmailVerified) {
         return redirect("/sign-up/validate-email");
       }
     }
+    return redirect("/");
   }
 
   if (!isProd) {
-    console.error(response);
+    console.error("signIn erro: response", response);
   }
 
   if (
-    response.status === 400 || // Ex: Invalid email type format
-    response.status === 401 // Ex: Wrong email/password
+    response.status === 400 ||
+    response.status === 404 ||
+    response.status === 401 || // Ex: Invalid email type format
+    response.status === 409 // Ex: Wrong email/password
   ) {
     error.email.errors ??= [];
     error.password.errors ??= [];

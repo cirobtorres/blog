@@ -3,8 +3,8 @@ import { Link } from "../Links";
 
 export function Footer() {
   return (
-    <footer className="h-footer flex items-center justify-center border-t px-6 text-center">
-      <p className="font-medium font-sans text-sm text-muted-foreground">
+    <footer className="h-footer flex items-center justify-center border-t px-6 text-center bg-muted dark:bg-card">
+      <p className="font-sans text-sm text-muted-foreground">
         Built by{" "}
         <Link
           href="https://nextjs.org/"

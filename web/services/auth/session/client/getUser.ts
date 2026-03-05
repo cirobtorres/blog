@@ -35,9 +35,9 @@ const getUser = async (): Promise<AuthSession> => {
 
     return { ok: true, data: await response.json() };
   } catch (error) {
-    if (!isProd) {
-      console.error("getUser (client):", error);
-    }
+    // if (!isProd) {
+    //   console.error("getUser (client):", error);
+    // }
     return { ok: false, data: null };
   }
 };

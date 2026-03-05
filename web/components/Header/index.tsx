@@ -3,11 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
-import { cn, linkVariants } from "../../utils/className";
+import { cn, focusRing, linkVariants } from "../../utils/className";
 import { logout } from "../../services/auth/logout";
 import { Skeleton } from "../Skeleton";
 import getUser from "../../services/auth/session/client/getUser";
 import { webUrls } from "../../urls";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import Image from "next/image";
+import { Button } from "../Buttons";
 
 const content = [
   {
@@ -27,7 +30,7 @@ export function Header({
   sticky?: boolean;
   progress?: boolean;
 }) {
-  const [session, setSession] = useState<AuthSession | null>(null);
+  const [user, setUser] = useState<AuthSession | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const scrollingDownRef = useRef(0);
 
@@ -86,11 +89,11 @@ export function Header({
   }, [sticky]);
 
   useEffect(() => {
-    getUser().then(setSession);
+    getUser().then(setUser);
   }, []);
 
   function renderAuthArea() {
-    if (session === null)
+    if (user === null)
       return (
         <div className="grid grid-cols-[120px_17px_25px] items-center ml-auto mr-0">
           <Skeleton className="shrink-0 h-6 w-full" />
@@ -99,56 +102,80 @@ export function Header({
         </div>
       );
 
-    if (session.ok) {
+    if (user.ok) {
       return (
-        <div className="grid grid-cols-[1fr_17px_25px] items-center ml-auto mr-0">
-          <Link
-            href="/author"
-            className={cn(
-              linkVariants({ variant: "button" }),
-              "max-w-30 cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
-            )}
-          >
-            <p className="truncate text-nowrap justify-start">
-              {session.data.name}
-            </p>
-          </Link>
-          <div className="w-px h-4 mx-2 bg-neutral-800" />
-          <button
-            onClick={async () => {
-              await logout();
-              setSession({ ok: false, data: null });
-            }}
-            className={cn(
-              linkVariants({ variant: "button" }),
-              "w-full max-w-6.25 cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
-            )}
-          >
-            Sair
-          </button>
+        <div className="ml-auto mr-0">
+          <Popover>
+            <PopoverTrigger
+              asChild
+              tabIndex={0}
+              className={cn(
+                "flex items-center justify-start gap-2 cursor-pointer rounded-full p-1 transition-[background-color,box-shadow] duration-300 group",
+                focusRing,
+              )}
+            >
+              <div>
+                <Image
+                  src="https://placehold.co/32x32/0a0a0a/f5f5f5/jpg" // TODO
+                  alt="User avatar"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+                <p className="max-w-30 text-sm font-sans truncate text-nowrap justify-start text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground transition-color duration-300">
+                  {user.data.name}
+                </p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              sideOffset={10}
+              className="flex flex-col items-center justify-center p-4 gap-2"
+            >
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {user.data.email}
+              </p>
+              <Image
+                src="https://placehold.co/100x100/0a0a0a/f5f5f5/jpg" // TODO
+                alt="User avatar"
+                width={100}
+                height={100}
+                className="rounded-full"
+              />
+              <p className="text-sm text-muted-foreground truncate text-nowrap">
+                {user.data.name}
+              </p>
+              <div className="flex gap-1">
+                <Link
+                  href="/author"
+                  className="w-20 h-10 inline-flex items-center justify-center text-foreground text-center no-underline rounded-l-full bg-primary"
+                >
+                  Painel
+                </Link>
+                <Button
+                  onClick={async () => {
+                    await logout();
+                    setUser({ ok: false, data: null });
+                  }}
+                  variant="outline"
+                  className="w-20 h-10 rounded-r-full"
+                >
+                  Sair
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       );
     }
 
     return (
       <div className="flex items-center gap-2 ml-auto mr-0">
-        <Link
-          href="/sign-in"
-          className={cn(
-            linkVariants({ variant: "button" }),
-            "size-fit cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
-          )}
-        >
+        <Link href="/sign-in" className="no-underline">
           Entrar
         </Link>
         <div className="w-px h-4 bg-muted" />
-        <Link
-          href="/sign-up"
-          className={cn(
-            linkVariants({ variant: "button" }),
-            "size-fit cursor-pointer bg-inherit dark:bg-inherit hover:bg-inherit hover:dark:bg-inherit",
-          )}
-        >
+        <Link href="/sign-up" className="no-underline">
           Cadastrar
         </Link>
       </div>
@@ -159,8 +186,10 @@ export function Header({
     <header
       ref={headerRef}
       className={cn(
-        "sticky top-0 left-0 right-0 h-header border-b flex items-center px-6 transition-transform duration-300 will-change-transform bg-background",
-        sticky ? "z-10 backdrop-blur-sm" : "static",
+        "sticky top-0 left-0 right-0 h-header border-b flex items-center px-6 transition-transform duration-300 will-change-transform",
+        sticky
+          ? "z-10 backdrop-blur-sm bg-muted/75 dark:bg-card/75"
+          : "static bg-muted dark:bg-card",
       )}
     >
       <div className="w-full flex items-center justify-between max-w-360 mx-auto">

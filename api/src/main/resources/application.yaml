@@ -108,18 +108,6 @@ spring:
   # ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
   # ddl-auto: drop            # Only the database schema is dropped
 
-  mail:
-    host: ${MAILER_HOST}
-    port: ${MAILER_PORT}
-    username: ${MAILER_USERNAME}
-    password: ${MAILER_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enabled: true
-
 api-properties:
   application:
     production: false

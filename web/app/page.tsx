@@ -11,24 +11,24 @@ import { cn, linkVariants } from "../utils/className";
 import Link from "next/link";
 import { slugify } from "../utils/strings-transforms";
 
-// const cardItems = Array.from({ length: 3 }).map(() => {
-//   const title =
-//     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, error.";
-//   const subTitle =
-//     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sunt aspernatur esse! Iure, quae numquam sit totam inventore nihil praesentium quo odit dolorum voluptas iste aliquid excepturi debitis eum quisquam.";
-//   return {
-//     title,
-//     subTitle,
-//     createdAt: new Date(),
-//   };
-// });
+const cardItems = Array.from({ length: 3 }).map(() => {
+  const title =
+    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, error.";
+  const subTitle =
+    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sunt aspernatur esse! Iure, quae numquam sit totam inventore nihil praesentium quo odit dolorum voluptas iste aliquid excepturi debitis eum quisquam.";
+  return {
+    title,
+    subTitle,
+    createdAt: new Date(),
+  };
+});
 
-const cardItems: {
-  href: string;
-  title: string;
-  subTitle: string;
-  createdAt: Date;
-}[] = [];
+// const cardItems: {
+//   href: string;
+//   title: string;
+//   subTitle: string;
+//   createdAt: Date;
+// }[] = [];
 
 export default async function HomePage() {
   return (
@@ -53,7 +53,7 @@ export default async function HomePage() {
                 return (
                   <CardWrapper key={index}>
                     <CardBody>
-                      <small className="font-medium font-sans text-black dark:text-neutral-500">
+                      <small className="font-sans text-muted-foreground">
                         <time>{convertToLargeDate(props.createdAt)}</time>
                       </small>
                       <Link
@@ -62,7 +62,7 @@ export default async function HomePage() {
                       >
                         {props.title}
                       </Link>
-                      <p className="text-base text-muted-foreground font-normal font-sans">
+                      <p className="font-sans text-muted-foreground">
                         {props.subTitle}
                       </p>
                     </CardBody>
@@ -73,7 +73,7 @@ export default async function HomePage() {
                           linkVariants({
                             variant: "button",
                           }),
-                          "max-w-60 mx-auto rounded-md",
+                          "max-w-60 mx-auto",
                         )}
                       >
                         Saiba mais
