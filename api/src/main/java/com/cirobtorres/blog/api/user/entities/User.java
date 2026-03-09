@@ -27,11 +27,6 @@ public class User {
     )
     private final Set<UserIdentity> identities = new HashSet<>();
 
-    // @Column(length = 100)
-    @Column
-    // @Size(min = 3, max = 100)
-    private String name;
-
     @Column(unique = true) // NULLABLE
     private String email;
 
@@ -70,7 +65,7 @@ public class User {
     private Set<Authority> authorities = new HashSet<>();
 
     @Column(nullable = false)
-    private boolean enabled = true; // TODO: false = refuses login
+    private boolean enabled = true;
 
     public UUID getId() {
         return id;
@@ -92,14 +87,6 @@ public class User {
     public void removeIdentity(UserIdentity identity) {
         identities.remove(identity);
         identity.setUser(null);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {

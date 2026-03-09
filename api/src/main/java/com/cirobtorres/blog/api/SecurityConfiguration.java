@@ -31,6 +31,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,15 +147,6 @@ public class SecurityConfiguration {
     }
 
     // Remove "SCOPE_" prefix
-    // @Bean
-    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
-    //     var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    //     authoritiesConverter.setAuthorityPrefix("");
-    //     authoritiesConverter.setAuthoritiesClaimName("authorities"); // Use custom claim defined by JWT
-    //     var converter = new JwtAuthenticationConverter();
-    //     converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
-    //     return converter;
-    // }
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -165,7 +157,7 @@ public class SecurityConfiguration {
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             // Get authorities (USER, ADMIN, AUTHOR, etc)
             var authorities = authoritiesConverter.convert(jwt);
-            var finalAuthorities = new java.util.ArrayList<>(authorities);
+            var finalAuthorities = new ArrayList<>(authorities);
 
             // Adds "type" as a temporary authority
             // The user has authority to change its password as long as the duration of the token
@@ -192,17 +184,6 @@ public class SecurityConfiguration {
         return source;
     }
 
-    // @Bean
-    // public BearerTokenResolver bearerTokenResolver() {
-    //     return request -> {
-    //         if (request.getCookies() == null) return null;
-    //         return Arrays.stream(request.getCookies())
-    //                 .filter(cookie -> "access_token".equals(cookie.getName()))
-    //                 .map(Cookie::getValue)
-    //                 .findFirst()
-    //                 .orElse(null);
-    //     };
-    // }
     @Bean
     public BearerTokenResolver bearerTokenResolver() {
         return request -> {

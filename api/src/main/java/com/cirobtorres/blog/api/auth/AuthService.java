@@ -135,6 +135,7 @@ public class AuthService {
         User user = userIdentityService.createLocalUser(
                 userRegisterDTO.name(),
                 userRegisterDTO.email(),
+                null,
                 userRegisterDTO.password()
         );
 
@@ -145,7 +146,7 @@ public class AuthService {
 
         // Email code
         String token = auditTokenService.createEmailCode(userIdentity, AuditTokenType.EMAIL_VALIDATION);
-        mailService.sendValidationEmail(user.getEmail(), user.getName(), token);
+        mailService.sendValidationEmail(userIdentity.getProviderEmail(), userIdentity.getName(), token);
 
         // Login
         return loginTokens(user);
@@ -189,8 +190,8 @@ public class AuthService {
 
         // Send email
         mailService.sendValidationEmail(
-                userIdentity.getUser().getEmail(),
-                userIdentity.getUser().getName(),
+                userIdentity.getProviderEmail(),
+                userIdentity.getName(),
                 token
         );
         if (!isProd) log.info("AuthService.renewCode(): sending audit token to email");
@@ -317,19 +318,19 @@ public class AuthService {
 
         if (localIdentity.isPresent()) {
             // Local user exists: send code
-            UserIdentity identity = localIdentity.get();
+            UserIdentity userIdentity = localIdentity.get();
             String token = auditTokenService.createEmailCode(
-                    identity,
+                    userIdentity,
                     AuditTokenType.PASSWORD_RESET
             );
             mailService.sendResetPasswordEmail(
-                    userEmailDTO.email(),
-                    identity.getUser().getName(),
+                    userIdentity.getProviderEmail(),
+                    userIdentity.getName(),
                     token
             );
         } else {
             // No LOCAL account. Instead, user might have one or more provider identities
-            String userName = identities.getFirst().getUser().getName();
+            String userName = identities.getFirst().getName();
 
             List<String> providerNames = identities.stream()
                     .map(UserIdentity::getProvider)
@@ -445,7 +446,7 @@ public class AuthService {
     private TokensDTO loginTokens(User user) throws NoSuchAlgorithmException {
         List<String> authorities = authorityExtractor.fromUser(user);
         String subject = user.getId().toString();
-        String accessToken = jwtService.createAccessToken(subject, authorities, null);
+        String accessToken = jwtService.createAccessToken(subject, authorities, "LOCAL");
         String refreshToken = jwtService.createRefreshToken(subject);
         RefreshToken refreshTokenEntity = new RefreshToken();
         refreshTokenEntity.setUserId(user.getId());

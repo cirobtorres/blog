@@ -155,7 +155,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   # ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
   # ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
   # ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables

@@ -1,15 +1,13 @@
 package com.cirobtorres.blog.api.userIdentity.services;
 
-import com.cirobtorres.blog.api.authority.entities.Authority;
-import com.cirobtorres.blog.api.authority.enums.AuthorityType;
-import com.cirobtorres.blog.api.authority.interfaces.AuthorityRepository;
+import com.cirobtorres.blog.api.ApiApplicationProperties;
+import com.cirobtorres.blog.api.authority.services.AuthorityService;
 import com.cirobtorres.blog.api.user.entities.User;
 import com.cirobtorres.blog.api.user.repositories.UserRepository;
 import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
 import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import com.cirobtorres.blog.api.userIdentity.repositories.UserIdentityRepository;
 import jakarta.transaction.Transactional;
-import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,33 +19,40 @@ import java.util.Optional;
 @Service
 public class UserIdentityService {
     private final UserRepository userRepository;
-    private final AuthorityRepository authorityRepository;
+    private final AuthorityService authorityService;
     private final UserIdentityRepository userIdentityRepository;
     private final PasswordEncoder passwordEncoder;
+    private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(UserIdentityService.class);
 
     public UserIdentityService(
+            ApiApplicationProperties apiApplicationProperties,
             UserRepository userRepository,
-            AuthorityRepository authorityRepository,
+            AuthorityService authorityService,
             UserIdentityRepository identityRepository,
             PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
+        this.authorityService = authorityService;
         this.userIdentityRepository = identityRepository;
         this.passwordEncoder = passwordEncoder;
+        this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Transactional
     public User createLocalUser(
             String name,
             String email,
+            String pictureUrl,
             String password
     ) {
+        if (!isProd) log.info("UserIdentityService.createLocalUser(): pictureUrl={}", pictureUrl);
         User user = userRepository.findByEmail(email).orElseGet(User::new);
 
         UserIdentity userIdentity = new UserIdentity();
         userIdentity.setUser(user);
+        userIdentity.setName(name);
+        userIdentity.setPictureUrl(pictureUrl);
         userIdentity.setProvider(UserIdentityProvider.LOCAL);
         userIdentity.setProviderUserId(email);
         userIdentity.setProviderEmail(email);
@@ -55,10 +60,9 @@ public class UserIdentityService {
         userIdentity.setPasswordHash(passwordEncoder.encode(password));
 
         user.addIdentity(userIdentity);
-        user.setName(name);
         user.setEmail(email);
         user.setEnabled(true);
-        user.getAuthorities().add(userAuthority());
+        user.getAuthorities().add(authorityService.getDefaultUserAuthority());
         userRepository.save(user);
         userIdentityRepository.save(userIdentity);
 
@@ -71,18 +75,33 @@ public class UserIdentityService {
             String providerUserId,
             String name,
             String email,
+            String pictureUrl,
             boolean emailVerified
     ) {
+        if (!isProd) log.info("UserIdentityService.createOAuthUser()");
         UserIdentity userIdentity = userIdentityRepository
                 .findByProviderAndProviderUserId(provider, providerUserId)
-                .orElseGet(() -> resolveUser(provider, providerUserId, email, emailVerified));
+                .orElseGet(
+                        () -> resolveUser(
+                                provider,
+                                providerUserId,
+                                name,
+                                email,
+                                pictureUrl,
+                                emailVerified
+                        )
+                );
 
         userIdentity.setLastAuthenticatedAt(LocalDateTime.now());
 
         User user = userIdentity.getUser();
-        user.getAuthorities().add(userAuthority());
+        user.getAuthorities().add(authorityService.getDefaultUserAuthority());
 
-        syncUserData(user, name, email);
+        if (email != null && user.getEmail() == null) {
+            user.setEmail(email);
+        }
+
+        userRepository.save(user);
 
         return user;
     }
@@ -96,18 +115,23 @@ public class UserIdentityService {
     private UserIdentity resolveUser(
             UserIdentityProvider provider,
             String providerUserId,
+            String name,
             String email,
+            String pictureUrl,
             boolean emailVerified
     ) {
-        User user = findMergeCandidate(email, emailVerified).orElseGet(User::new);
+        if (!isProd) log.info("UserIdentityService.resolveUser()");
+        User user = findOrMergeUser(
+                email,
+                emailVerified
+        ).orElseGet(User::new);
+
         userRepository.save(user);
 
         UserIdentity userIdentity = new UserIdentity();
         userIdentity.setUser(user);
-
-        // "providerEmail" + "providerUserId" is key for security.
-        // If a user alters its provider email, "user.email" must remain
-        // the same email as before so it preserves other identities.
+        userIdentity.setName(name);
+        userIdentity.setPictureUrl(pictureUrl);
         userIdentity.setProvider(provider);
         userIdentity.setProviderUserId(providerUserId);
 
@@ -119,35 +143,7 @@ public class UserIdentityService {
         return userIdentityRepository.save(userIdentity);
     }
 
-    private void syncUserData(
-            User user,
-            String name,
-            String email
-    ) {
-        if (user.getName() == null && name != null) {
-            user.setName(name);
-        }
-        if (email != null && user.getEmail() == null) {
-            user.setEmail(email);
-        }
-        userRepository.save(user);
-    }
-
-    private @NonNull Authority userAuthority() {
-        return authorityRepository.findByName(AuthorityType.USER)
-                .orElseThrow(
-                        () -> new IllegalStateException("Authority USER not found")
-                );
-    }
-
-    private @NonNull Authority userAuthority(AuthorityType authority) {
-        return authorityRepository.findByName(authority)
-                .orElseThrow(
-                        () -> new IllegalStateException("Authority USER not found")
-                );
-    }
-
-    private Optional<User> findMergeCandidate(String email, boolean emailVerified) {
+    private Optional<User> findOrMergeUser(String email, boolean emailVerified) {
         if (!emailVerified || email == null) {
             return Optional.empty();
         }

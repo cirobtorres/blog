@@ -1,12 +1,16 @@
 package com.cirobtorres.blog.api.oauth2;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.oauth2.interfaces.OAuth2ProviderAdapter;
 import com.cirobtorres.blog.api.oauth2.providers.OAuth2ProviderRegistry;
 import com.cirobtorres.blog.api.oauth2.records.OAuth2Context;
 import com.cirobtorres.blog.api.user.entities.User;
+import com.cirobtorres.blog.api.user.services.UserService;
 import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import com.cirobtorres.blog.api.userIdentity.services.UserIdentityService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -20,13 +24,17 @@ import java.util.Map;
 public class BlogOidcUserService extends OidcUserService {
     private final OAuth2ProviderRegistry auth2ProviderAdapter;
     private final UserIdentityService userIdentityService;
+    private final boolean isProd;
+    private final static Logger log = LoggerFactory.getLogger(BlogOidcUserService.class);
 
     public BlogOidcUserService(
+            ApiApplicationProperties apiApplicationProperties,
             OAuth2ProviderRegistry registry,
             UserIdentityService userIdentityService
     ) {
         this.auth2ProviderAdapter = registry;
         this.userIdentityService = userIdentityService;
+        this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Override
@@ -46,9 +54,11 @@ public class BlogOidcUserService extends OidcUserService {
                 adapter.extractProviderUserId(ctx),
                 adapter.extractName(ctx),
                 adapter.extractEmail(ctx).orElse(null),
+                adapter.extractPicture(ctx).orElse(null),
                 adapter.isEmailVerified(ctx)
         );
         Map<String, Object> attributes = new HashMap<>(oidcUser.getAttributes());
+        attributes.put("provider", provider.name());
         attributes.put("domainUserId", domainUser.getId().toString());
         userIdentityService.updateLastLogin(domainUser);
         return new DefaultOidcUser(

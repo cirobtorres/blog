@@ -7,7 +7,8 @@ import java.util.UUID;
 public record UserDTO (
         UUID id,
         String name,
-        String email,
+        String providerEmail,
+        String pictureUrl,
         List<String> authorities,
         boolean isProviderEmailVerified,
         LocalDateTime createdAt,

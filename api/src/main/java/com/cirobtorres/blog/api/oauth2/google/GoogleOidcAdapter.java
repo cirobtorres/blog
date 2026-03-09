@@ -37,6 +37,11 @@ public class GoogleOidcAdapter implements OAuth2ProviderAdapter {
     }
 
     @Override
+    public Optional<String> extractPicture(OAuth2Context ctx) {
+        return Optional.ofNullable(((OidcUser) ctx.user()).getPicture());
+    }
+
+    @Override
     public boolean isEmailVerified(OAuth2Context ctx) {
         return Boolean.TRUE.equals(((OidcUser) ctx.user()).getEmailVerified());
     }

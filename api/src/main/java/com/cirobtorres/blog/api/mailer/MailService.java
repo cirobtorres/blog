@@ -1,12 +1,9 @@
 package com.cirobtorres.blog.api.mailer;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;

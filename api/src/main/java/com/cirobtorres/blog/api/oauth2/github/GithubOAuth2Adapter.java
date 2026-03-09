@@ -6,6 +6,7 @@ import com.cirobtorres.blog.api.oauth2.interfaces.OAuth2ProviderAdapter;
 import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +35,11 @@ public class GithubOAuth2Adapter implements OAuth2ProviderAdapter {
     public Optional<String> extractEmail(OAuth2Context ctx) {
         String token = ctx.request().getAccessToken().getTokenValue();
         return fetchPrimaryEmail(token).map(GitHubEmailDTO::getEmail);
+    }
+
+    @Override
+    public Optional<String> extractPicture(OAuth2Context ctx) {
+        return Optional.ofNullable(ctx.user().getAttribute("avatar_url"));
     }
 
     @Override

@@ -10,5 +10,6 @@ public interface OAuth2ProviderAdapter {
     String extractProviderUserId(OAuth2Context ctx);
     String extractName(OAuth2Context ctx);
     Optional<String> extractEmail(OAuth2Context ctx);
+    Optional<String> extractPicture(OAuth2Context ctx);
     boolean isEmailVerified(OAuth2Context ctx);
 }

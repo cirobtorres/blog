@@ -123,7 +123,10 @@ export function Header({
             >
               <div>
                 <Image
-                  src="https://placehold.co/32x32/0a0a0a/f5f5f5/jpg" // TODO
+                  src={
+                    user.data.pictureUrl ??
+                    "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
+                  }
                   alt="User avatar"
                   width={32}
                   height={32}
@@ -140,10 +143,13 @@ export function Header({
               className="flex flex-col items-center justify-center p-4 gap-2"
             >
               <p className="text-sm text-muted-foreground line-clamp-2">
-                {user.data.email}
+                {user.data.providerEmail}
               </p>
               <Image
-                src="https://placehold.co/100x100/0a0a0a/f5f5f5/jpg" // TODO
+                src={
+                  user.data.pictureUrl ??
+                  "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
+                }
                 alt="User avatar"
                 width={100}
                 height={100}

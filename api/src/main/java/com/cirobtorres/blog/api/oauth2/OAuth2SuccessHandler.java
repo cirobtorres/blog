@@ -23,6 +23,7 @@ import java.util.UUID;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final String webUrl;
+    // private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
     public OAuth2SuccessHandler(
@@ -31,6 +32,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     ) {
         this.jwtService = jwtService;
         this.webUrl = apiApplicationProperties.getFrontend().getUrl();
+        // this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Override
@@ -43,15 +45,16 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String domainUserId = Objects.requireNonNull(oauthUser).getAttribute("domainUserId");
 
         if (domainUserId == null || domainUserId.isBlank()) {
-            log.error("Login OAuth2 fail: domainUserId is missing. oauthUser.getAttributes() = {}", oauthUser.getAttributes());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro na identificação do usuário");
+            log.error("OAuth2SuccessHandler.onAuthenticationSuccess(): Login OAuth2 failed: domainUserId is missing");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Authentication error.");
             return;
         }
 
         UUID userId = UUID.fromString(domainUserId);
 
         try {
-            TokensDTO tokens = jwtService.createTokensForOAuth2User(userId);
+            String provider = oauthUser.getAttribute("provider");
+            TokensDTO tokens = jwtService.createTokensForOAuth2User(userId, provider);
             jwtService.addTokensToCookies(response, tokens);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);

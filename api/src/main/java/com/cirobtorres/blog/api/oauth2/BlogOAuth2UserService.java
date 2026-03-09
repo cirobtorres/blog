@@ -49,8 +49,10 @@ public class BlogOAuth2UserService implements OAuth2UserService<OAuth2UserReques
                 adapter.extractProviderUserId(ctx),
                 adapter.extractName(ctx),
                 adapter.extractEmail(ctx).orElse(null),
+                adapter.extractPicture(ctx).orElse(null),
                 adapter.isEmailVerified(ctx)
         );
+        attributes.put("provider", provider.name());
         attributes.put("domainUserId", domainUser.getId().toString());
         userIdentityService.updateLastLogin(domainUser);
         String nameAttributeKey =

@@ -23,6 +23,12 @@ public class UserIdentity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column
+    private String name;
+
+    @Column(name = "picture_url")
+    private String pictureUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserIdentityProvider provider;
@@ -70,6 +76,22 @@ public class UserIdentity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public UserIdentityProvider getProvider() {

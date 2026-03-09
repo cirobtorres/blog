@@ -81,11 +81,12 @@ public class JwtService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String createAccessToken(String subject, List<String> authorities, List<String> scopes) {
+    // public String createAccessToken(String subject, List<String> authorities, List<String> scopes) {
+    public String createAccessToken(String subject, List<String> authorities, String provider) {
         List<String> finalAuthorities = new ArrayList<>(
                 authorities != null ? authorities : List.of()
         );
-        if (scopes != null) finalAuthorities.addAll(scopes);
+        // if (scopes != null) finalAuthorities.addAll(scopes);
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(subject)
@@ -94,6 +95,7 @@ public class JwtService {
                 .expiresAt(now.plusMillis(expAccToken))
                 .claim("type", TokenType.ACCESS.getType())
                 .claim("authorities", finalAuthorities)
+                .claim("provider", provider != null ? provider : "LOCAL")
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -114,13 +116,13 @@ public class JwtService {
     }
 
     @Transactional
-    public TokensDTO createTokensForOAuth2User(UUID userId) throws NoSuchAlgorithmException {
+    public TokensDTO createTokensForOAuth2User(UUID userId, String provider) throws NoSuchAlgorithmException {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
 
         List<String> authorities = authorityExtractor.fromUser(user); // Lazy
 
         String tokenSubject = user.getId().toString();
-        String accessToken = createAccessToken(tokenSubject, authorities, null);
+        String accessToken = createAccessToken(tokenSubject, authorities, provider);
         String refreshToken = createRefreshToken(tokenSubject);
 
         RefreshToken refreshTokenEntity = new RefreshToken();
@@ -142,7 +144,7 @@ public class JwtService {
             String subject = jwt.getSubject();
             List<String> auths = jwt.getClaimAsStringList("authorities");
             if (auths == null) auths = new ArrayList<>();
-            else auths = new ArrayList<>(auths); // Criar cópia mutável
+            else auths = new ArrayList<>(auths);
 
             String type = jwt.getClaimAsString("type");
             if (type != null) {
@@ -163,25 +165,6 @@ public class JwtService {
             return null;
         }
     }
-
-    // public Authentication parseToken(Jwt jwt) {
-    //     try {
-    //         String subject = jwt.getSubject();
-    //         List<String> auths = jwt.getClaimAsStringList("authorities");
-    //         if (!isProd && auths.isEmpty()) {
-    //             log.warn("JwtService.parseToken: auths is empty.");
-    //         }
-    //         if (auths == null) auths = Collections.emptyList();
-    //         List<SimpleGrantedAuthority> authorities = auths.stream().map(SimpleGrantedAuthority::new).toList();
-    //         if (authorities.isEmpty()) {
-    //             log.warn("JwtService.parseToken: no authorities. {}", authorities);
-    //         }
-    //         return new UsernamePasswordAuthenticationToken(subject, null, authorities);
-    //     } catch (Exception e) {
-    //         log.error("JwtService.parseToken: error. {}", e.getMessage());
-    //         return null;
-    //     }
-    // }
 
     public String getTokenClaim(Jwt jwt, RefreshTokenClaims claim) {
         return jwt.getClaim(claim.getValue());
