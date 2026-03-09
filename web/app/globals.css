@@ -168,33 +168,32 @@
     transform: translateY(calc(-1 * var(--height-header)));
   }
 
+  /* Autofill */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px
-      color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
-    -webkit-text-fill-color: #ffffff !important;
-    -webkit-background-clip: text !important;
-    border: none !important;
-    background-clip: text !important;
-    transition: background-color 50000s ease-in-out 0s;
+  input:-webkit-autofill:focus,
+  input:-internal-autofill-selected {
+    -webkit-box-shadow:
+      0 0 0px 1000px #171717 inset,
+      0 0 0px 1000px color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
+    -webkit-text-fill-color: #ffffff !important; /* Text */
+    border: 1px solid color-mix(in oklab, var(--primary) 75%, transparent) !important;
+    transition: background-color 50000s ease-in-out 0s; /* Lock browser transition, so it does not override it */
+    border-radius: inherit;
   }
 
-  input:-webkit-autofill {
-    border-color: color-mix(
-      in oklab,
-      var(--primary) 75%,
-      transparent
-    ) !important;
-    background-color: #171717;
-  }
-
-  input:-webkit-autofill label {
-    color: var(--primary) !important;
-    background-color: transparent;
-  }
-
-  input:-webkit-autofill.border-destructive {
+  /* Autofill error */
+  input:-webkit-autofill.border-destructive,
+  .has-error input:-webkit-autofill {
     border-color: var(--destructive) !important;
+    -webkit-box-shadow:
+      0 0 0px 1000px #171717 inset,
+      0 0 0px 1000px color-mix(in oklab, var(--destructive) 25%, transparent)
+        inset !important;
+  }
+
+  input:-webkit-autofill + label {
+    transform: translateY(-1.125rem) scale(0.75) !important; /* Makes sure peer-placeholder-shown works with autofill (usually it doesn't), otherwise label might get stuck */
+    color: var(--primary) !important;
   }
 }
