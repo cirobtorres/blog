@@ -180,7 +180,7 @@
     transition: background-color 50000s ease-in-out 0s;
   }
 
-  fieldset:has(input:-webkit-autofill) {
+  input:-webkit-autofill {
     border-color: color-mix(
       in oklab,
       var(--primary) 75%,
@@ -189,12 +189,12 @@
     background-color: #171717;
   }
 
-  fieldset:has(input:-webkit-autofill) label {
+  input:-webkit-autofill label {
     color: var(--primary) !important;
     background-color: transparent;
   }
 
-  fieldset.border-red-700:has(input:-webkit-autofill) {
-    border-color: #b91c1c !important;
+  input:-webkit-autofill.border-destructive {
+    border-color: var(--destructive) !important;
   }
 }
