@@ -105,6 +105,8 @@ const SignUpForm = () => {
         value={password}
         onChange={setPassword}
         strength={strength}
+        copyToClipboard
+        genPassword
         passErrors={state.error.password?.errors}
         strErrors={state.error.strength?.errors}
       />

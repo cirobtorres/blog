@@ -178,6 +178,8 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
             value={password}
             onChange={setPassword}
             strength={strength}
+            copyToClipboard
+            genPassword
             passErrors={sendCodeState.error.password?.errors}
             strErrors={sendCodeState.error.strength?.errors}
           />

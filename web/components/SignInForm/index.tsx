@@ -64,7 +64,6 @@ export default function SignInForm() {
         passErrors={state.error.password?.errors}
         strErrors={state.error.strength?.errors}
       />
-      <FieldsetError error={state.error.password?.errors} />
       <FieldsetError error={state.error.form?.errors} />
       <Button disabled={pending} className="rounded h-10.5">
         {pending && <Spinner />} {pending ? "Carregando" : "Confirmar"}

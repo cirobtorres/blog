@@ -18,6 +18,8 @@ const FieldsetPassword = ({
   passErrors,
   strength,
   strErrors,
+  copyToClipboard,
+  genPassword,
 }: {
   ref: React.RefObject<null>;
   value: string;
@@ -25,6 +27,8 @@ const FieldsetPassword = ({
   passErrors: string[];
   strErrors: string[];
   strength?: ZxcvbnResult;
+  copyToClipboard?: boolean;
+  genPassword?: boolean;
 }) => {
   const [type, setType] = React.useState<"text" | "password">("password");
   return (
@@ -35,20 +39,24 @@ const FieldsetPassword = ({
           id="password"
           name="password"
           type={type}
+          maxLength={32}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          maxLength={32}
           error={!!passErrors}
         />
-        <CopyToClipBoard
-          toCopy={value}
-          className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-24.5"
-        />
-        <FieldsetGeneratePassword
-          inputRef={ref}
-          setState={onChange}
-          className="absolute top-1/2 -translate-y-1/2 right-9"
-        />
+        {copyToClipboard && (
+          <CopyToClipBoard
+            toCopy={value}
+            className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-24.5"
+          />
+        )}
+        {genPassword && (
+          <FieldsetGeneratePassword
+            inputRef={ref}
+            setState={onChange}
+            className="absolute top-1/2 -translate-y-1/2 right-9"
+          />
+        )}
         <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />
         <FieldsetLabel htmlFor="password" label="Senha" error={!!passErrors} />
       </Fieldset>

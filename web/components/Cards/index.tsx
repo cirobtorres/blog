@@ -7,7 +7,7 @@ export function CardGrid({ ...props }: React.ComponentProps<"div">) {
 export function CardWrapper({ ...props }: React.ComponentProps<"article">) {
   return (
     <article
-      className="max-w-full mx-auto flex flex-col justify-between gap-2 border p-4 rounded-lg bg-linear-150 from-0% to-75% from-neutral-900 to-neutral-950 hover:border-primary transition-border duration-300 hover:-translate-y-1"
+      className="max-w-full mx-auto flex flex-col justify-between gap-2 border p-4 rounded bg-linear-150 from-0% to-75% from-neutral-900 to-neutral-950 hover:border-primary transition-border duration-300"
       {...props}
     />
   );
