@@ -12,5 +12,5 @@ export default async function ValidateEmailFormServer({
   const { ok, data: user } = await getUser();
   if (!ok) notFound(); // Not authenticated
   if (step !== "success" && user.isProviderEmailVerified) notFound(); // Authenticated + search params + verified
-  return <ValidateEmailFormClient email={user.email} />; // Authenticated + unverified
+  return <ValidateEmailFormClient email={user.providerEmail} />; // Authenticated + unverified
 }
