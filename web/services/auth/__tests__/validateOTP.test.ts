@@ -20,9 +20,9 @@ beforeEach(() => {
 
 describe("validateOTP", () => {
   describe("validation", () => {
-    it("returns error when vCode is not 6 chars", async () => {
+    it("returns error when code is not 6 chars", async () => {
       const formData = new FormData();
-      formData.set("vCode", "12345");
+      formData.set("code", "12345");
 
       const result = await validateOTP(
         { ok: false, success: null, error: {} },
@@ -33,9 +33,9 @@ describe("validateOTP", () => {
       expect(result.error).toBeDefined();
     });
 
-    it("returns error when vCode has invalid chars", async () => {
+    it("returns error when code has invalid chars", async () => {
       const formData = new FormData();
-      formData.set("vCode", "12345a");
+      formData.set("code", "12345a");
 
       const result = await validateOTP(
         { ok: false, success: null, error: {} },
@@ -46,9 +46,9 @@ describe("validateOTP", () => {
       expect(result.error).toBeDefined();
     });
 
-    it("accepts valid 6-char uppercase alphanumeric vCode", async () => {
+    it("accepts valid 6-char uppercase alphanumeric code", async () => {
       const formData = new FormData();
-      formData.set("vCode", "ABC123");
+      formData.set("code", "ABC123");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token" ? { value: "token" } : undefined,
@@ -67,7 +67,7 @@ describe("validateOTP", () => {
   describe("API flow", () => {
     it("returns ok: true when validation API returns ok", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token"
@@ -88,7 +88,7 @@ describe("validateOTP", () => {
 
     it("retries with refresh token when access_token missing or 401", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token"
@@ -119,7 +119,7 @@ describe("validateOTP", () => {
 
     it("returns session expired error when 401 and no refresh", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token" ? { value: "bad" } : undefined,
@@ -139,7 +139,7 @@ describe("validateOTP", () => {
 
     it("returns invalid code for 404/409/410", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: () => ({ value: "token" }),
       });
@@ -156,7 +156,7 @@ describe("validateOTP", () => {
 
     it("returns generic error for other status codes", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({ get: () => ({ value: "token" }) });
       mockFetch.mockResolvedValue({ ok: false, status: 500 });
 
@@ -173,7 +173,7 @@ describe("validateOTP", () => {
 
     it("when 401 and refresh returns ok but no set-cookie, does not retry validation", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token"
@@ -199,7 +199,7 @@ describe("validateOTP", () => {
 
     it("when 401 and refresh returns set-cookie without access_token, keeps 401 error", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token"
@@ -227,7 +227,7 @@ describe("validateOTP", () => {
 
     it("when no access_token but has refresh_token and refresh fails", async () => {
       const formData = new FormData();
-      formData.set("vCode", "123456");
+      formData.set("code", "123456");
       mockCookies.mockResolvedValue({
         get: (name: string) =>
           name === "access_token"

@@ -1,6 +1,6 @@
 "use client";
 
-import { apiClientUrls } from "../../../../urls";
+import { apiClientUrls } from "../../../../config/routes";
 
 const getUser = async (): Promise<AuthSession> => {
   const isProd = process.env.NODE_ENV === "production";
@@ -34,10 +34,7 @@ const getUser = async (): Promise<AuthSession> => {
     }
 
     return { ok: true, data: await response.json() };
-  } catch (error) {
-    // if (!isProd) {
-    //   console.error("getUser (client):", error);
-    // }
+  } catch (e) {
     return { ok: false, data: null };
   }
 };

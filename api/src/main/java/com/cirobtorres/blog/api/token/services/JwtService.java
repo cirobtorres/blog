@@ -65,14 +65,7 @@ public class JwtService {
         this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
-    public String createToken(
-            String subject,
-            String type,
-            Instant issuedAt,
-            Instant expiresAt,
-            List<String> authorities,
-            List<String> scopes
-    ) {
+    public String createToken(String subject, List<String> authorities, String type, Instant issuedAt, Instant expiresAt, List<String> scopes) {
         List<String> finalAuthorities = new ArrayList<>(authorities);
         if (scopes != null) finalAuthorities.addAll(scopes);
 
@@ -88,11 +81,7 @@ public class JwtService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String createAccessToken(
-            String subject,
-            List<String> authorities,
-            List<String> scopes
-    ) {
+    public String createAccessToken(String subject, List<String> authorities, List<String> scopes) {
         List<String> finalAuthorities = new ArrayList<>(
                 authorities != null ? authorities : List.of()
         );
@@ -152,20 +141,47 @@ public class JwtService {
         try {
             String subject = jwt.getSubject();
             List<String> auths = jwt.getClaimAsStringList("authorities");
+            if (auths == null) auths = new ArrayList<>();
+            else auths = new ArrayList<>(auths); // Criar cópia mutável
+
+            String type = jwt.getClaimAsString("type");
+            if (type != null) {
+                auths.add("TOKEN_TYPE_" + type);
+            }
+
             if (!isProd && auths.isEmpty()) {
-                log.warn("JwtService.parseToken: auths is empty.");
+                log.warn("JwtService.parseToken: No authorities found for subject: {}", subject);
             }
-            if (auths == null) auths = Collections.emptyList();
-            List<SimpleGrantedAuthority> authorities = auths.stream().map(SimpleGrantedAuthority::new).toList();
-            if (authorities.isEmpty()) {
-                log.warn("JwtService.parseToken: no authorities. {}", authorities);
-            }
+
+            List<SimpleGrantedAuthority> authorities = auths.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
+
             return new UsernamePasswordAuthenticationToken(subject, null, authorities);
         } catch (Exception e) {
-            log.error("JwtService.parseToken: error. {}", e.getMessage());
+            log.error("JwtService.parseToken: error parsing token. {}", e.getMessage());
             return null;
         }
     }
+
+    // public Authentication parseToken(Jwt jwt) {
+    //     try {
+    //         String subject = jwt.getSubject();
+    //         List<String> auths = jwt.getClaimAsStringList("authorities");
+    //         if (!isProd && auths.isEmpty()) {
+    //             log.warn("JwtService.parseToken: auths is empty.");
+    //         }
+    //         if (auths == null) auths = Collections.emptyList();
+    //         List<SimpleGrantedAuthority> authorities = auths.stream().map(SimpleGrantedAuthority::new).toList();
+    //         if (authorities.isEmpty()) {
+    //             log.warn("JwtService.parseToken: no authorities. {}", authorities);
+    //         }
+    //         return new UsernamePasswordAuthenticationToken(subject, null, authorities);
+    //     } catch (Exception e) {
+    //         log.error("JwtService.parseToken: error. {}", e.getMessage());
+    //         return null;
+    //     }
+    // }
 
     public String getTokenClaim(Jwt jwt, RefreshTokenClaims claim) {
         return jwt.getClaim(claim.getValue());

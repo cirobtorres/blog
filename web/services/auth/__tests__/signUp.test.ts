@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { publicWebUrls } from "../../../config/routes";
 import { signUp } from "../signUp";
 
 const mockCookies = jest.fn();
@@ -103,6 +104,7 @@ describe("signUp", () => {
       formData.set("email", "user@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -117,7 +119,7 @@ describe("signUp", () => {
       await expect(
         signUp({ ok: false, success: null, error: {} }, formData),
       ).rejects.toThrow("NEXT_REDIRECT");
-      expect(mockRedirect).toHaveBeenCalledWith("/sign-up/validate-email");
+      expect(mockRedirect).toHaveBeenCalledWith(publicWebUrls.validateEmail);
       expect(cookieStoreSet).toHaveBeenCalled();
     });
 
@@ -127,6 +129,7 @@ describe("signUp", () => {
       formData.set("email", "user@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -145,6 +148,7 @@ describe("signUp", () => {
       formData.set("email", "existing@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -167,6 +171,7 @@ describe("signUp", () => {
       formData.set("email", "existing@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -189,6 +194,7 @@ describe("signUp", () => {
       formData.set("email", "user@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({ ok: false, status: 400 });
 
@@ -207,6 +213,7 @@ describe("signUp", () => {
       formData.set("email", "user@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
@@ -229,6 +236,7 @@ describe("signUp", () => {
       formData.set("email", "user@example.com");
       formData.set("password", "password123");
       formData.set("strength", "4");
+      formData.set("termsCheckbox", "true");
 
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
@@ -239,7 +247,7 @@ describe("signUp", () => {
 
       expect(result.ok).toBe(false);
       expect(result.error.form.errors).toContain(
-        "Falha na conexão com o servidor.",
+        "Falha na conexão com o servidor",
       );
     });
   });

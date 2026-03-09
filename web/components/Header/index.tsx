@@ -7,18 +7,31 @@ import { cn, focusRing, linkVariants } from "../../utils/className";
 import { logout } from "../../services/auth/logout";
 import { Skeleton } from "../Skeleton";
 import getUser from "../../services/auth/session/client/getUser";
-import { webUrls } from "../../urls";
+import {
+  externalUrls,
+  protectedWebUrls,
+  publicWebUrls,
+} from "../../config/routes";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import Image from "next/image";
 import { Button } from "../Buttons";
+import { usePathname } from "next/navigation";
 
-const content = [
+interface ContentProps {
+  path: string;
+  variant: "internal" | "external" | "button" | "title" | null | undefined;
+  text: string;
+}
+
+const content: ContentProps[] = [
   {
     path: "/about",
+    variant: "internal",
     text: "About",
   },
   {
-    path: webUrls.myGithub,
+    path: externalUrls.myGitHub,
+    variant: "external",
     text: "Github",
   },
 ];
@@ -31,6 +44,7 @@ export function Header({
   progress?: boolean;
 }) {
   const [user, setUser] = useState<AuthSession | null>(null);
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const scrollingDownRef = useRef(0);
 
@@ -93,14 +107,7 @@ export function Header({
   }, []);
 
   function renderAuthArea() {
-    if (user === null)
-      return (
-        <div className="grid grid-cols-[120px_17px_25px] items-center ml-auto mr-0">
-          <Skeleton className="shrink-0 h-6 w-full" />
-          <div className="w-px h-4 mx-2 bg-neutral-800" />
-          <Skeleton className="shrink-0 h-6 w-full" />
-        </div>
-      );
+    if (user === null) return <Skeleton className="w-30 h-6 shrink-0" />;
 
     if (user.ok) {
       return (
@@ -122,7 +129,7 @@ export function Header({
                   height={32}
                   className="rounded-full"
                 />
-                <p className="max-w-30 text-sm font-sans truncate text-nowrap justify-start text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground transition-color duration-300">
+                <p className="max-w-30 text-sm font-medium font-sans truncate text-nowrap justify-start text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground transition-color duration-300">
                   {user.data.name}
                 </p>
               </div>
@@ -147,14 +154,14 @@ export function Header({
               </p>
               <div className="flex gap-1">
                 <Link
-                  href="/author"
+                  href={protectedWebUrls.authors}
                   className="w-20 h-10 inline-flex items-center justify-center text-foreground text-center no-underline rounded-l-full bg-primary"
                 >
                   Painel
                 </Link>
                 <Button
                   onClick={async () => {
-                    await logout();
+                    await logout(pathname);
                     setUser({ ok: false, data: null });
                   }}
                   variant="outline"
@@ -171,11 +178,11 @@ export function Header({
 
     return (
       <div className="flex items-center gap-2 ml-auto mr-0">
-        <Link href="/sign-in" className="no-underline">
+        <Link href={publicWebUrls.signIn} className="no-underline">
           Entrar
         </Link>
         <div className="w-px h-4 bg-muted" />
-        <Link href="/sign-up" className="no-underline">
+        <Link href={publicWebUrls.signUp} className="no-underline">
           Cadastrar
         </Link>
       </div>
@@ -199,10 +206,11 @@ export function Header({
           </Link>
         </div>
         <nav className="md:flex flex-1 hidden gap-6">
-          {content?.map(({ path, text }, index) => (
+          {content?.map(({ path, variant, text }, index) => (
             <Link
               key={index}
               href={path}
+              variant={variant}
               className={linkVariants({ variant: "internal" })}
             >
               {text}

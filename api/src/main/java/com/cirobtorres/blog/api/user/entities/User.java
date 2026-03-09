@@ -27,7 +27,9 @@ public class User {
     )
     private final Set<UserIdentity> identities = new HashSet<>();
 
+    // @Column(length = 100)
     @Column
+    // @Size(min = 3, max = 100)
     private String name;
 
     @Column(unique = true) // NULLABLE

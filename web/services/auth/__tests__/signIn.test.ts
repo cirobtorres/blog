@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import { publicWebUrls } from "../../../config/routes";
 import { signIn } from "../signIn";
 
 const mockCookies = jest.fn();
@@ -96,7 +97,9 @@ describe("signIn", () => {
         );
 
         expect(result.ok).toBe(false);
-        expect(result.error.email.errors).toContain("Email ou senha não existem");
+        expect(result.error.email.errors).toContain(
+          "Email ou senha não existem",
+        );
         expect(result.error.password.errors).toContain(
           "Email ou senha não existem",
         );
@@ -135,7 +138,7 @@ describe("signIn", () => {
           formData,
         ),
       ).rejects.toThrow("NEXT_REDIRECT");
-      expect(mockRedirect).toHaveBeenCalledWith("/sign-up/validate-email");
+      expect(mockRedirect).toHaveBeenCalledWith(publicWebUrls.validateEmail);
     });
 
     it("on success with verified email redirects to home", async () => {
@@ -183,7 +186,7 @@ describe("signIn", () => {
       );
 
       expect(result.ok).toBe(false);
-      expect(result.error.form.errors).toContain("Erro de autenticação.");
+      expect(result.error.form.errors).toContain("Erro de autenticação");
     });
   });
 });

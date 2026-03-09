@@ -17,7 +17,6 @@ import java.util.UUID;
 )
 @EntityListeners(AuditingEntityListener.class)
 public class RefreshToken {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

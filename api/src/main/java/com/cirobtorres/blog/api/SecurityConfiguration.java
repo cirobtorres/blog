@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -38,13 +39,13 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
     private final String frontUrl;
-    private final boolean isProd;
+    // private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     public SecurityConfiguration(
             ApiApplicationProperties apiApplicationProperties
     ) {
-        this.isProd = apiApplicationProperties.getApplication().isProduction();
+        // this.isProd = apiApplicationProperties.getApplication().isProduction();
         this.frontUrl = apiApplicationProperties.getFrontend().getUrl();
     }
 
@@ -90,7 +91,10 @@ public class SecurityConfiguration {
                                 "/auth/register",
                                 "/auth/refresh",
                                 "/auth/validation",
-                                "/auth/renew-code"
+                                "/auth/renew-code",
+                                "/auth/password-reset-email-request",
+                                "/auth/password-reset-code",
+                                "/auth/password-reset"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -100,7 +104,9 @@ public class SecurityConfiguration {
                                 "/auth/login",
                                 "/auth/logout",
                                 "/auth/register",
-                                "/auth/refresh"
+                                "/auth/refresh",
+                                "/auth/password-reset-email-request",
+                                "/auth/password-reset-code"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,
@@ -108,6 +114,15 @@ public class SecurityConfiguration {
                                 "/users/me",
                                 "/articles"
                         ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/auth/password-reset"
+                        ).hasAuthority("PASSWORD_RESET")
+                        // ).access((authentication, context) -> {
+                        //     boolean isResetToken = authentication.get() instanceof JwtAuthenticationToken jwtAuth
+                        //             && "PASSWORD_RESET".equals(jwtAuth.getToken().getClaim("type"));
+                        //     return new AuthorizationDecision(isResetToken);
+                        // })
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -131,13 +146,36 @@ public class SecurityConfiguration {
     }
 
     // Remove "SCOPE_" prefix
+    // @Bean
+    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    //     var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    //     authoritiesConverter.setAuthorityPrefix("");
+    //     authoritiesConverter.setAuthoritiesClaimName("authorities"); // Use custom claim defined by JWT
+    //     var converter = new JwtAuthenticationConverter();
+    //     converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+    //     return converter;
+    // }
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         authoritiesConverter.setAuthorityPrefix("");
-        authoritiesConverter.setAuthoritiesClaimName("authorities"); // Use custom claim defined by JWT
+        authoritiesConverter.setAuthoritiesClaimName("authorities");
+
         var converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            // Get authorities (USER, ADMIN, AUTHOR, etc)
+            var authorities = authoritiesConverter.convert(jwt);
+            var finalAuthorities = new java.util.ArrayList<>(authorities);
+
+            // Adds "type" as a temporary authority
+            // The user has authority to change its password as long as the duration of the token
+            String type = jwt.getClaimAsString("type");
+            if (type != null) {
+                finalAuthorities.add(new SimpleGrantedAuthority(type)); // PASSWORD_RESET
+            }
+
+            return finalAuthorities;
+        });
         return converter;
     }
 
@@ -145,11 +183,6 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // config.setAllowedOriginPatterns(
-        //         isProd
-        //                 ? List.of(frontUrl)
-        //                 : List.of("http://localhost:3000", "http://localhost:3001")
-        // );
         config.setAllowedOrigins(List.of(frontUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
@@ -159,12 +192,33 @@ public class SecurityConfiguration {
         return source;
     }
 
+    // @Bean
+    // public BearerTokenResolver bearerTokenResolver() {
+    //     return request -> {
+    //         if (request.getCookies() == null) return null;
+    //         return Arrays.stream(request.getCookies())
+    //                 .filter(cookie -> "access_token".equals(cookie.getName()))
+    //                 .map(Cookie::getValue)
+    //                 .findFirst()
+    //                 .orElse(null);
+    //     };
+    // }
     @Bean
     public BearerTokenResolver bearerTokenResolver() {
         return request -> {
             if (request.getCookies() == null) return null;
-            return Arrays.stream(request.getCookies())
+            // Tries access_token first
+            String accessToken = Arrays.stream(request.getCookies())
                     .filter(cookie -> "access_token".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+
+            if (accessToken != null) return accessToken;
+
+            // If none, tries reset_token
+            return Arrays.stream(request.getCookies())
+                    .filter(cookie -> "reset_password_token".equals(cookie.getName()))
                     .map(Cookie::getValue)
                     .findFirst()
                     .orElse(null);

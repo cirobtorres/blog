@@ -15,21 +15,30 @@ interface ExternalLinkProps extends ComponentPropsWithRef<typeof NextLink> {
 export function Link({
   children,
   href,
-  variant = "external",
+  variant = "internal",
   className,
   ...props
 }: ExternalLinkProps) {
-  const external = href.startsWith("http") || href.startsWith("https");
   return (
     <NextLink
       {...props}
       href={href}
       data-variant={variant}
-      target={props.target ? props.target : external ? "_blank" : undefined}
-      className={cn(external && "inline-flex", linkVariants({ variant }), className)}
+      target={
+        props.target
+          ? props.target
+          : variant === "external"
+            ? "_blank"
+            : undefined
+      }
+      className={cn(
+        variant === "external" && "inline-flex",
+        linkVariants({ variant }),
+        className,
+      )}
     >
       {children}
-      {external && (
+      {variant === "external" && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="12"

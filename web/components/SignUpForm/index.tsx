@@ -6,24 +6,24 @@ import React from "react";
 import {
   Fieldset,
   FieldsetError,
-  FieldsetGeneratePassword,
   FieldsetInput,
   FieldsetLabel,
-  FieldsetPassTypeBtn,
-  PasswordStrength,
 } from "../Fieldset";
-import CopyToClipBoard from "../CopyToClipBoard";
 import Spinner from "../Spinner";
 import { signUp } from "../../services/auth/signUp";
 import { Button } from "../Buttons";
+import { Checkbox } from "../Checkbox";
+import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
+import { Link } from "../Links";
 
 const SignUpForm = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [type, setType] = React.useState<"text" | "password">("password");
+  const [termsCheckbox, setTermsCheckbox] = React.useState(true);
 
-  const ref = React.useRef(null);
+  const passRef = React.useRef(null);
+
   const options = {
     translations,
   };
@@ -37,6 +37,7 @@ const SignUpForm = () => {
       formData.set("name", name);
       formData.set("email", email);
       formData.set("password", password);
+      formData.set("termsCheckbox", String(termsCheckbox));
       formData.set("strength", strength.score.toString());
 
       return await signUp(prevState, formData);
@@ -44,23 +45,45 @@ const SignUpForm = () => {
     {
       ok: false,
       success: null,
-      error: {},
+      error: {
+        name: {
+          errors: null,
+        },
+        email: {
+          errors: null,
+        },
+        password: {
+          errors: null,
+        },
+        strength: {
+          errors: null,
+        },
+        termsCheckbox: {
+          errors: null,
+        },
+      },
     },
   );
 
   return (
-    <form action={action} className="flex flex-col justify-center gap-2">
-      <Fieldset error={!!state.error.name}>
+    <form action={action} className="w-full flex flex-col justify-center gap-2">
+      <Fieldset>
         <FieldsetInput
           id="name"
           value={name}
           placeholder="John Doe"
+          maxLength={65}
           onChange={(e) => setName(e.target.value)}
+          error={state.error.name?.errors}
         />
-        <FieldsetLabel htmlFor="name" label="Nome" error={!!state.error.name} />
+        <FieldsetLabel
+          htmlFor="name"
+          label="Nome"
+          error={!!state.error.name?.errors}
+        />
       </Fieldset>
-      <FieldsetError error={state.error?.name?.errors} />
-      <Fieldset error={!!state.error.email}>
+      <FieldsetError error={state.error.name?.errors} />
+      <Fieldset>
         <FieldsetInput
           id="email"
           type="email"
@@ -68,62 +91,48 @@ const SignUpForm = () => {
           placeholder="johndoe@email.com"
           onChange={(e) => setEmail(e.target.value)}
           className="truncate"
+          error={state.error.email?.errors}
         />
         <FieldsetLabel
           htmlFor="email"
           label="E-mail"
-          error={!!state.error.email}
+          error={!!state.error.email?.errors}
         />
       </Fieldset>
-      <FieldsetError error={state.error?.email?.errors} />
-      <Fieldset error={!!state.error.password}>
-        <FieldsetInput
-          ref={ref}
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type={type}
+      <FieldsetError error={state.error.email?.errors} />
+      <FieldsetPassword
+        ref={passRef}
+        value={password}
+        onChange={setPassword}
+        strength={strength}
+        passErrors={state.error.password?.errors}
+        strErrors={state.error.strength?.errors}
+      />
+      <fieldset className="flex items-start gap-2">
+        <Checkbox
+          id="terms-checkbox"
+          name="terms-checkbox"
+          checked={termsCheckbox}
+          aria-invalid={!!state.error.termsCheckbox?.errors}
+          onCheckedChange={(checked) => setTermsCheckbox(checked === true)}
         />
-        <CopyToClipBoard
-          toCopy={password}
-          className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-24.5"
-        />
-        <FieldsetGeneratePassword
-          inputRef={ref}
-          setState={setPassword}
-          className="absolute top-1/2 -translate-y-1/2 right-9"
-        />
-        <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />
-        <FieldsetLabel
-          htmlFor="password"
-          label="Senha"
-          error={!!state.error.password}
-        />
-      </Fieldset>
-      <FieldsetError error={state.error?.password?.errors} />
-      <FieldsetError error={state.error?.strength?.errors} />
-      <PasswordStrength strength={strength.score} />
-      {password !== "" && (
-        <ul className="mx-2">
-          {strength.feedback.warning !== null && (
-            <li className="text-xs font-medium text-red-500">
-              {strength.feedback.warning}
-            </li>
-          )}
-          {strength.feedback.suggestions.map((text, i) => (
-            <li key={i} className="text-xs font-medium text-amber-500">
-              {text}
-            </li>
-          ))}
-          {strength.score === 4 && (
-            <li className="text-xs text-center font-medium text-emerald-500">
-              Senha forte
-            </li>
-          )}
-        </ul>
-      )}
+        <label
+          htmlFor="terms-checkbox"
+          className="text-xs text-foreground leading-4 font-medium select-none"
+        >
+          Ao clicar em confirmar, você concorda com as{" "}
+          <Link
+            href="/"
+            className="text-xs font-medium text-primary underline underline-offset-2"
+          >
+            políticas de privacidade e uso de dados
+          </Link>{" "}
+          do website.
+        </label>
+      </fieldset>
+      <FieldsetError error={state.error?.termsCheckbox?.errors} />
       <FieldsetError error={state.error?.form?.errors} />
-      <Button disabled={pending} className="rounded h-10.5">
+      <Button type="submit" disabled={pending} className="rounded h-10.5">
         {pending && <Spinner />} {pending ? "Cadastrando" : "Confirmar"}
       </Button>
     </form>

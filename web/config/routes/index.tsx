@@ -1,0 +1,51 @@
+const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+const API_SERVER = process.env.API_URL_SERVER || "http://localhost:8080";
+const API_CLIENT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const MY_GIT = "https://github.com/cirobtorres";
+const BLOG_GIT = "https://github.com/cirobtorres/blog";
+
+const publicWebUrls = {
+  home: WEB_URL,
+  signIn: WEB_URL + "/users/sign-in",
+  forget: WEB_URL + "/users/sign-in/forgot-password",
+  signUp: WEB_URL + "/users/sign-up",
+  validateEmail: WEB_URL + "/users/sign-up/validate-email",
+};
+
+const protectedWebUrls = {
+  authors: WEB_URL + "/authors",
+};
+
+const apiServerUrls = {
+  login: API_SERVER + "/auth/login",
+  register: API_SERVER + "/auth/register",
+  emailCode: API_SERVER + "/auth/validation",
+  renewCode: API_SERVER + "/auth/renew-code",
+  refresh: API_SERVER + "/auth/refresh",
+  passResetEmailRequest: API_SERVER + "/auth/password-reset-email-request",
+  passResetCode: API_SERVER + "/auth/password-reset-code",
+  passwordReset: API_SERVER + "/auth/password-reset",
+  me: API_SERVER + "/users/me",
+};
+
+const apiClientUrls = {
+  google: API_CLIENT + "/oauth2/authorization/google",
+  github: API_CLIENT + "/oauth2/authorization/github",
+  microsoft: "/", // TODO
+  linkedin: "/", // TODO
+  me: API_CLIENT + "/users/me",
+  logout: API_CLIENT + "/auth/logout",
+};
+
+const externalUrls = {
+  myGitHub: MY_GIT,
+  blogGitHub: BLOG_GIT,
+};
+
+export {
+  publicWebUrls,
+  protectedWebUrls,
+  apiServerUrls,
+  apiClientUrls,
+  externalUrls,
+};

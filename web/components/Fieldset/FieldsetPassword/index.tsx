@@ -1,0 +1,80 @@
+import React from "react";
+import {
+  Fieldset,
+  FieldsetError,
+  FieldsetGeneratePassword,
+  FieldsetInput,
+  FieldsetLabel,
+  FieldsetPassTypeBtn,
+  PasswordStrength,
+} from "..";
+import CopyToClipBoard from "../../CopyToClipBoard";
+import { ZxcvbnResult } from "@zxcvbn-ts/core";
+
+const FieldsetPassword = ({
+  ref,
+  value,
+  onChange,
+  passErrors,
+  strength,
+  strErrors,
+}: {
+  ref: React.RefObject<null>;
+  value: string;
+  onChange: React.Dispatch<React.SetStateAction<string>>;
+  passErrors: string[];
+  strErrors: string[];
+  strength?: ZxcvbnResult;
+}) => {
+  const [type, setType] = React.useState<"text" | "password">("password");
+  return (
+    <>
+      <Fieldset>
+        <FieldsetInput
+          ref={ref}
+          id="password"
+          name="password"
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          maxLength={32}
+          error={!!passErrors}
+        />
+        <CopyToClipBoard
+          toCopy={value}
+          className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-24.5"
+        />
+        <FieldsetGeneratePassword
+          inputRef={ref}
+          setState={onChange}
+          className="absolute top-1/2 -translate-y-1/2 right-9"
+        />
+        <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />
+        <FieldsetLabel htmlFor="password" label="Senha" error={!!passErrors} />
+      </Fieldset>
+      <FieldsetError error={passErrors} />
+      <FieldsetError error={strErrors} />
+      {strength && <PasswordStrength strength={strength.score} />}
+      {strength?.feedback.warning !== null &&
+        strength?.feedback.suggestions !== null && (
+          <ul className="mx-2">
+            <li className="text-xs font-medium text-red-500">
+              {strength?.feedback.warning}
+            </li>
+            {strength?.feedback.suggestions.map((text, i) => (
+              <li key={i} className="text-xs font-medium text-amber-500">
+                {text}
+              </li>
+            ))}
+            {strength?.score === 4 && (
+              <li className="text-xs text-center font-medium text-emerald-500">
+                Senha forte
+              </li>
+            )}
+          </ul>
+        )}
+    </>
+  );
+};
+
+export { FieldsetPassword };

@@ -1,12 +1,12 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../urls";
-import * as z from "zod";
+import { apiServerUrls } from "../../config/routes";
 import { extractTokenFromHeader } from "../helpers/serve-actions";
+import * as z from "zod";
 
 const signUpSchema = z.object({
-  vCode: z
+  code: z
     .string()
     .length(6)
     .regex(/^[A-Z0-9]+$/),
@@ -17,19 +17,21 @@ const validateOTP = async (
   formData: FormData,
 ): Promise<ValidateEmailActionState> => {
   const isProd = process.env.NODE_ENV === "production";
-  const { vCode } = Object.fromEntries(formData.entries());
+  const { code } = Object.fromEntries(formData.entries());
 
   const result = signUpSchema.safeParse({
-    vCode,
+    code,
   });
 
   if (!result.success) {
-    const error = z.treeifyError(result.error).properties;
-
     return {
       ok: false,
       success: null,
-      error,
+      error: {
+        code: {
+          errors: ["Código inválido"],
+        },
+      },
     };
   }
 
@@ -42,54 +44,33 @@ const validateOTP = async (
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: vCode }),
+      body: JSON.stringify({ token: code }),
     });
   }
 
   const accessToken = cookieStore.get("access_token")?.value;
   let response = await callSpringValidation(accessToken);
 
-  if (!isProd) {
-    console.error(
-      "!accessToken || response.status === 401",
-      !accessToken || response.status === 401,
-    );
-  }
-
   if (!accessToken || response.status === 401) {
     const refreshToken = cookieStore.get("refresh_token")?.value;
-    if (!isProd) {
-      console.error("refreshToken", refreshToken);
-    }
+
     if (refreshToken) {
       const refreshRes = await fetch(apiServerUrls.refresh, {
         method: "POST",
         headers: { Cookie: `refresh_token=${refreshToken}` },
       });
 
-      if (!isProd) {
-        console.error("refreshRes", refreshRes);
-        console.error("refreshRes.ok", refreshRes.ok);
-      }
-
       if (refreshRes.ok) {
         const setCookie = refreshRes.headers.get("set-cookie");
+
         if (setCookie) {
-          if (!isProd) {
-            console.error("setCookie", setCookie);
-          }
           const newAccessToken = extractTokenFromHeader(
             setCookie,
             "access_token",
           );
-          if (!isProd) {
-            console.error("newAccessToken", newAccessToken);
-          }
+
           if (newAccessToken) {
             response = await callSpringValidation(newAccessToken);
-            if (!isProd) {
-              console.error("Último response", response);
-            }
           }
         }
       }

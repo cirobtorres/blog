@@ -1,55 +1,38 @@
 import generator from "generate-password-ts";
 import { SetStateAction } from "react";
-import { cn, focusRing } from "../../utils/className";
+import { cn, focusRing, inputBorder } from "../../utils/className";
 import { Score } from "@zxcvbn-ts/core";
 
 const Fieldset = ({
   className,
-  error,
   ...props
 }: React.ComponentProps<"fieldset"> & {
   className?: string;
-  error?: boolean;
 }) => {
   return (
     <fieldset
       {...props}
       className={cn(
-        "relative w-full transition-[border,transform] duration-300 rounded [&_input]:has-disabled:cursor-not-allowed [&_input]:has-disabled:[&_label]:text-neutral-700 bg-neutral-900 [&_input]:has-disabled:border-neutral-800 [&_input]:has-disabled:bg-[#1f1f1f] border group",
-        error
-          ? "border-red-700 dark:hover:border-red-600 [&_input]:has-disabled:border-red-900"
-          : "dark:hover:border-neutral-700",
+        "relative w-full duration-300 rounded bg-neutral-900 group",
+        "has-disabled:[&_input]:cursor-not-allowed has-disabled:[&_input]:[&_label]:text-neutral-600 has-disabled:[&_input]:bg-[#1f1f1f]",
         className,
       )}
     />
   );
 };
 
-type BaseInputProps = Omit<React.ComponentProps<"input">, "value" | "onChange">;
-
-type ControlledInputProps = {
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement, HTMLInputElement>;
-};
-
-type UncontrolledInputProps = {
-  value?: never;
-  onChange?: never;
-};
-
-type FieldsetInputProps =
-  | (BaseInputProps & ControlledInputProps)
-  | (BaseInputProps & UncontrolledInputProps);
-
-const FieldsetInput = (props: FieldsetInputProps) => (
+const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
   <input
     {...props}
     autoComplete="off"
     placeholder={props.placeholder ?? ""}
     className={cn(
-      "h-full w-full px-2 pt-4.5 pb-1 text-xs font-medium rounded peer transition-all duration-300 appearance-none border-none outline-none placeholder:text-transparent placeholder:select-none text-foreground/50 bg-transparent focus:placeholder:text-muted-foreground/50 disabled:cursor-not-allowed",
+      "h-full w-full px-2 pt-4.5 pb-1 text-xs font-medium rounded peer transition-[border,transform,box-shadow] duration-300 placeholder:text-transparent placeholder:select-none text-foreground/50 bg-transparent focus:placeholder:text-muted-foreground/50 disabled:cursor-not-allowed peer",
       focusRing,
-      props.className ?? "",
+      error
+        ? "border border-destructive disabled:bg-destructive/25 disabled:border-destructive"
+        : inputBorder,
+      className,
     )}
   />
 );
@@ -67,10 +50,10 @@ const FieldsetLabel = ({
   <label
     {...props}
     className={cn(
-      "absolute origin-left top-1/2 z-10 start-1 px-1 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 scale-75 peer-focus:-translate-y-4.5 peer-focus:scale-75 text-foreground peer-focus:text-foreground peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-foreground",
-      className,
+      "absolute origin-left top-1/2 z-10 start-1 px-1 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 scale-75 peer-focus:-translate-y-4.5 peer-focus:scale-75 text-foreground peer-focus:text-foreground peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-foreground peer-disabled:text-neutral-600",
       error &&
-        "text-red-700 peer-focus:text-red-700 peer-placeholder-shown:text-red-700",
+        "text-destructive peer-focus:text-destructive peer-placeholder-shown:text-destructive",
+      className,
     )}
   >
     {label}
@@ -104,7 +87,8 @@ const FieldsetPassTypeBtn = ({
         });
       }}
       className={cn(
-        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1 size-7 flex items-center justify-center transition-[border,box-shadow] duration-300 rounded border dark:hover:border-neutral-700 dark:bg-neutral-900 group/passHideButton",
+        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1 size-7 flex items-center justify-center transition-[border,box-shadow] duration-300 rounded dark:bg-neutral-900 group/passHideButton",
+        inputBorder,
         focusRing,
       )}
     >
@@ -181,7 +165,8 @@ const FieldsetGeneratePassword = ({
       });
     }}
     className={cn(
-      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs text-muted-foreground font-medium h-7 space-x-2 px-2 py-1.25 max-w-20 transition-[color,border,box-shadow] duration-300 rounded border dark:hover:text-neutral-400 dark:hover:border-neutral-700 dark:bg-neutral-900",
+      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs text-muted-foreground font-medium h-7 space-x-2 px-2 py-1.25 max-w-20 transition-[color,border,box-shadow] duration-300 rounded dark:hover:text-neutral-400 dark:bg-neutral-900",
+      inputBorder,
       focusRing,
       className,
     )}
@@ -199,7 +184,7 @@ const FieldsetError = ({
 }) =>
   error &&
   error.length > 0 && (
-    <ul className={cn("text-sm text-red-700", className)}>
+    <ul className={cn("text-sm text-destructive", className)}>
       {error.map((error, index) => (
         <li key={index}>{error}</li>
       ))}

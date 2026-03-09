@@ -4,26 +4,15 @@ import {
   extractTokenFromHeader,
   extractPayload,
 } from "./services/helpers/serve-actions";
-import { apiServerUrls } from "./urls";
+import { apiServerUrls, publicWebUrls } from "./config/routes";
+import { PROTECTED_ROUTES } from "./config/protected";
+import { getAuthorServer } from "./services/auth/getAuthorServer";
 
 export async function proxy(request: NextRequest) {
-  // const isProd = process.env.NODE_ENV === "production";
   const { pathname } = request.nextUrl;
 
   const accessToken = request.cookies.get("access_token")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
-
-  // const publicRoutes = ["/", "/articles", "/sign-in", "/sign-up", "/public"];
-
-  // const isPublicRoute = publicRoutes.some((route) =>
-  //   pathname.startsWith(route),
-  // );
-
-  // if (!isProd) {
-  //   console.error("proxy.accessToken", !!accessToken);
-  //   console.error("proxy.refreshToken", !!refreshToken);
-  //   console.error("proxy.isPublicRoute", !!isPublicRoute);
-  // }
 
   let isExpired = true;
   if (accessToken) {
@@ -40,10 +29,6 @@ export async function proxy(request: NextRequest) {
       method: "POST",
       headers: { Cookie: `refresh_token=${refreshToken}` },
     });
-
-    // if (!isProd) {
-    //   console.error("proxy.refreshRes", refreshRes);
-    // }
 
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
@@ -69,6 +54,23 @@ export async function proxy(request: NextRequest) {
       }
     }
   }
+
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  // TODO: protege apenas de usuários não logados
+  // TODO: Usuários logados, mas sem authorities podem ter acesso a URLs que não deveriam
+  if (isProtectedRoute && !accessToken) {
+    const loginUrl = new URL(
+      publicWebUrls.signIn + "?login=required",
+      request.url,
+    );
+    // Opcional: salva a página que ele tentou acessar para redirecionar depois
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
   return NextResponse.next();
 }
 
@@ -89,8 +91,8 @@ export const config = {
 // export const config = {
 //   matcher: [
 //     "/((?!_next/static|_next/image|favicon.ico).*)",
-//     "/author",
-//     "/author/:path*",
+//     "/authors",
+//     "/authors/:path*",
 //     "/auth/:path*",
 //   ],
 // };
@@ -98,8 +100,8 @@ export const config = {
 // Production
 // export const config = {
 //   matcher: [
-//     "/author",
-//     "/author/:path*",
+//     "/authors",
+//     "/authors/:path*",
 //     "/api/:path*",
 //   ],
 // };

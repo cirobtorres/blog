@@ -1,4 +1,4 @@
-import { webUrls } from "../../urls";
+import { externalUrls } from "../../config/routes";
 import { Link } from "../Links";
 
 export function Footer() {
@@ -8,12 +8,17 @@ export function Footer() {
         Built by{" "}
         <Link
           href="https://nextjs.org/"
-          className="underline underline-offset-2"
+          variant="external"
+          className="text-primary underline underline-offset-2"
         >
           Next.js
         </Link>
         . The source code is available on{" "}
-        <Link href={webUrls.myGithub} className="underline underline-offset-2">
+        <Link
+          href={externalUrls.myGitHub}
+          variant="external"
+          className="text-primary underline underline-offset-2"
+        >
           Github
         </Link>
         .

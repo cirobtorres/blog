@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { apiServerUrls } from "../../urls";
+import { apiServerUrls, publicWebUrls } from "../../config/routes";
 import { cookies } from "next/headers";
 import { parseSetCookie } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
@@ -11,10 +11,13 @@ const signUpSchema = z.object({
   name: z
     .string()
     .min(3, "Pelo menos 3 caracteres")
-    .max(50, "Nome muito longo"),
+    .max(65, "Nome muito longo"),
   email: z.email("E-mail inválido").trim().toLowerCase(),
-  password: z.string().min(8, "Mínimo de 6 caracteres"),
+  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
   strength: z.number().min(4, "Senha muito fraca"),
+  termsCheckbox: z.refine((value) => value === "true", {
+    message: "Você precisa concordar com as políticas de uso de dados",
+  }),
 });
 
 const signUp = async (
@@ -130,11 +133,11 @@ const signUp = async (
     return {
       ok: false,
       success: null,
-      error: { form: { errors: ["Falha na conexão com o servidor."] } },
+      error: { form: { errors: ["Falha na conexão com o servidor"] } },
     };
   }
 
-  redirect("/sign-up/validate-email");
+  redirect(publicWebUrls.validateEmail);
 };
 
 export { signUp };

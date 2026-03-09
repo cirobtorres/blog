@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../urls";
+import { apiServerUrls } from "../../config/routes";
 
 const renewVCode = async () => {
   // const isProd = process.env.NODE_ENV === "production";

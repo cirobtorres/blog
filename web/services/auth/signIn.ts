@@ -7,7 +7,7 @@ import {
   parseSetCookie,
 } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { apiServerUrls } from "../../urls";
+import { apiServerUrls, publicWebUrls } from "../../config/routes";
 
 const signIn = async (
   prevState: SignInActionState,
@@ -43,10 +43,6 @@ const signIn = async (
     body: JSON.stringify({ email, password }),
     cache: "no-store",
   });
-
-  if (!isProd) {
-    console.error("response", response);
-  }
 
   if (response.ok) {
     const cookieStore = await cookies();
@@ -90,21 +86,17 @@ const signIn = async (
       cache: "no-store",
     });
 
-    if (!isProd) {
-      console.error("userResponse", userResponse);
-    }
-
     if (userResponse.ok) {
       const userData = await userResponse.json();
       if (!userData.isProviderEmailVerified) {
-        return redirect("/sign-up/validate-email");
+        return redirect(publicWebUrls.validateEmail);
       }
     }
     return redirect("/");
   }
 
   if (!isProd) {
-    console.error("signIn erro: response", response);
+    console.error("signIn", response);
   }
 
   if (
@@ -118,7 +110,7 @@ const signIn = async (
     error.email.errors.push("Email ou senha não existem");
     error.password.errors.push("Email ou senha não existem");
   } else {
-    (error.form.errors ??= []).push("Erro de autenticação.");
+    (error.form.errors ??= []).push("Erro de autenticação");
   }
 
   // Server side validations
@@ -133,7 +125,7 @@ const signIn = async (
   return {
     ok: false,
     success: null,
-    error: { form: ["Ocorreu um erro inesperado. Tente mais tarde."] },
+    error: { form: ["Ocorreu um erro inesperado. Tente mais tarde"] },
   };
 };
 

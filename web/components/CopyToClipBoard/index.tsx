@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { cn, focusRing } from "../../utils/className";
+import { cn, focusRing, inputBorder } from "../../utils/className";
 
 const CopyToClipBoard = ({
   toCopy,
@@ -31,7 +31,8 @@ const CopyToClipBoard = ({
       type="button"
       onClick={handleCopy}
       className={cn(
-        "cursor-pointer inline-flex items-center text-center text-nowrap text-xs text-muted-foreground font-medium space-x-2 px-2 py-1.25 max-w-24 transition-[color,border,box-shadow] duration-300 rounded border disabled:cursor-auto disabled:bg-[#1f1f1f] dark:not-disabled:hover:text-neutral-400 dark:not-disabled:hover:border-neutral-700 dark:bg-neutral-900",
+        "cursor-pointer inline-flex items-center text-center text-nowrap text-xs text-muted-foreground font-medium space-x-2 px-2 py-1.25 max-w-24 transition-[color,border,box-shadow] duration-300 rounded disabled:cursor-auto disabled:bg-[#1f1f1f]",
+        inputBorder,
         focusRing,
         className,
       )}

@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -33,14 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+
         String token = extractToken(request);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = auth != null && auth.isAuthenticated() &&
-                !(auth instanceof AnonymousAuthenticationToken);
-        // Defensive/resilient code
-        // If an authentication session got this far with a token on its context but labeled as anonymous
-        // Chances are that security filter chain order is messed up for some reason
-        if (token != null && !isAuthenticated) {
+
+        if (token != null) {
             try {
                 Jwt decodedToken = jwtService.decodeToken(token);
                 Authentication jwtAuth = jwtService.parseToken(decodedToken);
@@ -49,25 +44,81 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(jwtAuth);
                 }
             } catch (Exception e) {
-                log.error("JwtAuthenticationFilter.doFilterInternal: JWT validation failed. {}", e.getMessage());
+                log.warn("JWT validation failed: {}", e.getMessage());
             }
         }
+
         filterChain.doFilter(request, response);
     }
 
     private String extractToken(HttpServletRequest request) {
+        // Authorization Header
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
+
         Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (var cookie : cookies) {
-                if ("access_token".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
+        if (cookies == null) return null;
+
+        // Access Token
+        for (Cookie cookie : cookies) {
+            if ("access_token".equals(cookie.getName())) {
+                return cookie.getValue();
             }
         }
+
+        // Reset Password Token
+        for (Cookie cookie : cookies) {
+            if ("reset_password_token".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+
         return null;
     }
+
+    // @Override
+    // protected void doFilterInternal(
+    //         @NonNull HttpServletRequest request,
+    //         @NonNull HttpServletResponse response,
+    //         @NonNull FilterChain filterChain
+    // ) throws ServletException, IOException {
+    //     String token = extractToken(request);
+    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    //     boolean isAuthenticated = auth != null && auth.isAuthenticated() &&
+    //             !(auth instanceof AnonymousAuthenticationToken);
+    //     // Defensive/resilient code
+    //     // If an authentication session got this far with a token on its context but labeled as anonymous
+    //     // Chances are that security filter chain order is messed up for some reason
+    //     if (token != null && !isAuthenticated) {
+    //         try {
+    //             Jwt decodedToken = jwtService.decodeToken(token);
+    //             Authentication jwtAuth = jwtService.parseToken(decodedToken);
+//
+    //             if (jwtAuth != null) {
+    //                 SecurityContextHolder.getContext().setAuthentication(jwtAuth);
+    //             }
+    //         } catch (Exception e) {
+    //             log.error("JwtAuthenticationFilter.doFilterInternal: JWT validation failed. {}", e.getMessage());
+    //         }
+    //     }
+    //     filterChain.doFilter(request, response);
+    // }
+
+    // private String extractToken(HttpServletRequest request) {
+    //     String bearerToken = request.getHeader("Authorization");
+    //     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+    //         return bearerToken.substring(7);
+    //     }
+    //     Cookie[] cookies = request.getCookies();
+    //     if (cookies != null) {
+    //         for (var cookie : cookies) {
+    //             if ("access_token".equals(cookie.getName())) {
+    //                 return cookie.getValue();
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 }

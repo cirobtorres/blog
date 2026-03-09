@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { webUrls } from "../../../../urls";
+import { publicWebUrls } from "../../../../config/routes";
 
 export async function GET() {
-  return NextResponse.redirect(webUrls.home);
+  return NextResponse.redirect(publicWebUrls.home);
 }

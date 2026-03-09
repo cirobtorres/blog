@@ -2,15 +2,17 @@ package com.cirobtorres.blog.api.auth;
 
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.emailToken.dtos.VTokenDTO;
+import com.cirobtorres.blog.api.auditToken.dtos.AuditTokenDTO;
+import com.cirobtorres.blog.api.token.dtos.PassResTokenDTO;
 import com.cirobtorres.blog.api.token.dtos.TokensDTO;
 import com.cirobtorres.blog.api.token.services.JwtService;
 import com.cirobtorres.blog.api.user.dtos.UserLoginDTO;
+import com.cirobtorres.blog.api.user.dtos.UserPasswordDTO;
 import com.cirobtorres.blog.api.user.dtos.UserRegisterDTO;
+import com.cirobtorres.blog.api.user.dtos.UserEmailDTO;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +47,10 @@ public class AuthController {
     public ResponseEntity<Void> login(
             @RequestBody @Valid UserLoginDTO userLoginDTO,
             HttpServletResponse response
-    ) {
+    ) throws NoSuchAlgorithmException {
         TokensDTO tokens = authService.login(userLoginDTO);
         jwtService.addTokensToCookies(response, tokens);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("logout")
@@ -90,7 +92,7 @@ public class AuthController {
 
     @PostMapping("validation")
     public ResponseEntity<Void> validation(
-            @RequestBody @Valid VTokenDTO vTokenDTO,
+            @RequestBody @Valid AuditTokenDTO vTokenDTO,
             Authentication auth,
             HttpServletResponse response
     ) throws NoSuchAlgorithmException {
@@ -108,5 +110,48 @@ public class AuthController {
         UUID userId = UUID.fromString(auth.getName());
         authService.renewCode(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("password-reset-email-request")
+    public ResponseEntity<Void> passwordResetEmailRequest(
+            @RequestBody @Valid UserEmailDTO userEmailDTO
+    ) throws NoSuchAlgorithmException, MessagingException {
+        authService.passwordResetEmailCodeRequest(userEmailDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("password-reset-code")
+    public ResponseEntity<Void> passwordResetCode(
+            @RequestBody @Valid AuditTokenDTO codeDTO,
+            HttpServletResponse response
+    ) throws NoSuchAlgorithmException {
+        if (!isProd) log.info("AuthController.passwordResetCode(): codeDTO={}, codeDTO.token()={}", codeDTO, codeDTO.token());
+        PassResTokenDTO token = authService.passwordResetCodeConfirmation(codeDTO);
+        long fifteenMin = 1000 * 60 * 15;
+        jwtService.addToCookies(
+                response,
+                "reset_password_token",
+                token.passResetToken(),
+                "/",
+                fifteenMin
+        );
+        return  ResponseEntity.ok().build();
+    }
+
+    @PostMapping("password-reset")
+    public ResponseEntity<Void> passwordReset(
+            @RequestBody @Valid UserPasswordDTO passwordDTO,
+            HttpServletResponse response
+    ) {
+        if (!isProd) log.info("AuthController.passwordReset(): passwordDTO={}, passwordDTO.password()={}", passwordDTO,  passwordDTO.password());
+        authService.passwordReset(passwordDTO);
+        jwtService.addToCookies(
+                response,
+                "reset_password_token",
+                "",
+                "/",
+                0
+        ); // Clear token
+        return  ResponseEntity.ok().build();
     }
 }

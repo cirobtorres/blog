@@ -42,12 +42,9 @@ spring:
     properties:
       mail:
         smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true # TLS only
-          ssl:
-            trust: "*"
+          timeout: 5000
+          connectiontimeout: 5000
+          writetimeout: 5000
 
 # ApiApplicationProperties
 api-properties:
@@ -95,7 +92,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -107,6 +104,16 @@ spring:
   # ddl-auto: create-only     # The database schema is generated, but existing tables are not dropped first
   # ddl-auto: create-drop     # The schema is created on startup and dropped when the application stops
   # ddl-auto: drop            # Only the database schema is dropped
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
 
 api-properties:
   application:
@@ -158,16 +165,15 @@ spring:
   # ddl-auto: drop            # Only the database schema is dropped
 
   mail:
-    host: ${MAILER_HOST}
-    port: ${MAILER_PORT}
-    username: ${MAILER_USERNAME}
-    password: ${MAILER_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
-            enabled: true
+            enable: true
+            required: true # TLS only
+          ssl:
+            trust: "*"
 
 # ApiApplicationProperties
 api-properties:

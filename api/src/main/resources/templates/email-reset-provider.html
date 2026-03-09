@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: sans-serif;
+            }
+
+            .body-wrapper {
+                width: 600px;
+                color: #000 !important;
+                background-color: #fff;
+            }
+
+            .body-wrapper * {
+                margin-bottom: 24px;
+            }
+
+            .email {
+                color: #15c;
+                text-decoration: underline;
+            }
+        </style>
+        <title>Confirmação de E-mail</title>
+    </head>
+    <body class="body-wrapper">
+        <h2 class="heading">Recuperação de senha</h2>
+
+        <div class="text-wrapper">
+            <p>Recebemos um pedido de recuperação de senha associado ao email <span th:text="${email}" class="email"></span>, porém essa conta cadastrada está vinculada <span th:text="${provider}" class="provider"></span> e qualquer tentativa de mudança de senha deverá, portanto, ser feita diretamente com eles.</p>
+        </div>
+
+        <div class="text-wrapper">
+            <p>Se você não solicitou a recuperação de senha, você pode ignorar este email.</p>
+        </div>
+
+        <small>Este é um e-mail automático.</small>
+    </body>
+</html>
