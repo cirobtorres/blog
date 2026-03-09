@@ -173,13 +173,17 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-internal-autofill-selected {
+    box-shadow:
+      0 0 0px 1000px oklch(0.21 0.006 285.885) inset,
+      0 0 0px 1000px color-mix(in oklch, var(--primary), transparent 75%) inset !important;
+
     -webkit-box-shadow:
-      0 0 0px 1000px #171717 inset,
-      0 0 0px 1000px color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
-    -webkit-text-fill-color: #ffffff !important; /* Text */
-    border: 1px solid color-mix(in oklab, var(--primary) 75%, transparent) !important;
-    transition: background-color 50000s ease-in-out 0s; /* Lock browser transition, so it does not override it */
+      0 0 0px 1000px oklch(0.21 0.006 285.885) inset,
+      0 0 0px 1000px color-mix(in oklch, var(--primary), transparent 75%) inset !important;
+
+    -webkit-text-fill-color: var(--foreground) !important;
     border-radius: inherit;
+    transition: background-color 50000s ease-in-out 0s;
   }
 
   /* Autofill error */
@@ -193,7 +197,11 @@
   }
 
   input:-webkit-autofill + label {
-    transform: translateY(-1.125rem) scale(0.75) !important; /* Makes sure peer-placeholder-shown works with autofill (usually it doesn't), otherwise label might get stuck */
     color: var(--primary) !important;
+  }
+
+  /* Makes sure peer-placeholder-shown works with autofill (usually it doesn't), otherwise label might get stuck */
+  input:-webkit-autofill:not(:placeholder-shown) + label {
+    filter: none; /* Browser re-render */
   }
 }
