@@ -173,17 +173,14 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-internal-autofill-selected {
-    -webkit-box-shadow:
-      0 0 0px 1000px #171717 inset,
-      0 0 0px 1000px color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
-    /* -webkit-box-shadow: 0 0 0px 1000px
-      color-mix(in oklab, var(--primary) 25%, transparent) inset !important; */
+    -webkit-box-shadow: 0 0 0px 1000px
+      color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
+    -webkit-text-fill-color: #ffffff !important; /* Text */
     -webkit-background-clip: text !important;
     background-clip: text !important;
-    -webkit-text-fill-color: #ffffff !important; /* Text */
     border: 1px solid color-mix(in oklab, var(--primary) 75%, transparent) !important;
-    transition: background-color 50000s ease-in-out 0s; /* Lock browser transition, so it does not override it */
     border-radius: inherit;
+    transition: background-color 50000s ease-in-out 0s; /* Lock browser transition, so it does not override it */
   }
 
   /* Autofill error */
