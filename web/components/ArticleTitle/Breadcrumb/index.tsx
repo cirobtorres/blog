@@ -21,17 +21,18 @@ export const ArtBreadcrumb = () => {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+            <Link
+              href="/"
+              className="text-primary/75 hover:text-primary dark:hover:text-primary font-normal underline underline-offset-2"
+            >
+              Home
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem className="italic text-neutral-500">
-          Articles
-        </BreadcrumbItem>
+        <BreadcrumbItem className="italic">Articles</BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem className="italic text-neutral-500">
-          {sugarPath}
-        </BreadcrumbItem>
+        <BreadcrumbItem className="italic">{sugarPath}</BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );

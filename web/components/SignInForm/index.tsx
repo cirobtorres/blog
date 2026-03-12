@@ -42,7 +42,7 @@ export default function SignInForm() {
 
   return (
     <form action={action} className="w-full flex flex-col justify-center gap-2">
-      <Fieldset>
+      <Fieldset error={!!state.error.email?.errors}>
         <FieldsetInput
           id="email"
           value={email}

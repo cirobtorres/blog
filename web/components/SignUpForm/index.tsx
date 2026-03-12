@@ -12,7 +12,7 @@ import {
 import Spinner from "../Spinner";
 import { signUp } from "../../services/auth/signUp";
 import { Button } from "../Buttons";
-import { Checkbox } from "../Checkbox";
+import { Checkbox } from "../Fieldset/Checkbox";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
 import { Link } from "../Links";
 
@@ -67,7 +67,7 @@ const SignUpForm = () => {
 
   return (
     <form action={action} className="w-full flex flex-col justify-center gap-2">
-      <Fieldset>
+      <Fieldset error={!!state.error.name?.errors}>
         <FieldsetInput
           id="name"
           value={name}
@@ -83,7 +83,7 @@ const SignUpForm = () => {
         />
       </Fieldset>
       <FieldsetError error={state.error.name?.errors} />
-      <Fieldset>
+      <Fieldset error={!!state.error.email?.errors}>
         <FieldsetInput
           id="email"
           type="email"
@@ -120,12 +120,12 @@ const SignUpForm = () => {
         />
         <label
           htmlFor="terms-checkbox"
-          className="text-xs text-foreground leading-4 font-medium select-none"
+          className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none"
         >
           Ao clicar em confirmar, você concorda com as{" "}
           <Link
             href="/"
-            className="text-xs font-medium text-primary underline underline-offset-2"
+            className="text-xs text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2"
           >
             políticas de privacidade e uso de dados
           </Link>{" "}

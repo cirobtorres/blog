@@ -33,7 +33,7 @@ const FieldsetPassword = ({
   const [type, setType] = React.useState<"text" | "password">("password");
   return (
     <>
-      <Fieldset>
+      <Fieldset error={!!passErrors}>
         <FieldsetInput
           ref={ref}
           id="password"
@@ -47,14 +47,14 @@ const FieldsetPassword = ({
         {copyToClipboard && (
           <CopyToClipBoard
             toCopy={value}
-            className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-24.5"
+            className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-25"
           />
         )}
         {genPassword && (
           <FieldsetGeneratePassword
             inputRef={ref}
             setState={onChange}
-            className="absolute top-1/2 -translate-y-1/2 right-9"
+            className="absolute top-1/2 -translate-y-1/2 right-9.25"
           />
         )}
         <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />

@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import { ComponentPropsWithRef } from "react";
-import { cn, linkVariants } from "../../utils/className";
+import { cn, linkVariants } from "../../utils/variants";
 import { type VariantProps } from "class-variance-authority";
 
 type LinkVariant = VariantProps<typeof linkVariants>["variant"];

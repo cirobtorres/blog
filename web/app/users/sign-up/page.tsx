@@ -4,7 +4,7 @@ import { Skeleton } from "../../../components/Skeleton";
 import SignUpForm from "../../../components/SignUpForm";
 import LoginProviders from "../../../components/LoginProviders";
 import { publicWebUrls } from "../../../config/routes";
-import { Separation, SignUpInfo } from "../../../components/utils";
+import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
 
 const SignUpFormLoad = () => (
@@ -26,42 +26,43 @@ const SignUpFormLoad = () => (
 
 export default function SignUpPage() {
   return (
-    <main className="h-full min-h-screen grid sm:grid-cols-[1fr_500px_1fr] bg-border dark:bg-black">
-      <div className="h-full min-h-screen px-4 sm:px-8 py-8 col-start-2 flex flex-col justify-center gap-2 shadow border-x bg-background">
-        <Link href="/" className="ml-0 mr-auto">
-          Home
-        </Link>
-
-        <h1 className="text-foreground text-3xl font-bold mb-8">Cadastrar</h1>
-
-        <Alert type="warn">
-          Este site está em construção. O banco poderá sofrer limpeza de tempos
-          em tempos, o que significa que contas cadastradas aqui poderão ser
-          apagadas no futuro.
-        </Alert>
-
-        <Suspense fallback={SignUpFormLoad()}>
-          <SignUpForm />
-        </Suspense>
-
-        <Separation />
-
-        <LoginProviders />
-
-        <p className="text-xs font-medium text-muted-foreground">
-          Se você já possui uma conta, clique{" "}
-          <Link
-            href={publicWebUrls.signIn}
-            className="text-xs underline underline-offset-2 text-primary"
-          >
-            aqui
+    <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px] bg-linear-270 dark:from-black dark:to-stone-900">
+      <div className="grayscale [background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25),rgba(0,0,0,1)),linear-gradient(0deg,rgba(0,0,0,1),rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://imgproxy.flathub.org/insecure/dpr:1/f:webp/rs:fill-down/aHR0cHM6Ly9kbC5mbGF0aHViLm9yZy9tZWRpYS9vcmcvYmxlbmRlci9CbGVuZGVyLzBkNzMxYmE5NzU3NzE5YTQzMDkyMzBhNjhkMmVlY2VkL3NjcmVlbnNob3RzL2ltYWdlLTRfb3JpZy5wbmc')]" />
+      <div className="w-full h-full min-h-screen px-4 min-[700px]:px-8 py-8 not-dark:shadow border-stone-800 min-[700px]:border-l dark:bg-stone-950">
+        <div className="max-w-125 mx-auto h-full flex flex-col justify-center gap-2">
+          <Link href="/" className="ml-0 mr-auto mb-4">
+            Home
           </Link>
-          .
-        </p>
 
-        <hr className="w-full" />
+          <h1 className="text-3xl font-bold mb-8">Cadastrar</h1>
 
-        <SignUpInfo />
+          <Alert title="Site em construção" variant="warn">
+            Contas cadastradas aqui poderão ser apagadas no futuro.
+          </Alert>
+
+          <Suspense fallback={SignUpFormLoad()}>
+            <SignUpForm />
+          </Suspense>
+
+          <Separation />
+
+          <LoginProviders />
+
+          <p className="text-xs font-medium text-neutral-500">
+            Se você já possui uma conta, clique{" "}
+            <Link
+              href={publicWebUrls.signIn}
+              className="text-xs text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2"
+            >
+              aqui
+            </Link>
+            .
+          </p>
+
+          <Hr />
+
+          <SignUpInfo />
+        </div>
       </div>
     </main>
   );

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { cn } from "../../utils/className";
+import { cn } from "../../utils/variants";
 
 type BannerHeight = "sm" | "md" | "lg" | "xl" | "2xl";
 

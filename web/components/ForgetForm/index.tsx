@@ -150,10 +150,10 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
   if (isStepSuccess) {
     return (
       <div className="w-full flex flex-col gap-2 mb-6">
-        <h1 className="text-foreground text-3xl font-bold mb-8">
+        <h1 className="text-neutral-100 text-3xl font-bold mb-8">
           Senha salva!
         </h1>
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-sm font-medium text-neutral-500">
           A senha de {email} foi alterada com sucesso.
         </p>
         <Link href="/" variant="button" className="max-w-30 mx-auto">
@@ -166,10 +166,10 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
   if (hasToken)
     return (
       <div className="w-full flex flex-col gap-2 mb-6">
-        <h1 className="text-foreground text-3xl font-bold mb-8">
+        <h1 className="text-neutral-100 text-3xl font-bold mb-8">
           Esqueceu sua senha?
         </h1>
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-sm font-medium text-neutral-500">
           Crie uma nova senha
         </p>
         <form action={passChangedAction} className="flex flex-col gap-2">
@@ -194,10 +194,10 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
 
   return (
     <div className="flex flex-col gap-2 mb-6">
-      <h1 className="text-foreground text-3xl font-bold mb-8">
+      <h1 className="text-neutral-100 text-3xl font-bold mb-8">
         Esqueceu sua senha?
       </h1>
-      <p className="text-sm font-medium text-muted-foreground">
+      <p className="text-sm font-medium text-neutral-500">
         Enviaremos um código de validação para seu e-mail
       </p>
       {isStepCode ? (
@@ -213,7 +213,7 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-5 stroke-muted-foreground"
+              className="h-5 stroke-stone-500"
             >
               <circle cx="12" cy="12" r="10" />
               <line x1="12" x2="12" y1="8" y2="12" />
@@ -223,7 +223,7 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
               <p className="text-xs break-all text-emerald-500">
                 <strong>{email}</strong>
               </p>
-              <p className="text-xs text-foreground">
+              <p className="text-xs text-neutral-100">
                 Você receberá um código de validação se uma conta associada a
                 esse email existir.
               </p>
@@ -236,7 +236,7 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
               onChange={setCode}
               pending={isSendCodePending}
             />
-            <small className="text-[10px] min-[450px]:text-xs text-muted-foreground/75 font-medium">
+            <small className="text-[10px] min-[450px]:text-xs text-neutral-500/75 font-medium">
               O código é válido por 1 hora
             </small>
           </div>

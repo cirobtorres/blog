@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
-import { cn, focusRing, linkVariants } from "../../utils/className";
+import { cn, focusRing, linkVariants } from "../../utils/variants";
 import { logout } from "../../services/auth/logout";
 import { Skeleton } from "../Skeleton";
 import getUser from "../../services/auth/session/client/getUser";
@@ -28,6 +28,11 @@ const content: ContentProps[] = [
     path: "/about",
     variant: "internal",
     text: "About",
+  },
+  {
+    path: "/contact",
+    variant: "internal",
+    text: "Contact",
   },
   {
     path: externalUrls.myGitHub,
@@ -132,7 +137,7 @@ export function Header({
                   height={32}
                   className="rounded-full"
                 />
-                <p className="max-w-30 text-sm font-medium font-sans truncate text-nowrap justify-start text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground transition-color duration-300">
+                <p className="max-w-30 text-sm font-medium truncate text-nowrap justify-start text-neutral-500 group-hover:text-neutral-100 dark:group-hover:text-neutral-100 transition-color duration-300">
                   {user.data.name}
                 </p>
               </div>
@@ -142,7 +147,7 @@ export function Header({
               sideOffset={10}
               className="flex flex-col items-center justify-center p-4 gap-2"
             >
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-neutral-500 line-clamp-2">
                 {user.data.providerEmail}
               </p>
               <Image
@@ -155,13 +160,13 @@ export function Header({
                 height={100}
                 className="rounded-full"
               />
-              <p className="text-sm text-muted-foreground truncate text-nowrap">
+              <p className="text-sm text-neutral-500 truncate text-nowrap">
                 {user.data.name}
               </p>
               <div className="flex gap-1">
                 <Link
                   href={protectedWebUrls.authors}
-                  className="w-20 h-10 inline-flex items-center justify-center text-foreground text-center no-underline rounded-l-full bg-primary"
+                  className="w-20 h-10 inline-flex items-center justify-center text-neutral-100 text-center no-underline rounded-l-full bg-primary"
                 >
                   Painel
                 </Link>
@@ -184,13 +189,9 @@ export function Header({
 
     return (
       <div className="flex items-center gap-2 ml-auto mr-0">
-        <Link href={publicWebUrls.signIn} className="no-underline">
-          Entrar
-        </Link>
-        <div className="w-px h-4 bg-muted" />
-        <Link href={publicWebUrls.signUp} className="no-underline">
-          Cadastrar
-        </Link>
+        <Link href={publicWebUrls.signIn}>Entrar</Link>
+        <div className="w-px h-4 bg-stone-800" />
+        <Link href={publicWebUrls.signUp}>Cadastrar</Link>
       </div>
     );
   }
@@ -199,13 +200,13 @@ export function Header({
     <header
       ref={headerRef}
       className={cn(
-        "sticky top-0 left-0 right-0 h-header border-b flex items-center px-6 transition-transform duration-300 will-change-transform",
+        "sticky top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform",
         sticky
-          ? "z-10 backdrop-blur-sm bg-muted/75 dark:bg-card/75"
-          : "static bg-muted dark:bg-card",
+          ? "z-10 backdrop-blur-sm bg-neutral-200/90 dark:bg-stone-900/90"
+          : "static bg-neutral-200 dark:bg-stone-900",
       )}
     >
-      <div className="w-full flex items-center justify-between max-w-360 mx-auto">
+      <div className="w-full flex items-center justify-between max-w-300 mx-auto">
         <div className="mr-6">
           <Link href="/" className="no-underline">
             LOGO

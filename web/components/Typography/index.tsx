@@ -1,4 +1,4 @@
-import { cn } from "../../utils/className";
+import { cn } from "../../utils/variants";
 
 export function H2({
   className,
@@ -8,7 +8,7 @@ export function H2({
     <h2
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-foreground scroll-m-20 tracking-tight text-balance not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight text-balance not-first:mt-6",
         className,
       )}
     />
@@ -23,7 +23,7 @@ export function H3({
     <h3
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-foreground scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -38,7 +38,7 @@ export function H4({
     <h4
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-foreground scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -53,7 +53,7 @@ export function H5({
     <h5
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-foreground scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -68,7 +68,7 @@ export function H6({
     <h6
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-foreground scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -83,7 +83,7 @@ export function P({
     <p
       {...props}
       className={cn(
-        "text-base font-normal font-sans leading-7 not-first:mt-6 text-black dark:text-neutral-400",
+        "text-base font-normal leading-7 not-first:mt-6 text-neutral-900 dark:text-neutral-400",
         className,
       )}
     />
@@ -98,7 +98,7 @@ export function Blockquote({
     <blockquote
       {...props}
       className={cn(
-        "border-l-2 pl-6 not-first:mt-6 italic text-black dark:text-neutral-400",
+        "border-l-2 pl-6 not-first:mt-6 italic text-neutral-900 dark:text-neutral-400",
         className,
       )}
     />
@@ -136,7 +136,7 @@ export function Li({
   return (
     <li
       {...props}
-      className={cn("text-black dark:text-neutral-400", className)}
+      className={cn("text-neutral-900 dark:text-neutral-400", className)}
     />
   );
 }

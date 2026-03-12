@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
-import { cn, focusRingOTPSlot } from "../../utils/className";
+import { cn, focusRingOTPSlot } from "../../utils/variants";
 
 function InputOTP({
   className,
@@ -63,7 +63,7 @@ function InputOTPSlot({
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink bg-foreground h-4 w-px duration-1000" />
+          <div className="animate-caret-blink bg-stone-100 h-4 w-px duration-1000" />
         </div>
       )}
     </div>

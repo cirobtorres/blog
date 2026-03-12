@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { cn, linkVariants } from "../../../utils/className";
+import { cn, linkVariants } from "../../../utils/variants";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +15,7 @@ export default function ScrollSummary() {
       <Accordion type="single" defaultValue="summary" collapsible>
         <AccordionItem value="summary">
           <AccordionTrigger className="mb-3">
-            <p className="font-sans text-xs font-medium text-neutral-500 dark:text-neutral-100">
+            <p className="text-xs font-medium text-neutral-500 dark:text-neutral-100">
               Sumário
             </p>
           </AccordionTrigger>
@@ -31,7 +31,7 @@ export default function ScrollSummary() {
                       linkVariants(),
                       "block text-xs text-neutral-500 ml-1 p-px my-1",
                       i === 0 &&
-                        "relative text-sidebar-foreground dark:text-neutral-100 hover:bg-transparent hover:text-foreground data-[active=true]:bg-transparent data-[depth=3]:ps-4.5 data-[depth=4]:ps-5.5 data-[active=true]:text-foreground before:absolute data-[active=true]:before:w-0.75 data-[active=true]:before:bg-primary before:inset-y-px before:-left-4.75 before:w-px before:rounded-full",
+                        "relative dark:text-neutral-100 hover:bg-transparent hover:text-neutral-100 data-[active=true]:bg-transparent data-[depth=3]:ps-4.5 data-[depth=4]:ps-5.5 data-[active=true]:text-neutral-100 before:absolute data-[active=true]:before:w-0.75 data-[active=true]:before:bg-primary before:inset-y-px before:-left-4.75 before:w-px before:rounded-full",
                     )}
                   >
                     Lorem ipsum dolor

@@ -4,19 +4,26 @@ import {
   CardBody,
   CardFooter,
   CardGrid,
+  CardHeader,
+  CardImage,
+  CardImageWrapper,
   CardWrapper,
 } from "../components/Cards";
 import { convertToLargeDate } from "../utils/date";
-import { cn, linkVariants } from "../utils/className";
-import Link from "next/link";
+import { cn, linkVariants } from "../utils/variants";
 import { slugify } from "../utils/strings-transforms";
+import Link from "next/link";
 
-const cardItems = Array.from({ length: 3 }).map(() => {
+const cardItems = Array.from({ length: 5 }).map(() => {
+  const src = "https://placehold.co/1920x1080/000/fff/jpeg";
+  const alt = "Lorem ipsum dolor sit amet consectetur";
   const title =
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, error.";
   const subTitle =
     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sunt aspernatur esse! Iure, quae numquam sit totam inventore nihil praesentium quo odit dolorum voluptas iste aliquid excepturi debitis eum quisquam.";
   return {
+    src,
+    alt,
     title,
     subTitle,
     createdAt: new Date(),
@@ -24,6 +31,8 @@ const cardItems = Array.from({ length: 3 }).map(() => {
 });
 
 // const cardItems: {
+//   src: string;
+//   alt: string;
 //   href: string;
 //   title: string;
 //   subTitle: string;
@@ -35,7 +44,7 @@ export default async function HomePage() {
     <div className="min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
       <Header />
       <main className="px-6 my-6">
-        <div className="h-full w-full max-w-200 mx-auto">
+        <div className="w-full max-w-300 h-full mx-auto">
           {cardItems.length === 0 && (
             <div className="h-full flex justify-center items-center">
               <span className="font-medium text-neutral-500 pointer-events-none">
@@ -52,33 +61,35 @@ export default async function HomePage() {
                 const slug = slugify(props.title);
                 return (
                   <CardWrapper key={index}>
-                    <CardBody>
-                      <small className="font-sans text-muted-foreground">
-                        <time>{convertToLargeDate(props.createdAt)}</time>
-                      </small>
+                    <CardImageWrapper h="sm">
+                      <CardImage src={props.src} alt={props.alt} />
+                    </CardImageWrapper>
+                    <small className="text-neutral-400 dark:text-neutral-500">
+                      <time>{convertToLargeDate(props.createdAt)}</time>
+                    </small>
+                    <CardHeader>
                       <Link
                         href={`/articles/${year}/${month}/${day}/${slug}`}
                         className={linkVariants({ variant: "title" })}
                       >
                         {props.title}
                       </Link>
-                      <p className="font-sans text-muted-foreground">
-                        {props.subTitle}
-                      </p>
+                    </CardHeader>
+                    <CardBody>
+                      <p className="text-neutral-500">{props.subTitle}</p>
                     </CardBody>
-                    <CardFooter>
+                    {/* <CardFooter>
                       <Link
                         href={`/articles/${year}/${month}/${day}/${slug}`}
                         className={cn(
                           linkVariants({
                             variant: "button",
                           }),
-                          "max-w-60 mx-auto",
                         )}
                       >
                         Saiba mais
                       </Link>
-                    </CardFooter>
+                    </CardFooter> */}
                   </CardWrapper>
                 );
               })}

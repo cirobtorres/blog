@@ -3,7 +3,7 @@
 import React from "react";
 import { validateOTP } from "../../../services/auth/validateOTP";
 import { Button, buttonVariants } from "../../Buttons";
-import { cn, inputBorder, linkVariants } from "../../../utils/className";
+import { cn, linkVariants } from "../../../utils/variants";
 import { Link } from "../../Links";
 import { FieldsetError } from "../../Fieldset";
 import { renewVCode } from "../../../services/auth/renewVCode";
@@ -108,18 +108,17 @@ export default function ValidateEmailFormClient({
 
   if (isSuccess)
     return (
-      <div className="w-screen flex items-center justify-center border-y shadow bg-background">
-        <div className="h-80 w-full my-auto flex items-center justify-center bg-neutral-100 dark:bg-background">
+      <div className="w-screen flex items-center justify-center border-y shadow bg-stone-925">
+        <div className="h-80 w-full my-auto flex items-center justify-center bg-neutral-100 dark:bg-stone-925">
           <div className="flex flex-col gap-4 mx-4 text-center">
-            <h1 className="font-bold text-3xl text-foreground">
+            <h1 className="font-bold text-3xl text-neutral-100">
               Email validado com sucesso!
             </h1>
             <Link
               href="/"
               className={cn(
                 linkVariants({ variant: "button" }),
-                "max-w-40 mx-auto",
-                inputBorder,
+                "max-w-40 mx-auto border dark:border-stone-700 focus-visible:border-stone-400 dark:focus-visible:border-stone-700 dark:bg-stone-900",
               )}
             >
               Retornar
@@ -130,18 +129,18 @@ export default function ValidateEmailFormClient({
     );
 
   return (
-    <div className="w-screen flex items-center justify-center border-y shadow-md bg-neutral-100 dark:bg-background">
+    <div className="w-screen flex items-center justify-center border-y shadow-md bg-neutral-100 dark:bg-stone-925">
       <form
         action={validateCodeAction}
         className="w-full max-w-120 flex flex-col gap-6 justify-center items-center px-8 py-16"
       >
-        <h1 className="text-2xl min-[450px]:text-3xl font-bold text-foreground">
+        <h1 className="text-2xl min-[450px]:text-3xl font-bold text-neutral-100">
           Cheque o seu email
         </h1>
         <div className="flex flex-col justify-center items-center">
           <p className="text-xs min-[450px]:text-base text-neutral-400 text-center font-normal">
             Por favor, verifique o código de 6 dígitos que enviamos para{" "}
-            <b className="text-foreground">{email}</b>.
+            <b className="text-neutral-100">{email}</b>.
           </p>
         </div>
         <div className="flex flex-col justify-center items-center gap-3">
@@ -157,12 +156,12 @@ export default function ValidateEmailFormClient({
             countdown={countdownRenewCode}
           />
           {resendCodeState?.ok && (
-            <p className="text-xs font-medium text-muted-foreground">
+            <p className="text-xs font-medium text-neutral-500">
               Código enviado para{" "}
-              <strong className="text-foreground">{email}</strong>
+              <strong className="text-neutral-100">{email}</strong>
             </p>
           )}
-          <small className="text-[10px] min-[450px]:text-xs text-muted-foreground/75 font-medium">
+          <small className="text-[10px] min-[450px]:text-xs text-neutral-500/75 font-medium">
             O código é válido por 1 hora
           </small>
         </div>
@@ -181,7 +180,7 @@ export default function ValidateEmailFormClient({
             disabled={code.length < 6 || isPendingValidateCode}
             className={cn(
               buttonVariants(),
-              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded",
+              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900",
             )}
           >
             {isPendingValidateCode && <Spinner />} Confirmar
@@ -192,7 +191,7 @@ export default function ValidateEmailFormClient({
           Não consegue fazer login?{" "}
           <Link
             href="/" // TODO
-            className="text-xs min-[450px]:text-sm text-primary underline underline-offset-2"
+            className="text-sm text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2"
           >
             Clique aqui
           </Link>
