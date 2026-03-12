@@ -1,16 +1,5 @@
 import NextLink from "next/link";
-import { ComponentPropsWithRef } from "react";
 import { cn, linkVariants } from "../../utils/variants";
-import { type VariantProps } from "class-variance-authority";
-
-type LinkVariant = VariantProps<typeof linkVariants>["variant"];
-
-interface ExternalLinkProps extends ComponentPropsWithRef<typeof NextLink> {
-  children: React.ReactNode;
-  href: string;
-  variant?: LinkVariant;
-  className?: string;
-}
 
 export function Link({
   children,

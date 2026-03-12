@@ -10,6 +10,7 @@ import { renewVCode } from "../../../services/auth/renewVCode";
 import Spinner from "../../Spinner";
 import FieldsetOTPCode from "../../Fieldset/FieldsetOTPCode";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import RenewCodeButton from "./RenewCodeButton";
 
 interface ValidateEmailFormProps {
   email: string;
@@ -132,18 +133,22 @@ export default function ValidateEmailFormClient({
     <div className="w-screen flex items-center justify-center border-y shadow-md bg-neutral-100 dark:bg-stone-925">
       <form
         action={validateCodeAction}
-        className="w-full max-w-120 flex flex-col gap-6 justify-center items-center px-8 py-16"
+        className="w-full max-w-120 flex flex-col justify-center items-center px-8 py-16"
       >
-        <h1 className="text-2xl min-[450px]:text-3xl font-bold text-neutral-100">
+        <h1 className="text-2xl mb-6 min-[450px]:text-3xl font-bold text-neutral-100">
           Cheque o seu email
         </h1>
-        <div className="flex flex-col justify-center items-center">
+        <div className="mb-3 flex flex-col justify-center items-center">
           <p className="text-xs min-[450px]:text-base text-neutral-400 text-center font-normal">
             Por favor, verifique o código de 6 dígitos que enviamos para{" "}
             <b className="text-neutral-100">{email}</b>.
           </p>
         </div>
-        <div className="flex flex-col justify-center items-center gap-3">
+        <div className="mb-3 w-full h-px inline-grid">
+          <div className="w-full h-px grid-cols-1 bg-[linear-gradient(to_right,transparent_0%,var(--color-primary)_25%,var(--color-primary)_75%,transparent_100%)]" />
+          <div className="w-full h-px grid-cols-1 bg-[linear-gradient(to_right,transparent_0%,var(--color-primary)_25%,var(--color-primary)_75%,transparent_100%)] blur-sm" />
+        </div>
+        <div className="mb-6 flex flex-col justify-center items-center gap-3">
           <FieldsetOTPCode
             inputRef={inputRef}
             value={code}
@@ -161,11 +166,11 @@ export default function ValidateEmailFormClient({
               <strong className="text-neutral-100">{email}</strong>
             </p>
           )}
-          <small className="text-[10px] min-[450px]:text-xs text-neutral-500/75 font-medium">
+          <small className="text-[10px] min-[450px]:text-xs font-bold text-neutral-500">
             O código é válido por 1 hora
           </small>
         </div>
-        <div className="w-full flex justify-between items-center gap-2">
+        <div className="mb-6 w-full flex justify-between items-center gap-2">
           <Link
             href="/"
             className={cn(
@@ -200,41 +205,3 @@ export default function ValidateEmailFormClient({
     </div>
   );
 }
-
-const RenewCodeButton = ({
-  onClick,
-  isResending,
-  countdown,
-}: {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  isResending: boolean;
-  countdown: number;
-}) => (
-  <Button
-    type="button"
-    variant="outline"
-    onClick={onClick}
-    disabled={isResending || countdown > 0}
-    className="text-xs min-[450px]:text-sm"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={cn(
-        "size-3 min-[450px]:size-4",
-        isResending ? "animate-spin" : "",
-      )}
-    >
-      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-      <path d="M21 3v5h-5" />
-      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-      <path d="M8 16H3v5" />
-    </svg>
-    Reenviar código {countdown > 0 && countdown}
-  </Button>
-);

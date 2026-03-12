@@ -15,6 +15,11 @@ import { Button } from "../Buttons";
 import { Checkbox } from "../Fieldset/Checkbox";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
 import { Link } from "../Links";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "../AlertDialog";
 
 const SignUpForm = () => {
   const [name, setName] = React.useState("");
@@ -118,19 +123,24 @@ const SignUpForm = () => {
           aria-invalid={!!state.error.termsCheckbox?.errors}
           onCheckedChange={(checked) => setTermsCheckbox(checked === true)}
         />
-        <label
-          htmlFor="terms-checkbox"
-          className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none"
-        >
+        <p className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none">
           Ao clicar em confirmar, você concorda com as{" "}
-          <Link
+          {/* <Link
             href="/"
             className="text-xs text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2"
           >
             políticas de privacidade e uso de dados
-          </Link>{" "}
+          </Link>{" "} */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <span className="cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 transition-colors duration-300">
+                políticas de privacidade e uso de dados
+              </span>
+            </AlertDialogTrigger>
+            <AlertDialogContent></AlertDialogContent>
+          </AlertDialog>{" "}
           do website.
-        </label>
+        </p>
       </fieldset>
       <FieldsetError error={state.error?.termsCheckbox?.errors} />
       <FieldsetError error={state.error?.form?.errors} />

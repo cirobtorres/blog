@@ -54,7 +54,7 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        "dark:bg-input/30 size-10 border-y border-r first:border-l text-sm transition-all duration-300 outline-none first:rounded-l-lg last:rounded-r-lg relative flex items-center justify-center aria-invalid:border-destructive/75 aria-invalid:bg-destructive/15",
+        "bg-stone-200/50 dark:bg-stone-900 size-10 border-y border-r first:border-l border-stone-700 text-sm transition-all duration-300 outline-none first:rounded-l-lg last:rounded-r-lg relative flex items-center justify-center aria-invalid:border-destructive/75 aria-invalid:bg-destructive/15",
         focusRingOTPSlot,
         className,
       )}

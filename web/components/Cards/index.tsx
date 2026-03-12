@@ -1,11 +1,21 @@
 import Image from "next/image";
 import { cn } from "../../utils/variants";
+import { Link } from "../Links";
 
 export function CardGrid({ ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className="grid grid-cols-1 min-[480px]:grid-cols-2 min-[960px]:grid-cols-3 gap-4"
       {...props}
+    />
+  );
+}
+
+export function CardLink({ ...props }): ExternalLinkProps {
+  return (
+    <Link
+      {...props}
+      className="p-2 rounded-xl border border-transparent focus-visible:border-border"
     />
   );
 }
@@ -19,39 +29,48 @@ export function CardWrapper({ ...props }: React.ComponentProps<"article">) {
   );
 }
 
-export function CardHeader({ ...props }: React.ComponentProps<"div">) {
-  return <div {...props} className={cn("p-1", props.className)} />;
-}
-
-export function CardBody({ ...props }: React.ComponentProps<"div">) {
-  return <div {...props} className="flex flex-col gap-2" />;
-}
-
-export function CardFooter({ ...props }: React.ComponentProps<"div">) {
-  return <div {...props} className={cn(props.className)} />;
-}
-
-// ---
-
-type BannerHeight = "sm" | "md" | "lg" | "xl";
-
-const heightMap: Record<BannerHeight, string> = {
-  sm: "h-48",
-  md: "h-64",
-  lg: "h-80",
-  xl: "h-96",
-};
-
-export function CardImageWrapper({
-  h = "xl",
+export function CardCreatedAt({
+  createdAt,
   ...props
-}: React.ComponentProps<"div"> & { h?: BannerHeight }) {
+}: React.ComponentProps<"time"> & { createdAt?: string }) {
+  return (
+    <small>
+      <time {...props} className="text-neutral-400 dark:text-neutral-500">
+        {createdAt}
+      </time>
+    </small>
+  );
+}
+
+export function CardHeader({ ...props }: React.ComponentProps<"div">) {
   return (
     <div
       {...props}
       className={cn(
-        "relative w-full max-w-full rounded-xl overflow-hidden",
-        heightMap[h],
+        "text-lg text-neutral-900 dark:text-neutral-100",
+        props.className,
+      )}
+    />
+  );
+}
+
+export function CardDescription({ ...props }: React.ComponentProps<"p">) {
+  return (
+    <p
+      {...props}
+      className="text-sm font-normal text-neutral-400 dark:text-neutral-500"
+    />
+  );
+}
+
+// ---
+
+export function CardImageWrapper({ ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      {...props}
+      className={cn(
+        "relative w-full max-w-full rounded-xl overflow-hidden aspect-video",
         props.className,
       )}
     />

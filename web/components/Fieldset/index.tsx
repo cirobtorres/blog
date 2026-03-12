@@ -31,7 +31,7 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     placeholder={props.placeholder ?? ""}
     aria-invalid={!!error}
     className={cn(
-      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-[transform,box-shadow] duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border border-stone-700 text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 focus:aria-invalid:placeholder:text-destructive/65 dark:aria-invalid:not-focus-visible:border-destructive peer",
+      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-[transform,box-shadow] duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 focus:aria-invalid:placeholder:text-destructive/65 dark:aria-invalid:not-focus-visible:border-destructive peer",
       focusRing,
       className,
     )}
@@ -88,7 +88,7 @@ const FieldsetPassTypeBtn = ({
         });
       }}
       className={cn(
-        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-shadow duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-stone-700",
+        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-shadow duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-border",
         focusRing,
       )}
     >
@@ -165,7 +165,7 @@ const FieldsetGeneratePassword = ({
       });
     }}
     className={cn(
-      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-20 transition-[color,box-shadow] duration-300 border dark:border-stone-600 rounded disabled:cursor-auto not-dark:shadow text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-750 dark:focus-visible:border-stone-700",
+      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-20 transition-[color,box-shadow] duration-300 border dark:border-stone-600 rounded not-dark:shadow text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-750",
       focusRing,
       className,
     )}
@@ -223,7 +223,7 @@ const PasswordStrength = ({ strength }: { strength: Score }) => {
         className="col-start-1 row-start-1 w-0 h-1 m-px rounded-full blur-[2px] transition-width duration-300"
         style={{ width: percentage + "%", backgroundColor: color }}
       /> */}
-      <div className="col-start-1 row-start-1 w-full h-1.5 rounded-full border dark:border-stone-900 dark:bg-stone-925" />
+      <div className="col-start-1 row-start-1 w-full h-1.5 rounded-full border bg-container" />
     </div>
   );
 };

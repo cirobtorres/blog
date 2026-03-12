@@ -19,7 +19,7 @@ const FieldsetOTPCode = ({
 }) => {
   return (
     <fieldset className="flex flex-col justify-center items-center gap-2">
-      <label htmlFor="code" className="text-xs font-medium text-neutral-500/75">
+      <label htmlFor="code" className="text-xs font-bold text-neutral-500">
         Código de verificação
       </label>
       <InputOTP

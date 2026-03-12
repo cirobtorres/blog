@@ -1,3 +1,5 @@
+type AuthSessionConfirmed = { ok: true; data: User };
+
 type AuthSession = { ok: true; data: User } | { ok: false; data: null };
 
 type User = {

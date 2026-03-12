@@ -9,7 +9,7 @@ const cn = (...inputs: ClassValue[]): string => {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950";
+  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950";
 
 const focusRingOTPGroup =
   "outline-none has-aria-invalid:outline-none has-aria-invalid:ring-2 has-aria-invalid:ring-destructive has-aria-invalid:ring-offset-2 has-aria-invalid:ring-offset-stone-900 has-aria-invalid:bg-destructive/15";
@@ -26,10 +26,8 @@ const buttonVariants = cva(
         default:
           "bg-primary/65 border-primary disabled:bg-primary/50 text-neutral-100 hover:bg-primary/80",
         outline:
-          "text-neutral-500 hover:not-disabled:text-neutral-900 dark:hover:not-disabled:text-neutral-100 disabled:text-neutral-500/50 disabled:border-stone-500/40 disabled:bg-stone-800 not-disabled:hover:border-stone-400 not-disabled:focus-visible:border-stone-400 dark:not-disabled:hover:border-stone-700 dark:not-disabled:focus-visible:border-stone-700",
-        secondary:
-          "bg-secondary text-secondary-stone-100 hover:bg-secondary/80",
-        ghost: "hover:text-neutral-100",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:hover:bg-stone-800 dark:bg-stone-900 dark:border-stone-700 dark:focus-visible:border-stone-700 disabled:text-neutral-500/50 disabled:border-stone-500/40 disabled:bg-stone-800",
+        ghost: "",
         destructive:
           "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
         link: "text-primary underline-offset-4 hover:underline",

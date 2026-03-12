@@ -47,7 +47,7 @@ const FieldsetPassword = ({
         {copyToClipboard && (
           <CopyToClipBoard
             toCopy={value}
-            className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-25"
+            className="max-[400px]:hidden absolute top-1/2 -translate-y-1/2 right-25.25"
           />
         )}
         {genPassword && (

@@ -13,7 +13,7 @@ const MicrosoftLink = ({
       href={apiClientUrls.microsoft}
       target="_self"
       className={cn(
-        "w-full h-10.5 flex justify-center items-center gap-2 rounded cursor-pointer duration-300 text-base shadow font-medium transition-[background-color,box-shadow] bg-stone-200/50 dark:bg-stone-800 border dark:border-stone-700 focus-visible:border-stone-400 dark:hover:border-stone-700 dark:focus-visible:border-stone-700 hover:text-neutral-900 dark:hover:text-neutral-100",
+        "w-full h-10.5 flex justify-center items-center gap-2 rounded border cursor-pointer text-base shadow font-medium transition-shadow duration-300 bg-stone-200 dark:bg-stone-800",
         focusRing,
         className,
       )}

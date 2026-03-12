@@ -10,7 +10,9 @@
   --informative: oklch(54.6% 0.245 262.881);
   --destructive: oklch(58.6% 0.253 17.585);
   --warning: oklch(68.1% 0.162 75.834);
-  --background: color-mix(in oklab, var(--color-stone-200) 50%, transparent);
+  --background: var(--color-stone-100);
+  --container: var(--color-stone-200);
+  --border: var(--color-stone-300);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +24,8 @@
     --destructive: oklch(58.6% 0.253 17.585);
     --warning: oklch(68.1% 0.162 75.834);
     --background: var(--color-stone-900);
+    --container: var(--color-stone-800);
+    --border: var(--color-stone-700);
   }
 }
 
@@ -32,6 +36,8 @@
   --color-destructive: var(--destructive);
   --color-warning: var(--warning);
   --color-background: var(--background);
+  --color-container: var(--container);
+  --color-border: var(--border);
   --color-stone-925: color-mix(
     in oklab,
     var(--color-stone-900),
@@ -83,24 +89,24 @@
 
 @layer base {
   * {
-    @apply border-stone-300 dark:border-stone-800;
+    @apply border-border;
   }
   body {
-    @apply font-inter text-neutral-950 dark:text-neutral-100 bg-stone-200/50 dark:bg-stone-925;
+    @apply font-inter text-neutral-950 dark:text-neutral-100 bg-background;
   }
   .header-hidden {
     transform: translateY(calc(-1 * var(--height-header)));
   }
 
   ::selection {
-    background-color: color-mix(in oklab, var(--primary), black);
+    background-color: color-mix(in oklab, var(--primary) 75%, black);
     color: white; /* Ou outra cor que contraste bem com o seu OKLCH primary */
   }
 
   /* Opcional: Garante que inputs e textareas sigam o mesmo padrão */
   input::selection,
   textarea::selection {
-    background-color: color-mix(in oklab, var(--primary), black);
+    background-color: color-mix(in oklab, var(--primary) 75%, black);
     color: white;
   }
 
@@ -129,9 +135,9 @@
         inset !important;
   }
 
-  input:-webkit-autofill + label {
+  /* input:-webkit-autofill + label {
     color: var(--primary) !important;
-  }
+  } */
 
   /* Makes sure peer-placeholder-shown works with autofill (usually it doesn't), otherwise label might get stuck */
   input:-webkit-autofill:not(:placeholder-shown) + label {

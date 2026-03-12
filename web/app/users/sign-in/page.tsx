@@ -54,7 +54,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
           <SignUpInfo />
         </div>
       </div>
-      <div className="grayscale [background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25),rgba(0,0,0,1)),linear-gradient(0deg,rgba(0,0,0,1),rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
+      <div className="grayscale [background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25),rgba(0,0,0,0.75)),linear-gradient(0deg,rgba(0,0,0,0.75),rgba(0,0,0,0.25),rgba(0,0,0,0.75)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,0.75)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
     </main>
   );
 }
