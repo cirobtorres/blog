@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import ArticleTitle from "../../../../../../components/ArticleTitle";
-import ArticleBody from "../../../../../../components/ArticleSection";
+import ArticleBody from "../../../../../../components/ArticleBody";
 import { Footer } from "../../../../../../components/Footer";
 import { Header } from "../../../../../../components/Header";
 import ArticleComments from "../../../../../../components/ArticleComments";

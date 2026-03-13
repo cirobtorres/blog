@@ -4,7 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ArticleCardLink = ({ href, className, ...props }: ArticleCardLink) => (
-  <Link href={href} {...props} className={cn(className)} />
+  <Link
+    href={href}
+    {...props}
+    className={cn(
+      "transition-[border,box-shadow] duration-300 rounded-xl border border-transparent focus-visible:border-border",
+      focusRing,
+      className,
+    )}
+  />
 );
 
 ArticleCardLink.displayName = "ArticleCardLink";
@@ -69,8 +77,9 @@ const ArticleCard = ({ children, className, ...props }: ArticleCard) => {
   return (
     <article
       {...props}
+      tabIndex={-1}
       className={cn(
-        "relative w-full max-w-100 h-100 flex flex-col gap-2 rounded-xl p-1 border border-transparent focus-visible:border-border transition-[border,box-shadow]",
+        "relative w-full max-w-100 h-100 flex flex-col gap-2 p-1",
         focusRing,
         className,
       )}
