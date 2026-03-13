@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import { cn, linkVariants } from "../../utils/variants";
-import { publicWebUrls } from "../../config/routes";
 
 export function Link({
   children,
@@ -10,8 +9,7 @@ export function Link({
   ...props
 }: ExternalLinkProps) {
   const isHrefExternal =
-    process.env.NODE_ENV === "production" &&
-    !href.startsWith(publicWebUrls.home);
+    process.env.NODE_ENV === "production" && href.startsWith("https");
   return (
     <NextLink
       {...props}
