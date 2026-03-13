@@ -7,11 +7,11 @@ import { usePathname } from "next/navigation";
 import { logout } from "../../../services/auth/logout";
 import { Dispatch, SetStateAction } from "react";
 
-const elStyleWrapper = "flex flex-col p-1 border-b";
+const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
   "w-full cursor-pointer flex items-center gap-1 text-xs p-1 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-700 font-normal transition-[background-color,box-shadow] duration-300 rounded";
 
-const UserPopover = ({
+const UserSignedIn = ({
   user,
   setUserState,
 }: {
@@ -30,36 +30,31 @@ const UserPopover = ({
             focusRing,
           )}
         >
-          <div>
-            <Image
-              src={
-                user.data.pictureUrl ??
-                "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
-              }
-              alt="User avatar"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
-            <p className="max-w-30 text-sm font-medium truncate text-nowrap justify-start transition-color duration-300">
-              {user.data.name}
-            </p>
-          </div>
+          <Image
+            src={
+              user.data.pictureUrl ??
+              "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
+            }
+            alt="User avatar"
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
         </PopoverTrigger>
         <PopoverContent
           align="end"
           sideOffset={10}
           className="flex flex-col justify-center gap-0 p-0 overflow-hidden"
         >
-          <div className="flex flex-col p-2 border-b dark:border-neutral-700">
+          <div className="flex flex-col p-2 border-b">
             <p className="text-xs font-bold truncate text-nowrap">
               {user.data.name}
             </p>
-            <p className="text-xs line-clamp-2">{user.data.providerEmail}</p>
+            <p className="text-xs line-clamp-2 text-neutral-400 dark:text-neutral-500">
+              {user.data.providerEmail}
+            </p>
           </div>
-          <div
-            className={cn(elStyleWrapper, "border-b dark:border-neutral-700")}
-          >
+          <div className={cn(elStyleWrapper, "border-b")}>
             <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
               Usuário
             </p>
@@ -68,9 +63,7 @@ const UserPopover = ({
               Preferências
             </Link>
           </div>
-          <div
-            className={cn(elStyleWrapper, "border-b dark:border-neutral-700")}
-          >
+          <div className={cn(elStyleWrapper, "border-b")}>
             <p className="text-xs cursor-pointer flex items-center gap-1 font-medium text-nowrap p-1 text-neutral-500">
               Administrativo
             </p>
@@ -89,9 +82,7 @@ const UserPopover = ({
               Media
             </Link>
           </div>
-          <div
-            className={cn(elStyleWrapper, "border-b dark:border-neutral-700")}
-          >
+          <div className={cn(elStyleWrapper, "border-b")}>
             <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
               Tema
             </p>
@@ -273,4 +264,4 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export default UserPopover;
+export default UserSignedIn;

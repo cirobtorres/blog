@@ -47,7 +47,7 @@ export default function ArticleTitle() {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
+      <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10 mt-6">
         <div className="w-full h-px inline-grid">
           <div className="w-full h-px grid-cols-1 bg-[linear-gradient(to_right,transparent_0%,var(--color-primary)_25%,var(--color-primary)_75%,transparent_100%)]" />
           <div className="w-full h-px grid-cols-1 bg-[linear-gradient(to_right,transparent_0%,var(--color-primary)_25%,var(--color-primary)_75%,transparent_100%)] blur-sm" />

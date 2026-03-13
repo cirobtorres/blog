@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="h-footer flex items-center justify-center px-6 text-center border-t bg-container">
       <div className="max-w-300 mx-auto">
-        <p className="text-sm text-neutral-500">
+        <p className="text-xs text-neutral-500">
           Built by{" "}
           <Link
             href="https://nextjs.org/"

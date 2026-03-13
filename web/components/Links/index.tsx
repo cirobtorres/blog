@@ -8,26 +8,25 @@ export function Link({
   className,
   ...props
 }: ExternalLinkProps) {
+  const isHrefExternal =
+    process.env.NODE_ENV === "production" &&
+    !href.startsWith(process.env.WEB_URL);
   return (
     <NextLink
       {...props}
       href={href}
       data-variant={variant}
       target={
-        props.target
-          ? props.target
-          : variant === "external"
-            ? "_blank"
-            : undefined
+        props.target ? props.target : isHrefExternal ? "_blank" : undefined
       }
       className={cn(
-        variant === "external" && "inline-flex",
+        isHrefExternal && "inline-flex",
         linkVariants({ variant }),
         className,
       )}
     >
       {children}
-      {variant === "external" && (
+      {isHrefExternal && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="12"

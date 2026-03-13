@@ -14,10 +14,15 @@ import { signUp } from "../../services/auth/signUp";
 import { Button } from "../Buttons";
 import { Checkbox } from "../Fieldset/Checkbox";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
-import { Link } from "../Links";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
 
@@ -25,6 +30,7 @@ const SignUpForm = () => {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [termsDialog, setTermsDialog] = React.useState(false);
   const [termsCheckbox, setTermsCheckbox] = React.useState(true);
 
   const passRef = React.useRef(null);
@@ -123,7 +129,10 @@ const SignUpForm = () => {
           aria-invalid={!!state.error.termsCheckbox?.errors}
           onCheckedChange={(checked) => setTermsCheckbox(checked === true)}
         />
-        <p className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none">
+        <label
+          htmlFor="terms-checkbox"
+          className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none"
+        >
           Ao clicar em confirmar, você concorda com as{" "}
           {/* <Link
             href="/"
@@ -131,16 +140,65 @@ const SignUpForm = () => {
           >
             políticas de privacidade e uso de dados
           </Link>{" "} */}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <AlertDialog open={termsDialog} onOpenChange={setTermsDialog}>
+            <AlertDialogTrigger
+              asChild
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setTermsDialog(!termsDialog);
+              }}
+            >
               <span className="cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 transition-colors duration-300">
                 políticas de privacidade e uso de dados
               </span>
             </AlertDialogTrigger>
-            <AlertDialogContent></AlertDialogContent>
+            <AlertDialogContent className="max-w-xs min-[400px]:max-w-100 min-[460px]:max-w-118.75 min-[550px]:max-w-lg min-[600px]:max-w-xl min-[800px]:max-w-3xl">
+              <AlertDialogHeader className="flex items-center justify-between">
+                <AlertDialogTitle className="text-xl">
+                  Políticas de Privacidade e Uso de Dados
+                </AlertDialogTitle>
+                <AlertDialogCancel>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className=""
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </AlertDialogCancel>
+              </AlertDialogHeader>
+              <AlertDialogDescription
+                asChild
+                className="max-h-100 overflow-y-auto scrollbar"
+              >
+                <div className="flex flex-col gap-4">
+                  <Terms />
+                </div>
+              </AlertDialogDescription>
+              <AlertDialogFooter className="p-2">
+                <AlertDialogCancel className="h-fit py-1 w-24">
+                  Voltar
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => setTermsCheckbox(true)}
+                  className="h-fit py-1 w-24"
+                >
+                  Confirmar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
           </AlertDialog>{" "}
           do website.
-        </p>
+        </label>
       </fieldset>
       <FieldsetError error={state.error?.termsCheckbox?.errors} />
       <FieldsetError error={state.error?.form?.errors} />
@@ -152,3 +210,114 @@ const SignUpForm = () => {
 };
 
 export default SignUpForm;
+
+const Terms = () => (
+  <>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis,{" "}
+      <b className="text-primary/75">
+        saepe a atque maxime corrupti! Quidem soluta modi dolorem perspiciatis
+        officiis corrupti est maxime
+      </b>
+      , facilis amet adipisci voluptatum, sapiente expedita. Nisi rerum
+      voluptatum ullam aut consequuntur sequi minus tempore recusandae culpa sed
+      facere saepe voluptates cumque doloribus, minima reiciendis maxime.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
+      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
+      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
+      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
+      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
+      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
+      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
+      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
+      Aliquid.
+    </p>
+  </>
+);

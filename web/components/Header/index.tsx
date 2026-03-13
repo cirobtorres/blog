@@ -3,19 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
-import { cn, focusRing, linkVariants } from "../../utils/variants";
-import { logout } from "../../services/auth/logout";
-import getUser from "../../services/auth/session/client/getUser";
-import {
-  externalUrls,
-  protectedWebUrls,
-  publicWebUrls,
-} from "../../config/routes";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { cn, linkVariants } from "../../utils/variants";
+import { externalUrls, publicWebUrls } from "../../config/routes";
 import { Skeleton } from "../Skeleton";
-import UserPopover from "./UserPopover";
+import getUser from "../../services/auth/session/client/getUser";
+import UserSignedIn from "./UserSignedIn";
 
 interface ContentProps {
   path: string;
@@ -101,35 +93,13 @@ export function Header({
   }, []);
 
   function renderAuthArea() {
-    if (user === null)
-      return (
-        <div className="flex items-center gap-2">
-          <Skeleton className="flex justify-center items-center shrink-0 size-8 rounded-full" />
-          <Skeleton className="w-20 h-6 shrink-0" />
-        </div>
-      );
+    if (user === null) return <UserSkeleton />;
 
     if (user.ok) {
-      return <UserPopover user={user} setUserState={setUser} />;
+      return <UserSignedIn user={user} setUserState={setUser} />;
     }
 
-    return (
-      <div className="flex items-center gap-2 ml-auto mr-0">
-        <Link
-          href={publicWebUrls.signIn}
-          className="text-sm font-normal text-neutral-900 dark:text-neutral-100"
-        >
-          Entrar
-        </Link>
-        <div className="w-px h-4 bg-stone-800" />
-        <Link
-          href={publicWebUrls.signUp}
-          className="text-sm font-normal text-neutral-900 dark:text-neutral-100"
-        >
-          Cadastrar
-        </Link>
-      </div>
-    );
+    return <UserSignedOff />;
   }
 
   return (
@@ -169,3 +139,28 @@ export function Header({
     </header>
   );
 }
+
+const UserSkeleton = () => (
+  <div className="flex items-center gap-2">
+    <Skeleton className="flex justify-center items-center shrink-0 size-8 rounded-full" />
+    <Skeleton className="w-20 h-6 shrink-0" />
+  </div>
+);
+
+const UserSignedOff = () => (
+  <div className="flex items-center gap-2 ml-auto mr-0">
+    <Link
+      href={publicWebUrls.signIn}
+      className="text-sm font-normal text-neutral-900 dark:text-neutral-100"
+    >
+      Entrar
+    </Link>
+    <div className="w-px h-4 bg-stone-800" />
+    <Link
+      href={publicWebUrls.signUp}
+      className="text-sm font-normal text-neutral-900 dark:text-neutral-100"
+    >
+      Cadastrar
+    </Link>
+  </div>
+);

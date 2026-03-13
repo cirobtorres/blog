@@ -26,7 +26,7 @@ const buttonVariants = cva(
         default:
           "bg-primary/65 border-primary disabled:bg-primary/50 text-neutral-100 hover:bg-primary/80",
         outline:
-          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:hover:bg-stone-800 dark:bg-stone-900 dark:border-stone-700 dark:focus-visible:border-stone-700 disabled:text-neutral-500/50 disabled:border-stone-500/40 disabled:bg-stone-800",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost: "",
         destructive:
           "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
@@ -40,18 +40,16 @@ const buttonVariants = cva(
 );
 
 const linkVariants = cva(
-  cn(
-    "w-fit text-sm rounded transition-[border,color,box-shadow,background] duration-300",
-    focusRing,
-  ),
+  cn("w-fit text-sm rounded transition-all duration-300", focusRing),
   {
     variants: {
       variant: {
-        title: "font-extrabold text-xl no-underline",
         internal:
           "font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 no-underline",
         external:
           "font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 underline underline-offset-2",
+        markdown:
+          "border text-base font-medium rounded-lg px-1 py-0.5 bg-container text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
         button:
           "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-925 border border-transparent not-disabled:hover:border-stone-400 not-disabled:focus-visible:border-stone-400 dark:not-disabled:hover:border-stone-700 dark:not-disabled:focus-visible:border-stone-700",
       },

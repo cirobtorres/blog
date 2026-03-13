@@ -1,5 +1,5 @@
-// import Image from "next/image";
 import { Alert } from "../../Alert";
+import { Link } from "../../Links";
 import { Blockquote, H2, H3, Li, Ol, P, Ul } from "../../Typography";
 
 export default function ArticleContent() {
@@ -45,12 +45,15 @@ export default function ArticleContent() {
       <H2>Lorem ipsum dolor sit amet consectetur adipisicing elit.</H2>
       <P>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum atque
-        eveniet voluptas fugit voluptates, quod officiis aliquam asperiores,
-        temporibus neque aspernatur expedita totam, quibusdam iure repellendus
-        iste consequuntur. Accusamus, velit minima sapiente, et voluptas
-        reprehenderit totam quo, fugit error suscipit voluptatem doloremque
-        beatae neque quod fugiat? Esse doloribus accusamus praesentium est quasi
-        velit, eius aliquid.
+        eveniet voluptas{" "}
+        <mark className="border rounded-lg italic px-1 py-0.5 text-neutral-700 dark:text-neutral-400 bg-container">
+          fugit voluptates
+        </mark>
+        , quod officiis aliquam asperiores, temporibus neque aspernatur expedita
+        totam, quibusdam iure repellendus iste consequuntur. Accusamus, velit
+        minima sapiente, et voluptas reprehenderit totam quo, fugit error
+        suscipit voluptatem doloremque beatae neque quod fugiat? Esse doloribus
+        accusamus praesentium est quasi velit, eius aliquid.
       </P>
       <Alert title="Atenção" className="not-first:mt-6">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
@@ -73,41 +76,18 @@ export default function ArticleContent() {
         amet consectetur adipisicing elit. Iusto doloremque mollitia et, unde
         consequuntur explicabo? Cum praesentium doloremque itaque quo corrupti,
         adipisci dolorum ipsum blanditiis maiores, sunt quibusdam vel. Quaerat?
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio vel
-        nisi repudiandae dolore, nobis ipsam dolorum veritatis placeat eveniet
-        minus, minima, earum nihil tempore? Perspiciatis a nam sequi veniam.
-        Nisi. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat
-        numquam voluptates optio! Esse, magnam? Placeat cumque eligendi
-        veritatis harum sunt voluptatibus est vitae quo corporis, impedit
-        tempore et dolor mollitia.
+        Lorem ipsum dolor sit amet{" "}
+        <Link href="/" variant="markdown">
+          consectetur
+        </Link>
+        , adipisicing elit. Distinctio vel nisi repudiandae dolore, nobis ipsam
+        dolorum veritatis placeat eveniet minus, minima, earum nihil tempore?
+        Perspiciatis a nam sequi veniam. Nisi. Lorem ipsum, dolor sit amet
+        consectetur adipisicing elit. Repellat numquam voluptates optio! Esse,
+        magnam? Placeat cumque eligendi veritatis harum sunt voluptatibus est
+        vitae quo corporis, impedit tempore et dolor mollitia.
       </P>
-      {/* <figure className="not-first:mt-6 w-full flex flex-col">
-        <Image
-          src="https://placehold.co/1920x1080/000/fff/jpeg"
-          alt="Placeholder image example 1"
-          loading="lazy"
-          sizes="(max-width: 1024px) 100vw, 1020px"
-          width={1920}
-          height={1080}
-        />
-        <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
-          <small>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
-            voluptatem, quia nisi laudantium magnam dicta dolores tempora
-            cupiditate suscipit quae ipsa, doloribus eos!
-          </small>
-        </figcaption>
-      </figure> */}
-      <figure className="not-first:mt-6 w-full flex flex-col">
-        <div className="[background-image:url('https://techgage.com/wp-content/uploads/2023/03/Blender-3.5-Splash-Screen.jpg')] w-full aspect-video bg-contain" />
-        <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
-          <small>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
-            voluptatem, quia nisi laudantium magnam dicta dolores tempora
-            cupiditate suscipit quae ipsa, doloribus eos!
-          </small>
-        </figcaption>
-      </figure>
+      <ImageComponent />
       <H3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis?</H3>
       <Ul>
         <Li>
@@ -142,6 +122,10 @@ export default function ArticleContent() {
           officia minus nulla sit dignissimos provident.
         </Li>
       </Ul>
+      <YouTubePlayerComponent
+        src="https://www.youtube-nocookie.com/embed/y2fAuh2S5Ng?si=BE07_YrQhkZMvCyl"
+        title="Vídeo do Polygon Runway"
+      />
       <Alert title="Atenção" variant="success" className="not-first:mt-6">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
         error ab est minus magnam. Deleniti, illum eius! Lorem ipsum dolor sit
@@ -194,3 +178,54 @@ export default function ArticleContent() {
     </article>
   );
 }
+
+const YouTubePlayerComponent = ({
+  ...props
+}: React.ComponentProps<"iframe">) => {
+  return (
+    <iframe
+      title="Reprodutor de vídeo"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      referrerPolicy="strict-origin-when-cross-origin"
+      loading="lazy"
+      className="w-full aspect-video not-first:mt-6 overflow-hidden rounded-lg not-dark:shadow-lg"
+      {...props}
+    />
+  );
+};
+
+const ImageComponent = () => {
+  {
+    /* <figure className="not-first:mt-6 w-full flex flex-col">
+        <Image
+          src="https://placehold.co/1920x1080/000/fff/jpeg"
+          alt="Placeholder image example 1"
+          loading="lazy"
+          sizes="(max-width: 1024px) 100vw, 1020px"
+          width={1920}
+          height={1080}
+        />
+        <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
+          <small>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
+            voluptatem, quia nisi laudantium magnam dicta dolores tempora
+            cupiditate suscipit quae ipsa, doloribus eos!
+          </small>
+        </figcaption>
+      </figure> */
+  }
+
+  return (
+    <figure className="not-first:mt-6 w-full flex flex-col">
+      <div className="bg-[url('https://techgage.com/wp-content/uploads/2023/03/Blender-3.5-Splash-Screen.jpg')] w-full aspect-video bg-contain rounded-lg" />
+      <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
+        <small>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
+          voluptatem, quia nisi laudantium magnam dicta dolores tempora
+          cupiditate suscipit quae ipsa, doloribus eos!
+        </small>
+      </figcaption>
+    </figure>
+  );
+};

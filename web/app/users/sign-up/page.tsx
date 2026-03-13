@@ -48,7 +48,7 @@ export default function SignUpPage() {
 
           <LoginProviders />
 
-          <p className="text-xs font-medium text-neutral-500">
+          <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
             Se você já possui uma conta, clique{" "}
             <Link
               href={publicWebUrls.signIn}

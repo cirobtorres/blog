@@ -1,7 +1,18 @@
+import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
+
 export default function AboutPage() {
   return (
-    <main className="w-full min-h-screen max-w-200 mx-auto px-4 sm:px-8 py-8 shadow bg-blue-950">
-      AboutPage
-    </main>
+    <div
+      className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]" // grid-rows-[var(--height-header)_1fr_var(--height-footer)]
+    >
+      <Header className="fixed" />
+      <main className="mt-header-height">
+        <div className="px-6 my-6">
+          <div className="w-full max-w-300 h-full mx-auto">AboutPage</div>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }

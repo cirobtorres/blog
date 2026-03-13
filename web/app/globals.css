@@ -4,7 +4,6 @@
 @import "shadcn/tailwind.css";
 
 :root {
-  --radius: 0.65rem;
   --primary: oklch(0.541 0.281 293.009);
   --success: oklch(59.6% 0.145 163.225);
   --informative: oklch(54.6% 0.245 262.881);
@@ -17,14 +16,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --radius: 0.65rem;
     --primary: oklch(0.606 0.25 292.717);
     --success: oklch(59.6% 0.145 163.225);
     --informative: oklch(54.6% 0.245 262.881);
     --destructive: oklch(58.6% 0.253 17.585);
     --warning: oklch(68.1% 0.162 75.834);
-    --background: var(--color-stone-900);
-    --container: var(--color-stone-800);
+    --background: var(--color-stone-925);
+    --container: var(--color-stone-900);
     --border: var(--color-stone-700);
   }
 }
@@ -98,12 +96,41 @@
     transform: translateY(calc(-1 * var(--height-header)));
   }
 
-  ::selection {
-    background-color: color-mix(in oklab, var(--primary) 75%, black);
-    color: white; /* Ou outra cor que contraste bem com o seu OKLCH primary */
+  /* Scrollbar */
+  .scrollbar {
+    overflow: auto;
   }
 
-  /* Opcional: Garante que inputs e textareas sigam o mesmo padrão */
+  .scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    cursor: default;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-color: var(--color-stone-800);
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-stone-700);
+  }
+
+  .scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Text selection */
+  ::selection {
+    background-color: color-mix(in oklab, var(--primary) 75%, black);
+    color: white;
+  }
+
   input::selection,
   textarea::selection {
     background-color: color-mix(in oklab, var(--primary) 75%, black);

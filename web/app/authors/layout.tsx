@@ -2,6 +2,8 @@
 
 import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "../../services/auth/session/server/getSessionUser";
+import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
 
 export default async function AuthorLayout({
   children,
@@ -15,5 +17,15 @@ export default async function AuthorLayout({
     notFound();
   }
 
-  return children;
+  return (
+    <main className="w-full min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
+      <Header />
+      <div className="grid grid-cols-[auto_minmax(0,1200px)_auto] gap-2">
+        <div className="w-full h-full bg-container border-r"></div>
+        <div className="w-full mx-auto">{children}</div>
+        <div className="w-full h-full bg-container border-l"></div>
+      </div>
+      <Footer />
+    </main>
+  );
 }
