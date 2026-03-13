@@ -21,7 +21,7 @@ export function Link({
             href={href}
             data-variant={variant}
             target={props.target ?? "_blank"}
-            className={cn("inline-flex", linkVariants({ variant }), className)}
+            className={cn(linkVariants({ variant }), className)}
           >
             {children}
             <svg
@@ -40,7 +40,9 @@ export function Link({
             </svg>
           </NextLink>
         </HoverCardTrigger>
-        <HoverCardContent>{href}</HoverCardContent>
+        <HoverCardContent>
+          <p className="text-xs">Link: {href}</p>
+        </HoverCardContent>
       </HoverCard>
     );
 

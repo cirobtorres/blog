@@ -40,7 +40,10 @@ const buttonVariants = cva(
 );
 
 const linkVariants = cva(
-  cn("w-fit text-sm rounded transition-all duration-300", focusRing),
+  cn(
+    "w-fit text-sm inline-flex rounded transition-all duration-300",
+    focusRing,
+  ),
   {
     variants: {
       variant: {
