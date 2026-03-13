@@ -15,11 +15,11 @@ export function Link({
   if (isHrefExternal)
     return (
       <HoverCard>
-        <HoverCardTrigger>
+        <HoverCardTrigger className="inline-flex">
           <NextLink
             {...props}
             href={href}
-            data-variant={variant}
+            data-variant="external"
             target={props.target ?? "_blank"}
             className={cn(linkVariants({ variant }), className)}
           >
@@ -41,7 +41,9 @@ export function Link({
           </NextLink>
         </HoverCardTrigger>
         <HoverCardContent>
-          <p className="text-xs">Link: {href}</p>
+          <p className="text-xs text-neutral-400 dark:text-neutral-500">
+            {href}
+          </p>
         </HoverCardContent>
       </HoverCard>
     );
