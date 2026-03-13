@@ -77,7 +77,7 @@ export default function ArticleContent() {
         consequuntur explicabo? Cum praesentium doloremque itaque quo corrupti,
         adipisci dolorum ipsum blanditiis maiores, sunt quibusdam vel. Quaerat?
         Lorem ipsum dolor sit amet{" "}
-        <Link href="/" variant="markdown">
+        <Link href="https://youtube.com.br" variant="markdown">
           consectetur
         </Link>
         , adipisicing elit. Distinctio vel nisi repudiandae dolore, nobis ipsam

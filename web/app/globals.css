@@ -5,6 +5,7 @@
 
 :root {
   --primary: oklch(0.541 0.281 293.009);
+  --secondary: oklch(0.432 0.232 292.759);
   --success: oklch(59.6% 0.145 163.225);
   --informative: oklch(54.6% 0.245 262.881);
   --destructive: oklch(58.6% 0.253 17.585);
@@ -17,6 +18,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: oklch(0.606 0.25 292.717);
+    --secondary: oklch(0.432 0.232 292.759);
     --success: oklch(59.6% 0.145 163.225);
     --informative: oklch(54.6% 0.245 262.881);
     --destructive: oklch(58.6% 0.253 17.585);
@@ -29,6 +31,7 @@
 
 @theme inline {
   --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
   --color-success: var(--success);
   --color-informative: var(--informative);
   --color-destructive: var(--destructive);

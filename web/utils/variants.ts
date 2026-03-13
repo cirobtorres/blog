@@ -24,7 +24,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary/65 border-primary disabled:bg-primary/50 text-neutral-100 hover:bg-primary/80",
+          "bg-secondary border-primary disabled:bg-secondary/50 text-neutral-100 hover:bg-secondary/80",
         outline:
           "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost: "",
@@ -47,7 +47,7 @@ const linkVariants = cva(
         internal:
           "font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 no-underline",
         external:
-          "font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 underline underline-offset-2",
+          "font-bold text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2",
         markdown:
           "border text-base font-medium rounded-lg px-1 py-0.5 bg-container text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
         button:
