@@ -9,18 +9,17 @@ export function Link({
   className,
   ...props
 }: ExternalLinkProps) {
-  const isHrefExternal =
-    process.env.NODE_ENV === "production" && href.startsWith("https");
+  const isHrefExternal = href.startsWith("https");
 
   if (isHrefExternal)
     return (
       <HoverCard>
-        <HoverCardTrigger className="inline-flex">
+        <HoverCardTrigger asChild className="inline-flex">
           <NextLink
             {...props}
             href={href}
             data-variant="external"
-            target={props.target ?? "_blank"}
+            target="_blank"
             className={cn(linkVariants({ variant }), className)}
           >
             {children}
