@@ -8,7 +8,6 @@ import { externalUrls, publicWebUrls } from "../../config/routes";
 import { Skeleton } from "../Skeleton";
 import getUser from "../../services/auth/session/client/getUser";
 import UserSignedIn from "./UserSignedIn";
-import Image from "next/image";
 import Spinner from "../Spinner";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 
