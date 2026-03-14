@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Accordion as AccordionPrimitive } from "radix-ui";
-import { cn, focusRing } from "../../utils/variants";
+import { cn, focusRing, hoverRing } from "../../utils/variants";
 
 const iconSizes = "size-8 w-6 px-0 py-2";
 
@@ -11,9 +11,6 @@ const buttonStyles =
 
 const focusWithinRing =
   "has-[[data-slot=accordion-trigger]:focus-visible]:outline-none has-[[data-slot=accordion-trigger]:focus-visible]:ring-3 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-900/25 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-100 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-neutral-950";
-
-const hoverRing =
-  "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";
 
 const Chevron = () => {
   return (
@@ -221,7 +218,7 @@ function ArticleAccordionTrigger({
         >
           <div className="flex items-center gap-2">
             <Chevron />
-            <span className="text-sm text-primary">{label}</span>
+            <span className="text-sm">{label}</span>
           </div>
           <div className="flex items-center gap-0.5">
             <Disable onDisable={onDisable} />
@@ -247,7 +244,7 @@ function ArticleAccordionContent({
   );
 }
 
-function ArticleBlockEditor({
+function ArticleBlockAccordion({
   id,
   label,
   onDelete,
@@ -279,4 +276,4 @@ function ArticleBlockEditor({
   );
 }
 
-export { ArticleBlockEditor };
+export { ArticleBlockAccordion };

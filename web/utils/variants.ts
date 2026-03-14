@@ -11,6 +11,9 @@ const cn = (...inputs: ClassValue[]): string => {
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950";
 
+const hoverRing =
+  "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";
+
 const focusRingOTPGroup =
   "outline-none has-aria-invalid:outline-none has-aria-invalid:ring-2 has-aria-invalid:ring-destructive has-aria-invalid:ring-offset-2 has-aria-invalid:ring-offset-stone-900 has-aria-invalid:bg-destructive/15";
 
@@ -26,8 +29,9 @@ const buttonVariants = cva(
         default:
           "bg-secondary border-primary disabled:bg-secondary/50 text-neutral-100 hover:bg-secondary/80",
         outline:
-          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
-        ghost: "",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-border",
+        ghost:
+          "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-border",
         destructive:
           "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
         link: "text-primary underline-offset-4 hover:underline",
@@ -87,6 +91,7 @@ const alertVariants = cva(
 export {
   cn,
   focusRing,
+  hoverRing,
   focusRingOTPGroup,
   focusRingOTPSlot,
   buttonVariants,

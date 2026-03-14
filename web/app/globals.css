@@ -61,6 +61,7 @@
   --margin-header-height: var(--height-header);
   --animate-bouncing-arrow: bouncing-arrow 1s infinite;
   --animate-skeleton: skeleton 2s -1s infinite linear;
+  --animate-circular-open: circular-open 400ms ease-out forwards;
 
   /* FONT-FAMILY */
   --font-inter: "Inter", font-sans;
@@ -84,6 +85,15 @@
       left: 50%;
       transform: translate(0, 15%);
       animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+
+  @keyframes circular-open {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(150% at 50% 50%);
     }
   }
 }

@@ -1,0 +1,25 @@
+import { cn } from "../../../utils/variants";
+import { Button } from "../../Buttons";
+
+export function SaveButton({
+  label,
+  className,
+  action,
+  ...props
+}: {
+  label: string;
+  className?: string;
+  action: () => void;
+}) {
+  return (
+    <Button
+      formAction={action}
+      type="submit"
+      variant="outline"
+      className={cn("w-full", className)}
+      {...props}
+    >
+      {label}
+    </Button>
+  );
+}
