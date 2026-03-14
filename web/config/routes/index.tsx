@@ -1,4 +1,4 @@
-// const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
 const API_SERVER = process.env.API_URL_SERVER || "http://localhost:8080";
 const API_CLIENT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 const MY_GIT = "https://github.com/cirobtorres";
@@ -10,6 +10,10 @@ const publicWebUrls = {
   forget: "/users/sign-in/forgot-password",
   signUp: "/users/sign-up",
   validateEmail: "/users/sign-up/validate-email",
+};
+
+const pubWebUrlsAbsPath = {
+  home: WEB_URL + "/",
 };
 
 const protectedWebUrls = {
@@ -44,6 +48,7 @@ const externalUrls = {
 
 export {
   publicWebUrls,
+  pubWebUrlsAbsPath,
   protectedWebUrls,
   apiServerUrls,
   apiClientUrls,

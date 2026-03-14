@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { Link } from "../../../components/Links";
 import { Skeleton } from "../../../components/Skeleton";
-import SignUpForm from "../../../components/SignUpForm";
 import LoginProviders from "../../../components/LoginProviders";
 import { publicWebUrls } from "../../../config/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
+import SignUpForm from "../../../components/Forms/SignUpForm";
 
 const SignUpFormLoad = () => (
   <div className="w-full flex flex-col justify-center gap-2">

@@ -11,7 +11,7 @@ import {
 } from "../components/ArticleCards";
 import { convertToLargeDate } from "../utils/date";
 import { slugify } from "../utils/strings-transforms";
-import { HomePagination } from "../components/Padination";
+import { HomePagination } from "../components/Pagination";
 
 const articlesFromDB = Array.from({ length: 8 }).map((_, index) => {
   const id = index.toString();

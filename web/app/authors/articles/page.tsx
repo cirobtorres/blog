@@ -1,4 +1,6 @@
+import { ArticleCreate } from "../../../components/Forms/ArticleCreate";
+
 // Create article
 export default function AuthorsArticlesPage() {
-  return <p>AuthorsArticlesPage</p>;
+  return <ArticleCreate />;
 }

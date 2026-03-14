@@ -1,5 +1,3 @@
-import { Footer } from "../../components/Footer";
-import { Header } from "../../components/Header";
 import { slugify } from "../../utils/strings-transforms";
 import {
   AuthorsArticleCard,

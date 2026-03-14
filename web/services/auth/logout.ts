@@ -25,7 +25,7 @@ const logout = async (pathname?: string | undefined) => {
   }
 
   // User is authenticated, but he is not auhorized
-  if (!authorized && redirectTo && user) {
+  if (!authorized && redirectTo && !user) {
     // TODO: redirect to previous page ...
     redirect(redirectTo);
   }
