@@ -2,7 +2,11 @@ import { cn, focusRing, hoverRing } from "../../utils/variants";
 import { Button } from "../Buttons";
 import { Popover, PopoverContentClipPath, PopoverTrigger } from "../Popover";
 
-export function ArticleBlockAddEditor() {
+export function AddAccordionButton({
+  addBlock,
+}: {
+  addBlock: (type: Blocks["type"]) => void;
+}) {
   return (
     <Popover>
       <PopoverTrigger
@@ -12,19 +16,19 @@ export function ArticleBlockAddEditor() {
           focusRing,
         )}
       >
-        <AddArtEditorButton />
+        <OpenButton />
       </PopoverTrigger>
       <PopoverContentClipPath
         side="top"
         className="rounded-lg p-2 not-dark:shadow"
       >
         <div className="w-40 grid grid-cols-3 gap-1">
-          <AddEditorButton />
-          <AddCodeButton />
-          <AddAccordionButton />
-          <AddImageButton />
-          <AddImagesButton />
-          <AddVideoButton />
+          <EditorButton onClick={() => addBlock("html")} />
+          <CodeButton />
+          <AccordionButton />
+          <ImageButton />
+          <ImagesButton />
+          <VideoButton />
         </div>
         <div className="py-2 pb-0">
           <p className="text-center text-sm text-primary pointer-events-none">
@@ -36,7 +40,7 @@ export function ArticleBlockAddEditor() {
   );
 }
 
-const AddArtEditorButton = () => (
+const OpenButton = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -56,9 +60,9 @@ const AddArtEditorButton = () => (
   </svg>
 );
 
-const AddEditorButton = () => (
+const EditorButton = ({ onClick }: { onClick: () => void }) => (
   <div className={addAccDivStyle}>
-    <Button variant="outline" className={addAccBtnStyle}>
+    <Button variant="outline" onClick={onClick} className={addAccBtnStyle}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -83,7 +87,7 @@ const AddEditorButton = () => (
   </div>
 );
 
-const AddImageButton = () => (
+const ImageButton = () => (
   <div className={addAccDivStyle}>
     <Button variant="outline" className={addAccBtnStyle}>
       <svg
@@ -109,7 +113,7 @@ const AddImageButton = () => (
   </div>
 );
 
-const AddImagesButton = () => (
+const ImagesButton = () => (
   <div className={addAccDivStyle}>
     <Button variant="outline" className={addAccBtnStyle}>
       <svg
@@ -137,7 +141,7 @@ const AddImagesButton = () => (
   </div>
 );
 
-const AddVideoButton = () => (
+const VideoButton = () => (
   <div className={addAccDivStyle}>
     <Button variant="outline" className={addAccBtnStyle}>
       <svg
@@ -162,7 +166,7 @@ const AddVideoButton = () => (
   </div>
 );
 
-const AddCodeButton = () => (
+const CodeButton = () => (
   <div className={addAccDivStyle}>
     <Button variant="outline" className={addAccBtnStyle}>
       <svg
@@ -187,7 +191,7 @@ const AddCodeButton = () => (
   </div>
 );
 
-const AddAccordionButton = () => (
+const AccordionButton = () => (
   <div className={addAccDivStyle}>
     <Button variant="outline" className={addAccBtnStyle}>
       <svg

@@ -1,22 +1,22 @@
 "use client";
 
 import React from "react";
-import { ArticleBlockAccordion } from "../ArticleEditors/ArticleBlockAccordion";
-import { ArticleEditorTitle } from "../ArticleEditors/ArticleEditorTitle";
-import { ArticleEditorSubtitle } from "../ArticleEditors/ArticleEditorSubtitle";
-import { ArticleEditorBanner } from "../ArticleEditors/ArticleEditorBanner";
 import { PublishButton } from "./buttons/PublishButton";
 import { SaveButton } from "./buttons/SaveButton";
-import { ArticleBlockAddEditor } from "../ArticleEditors/ArticleBlockAddEditor";
-import { ArticleEditorHtml } from "../ArticleEditors/ArticleEditorHtml";
 import { OptionsButton } from "./buttons/OptionsButton";
+import { ArticleEditorTitle } from "../ArticleEditors/editors/ArticleEditorTitle";
+import { ArticleEditorSubtitle } from "../ArticleEditors/editors/ArticleEditorSubtitle";
+import { ArticleEditorBanner } from "../ArticleEditors/editors/ArticleEditorBanner";
+import { AddAccordionButton } from "../ArticleEditors/addAccordionButton";
+import { AddBlockButton, BlockList } from "../ArticleEditors/blocks";
 
-const id = "123";
-const onDelete = (id: string) => console.log("onDelete", id);
-const onDisable = (id: string) => console.log("onDisable", id);
-const moveDownward = (id: string) => console.log("moveDownward", id);
+const articleId = "123";
 
 export function ArticleCreate() {
+  const [blocks, setBlocks] = React.useState<Blocks[]>([]);
+  const [title, setTitle] = React.useState("");
+  const [subtitle, setSubtitle] = React.useState("");
+
   const [publishState, onPublishAction, isPublishPending] =
     React.useActionState(async () => {}, null);
 
@@ -29,28 +29,11 @@ export function ArticleCreate() {
     <form className="relative w-full grid grid-cols-[1fr_400px]">
       <div className="w-full max-w-3xl mx-auto p-2 flex flex-col gap-2">
         <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
-        <ArticleEditorTitle id={id} />
-        <ArticleEditorSubtitle id={id} />
-        <ArticleEditorBanner id={id} />
-        <ArticleBlockAccordion
-          id={id}
-          label="Teste"
-          onDelete={(e) => {
-            e.stopPropagation();
-            onDelete(id);
-          }}
-          onDisable={(e) => {
-            e.stopPropagation();
-            onDisable(id);
-          }}
-          moveDownward={(e) => {
-            e.stopPropagation();
-            moveDownward(id);
-          }}
-        >
-          <ArticleEditorHtml id={id} />
-        </ArticleBlockAccordion>
-        <ArticleBlockAddEditor />
+        <ArticleEditorTitle id={articleId} />
+        <ArticleEditorSubtitle id={articleId} />
+        <ArticleEditorBanner id={articleId} />
+        <BlockList blocks={blocks} setBlocks={setBlocks} />
+        <AddBlockButton blocks={blocks} setBlocks={setBlocks} />
       </div>
       <div className="w-full sticky top-1/2 -translate-y-1/2 grid grid-cols-[max-content_1fr] p-2 pl-0 mr-auto ml-0 gap-2 mt-0 mb-auto">
         <PublishButton

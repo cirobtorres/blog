@@ -35,15 +35,22 @@ const Chevron = () => {
 };
 
 const Disable = ({
+  locked,
   onDisable,
 }: {
+  locked: boolean;
   onDisable: (e: React.MouseEvent) => void;
 }) => {
   return (
     <span
       role="button"
       tabIndex={0}
-      className={cn(buttonStyles, focusRing)}
+      className={cn(
+        buttonStyles,
+        focusRing,
+        locked &&
+          "dark:text-neutral-100 dark:bg-stone-700 pointer-events-auto disabled:pointer-events-auto",
+      )}
       onClick={onDisable}
     >
       <svg
@@ -65,12 +72,23 @@ const Disable = ({
   );
 };
 
-const Delete = ({ onDelete }: { onDelete: (e: React.MouseEvent) => void }) => {
+const Delete = ({
+  locked,
+  onDelete,
+}: {
+  locked: boolean;
+  onDelete: (e: React.MouseEvent) => void;
+}) => {
   return (
     <span
       role="button"
       tabIndex={0}
-      className={cn(buttonStyles, focusRing)}
+      className={cn(
+        buttonStyles,
+        focusRing,
+        locked &&
+          "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
+      )}
       onClick={onDelete}
     >
       <svg
@@ -85,23 +103,33 @@ const Delete = ({ onDelete }: { onDelete: (e: React.MouseEvent) => void }) => {
         strokeLinejoin="round"
         className={cn(iconSizes)}
       >
-        <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" />
+        <path d="M10 11v6" />
+        <path d="M14 11v6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+        <path d="M3 6h18" />
+        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
       </svg>
     </span>
   );
 };
 
 const MoveDownward = ({
+  locked,
   moveDownward,
 }: {
+  locked: boolean;
   moveDownward: (e: React.MouseEvent) => void;
 }) => {
   return (
     <span
       role="button"
       tabIndex={0}
-      className={cn(buttonStyles, focusRing)}
+      className={cn(
+        buttonStyles,
+        focusRing,
+        locked &&
+          "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
+      )}
       onClick={moveDownward}
     >
       <svg
@@ -157,7 +185,7 @@ const Drag = () => {
   );
 };
 
-function ArticleAccordion({
+function EditorsAccordionWrapper({
   className,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
@@ -170,18 +198,20 @@ function ArticleAccordion({
   );
 }
 
-function ArticleAccordionItem({
+function EditorsAccordionItem({
   className,
+  locked,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+}: React.ComponentProps<typeof AccordionPrimitive.Item> & { locked: boolean }) {
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn(
         "w-full h-full transition-all duration-300 rounded-sm overflow-hidden border not-dark:shadow",
-        focusRing,
-        focusWithinRing,
-        hoverRing,
+        !locked && focusRing,
+        !locked && focusWithinRing,
+        !locked && hoverRing,
+        locked && "border-stone-800",
         className,
       )}
       {...props}
@@ -189,15 +219,17 @@ function ArticleAccordionItem({
   );
 }
 
-function ArticleAccordionTrigger({
+function EditorsAccordionTrigger({
   className,
   label,
+  locked,
   onDelete,
   onDisable,
   moveDownward,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
   label: string;
+  locked: boolean;
   onDelete: (e: React.MouseEvent) => void;
   onDisable: (e: React.MouseEvent) => void;
   moveDownward: (e: React.MouseEvent) => void;
@@ -211,19 +243,28 @@ function ArticleAccordionTrigger({
       >
         <button
           type="button"
+          aria-disabled={locked}
           className={cn(
-            "relative cursor-pointer outline-none p-2 text-left flex flex-1 items-center justify-between transition-all duration-300 bg-container disabled:pointer-events-none disabled:opacity-50 group/accordion-trigger",
+            "relative cursor-pointer outline-none p-2 text-left flex flex-1 items-center justify-between transition-all duration-300 bg-container group/accordion-trigger",
+            locked &&
+              "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
             className,
           )}
         >
-          <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              "flex items-center gap-2",
+              locked &&
+                "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
+            )}
+          >
             <Chevron />
             <span className="text-sm">{label}</span>
           </div>
           <div className="flex items-center gap-0.5">
-            <Disable onDisable={onDisable} />
-            <Delete onDelete={onDelete} />
-            <MoveDownward moveDownward={moveDownward} />
+            <Disable onDisable={onDisable} locked={locked} />
+            <Delete onDelete={onDelete} locked={locked} />
+            <MoveDownward moveDownward={moveDownward} locked={locked} />
             <Drag />
           </div>
         </button>
@@ -232,7 +273,7 @@ function ArticleAccordionTrigger({
   );
 }
 
-function ArticleAccordionContent({
+function EditorsAccordionContent({
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Content> & {
   children: React.ReactNode;
@@ -246,9 +287,10 @@ function ArticleAccordionContent({
   );
 }
 
-function ArticleBlockAccordion({
+function EditorsAccordion({
   id,
   label,
+  locked,
   onDelete,
   onDisable,
   moveDownward,
@@ -257,25 +299,33 @@ function ArticleBlockAccordion({
   children: React.ReactNode;
   id: string;
   label: string;
-  onDelete: (e: React.MouseEvent) => void;
-  onDisable: (e: React.MouseEvent) => void;
-  moveDownward: (e: React.MouseEvent) => void;
+  locked: boolean;
+  onDelete: (id: string) => void;
+  onDisable: (id: string) => void;
+  moveDownward: (id: string) => void;
 }) {
   return (
-    <ArticleAccordion type="single" collapsible>
-      <ArticleAccordionItem value="item-1">
-        <ArticleAccordionTrigger
+    <EditorsAccordionWrapper type="single" collapsible>
+      <EditorsAccordionItem value="item-1" locked={locked}>
+        <EditorsAccordionTrigger
           id={id}
           label={label}
-          onDelete={onDelete}
-          onDisable={onDisable}
-          moveDownward={moveDownward}
+          onDelete={() => onDelete(id)}
+          moveDownward={(e) => {
+            e.stopPropagation();
+            moveDownward(id);
+          }}
+          onDisable={(e) => {
+            e.stopPropagation();
+            onDisable(id);
+          }}
+          locked={locked}
           {...props}
         />
-        <ArticleAccordionContent {...props} />
-      </ArticleAccordionItem>
-    </ArticleAccordion>
+        <EditorsAccordionContent {...props} />
+      </EditorsAccordionItem>
+    </EditorsAccordionWrapper>
   );
 }
 
-export { ArticleBlockAccordion };
+export { EditorsAccordion };

@@ -1,5 +1,5 @@
-import { cn, hoverRing } from "../../utils/variants";
-import { focusWithinRing } from "./utils";
+import { cn, hoverRing } from "../../../utils/variants";
+import { focusWithinRing } from "../utils";
 
 export function ArticleEditorSubtitle({ id }: { id: string }) {
   const subtitleId = "title-" + id;
