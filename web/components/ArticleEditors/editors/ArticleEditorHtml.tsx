@@ -11,8 +11,6 @@ import Highlight from "@tiptap/extension-highlight";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
-import Link from "@tiptap/extension-link";
-import React from "react";
 import { cn, focusRing } from "../../../utils/variants";
 import { Skeleton } from "../../Skeleton";
 
@@ -248,7 +246,7 @@ export function HtmlEditor({
             </svg>
           </button>
         </div>
-        <div className={btnGroupStyle}>
+        {/* <div className={btnGroupStyle}>
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleLink().run()}
@@ -277,7 +275,7 @@ export function HtmlEditor({
               <line x1="8" x2="16" y1="12" y2="12" />
             </svg>
           </button>
-        </div>
+        </div> */}
         <div className={btnGroupStyle}>
           <button
             type="button"

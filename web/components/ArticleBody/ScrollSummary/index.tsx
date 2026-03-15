@@ -2,17 +2,11 @@
 
 import Link from "next/link";
 import { cn, linkVariants } from "../../../utils/variants";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../Accordion";
 
 export default function ScrollSummary() {
   return (
     <aside className="w-full h-fit md:sticky md:top-[calc(100svh/4)] ml-auto mr-0">
-      <Accordion type="single" defaultValue="summary" collapsible>
+      {/* <Accordion type="single" defaultValue="summary" collapsible>
         <AccordionItem value="summary">
           <AccordionTrigger className="mb-3">
             <p className="text-xs font-medium text-neutral-500 dark:text-neutral-100">
@@ -41,7 +35,7 @@ export default function ScrollSummary() {
             </div>
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
     </aside>
   );
 }
