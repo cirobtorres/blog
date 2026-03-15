@@ -23,7 +23,7 @@ export function H3({
     <h3
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -38,42 +38,42 @@ export function H4({
     <h4
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
         className,
       )}
     />
   );
 }
 
-export function H5({
-  className,
-  ...props
-}: React.ComponentProps<"h5"> & { className?: string }) {
-  return (
-    <h5
-      {...props}
-      className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
-        className,
-      )}
-    />
-  );
-}
+// export function H5({
+//   className,
+//   ...props
+// }: React.ComponentProps<"h5"> & { className?: string }) {
+//   return (
+//     <h5
+//       {...props}
+//       className={cn(
+//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+//         className,
+//       )}
+//     />
+//   );
+// }
 
-export function H6({
-  className,
-  ...props
-}: React.ComponentProps<"h6"> & { className?: string }) {
-  return (
-    <h6
-      {...props}
-      className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
-        className,
-      )}
-    />
-  );
-}
+// export function H6({
+//   className,
+//   ...props
+// }: React.ComponentProps<"h6"> & { className?: string }) {
+//   return (
+//     <h6
+//       {...props}
+//       className={cn(
+//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+//         className,
+//       )}
+//     />
+//   );
+// }
 
 export function P({
   className,

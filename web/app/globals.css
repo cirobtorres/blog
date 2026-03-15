@@ -39,17 +39,35 @@
   --color-background: var(--background);
   --color-container: var(--container);
   --color-border: var(--border);
-  --color-stone-925: color-mix(
-    in oklab,
-    var(--color-stone-900),
-    var(--color-stone-950)
-  );
-  --color-stone-975: color-mix(in oklab, var(--color-stone-950), black);
-  --color-stone-750: color-mix(
-    in oklab,
-    var(--color-stone-700),
-    var(--color-stone-800)
-  );
+  --color-stone-25: oklch(0.988 0.002 85.1);
+  --color-stone-75: oklch(0.975 0.003 85.1);
+  --color-stone-125: oklch(0.945 0.004 85.1);
+  --color-stone-150: oklch(0.928 0.004 85.1);
+  --color-stone-175: oklch(0.91 0.005 85.1);
+  --color-stone-225: oklch(0.865 0.006 85.1);
+  --color-stone-250: oklch(0.84 0.007 85.1);
+  --color-stone-275: oklch(0.815 0.008 85.1);
+  --color-stone-325: oklch(0.76 0.009 85.1);
+  --color-stone-350: oklch(0.73 0.01 85.1);
+  --color-stone-375: oklch(0.7 0.01 85.1);
+  --color-stone-425: oklch(0.635 0.011 85.1);
+  --color-stone-450: oklch(0.602 0.012 85.1);
+  --color-stone-475: oklch(0.57 0.012 85.1);
+  --color-stone-525: oklch(0.51 0.012 85.1);
+  --color-stone-550: oklch(0.482 0.012 85.1);
+  --color-stone-575: oklch(0.455 0.012 85.1);
+  --color-stone-625: oklch(0.405 0.011 85.1);
+  --color-stone-675: oklch(0.36 0.01 85.1);
+  --color-stone-650: oklch(0.382 0.011 85.1);
+  --color-stone-725: oklch(0.32 0.009 85.1);
+  --color-stone-750: oklch(0.302 0.009 85.1);
+  --color-stone-775: oklch(0.285 0.008 85.1);
+  --color-stone-825: oklch(0.25 0.007 85.1);
+  --color-stone-850: oklch(0.232 0.007 85.1);
+  --color-stone-875: oklch(0.215 0.006 85.1);
+  --color-stone-925: oklch(0.18 0.005 85.1);
+  --color-stone-950: oklch(0.16 0.005 85.1);
+  --color-stone-975: oklch(0.14 0.004 85.1);
 
   /* APP */
   --height-header: 50px;

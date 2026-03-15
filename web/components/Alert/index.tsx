@@ -32,9 +32,11 @@ const Alert = ({
   children,
   variant,
   className,
-}: { title: string; children: string; className?: string } & VariantProps<
-  typeof alertVariants
->) => {
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+} & VariantProps<typeof alertVariants>) => {
   switch (variant) {
     case "info":
       return (

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Button } from "../Buttons";
 import { ArticleBlockAccordion } from "../ArticleEditors/ArticleBlockAccordion";
 import { ArticleEditorTitle } from "../ArticleEditors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../ArticleEditors/ArticleEditorSubtitle";
@@ -9,6 +8,8 @@ import { ArticleEditorBanner } from "../ArticleEditors/ArticleEditorBanner";
 import { PublishButton } from "./buttons/PublishButton";
 import { SaveButton } from "./buttons/SaveButton";
 import { ArticleBlockAddEditor } from "../ArticleEditors/ArticleBlockAddEditor";
+import { ArticleEditorHtml } from "../ArticleEditors/ArticleEditorHtml";
+import { OptionsButton } from "./buttons/OptionsButton";
 
 const id = "123";
 const onDelete = (id: string) => console.log("onDelete", id);
@@ -47,7 +48,7 @@ export function ArticleCreate() {
             moveDownward(id);
           }}
         >
-          Conteúdo de Teste
+          <ArticleEditorHtml id={id} />
         </ArticleBlockAccordion>
         <ArticleBlockAddEditor />
       </div>
@@ -55,31 +56,16 @@ export function ArticleCreate() {
         <PublishButton
           label="Publicar"
           action={onPublishAction}
-          className="max-w-xs min-w-60"
+          className="max-w-xs min-w-60 h-8"
         />
-        <Button type="button" variant="outline" className="w-fit">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className=""
-          >
-            <circle cx="12" cy="12" r="1" />
-            <circle cx="19" cy="12" r="1" />
-            <circle cx="5" cy="12" r="1" />
-          </svg>
-        </Button>
-        <SaveButton
-          label="Salvar"
-          action={onPublishAction}
-          className="max-w-xs min-w-60"
-        />
+        <OptionsButton />
+        <div className="flex flex-col gap-2">
+          <SaveButton
+            label="Salvar"
+            action={onPublishAction}
+            className="max-w-xs min-w-60 h-8"
+          />
+        </div>
       </div>
     </form>
   );

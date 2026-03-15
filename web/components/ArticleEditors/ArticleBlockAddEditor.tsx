@@ -7,20 +7,24 @@ export function ArticleBlockAddEditor() {
     <Popover>
       <PopoverTrigger
         className={cn(
-          "w-fit cursor-pointer border rounded p-2 mx-auto text-neutral-400 dark:text-neutral-500 bg-stone-800 transition-all duration-300 hover:text-neutral-900 dark:hover:text-neutral-100 dark:hover:bg-stone-750 data-[state=open]:text-neutral-100 data-[state=open]:bg-stone-750 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750",
+          "w-fit cursor-pointer border rounded p-2 mx-auto text-neutral-500 dark:text-neutral-500 bg-container border-stone-300 dark:border-stone-700 dark:bg-stone-800 transition-all duration-300 hover:text-neutral-900 hover:bg-stone-250 dark:hover:text-neutral-100 dark:hover:bg-stone-750 data-[state=open]:text-neutral-900 data-[state=open]:bg-stone-250 dark:data-[state=open]:text-neutral-100 dark:data-[state=open]:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-250 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750 not-dark:shadow",
           hoverRing,
           focusRing,
         )}
       >
         <AddArtEditorButton />
       </PopoverTrigger>
-      <PopoverContentClipPath side="top" className="p-2">
+      <PopoverContentClipPath
+        side="top"
+        className="rounded-lg p-2 not-dark:shadow"
+      >
         <div className="w-40 grid grid-cols-3 gap-1">
           <AddEditorButton />
-          <AddImageButton />
-          <AddVideoButton />
           <AddCodeButton />
           <AddAccordionButton />
+          <AddImageButton />
+          <AddImagesButton />
+          <AddVideoButton />
         </div>
         <div className="py-2 pb-0">
           <p className="text-center text-sm text-primary pointer-events-none">
@@ -43,7 +47,6 @@ const AddArtEditorButton = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className=""
   >
     <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 .83.18 2 2 0 0 0 .83-.18l8.58-3.9a1 1 0 0 0 0-1.831z" />
     <path d="M16 17h6" />
@@ -98,6 +101,34 @@ const AddImageButton = () => (
         <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
         <circle cx="9" cy="9" r="2" />
         <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+      </svg>
+    </Button>
+    <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500">
+      Imagem
+    </span>
+  </div>
+);
+
+const AddImagesButton = () => (
+  <div className={addAccDivStyle}>
+    <Button variant="outline" className={addAccBtnStyle}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-fit"
+      >
+        <path d="M16 5h6" />
+        <path d="M19 2v6" />
+        <path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5" />
+        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+        <circle cx="9" cy="9" r="2" />
       </svg>
     </Button>
     <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500">
@@ -188,4 +219,4 @@ const addAccDivStyle =
   "size-full flex flex-col justify-center items-center gap-1";
 
 const addAccBtnStyle =
-  "size-12 rounded-xl aspect-square bg-stone-800 transition-all duration-300 dark:hover:bg-stone-750";
+  "size-12 rounded aspect-square border-stone-400 dark:border-stone-700 bg-stone-300 dark:bg-stone-800 transition-all duration-300 dark:hover:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-300 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750";

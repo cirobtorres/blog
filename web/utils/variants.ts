@@ -21,7 +21,7 @@ const focusRingOTPSlot =
   "outline-none data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-2 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900 data-[active=true]:ring-offset-stone-100 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
 
 const buttonVariants = cva(
-  "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 " +
+  "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow " +
     focusRing,
   {
     variants: {
@@ -33,7 +33,7 @@ const buttonVariants = cva(
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-border",
         destructive:
-          "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
+          "border-destructive bg-linear-to-r from-destructive/50 to-destructive/25",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },

@@ -178,7 +178,7 @@ function ArticleAccordionItem({
     <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn(
-        "w-full h-full transition-all duration-300 rounded-sm overflow-hidden border",
+        "w-full h-full transition-all duration-300 rounded-sm overflow-hidden border not-dark:shadow",
         focusRing,
         focusWithinRing,
         hoverRing,
@@ -234,12 +234,14 @@ function ArticleAccordionTrigger({
 
 function ArticleAccordionContent({
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+}: React.ComponentProps<typeof AccordionPrimitive.Content> & {
+  children: React.ReactNode;
+}) {
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="border-t p-2 h-100 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden"
-      {...props} // Children here!
+      className="border-t p-1 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden"
+      {...props}
     />
   );
 }
@@ -252,7 +254,7 @@ function ArticleBlockAccordion({
   moveDownward,
   ...props
 }: {
-  children: string;
+  children: React.ReactNode;
   id: string;
   label: string;
   onDelete: (e: React.MouseEvent) => void;

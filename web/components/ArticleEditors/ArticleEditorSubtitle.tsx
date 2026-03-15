@@ -6,7 +6,7 @@ export function ArticleEditorSubtitle({ id }: { id: string }) {
   return (
     <fieldset
       className={cn(
-        "relative p-2 pt-6 pr-1 flex flex-col rounded-sm transition-all duration-300 border bg-container",
+        "relative p-2 pt-6 pr-1 flex flex-col rounded-sm transition-all duration-300 border bg-container not-dark:shadow",
         hoverRing,
         focusWithinRing,
       )}

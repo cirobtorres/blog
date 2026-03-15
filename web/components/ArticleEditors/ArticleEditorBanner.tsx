@@ -2,7 +2,7 @@ export function ArticleEditorBanner({ id }: { id: string }) {
   const bannerInputId = "banner-input-" + id;
   const bannerLabelId = "banner-label-" + id;
   return (
-    <fieldset className="relative w-full flex justify-center items-center aspect-video border rounded overflow-hidden bg-container">
+    <fieldset className="relative w-full flex justify-center items-center aspect-video border rounded overflow-hidden bg-container not-dark:shadow">
       <label
         id={bannerLabelId}
         htmlFor={bannerInputId}
