@@ -1,18 +1,97 @@
 "use client";
 
-import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import {
+  EditorContent,
+  getMarkRange,
+  useEditor,
+  useEditorState,
+} from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
-import Heading from "@tiptap/extension-heading";
 import Paragraph from "@tiptap/extension-paragraph";
+import Link, { LinkProtocolOptions } from "@tiptap/extension-link";
+import Heading from "@tiptap/extension-heading";
 import Bold from "@tiptap/extension-bold";
 import History from "@tiptap/extension-history";
 import Highlight from "@tiptap/extension-highlight";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
+
 import OrderedList from "@tiptap/extension-ordered-list";
 import { cn, focusRing } from "../../../utils/variants";
 import { Skeleton } from "../../Skeleton";
+import React from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../AlertDialog";
+import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
+
+const validateAllowedUri = (
+  url: string,
+  ctx: {
+    defaultValidate: (url: string) => boolean;
+    protocols: Array<LinkProtocolOptions | string>;
+    defaultProtocol: string;
+  },
+) => {
+  try {
+    const parsedUrl = url.includes(":")
+      ? new URL(url)
+      : new URL(`${ctx.defaultProtocol}://${url}`);
+
+    // Tiptap general validation
+    if (!ctx.defaultValidate(parsedUrl.href)) {
+      return false; // Invalid URL
+    }
+
+    const disallowedDomains = [""]; // TODO (Tiptap link disallowedDomains)
+    const domain = parsedUrl.hostname;
+
+    const disallowedProtocols = ["ftp", "file", "mailto"];
+    const protocol = parsedUrl.protocol.replace(":", "");
+
+    const allowedProtocols = ctx.protocols.map((p) =>
+      typeof p === "string" ? p : p.scheme,
+    );
+
+    if (disallowedProtocols.includes(protocol)) {
+      return false; // Not allowed
+    }
+    if (!allowedProtocols.includes(protocol)) {
+      return false; // Not allowed
+    }
+    if (disallowedDomains.includes(domain)) {
+      return false; // Not allowed
+    }
+
+    return true; // all checks have passed
+  } catch {
+    return false;
+  }
+};
+
+const validateAllowedAutoLink = (url: string) => {
+  try {
+    const parsedUrl = url.includes(":")
+      ? new URL(url)
+      : new URL(`https://${url}`);
+
+    const disallowedDomains = [""]; // TODO (Tiptap link disallowedDomains)
+    const domain = parsedUrl.hostname;
+
+    return !disallowedDomains.includes(domain);
+  } catch {
+    return false;
+  }
+};
 
 export function HtmlEditor({
   id,
@@ -23,12 +102,24 @@ export function HtmlEditor({
   setVal: (data: string) => void;
   defaultValue?: string;
 }) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [textLinkInput, setTextLinkInput] = React.useState("");
+  const [linkInput, setLinkInput] = React.useState("");
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
       Document,
       Text,
       Paragraph,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: "https",
+        protocols: ["http", "https"],
+        isAllowedUri: (url, ctx) => validateAllowedUri(url, ctx),
+        shouldAutoLink: (url) => validateAllowedAutoLink(url),
+      }),
       Heading.configure({
         levels: [2, 3, 4],
       }),
@@ -43,11 +134,137 @@ export function HtmlEditor({
     onUpdate: ({ editor }) => setVal(editor.getHTML()),
   });
 
-  // React.useEffect(() => {
-  //   if (editor) {
-  //     setVal(editor.getHTML());
-  //   }
-  // }, [editor]);
+  const updateLink = React.useCallback(() => {
+    if (!editor || !editor.view || !editor.state || !editor.commands) {
+      console.warn("Editor não está disponível no momento da atualização.");
+      return;
+    }
+
+    try {
+      const { state, schema } = editor;
+      const { selection } = state;
+      const { from } = selection;
+      const $from = state.doc.resolve(from);
+      const linkMark = schema.marks.link;
+
+      const range = getMarkRange($from, linkMark);
+
+      if (range) {
+        editor
+          .chain()
+          .focus()
+          .insertContentAt(
+            { from: range.from, to: range.to },
+            {
+              type: "text",
+              text: textLinkInput || linkInput,
+              marks: [
+                {
+                  type: "link",
+                  attrs: { href: linkInput },
+                },
+              ],
+            },
+          )
+          .run();
+      } else {
+        // Fallback
+        editor
+          .chain()
+          .focus()
+          .extendMarkRange("link")
+          .setLink({ href: linkInput })
+          .run();
+      }
+    } catch (e) {
+      console.error("Erro ao atualizar link:", e);
+    }
+  }, [editor, linkInput, textLinkInput]);
+
+  const setLink = React.useCallback(() => {
+    if (!editor) return;
+
+    // Empty
+    if (linkInput === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+
+    if (textLinkInput && textLinkInput.trim() !== "") {
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(editor.state.selection, {
+          type: "text",
+          text: textLinkInput,
+          marks: [
+            {
+              type: "link",
+              attrs: {
+                href: linkInput,
+              },
+            },
+          ],
+        })
+        .run();
+    } else {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: linkInput })
+        .run();
+    }
+  }, [editor, linkInput, textLinkInput]);
+
+  const getKeyboardSelection = () => {
+    if (!editor) return "";
+
+    const { state } = editor;
+    const { selection } = state;
+
+    // If keyboard cursor is left inside <a></a>
+    const { from, to } = selection;
+    const $from = state.doc.resolve(from);
+
+    const range = getMarkRange($from, state.schema.marks.link);
+
+    if (range) {
+      return state.doc.textBetween(range.from, range.to, " ");
+    }
+
+    // Fallback: selected text
+    return state.doc.textBetween(from, to, " ");
+  };
+
+  const getKeyboardSelectionUrl = () => {
+    if (!editor) return "";
+
+    const { state } = editor;
+    const { from } = state.selection;
+    const $from = state.doc.resolve(from);
+
+    const linkMark = state.schema.marks.link;
+    const range = getMarkRange($from, linkMark);
+
+    if (range) {
+      const node = state.doc.nodeAt(range.from);
+      if (node) {
+        const mark = node.marks.find((m) => m.type.name === "link");
+        return mark?.attrs.href || "";
+      }
+    }
+
+    return "";
+  };
+
+  const handleLinkClick = () => {
+    const selectedText = getKeyboardSelection();
+    setTextLinkInput(selectedText || "");
+    const selectedUrl = getKeyboardSelectionUrl();
+    setLinkInput(selectedUrl);
+    setIsDialogOpen(true);
+  };
 
   const editorState = useEditorState({
     editor,
@@ -66,7 +283,7 @@ export function HtmlEditor({
     },
   });
 
-  if (!editor || !editorState) {
+  if (!editor) {
     return (
       <div className="w-full h-100 border rounded flex flex-col p-2 gap-2">
         <div className="flex flex-col gap-2">
@@ -101,7 +318,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
             className={cn(
-              editorState.isActiveHeading2
+              editorState?.isActiveHeading2
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -132,7 +349,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
             className={cn(
-              editorState.isActiveHeading3
+              editorState?.isActiveHeading3
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -164,7 +381,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 4 }).run()
             }
             className={cn(
-              editorState.isActiveHeading4
+              editorState?.isActiveHeading4
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -196,7 +413,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
             className={cn(
-              editorState.isActiveBold
+              editorState?.isActiveBold
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -222,7 +439,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
             className={cn(
-              editorState.isActiveHighlight
+              editorState?.isActiveHighlight
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -246,42 +463,133 @@ export function HtmlEditor({
             </svg>
           </button>
         </div>
-        {/* <div className={btnGroupStyle}>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleLink().run()}
-            className={cn(
-              editorState.isActiveLink
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M9 17H7A5 5 0 0 1 7 7h2" />
-              <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
-              <line x1="8" x2="16" y1="12" y2="12" />
-            </svg>
-          </button>
-        </div> */}
+        <div className={btnGroupStyle}>
+          <AlertDialog open={isDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <button
+                type="button"
+                tabIndex={0}
+                onClick={handleLinkClick}
+                className={cn(
+                  editorState?.isActiveLink
+                    ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
+                    : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M9 17H7A5 5 0 0 1 7 7h2" />
+                  <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
+                  <line x1="8" x2="16" y1="12" y2="12" />
+                </svg>
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex justify-between items-center bg-neutral-950">
+                  Hyperlink{" "}
+                  <AlertDialogCancel
+                    className="has-[>svg]:px-1 h-fit py-1"
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      editor.chain().focus();
+                    }}
+                  >
+                    X
+                  </AlertDialogCancel>
+                </AlertDialogTitle>
+              </AlertDialogHeader>
+              <div className="border-y border-neutral-700">
+                <AlertDialogDescription className="pb-0">
+                  Crie um texto para o hiperlink. Se você deixar o texto vazio,
+                  o texto será o próprio link.
+                </AlertDialogDescription>
+                <div className="flex flex-col gap-2 p-3">
+                  <Fieldset>
+                    <FieldsetInput
+                      id="text-link"
+                      value={textLinkInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setTextLinkInput(e.target.value)
+                      }
+                      // placeholder=""
+                      // className=""
+                      // {...props}
+                    />
+                    <FieldsetLabel htmlFor="text-link" label="Texto" />
+                  </Fieldset>
+                  <Fieldset>
+                    <FieldsetInput
+                      id="text-url"
+                      value={linkInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setLinkInput(e.target.value)
+                      }
+                      // placeholder=""
+                      // className=""
+                      // {...props}
+                    />
+                    <FieldsetLabel htmlFor="text-url" label="URL" />
+                  </Fieldset>
+                </div>
+              </div>
+              <AlertDialogFooter className="flex justify-between py-2 bg-neutral-950">
+                <div className="flex-1">
+                  <AlertDialogCancel
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      editor.chain().focus().unsetLink().run();
+                    }}
+                    className={cn("w-24")}
+                  >
+                    Remover
+                  </AlertDialogCancel>
+                </div>
+                <div className="flex gap-1">
+                  <AlertDialogCancel
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                    }}
+                    className={cn("w-24")}
+                  >
+                    Cancelar
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      if (editor?.isActive("link")) {
+                        updateLink();
+                      } else {
+                        setLink();
+                      }
+                    }}
+                    className={cn("w-24")}
+                  >
+                    Salvar
+                  </AlertDialogAction>
+                </div>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
         <div className={btnGroupStyle}>
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             className={cn(
-              editorState.isActiveBulletList
+              editorState?.isActiveBulletList
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -312,7 +620,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             className={cn(
-              editorState.isActiveOrderedList
+              editorState?.isActiveOrderedList
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -399,7 +707,7 @@ export function HtmlEditor({
         spellCheck={false}
         onFocus={() => editor.chain().selectTextblockEnd().focus()}
         className={cn(
-          "p-1 flex flex-col transition-all duration-300 rounded border dark:bg-stone-950 [&_.tiptap.ProseMirror]:h-100 [&_.tiptap.ProseMirror]:overflow-y-auto [&_.tiptap.ProseMirror]:p-2 [&_.tiptap.ProseMirror]:pr-6 [&_.tiptap.ProseMirror]:rounded-b-xs [&_.tiptap.ProseMirror]:outline-none [&_.tiptap.ProseMirror]:transition-all [&_.tiptap.ProseMirror]:scrollbar [&_.tiptap.ProseMirror_h2]:text-lg lg:[&_.tiptap.ProseMirror_h2]:text-2xl [&_.tiptap.ProseMirror_h2]:font-semibold [&_.tiptap.ProseMirror_h2]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h2]:text-neutral-100 [&_.tiptap.ProseMirror_h2]:scroll-m-20 [&_.tiptap.ProseMirror_h2]:tracking-tight [&_.tiptap.ProseMirror_h2]:text-balance [&_.tiptap.ProseMirror_h2]:not-first:mt-6 [&_.tiptap.ProseMirror_h3]:text-lg [&_.tiptap.ProseMirror_h3]:lg:text-xl [&_.tiptap.ProseMirror_h3]:font-semibold [&_.tiptap.ProseMirror_h3]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h3]:text-neutral-100 [&_.tiptap.ProseMirror_h3]:scroll-m-20 [&_.tiptap.ProseMirror_h3]:tracking-tight [&_.tiptap.ProseMirror_h3]:not-first:mt-6 [&_.tiptap.ProseMirror_h4]:text-lg [&_.tiptap.ProseMirror_h4]:lg:text-lg [&_.tiptap.ProseMirror_h4]:font-semibold [&_.tiptap.ProseMirror_h4]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h4]:text-neutral-100 [&_.tiptap.ProseMirror_h4]:scroll-m-20 [&_.tiptap.ProseMirror_h4]:tracking-tight [&_.tiptap.ProseMirror_h4]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-base [&_.tiptap.ProseMirror_p]:font-normal [&_.tiptap.ProseMirror_p]:leading-7 [&_.tiptap.ProseMirror_p]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-neutral-900 dark:[&_.tiptap.ProseMirror_p]:text-neutral-400 [&_.tiptap.ProseMirror_ul]:not-first:mt-6 [&_.tiptap.ProseMirror_ul]:ml-6 [&_.tiptap.ProseMirror_ul]:list-disc [&_.tiptap.ProseMirror_ul~li]:first:mt-6 [&_.tiptap.ProseMirror_ol]:not-first:mt-6 [&_.tiptap.ProseMirror_ol]:ml-6 [&_.tiptap.ProseMirror_ol]:list-decimal [&_.tiptap.ProseMirror_ol~li]:first:mt-6 [&_.tiptap.ProseMirror_li]:text-neutral-900 dark:[&_.tiptap.ProseMirror_li]:text-neutral-400",
+          "p-1 flex flex-col transition-all duration-300 rounded border dark:bg-stone-950 [&_.tiptap.ProseMirror]:h-100 [&_.tiptap.ProseMirror]:overflow-y-auto [&_.tiptap.ProseMirror]:p-2 [&_.tiptap.ProseMirror]:pr-6 [&_.tiptap.ProseMirror]:rounded-b-xs [&_.tiptap.ProseMirror]:outline-none [&_.tiptap.ProseMirror]:transition-all [&_.tiptap.ProseMirror]:scrollbar [&_.tiptap.ProseMirror_h2]:text-lg lg:[&_.tiptap.ProseMirror_h2]:text-2xl [&_.tiptap.ProseMirror_h2]:font-semibold [&_.tiptap.ProseMirror_h2]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h2]:text-neutral-100 [&_.tiptap.ProseMirror_h2]:scroll-m-20 [&_.tiptap.ProseMirror_h2]:tracking-tight [&_.tiptap.ProseMirror_h2]:text-balance [&_.tiptap.ProseMirror_h2]:not-first:mt-6 [&_.tiptap.ProseMirror_h3]:text-lg [&_.tiptap.ProseMirror_h3]:lg:text-xl [&_.tiptap.ProseMirror_h3]:font-semibold [&_.tiptap.ProseMirror_h3]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h3]:text-neutral-100 [&_.tiptap.ProseMirror_h3]:scroll-m-20 [&_.tiptap.ProseMirror_h3]:tracking-tight [&_.tiptap.ProseMirror_h3]:not-first:mt-6 [&_.tiptap.ProseMirror_h4]:text-lg [&_.tiptap.ProseMirror_h4]:lg:text-lg [&_.tiptap.ProseMirror_h4]:font-semibold [&_.tiptap.ProseMirror_h4]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h4]:text-neutral-100 [&_.tiptap.ProseMirror_h4]:scroll-m-20 [&_.tiptap.ProseMirror_h4]:tracking-tight [&_.tiptap.ProseMirror_h4]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-base [&_.tiptap.ProseMirror_p]:font-normal [&_.tiptap.ProseMirror_p]:leading-7 [&_.tiptap.ProseMirror_p]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-neutral-900 dark:[&_.tiptap.ProseMirror_p]:text-neutral-400 [&_.tiptap.ProseMirror_strong]:text-primary [&_.tiptap.ProseMirror_strong]:font-bold [&_.tiptap.ProseMirror_mark]:text-neutral-500 [&_.tiptap.ProseMirror_mark]:border dark:[&_.tiptap.ProseMirror_mark]:bg-stone-850 [&_.tiptap.ProseMirror_mark]:px-1 [&_.tiptap.ProseMirror_mark]:rounded-lg [&_.tiptap.ProseMirror_mark]:py-0.5 [&_.tiptap.ProseMirror_a]:text-primary [&_.tiptap.ProseMirror_a]:border dark:[&_.tiptap.ProseMirror_a]:bg-stone-850 [&_.tiptap.ProseMirror_a]:underline [&_.tiptap.ProseMirror_a]:underline-offset-2 [&_.tiptap.ProseMirror_a]:px-1 [&_.tiptap.ProseMirror_a]:rounded-lg [&_.tiptap.ProseMirror_a]:py-0.5 [&_.tiptap.ProseMirror_ul]:not-first:mt-6 [&_.tiptap.ProseMirror_ul]:ml-6 [&_.tiptap.ProseMirror_ul]:list-disc [&_.tiptap.ProseMirror_ul~li]:first:mt-6 [&_.tiptap.ProseMirror_ol]:not-first:mt-6 [&_.tiptap.ProseMirror_ol]:ml-6 [&_.tiptap.ProseMirror_ol]:list-decimal [&_.tiptap.ProseMirror_ol~li]:first:mt-6 [&_.tiptap.ProseMirror_li]:text-neutral-900 dark:[&_.tiptap.ProseMirror_li]:text-neutral-400",
         )}
       />
     </>

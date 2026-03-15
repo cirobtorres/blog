@@ -7,7 +7,6 @@ import { OptionsButton } from "./buttons/OptionsButton";
 import { ArticleEditorTitle } from "../ArticleEditors/editors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../ArticleEditors/editors/ArticleEditorSubtitle";
 import { ArticleEditorBanner } from "../ArticleEditors/editors/ArticleEditorBanner";
-import { AddAccordionButton } from "../ArticleEditors/addAccordionButton";
 import { AddBlockButton, BlockList } from "../ArticleEditors/blocks";
 
 const articleId = "123";
@@ -26,8 +25,8 @@ export function ArticleCreate() {
   );
 
   return (
-    <form className="relative w-full grid grid-cols-[1fr_400px]">
-      <div className="w-full max-w-3xl mx-auto p-2 flex flex-col gap-2">
+    <form className="relative w-full grid grid-cols-[minmax(0,var(--container-4xl))_1fr]">
+      <div className="w-full max-w-4xl mx-auto p-2 flex flex-col gap-2">
         <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
         <ArticleEditorTitle id={articleId} />
         <ArticleEditorSubtitle id={articleId} />
@@ -35,18 +34,18 @@ export function ArticleCreate() {
         <BlockList blocks={blocks} setBlocks={setBlocks} />
         <AddBlockButton blocks={blocks} setBlocks={setBlocks} />
       </div>
-      <div className="w-full sticky top-1/2 -translate-y-1/2 grid grid-cols-[max-content_1fr] p-2 pl-0 mr-auto ml-0 gap-2 mt-0 mb-auto">
+      <div className="w-full sticky top-0 grid grid-cols-[max-content_1fr] py-2 px-0 mr-auto ml-0 gap-2 mt-23 mb-auto">
         <PublishButton
           label="Publicar"
           action={onPublishAction}
-          className="max-w-xs min-w-60 h-8"
+          className="max-w-xs min-w-60"
         />
         <OptionsButton />
         <div className="flex flex-col gap-2">
           <SaveButton
             label="Salvar"
             action={onPublishAction}
-            className="max-w-xs min-w-60 h-8"
+            className="max-w-xs min-w-60"
           />
         </div>
       </div>

@@ -1,11 +1,11 @@
 import { Button } from "../../Buttons";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 
-export function OptionsButton() {
+export function OptionsButton({ className }: { className?: string }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button type="button" variant="outline" className="size-8">
+        <Button type="button" variant="outline" className={className}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -24,8 +24,8 @@ export function OptionsButton() {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-fit">
-        <button>Despublicar</button>
-        <button>Excluir</button>
+        <Button variant="outline">Despublicar</Button>
+        <Button variant="destructive">Excluir</Button>
       </PopoverContent>
     </Popover>
   );

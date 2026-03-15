@@ -21,8 +21,8 @@ export default async function AuthorLayout({
   return (
     <div className="w-full min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
       <Header />
-      <main className="grid grid-cols-[400px_1fr]">
-        <aside className="flex flex-col justify-center items-end ml-auto mr-0">
+      <main className="relative grid grid-cols-[280px_1fr] mx-auto">
+        <aside className="sticky top-0 flex flex-col justify-center items-end ml-auto mr-0 mb-auto mt-25">
           <Link href="/">Artigos</Link>
           <Link href="/">Media</Link>
         </aside>

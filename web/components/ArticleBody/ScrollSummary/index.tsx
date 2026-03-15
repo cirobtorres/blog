@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { cn, linkVariants } from "../../../utils/variants";
+// import Link from "next/link";
+// import { cn, linkVariants } from "../../../utils/variants";
 
 export default function ScrollSummary() {
   return (
