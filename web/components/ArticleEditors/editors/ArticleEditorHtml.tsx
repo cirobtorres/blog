@@ -1,6 +1,6 @@
 "use client";
 
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
@@ -13,8 +13,8 @@ import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Link from "@tiptap/extension-link";
 import React from "react";
-import Spinner from "../../Spinner";
 import { cn, focusRing } from "../../../utils/variants";
+import { Skeleton } from "../../Skeleton";
 
 export function HtmlEditor({
   id,
@@ -45,14 +45,52 @@ export function HtmlEditor({
     onUpdate: ({ editor }) => setVal(editor.getHTML()),
   });
 
-  React.useEffect(() => {
-    if (editor) {
-      setVal(editor.getHTML());
-    }
-  }, [editor]);
+  // React.useEffect(() => {
+  //   if (editor) {
+  //     setVal(editor.getHTML());
+  //   }
+  // }, [editor]);
 
-  if (!editor) {
-    return <Spinner />;
+  const editorState = useEditorState({
+    editor,
+    selector: ({ editor }) => {
+      if (!editor) return null;
+      return {
+        isActiveHeading2: editor.isActive("heading", { level: 2 }),
+        isActiveHeading3: editor.isActive("heading", { level: 3 }),
+        isActiveHeading4: editor.isActive("heading", { level: 4 }),
+        isActiveBold: editor.isActive("bold"),
+        isActiveHighlight: editor.isActive("highlight"),
+        isActiveLink: editor.isActive("link"),
+        isActiveBulletList: editor.isActive("bulletList"),
+        isActiveOrderedList: editor.isActive("orderedList"),
+      };
+    },
+  });
+
+  if (!editor || !editorState) {
+    return (
+      <div className="w-full h-100 border rounded flex flex-col p-2 gap-2">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-1/3 h-4" />
+        </div>
+        <div className="flex flex-col gap-2 mt-6">
+          <Skeleton className="w-1/2 h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-1/6 h-4" />
+        </div>
+        <div className="flex flex-col gap-2 mt-6">
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-[75%] h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-[85%] h-4" />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -65,7 +103,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
             className={cn(
-              editor.isActive("heading", { level: 2 })
+              editorState.isActiveHeading2
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -96,7 +134,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
             className={cn(
-              editor.isActive("heading", { level: 3 })
+              editorState.isActiveHeading3
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -128,7 +166,7 @@ export function HtmlEditor({
               editor.chain().focus().toggleHeading({ level: 4 }).run()
             }
             className={cn(
-              editor.isActive("heading", { level: 4 })
+              editorState.isActiveHeading4
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -160,7 +198,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
             className={cn(
-              editor.isActive("bold")
+              editorState.isActiveBold
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -186,7 +224,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
             className={cn(
-              editor.isActive("highlight")
+              editorState.isActiveHighlight
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -215,7 +253,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleLink().run()}
             className={cn(
-              editor.isActive("link")
+              editorState.isActiveLink
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -245,7 +283,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             className={cn(
-              editor.isActive("bulletList")
+              editorState.isActiveBulletList
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -276,7 +314,7 @@ export function HtmlEditor({
             type="button"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             className={cn(
-              editor.isActive("orderedList")
+              editorState.isActiveOrderedList
                 ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
                 : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
@@ -303,36 +341,6 @@ export function HtmlEditor({
               <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
             </svg>
           </button>
-          {/* <button
-            type="button"
-            onClick={() => console.log("To-do list")}
-            className={cn(
-              editor.isActive("link")
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M13 5h8" />
-              <path d="M13 12h8" />
-              <path d="M13 19h8" />
-              <path d="m3 17 2 2 4-4" />
-              <rect x="3" y="4" width="6" height="6" rx="1" />
-            </svg>
-          </button> */}
         </div>
         <div className={btnGroupStyle}>
           <button
