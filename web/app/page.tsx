@@ -48,7 +48,7 @@ export default async function HomePage() {
       <Header className="fixed" />
       <main className="mt-header-height">
         <div className="bg-[radial-gradient(circle,rgba(0,0,0,0.10),rgba(0,0,0,1)),url('https://techgage.com/wp-content/uploads/2022/09/Blender-3.3-with-OneAPI-and-Intel-Arc-GPU.jpg')] lg:col-start-1 lg:row-start-1 lg:h-150 w-full border-b aspect-video bg-cover" />
-        <div className="px-6 my-6">
+        <div className="px-4 my-6">
           <div className="w-full max-w-300 h-full mx-auto">
             <HomePagination />
             {articlesFromDB.length > 0 ? (

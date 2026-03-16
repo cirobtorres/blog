@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React from "react";
 import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
 import { cn, linkVariants } from "../../utils/variants";
@@ -44,9 +44,9 @@ export function Header({
   sticky?: boolean;
   progress?: boolean;
 }) {
-  const [user, setUser] = useState<AuthSession | null>(null);
-  const headerRef = useRef<HTMLElement>(null);
-  const scrollingDownRef = useRef(0);
+  const [user, setUser] = React.useState<AuthSession | null>(null);
+  const headerRef = React.useRef<HTMLElement>(null);
+  const scrollingDownRef = React.useRef(0);
 
   const hideNavbarListener = () => {
     let prevScrollPos = window.scrollY;
@@ -80,7 +80,7 @@ export function Header({
     return handleScroll;
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!sticky) return;
     const handleScroll = hideNavbarListener();
     window.addEventListener("scroll", handleScroll);
@@ -90,7 +90,7 @@ export function Header({
     };
   }, [sticky]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     getUser().then(setUser);
   }, []);
 
@@ -141,7 +141,7 @@ export function Header({
 }
 
 const UserSkeleton = () => (
-  <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2 ml-auto mr-0">
     <Skeleton className="flex justify-center items-center shrink-0 size-8 rounded-full">
       <Spinner />
     </Skeleton>
