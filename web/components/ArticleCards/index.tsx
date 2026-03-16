@@ -8,7 +8,7 @@ const ArticleCardLink = ({ href, className, ...props }: ArticleCardLink) => (
     href={href}
     {...props}
     className={cn(
-      "transition-[border,box-shadow] duration-300 rounded-xl border border-transparent focus-visible:border-border",
+      "transition-[border,box-shadow] duration-300 rounded-xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
       focusRing,
       className,
     )}

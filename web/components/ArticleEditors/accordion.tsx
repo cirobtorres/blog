@@ -201,8 +201,12 @@ function EditorsAccordionWrapper({
 function EditorsAccordionItem({
   className,
   locked,
+  hasError,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item> & { locked: boolean }) {
+}: React.ComponentProps<typeof AccordionPrimitive.Item> & {
+  locked: boolean;
+  hasError?: boolean;
+}) {
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
@@ -212,6 +216,7 @@ function EditorsAccordionItem({
         !locked && focusWithinRing,
         !locked && hoverRing,
         locked && "border-stone-800",
+        hasError && "border-destructive dark:border-destructive",
         className,
       )}
       {...props}
@@ -223,6 +228,7 @@ function EditorsAccordionTrigger({
   className,
   label,
   locked,
+  hasError,
   onDelete,
   onDisable,
   moveDownward,
@@ -230,6 +236,7 @@ function EditorsAccordionTrigger({
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
   label: string;
   locked: boolean;
+  hasError?: boolean;
   onDelete: (e: React.MouseEvent) => void;
   onDisable: (e: React.MouseEvent) => void;
   moveDownward: (e: React.MouseEvent) => void;
@@ -245,9 +252,12 @@ function EditorsAccordionTrigger({
           type="button"
           aria-disabled={locked}
           className={cn(
-            "relative cursor-pointer outline-none p-2 text-left flex flex-1 items-center justify-between transition-all duration-300 bg-container group/accordion-trigger",
+            "relative cursor-pointer outline-none p-2 text-left flex flex-1 items-center justify-between transition-all duration-300 group/accordion-trigger",
             locked &&
               "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
+            hasError
+              ? "bg-linear-to-r from-destructive/30 to-destructive/10"
+              : "bg-stone-200 dark:bg-stone-900",
             className,
           )}
         >
@@ -274,14 +284,19 @@ function EditorsAccordionTrigger({
 }
 
 function EditorsAccordionContent({
+  hasError,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Content> & {
   children: React.ReactNode;
+  hasError?: boolean;
 }) {
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="border-t p-1 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden"
+      className={cn(
+        "border-t p-1 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden",
+        hasError && "border-destructive",
+      )}
       {...props}
     />
   );
@@ -291,6 +306,7 @@ function EditorsAccordion({
   id,
   label,
   locked,
+  hasError,
   onDelete,
   onDisable,
   moveDownward,
@@ -300,16 +316,18 @@ function EditorsAccordion({
   id: string;
   label: string;
   locked: boolean;
+  hasError?: boolean;
   onDelete: (id: string) => void;
   onDisable: (id: string) => void;
   moveDownward: (id: string) => void;
 }) {
   return (
     <EditorsAccordionWrapper type="single" collapsible>
-      <EditorsAccordionItem value="item-1" locked={locked}>
+      <EditorsAccordionItem value="item-1" locked={locked} hasError={hasError}>
         <EditorsAccordionTrigger
           id={id}
           label={label}
+          hasError={hasError}
           onDelete={() => onDelete(id)}
           moveDownward={(e) => {
             e.stopPropagation();
@@ -322,7 +340,7 @@ function EditorsAccordion({
           locked={locked}
           {...props}
         />
-        <EditorsAccordionContent {...props} />
+        <EditorsAccordionContent {...props} hasError={hasError} />
       </EditorsAccordionItem>
     </EditorsAccordionWrapper>
   );

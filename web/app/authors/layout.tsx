@@ -23,8 +23,8 @@ export default async function AuthorLayout({
       <Header />
       <main className="relative grid grid-cols-[280px_1fr] mx-auto">
         <aside className="sticky top-0 flex flex-col justify-center items-end ml-auto mr-0 mb-auto mt-25">
-          <Link href="/">Artigos</Link>
-          <Link href="/">Media</Link>
+          <Link href="/authors/articles">Artigos</Link>
+          <Link href="/authors/media">Media</Link>
         </aside>
         {children}
       </main>

@@ -51,7 +51,7 @@ const FieldsetLabel = ({
   <label
     {...props}
     className={cn(
-      "absolute origin-left top-1/2 z-10 start-1 px-1 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 scale-75 peer-focus:-translate-y-4.5 peer-focus:scale-75 text-neutral-900 peer-focus:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-neutral-900 peer-disabled:text-neutral-600 dark:peer-placeholder-shown:text-neutral-100 dark:peer-disabled:text-neutral-600",
+      "absolute origin-left top-1/2 z-10 inset-s-1 px-1 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 scale-75 peer-focus:-translate-y-4.5 peer-focus:scale-75 text-neutral-900 peer-focus:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-neutral-900 peer-disabled:text-neutral-600 dark:peer-placeholder-shown:text-neutral-100 dark:peer-disabled:text-neutral-600",
       error &&
         "text-destructive peer-focus:text-destructive peer-placeholder-shown:text-destructive",
       className,
@@ -88,7 +88,7 @@ const FieldsetPassTypeBtn = ({
         });
       }}
       className={cn(
-        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-shadow duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-border",
+        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-shadow duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-stone-700",
         focusRing,
       )}
     >

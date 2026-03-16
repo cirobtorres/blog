@@ -1,11 +1,19 @@
 import { cn, hoverRing } from "../../../utils/variants";
 import { focusWithinRing } from "../utils";
 
-export function ArticleEditorSubtitle({ ...props }: FieldsetTextareaProps) {
+export function ArticleEditorSubtitle({
+  error,
+  ...props
+}: FieldsetTextareaProps & {
+  error?: string[] | undefined;
+}) {
   return (
     <fieldset
       className={cn(
         "relative p-2 pt-6 pr-1 flex flex-col rounded-sm transition-all duration-300 border bg-container not-dark:shadow",
+        error &&
+          error?.length > 0 &&
+          "border-destructive bg-linear-to-r from-destructive/30 to-destructive/10",
         hoverRing,
         focusWithinRing,
       )}
@@ -23,7 +31,7 @@ export function ArticleEditorSubtitle({ ...props }: FieldsetTextareaProps) {
       <label
         id="article-subtitle-label"
         htmlFor="article-subtitle-input"
-        className="absolute origin-left select-none pointer-events-none font-medium pl-3 top-6 transform transition-top duration-100 left-0 text-neutral-500 peer-placeholder-shown:left-0 peer-placeholder-shown:translate-x-0 -translate-y-5 peer-focus:-translate-y-5 peer-placeholder-shown:translate-y-0 translate-x-0 peer-focus:translate-x-0 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100"
+        className="absolute origin-left select-none pointer-events-none font-medium pl-3 top-6 transform transition-top duration-100 left-0 text-neutral-900 dark:text-neutral-100 peer-placeholder-shown:left-0 peer-placeholder-shown:translate-x-0 -translate-y-5 peer-focus:-translate-y-5 peer-placeholder-shown:translate-y-0 translate-x-0 peer-focus:translate-x-0 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100"
       >
         Subtítulo do Artigo
       </label>

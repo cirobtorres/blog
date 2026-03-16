@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import ForgetForm from "../../../../components/ForgetForm";
+import ForgetForm from "../../../../components/Forms/ForgetForm";
 import { Link } from "../../../../components/Links";
 import { publicWebUrls } from "../../../../config/routes";
 

@@ -1,5 +1,5 @@
 import { VariantProps } from "class-variance-authority";
-import { alertVariants, cn } from "../../utils/variants";
+import { alertVariants, cn } from "../utils/variants";
 
 const AlertWrapper = ({
   className,
@@ -23,8 +23,8 @@ const AlertTitle = ({ className, ...props }: React.ComponentProps<"p">) => (
 const AlertDescription = ({
   className,
   ...props
-}: React.ComponentProps<"p">) => {
-  return <p className={cn("font-medium", className)} {...props} />;
+}: React.ComponentProps<"div">) => {
+  return <div className={cn("font-medium", className)} {...props} />;
 };
 
 const Alert = ({

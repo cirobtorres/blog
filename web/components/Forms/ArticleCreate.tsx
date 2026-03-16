@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../utils/variants";
 import { publishArticle } from "../../services/article/publishArticle";
 import { sonnerToastPromise } from "../Sooner";
+import { Alert } from "../Alert";
+import { FieldsetError } from "../Fieldset";
 
 const profileId = "321";
 
@@ -29,9 +31,9 @@ export function ArticleCreate() {
         const formData = new FormData();
 
         formData.set("profileId", profileId);
-        formData.set("articleTitle", title);
-        formData.set("articleSubtitle", subtitle);
-        formData.set("articleBody", JSON.stringify(blocks));
+        formData.set("title", title);
+        formData.set("subtitle", subtitle);
+        formData.set("body", JSON.stringify(blocks));
 
         const success = (serverResponse: ArticleState) => {
           const now = convertToLargeDate(
@@ -94,21 +96,44 @@ export function ArticleCreate() {
     async () => {},
     null,
   );
-
   return (
     <form className="relative w-full grid grid-cols-[minmax(0,var(--container-4xl))_1fr]">
       <div className="w-full max-w-4xl mx-auto p-2 flex flex-col gap-2">
         <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
+        {publishState.error ? (
+          <Alert title="Erros" variant="alert">
+            {publishState.error.title &&
+              publishState.error.title.errors.map(
+                (err: string[], index: number) => (
+                  <p key={"title-" + index}>{err}</p>
+                ),
+              )}
+            {publishState.error.subtitle &&
+              publishState.error.subtitle.errors.map(
+                (err: string[], index: number) => (
+                  <p key={"subtitle-" + index}>{err}</p>
+                ),
+              )}
+          </Alert>
+        ) : null}
         <ArticleEditorTitle
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          error={publishState.error?.title?.errors}
         />
+        <FieldsetError error={publishState.error?.title?.errors} />
         <ArticleEditorSubtitle
           value={subtitle}
           onChange={(e) => setSubtitle(e.target.value)}
+          error={publishState.error?.subtitle?.errors}
         />
+        <FieldsetError error={publishState.error?.subtitle?.errors} />
         <ArticleEditorBanner />
-        <BlockList blocks={blocks} setBlocks={setBlocks} />
+        <BlockList
+          blocks={blocks}
+          setBlocks={setBlocks}
+          blocksErrors={publishState.error?.body?.items}
+        />
         <AddBlockButton blocks={blocks} setBlocks={setBlocks} />
       </div>
       <div className="w-full sticky top-0 grid grid-cols-[max-content_1fr] py-2 px-0 mr-auto ml-0 gap-2 mt-23 mb-auto">

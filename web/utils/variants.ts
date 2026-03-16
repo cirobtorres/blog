@@ -29,9 +29,9 @@ const buttonVariants = cva(
         default:
           "bg-secondary border-primary disabled:bg-secondary/50 text-neutral-100 hover:bg-secondary/80",
         outline:
-          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-border",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost:
-          "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-border",
+          "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         destructive:
           "border-destructive bg-linear-to-r from-destructive/50 to-destructive/25",
         link: "text-primary underline-offset-4 hover:underline",
