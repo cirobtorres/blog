@@ -35,8 +35,8 @@ type UncontrolledTextareaProps = {
 };
 
 type FieldsetInputProps =
-  | (BaseInputProps & ControlledTextareaProps)
-  | (BaseInputProps & UncontrolledTextareaProps);
+  | (BaseInputProps & ControlledInputProps)
+  | (BaseInputProps & UncontrolledInputProps);
 
 type FieldsetTextareaProps =
   | (BaseTextareaProps & ControlledTextareaProps)
