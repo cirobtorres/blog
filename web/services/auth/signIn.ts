@@ -8,34 +8,35 @@ import {
 } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { apiServerUrls, publicWebUrls } from "../../config/routes";
+import * as z from "zod";
+
+const signUpSchema = z.object({
+  email: z.email("E-mail inválido").trim().toLowerCase(),
+  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
+});
 
 const signIn = async (
   prevState: SignInActionState,
   formData: FormData,
 ): Promise<SignInActionState> => {
   const isProd = process.env.NODE_ENV === "production";
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const error: ActionStateError = {
-    email: { errors: [] },
-    password: { errors: [] },
-    form: { errors: [] },
-  };
+  const rawData = Object.fromEntries(formData.entries());
 
-  if (!email) (error.email.errors ??= []).push("Email é obrigatório");
-  if (!password) (error.password.errors ??= []).push("Senha é obrigatória");
+  const result = signUpSchema.safeParse({
+    ...rawData,
+  });
 
-  // Input type validations
-  if (
-    Object.keys(error.email.errors).length > 0 ||
-    Object.keys(error.password.errors).length
-  ) {
+  if (!result.success) {
+    const error = z.treeifyError(result.error).properties;
+
     return {
       ok: false,
       success: null,
       error,
     };
   }
+
+  const { email, password } = result.data;
 
   const response = await fetch(apiServerUrls.login, {
     method: "POST",
@@ -105,28 +106,28 @@ const signIn = async (
     response.status === 401 || // Ex: Invalid email type format
     response.status === 409 // Ex: Wrong email/password
   ) {
-    error.email.errors ??= [];
-    error.password.errors ??= [];
-    error.email.errors.push("Email ou senha não existem");
-    error.password.errors.push("Email ou senha não existem");
-  } else {
-    (error.form.errors ??= []).push("Erro de autenticação");
-  }
-
-  // Server side validations
-  if (Object.keys(error).length > 0) {
     return {
       ok: false,
       success: null,
-      error,
+      error: {
+        email: {
+          errors: ["Email ou senha não existem"],
+        },
+        password: {
+          errors: ["Email ou senha não existem"],
+        },
+      },
     };
-  }
-
-  return {
-    ok: false,
-    success: null,
-    error: { form: ["Ocorreu um erro inesperado. Tente mais tarde"] },
-  };
+  } else
+    return {
+      ok: false,
+      success: null,
+      error: {
+        form: {
+          errors: ["Ocorreu um erro inesperado. Tente mais tarde"],
+        },
+      },
+    };
 };
 
 export { signIn };

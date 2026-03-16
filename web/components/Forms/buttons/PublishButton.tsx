@@ -1,12 +1,13 @@
 import { cn } from "../../../utils/variants";
 import { Button } from "../../Buttons";
+import Spinner from "../../Spinner";
 
 export function PublishButton({
   label,
   className,
   action,
   ...props
-}: {
+}: React.ComponentProps<"button"> & {
   label: string;
   className?: string;
   action: () => void;
@@ -18,7 +19,7 @@ export function PublishButton({
       className={cn("w-full", className)}
       {...props}
     >
-      {label}
+      {props.disabled && <Spinner />} {label}
     </Button>
   );
 }

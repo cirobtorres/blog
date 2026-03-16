@@ -1,8 +1,7 @@
 import { cn, hoverRing } from "../../../utils/variants";
 import { focusWithinRing } from "../utils";
 
-export function ArticleEditorTitle({ id }: { id: string }) {
-  const titleId = "title-" + id;
+export function ArticleEditorTitle({ ...props }: FieldsetTextareaProps) {
   return (
     <fieldset
       className={cn(
@@ -12,20 +11,19 @@ export function ArticleEditorTitle({ id }: { id: string }) {
       )}
     >
       <textarea
-        id={titleId}
-        name={titleId}
+        {...props}
+        id="article-title-input"
+        name="articleTitle"
         autoFocus
-        // value={value}
         rows={2}
         maxLength={128}
         spellCheck={false}
-        // onChange={(e) => setVal(e.target.value)}
         placeholder=""
         className="resize-none text-sm rounded transition-all outline-none border-none bg-none peer scrollbar"
       />
       <label
-        id={"label-" + titleId}
-        htmlFor={titleId}
+        id="article-title-label"
+        htmlFor="article-title-input"
         className="absolute origin-left select-none pointer-events-none font-medium pl-3 top-6 transform transition-top duration-100 left-0 text-neutral-500 peer-placeholder-shown:left-0 peer-placeholder-shown:translate-x-0 -translate-y-5 peer-focus:-translate-y-5 peer-placeholder-shown:translate-y-0 translate-x-0 peer-focus:translate-x-0 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100"
       >
         Título do Artigo

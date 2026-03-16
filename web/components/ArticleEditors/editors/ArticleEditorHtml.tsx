@@ -496,27 +496,39 @@ export function HtmlEditor({
                 </svg>
               </button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex justify-between items-center bg-neutral-950">
-                  Hyperlink{" "}
+            <AlertDialogContent className="sm:max-w-md gap-2">
+              <AlertDialogHeader className="block">
+                <AlertDialogTitle className="w-full flex items-center justify-between text-xl">
+                  Hyperlink
                   <AlertDialogCancel
-                    className="has-[>svg]:px-1 h-fit py-1"
                     onClick={() => {
                       setIsDialogOpen(false);
                       editor.chain().focus();
                     }}
                   >
-                    X
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
                   </AlertDialogCancel>
                 </AlertDialogTitle>
               </AlertDialogHeader>
-              <div className="border-y border-neutral-700">
-                <AlertDialogDescription className="pb-0">
+              <div className="flex flex-col gap-2">
+                <AlertDialogDescription className="text-xs">
                   Crie um texto para o hiperlink. Se você deixar o texto vazio,
                   o texto será o próprio link.
                 </AlertDialogDescription>
-                <div className="flex flex-col gap-2 p-3">
+                <div className="flex flex-col gap-2">
                   <Fieldset>
                     <FieldsetInput
                       id="text-link"
@@ -545,14 +557,14 @@ export function HtmlEditor({
                   </Fieldset>
                 </div>
               </div>
-              <AlertDialogFooter className="flex justify-between py-2 bg-neutral-950">
+              <AlertDialogFooter className="p-2">
                 <div className="flex-1">
                   <AlertDialogCancel
                     onClick={() => {
                       setIsDialogOpen(false);
                       editor.chain().focus().unsetLink().run();
                     }}
-                    className={cn("w-24")}
+                    className="h-fit py-1 w-24"
                   >
                     Remover
                   </AlertDialogCancel>
@@ -562,7 +574,7 @@ export function HtmlEditor({
                     onClick={() => {
                       setIsDialogOpen(false);
                     }}
-                    className={cn("w-24")}
+                    className="h-fit py-1 w-24"
                   >
                     Cancelar
                   </AlertDialogCancel>
@@ -575,7 +587,7 @@ export function HtmlEditor({
                         setLink();
                       }
                     }}
-                    className={cn("w-24")}
+                    className="h-fit py-1 w-24"
                   >
                     Salvar
                   </AlertDialogAction>
