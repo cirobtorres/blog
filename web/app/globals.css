@@ -10,8 +10,6 @@
   --informative: oklch(54.6% 0.245 262.881);
   --destructive: oklch(58.6% 0.253 17.585);
   --warning: oklch(68.1% 0.162 75.834);
-  --background: var(--color-stone-100);
-  --container: var(--color-stone-200);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,8 +20,6 @@
     --informative: oklch(54.6% 0.245 262.881);
     --destructive: oklch(58.6% 0.253 17.585);
     --warning: oklch(68.1% 0.162 75.834);
-    --background: var(--color-stone-925);
-    --container: var(--color-stone-900);
   }
 }
 
@@ -34,8 +30,6 @@
   --color-informative: var(--informative);
   --color-destructive: var(--destructive);
   --color-warning: var(--warning);
-  --color-background: var(--background);
-  --color-container: var(--container);
   --color-stone-25: oklch(0.988 0.002 85.1);
   --color-stone-75: oklch(0.975 0.003 85.1);
   --color-stone-125: oklch(0.945 0.004 85.1);
@@ -118,8 +112,9 @@
     @apply border-stone-300 dark:border-stone-700;
   }
   body {
-    @apply font-inter text-neutral-950 dark:text-neutral-100 bg-linear-to-b from-stone-100 to-white dark:bg-linear-to-b dark:from-stone-925 dark:to-stone-850;
+    @apply font-inter text-neutral-950 dark:text-neutral-100 bg-stone-100 dark:bg-stone-925;
   }
+
   .header-hidden {
     transform: translateY(calc(-1 * var(--height-header)));
   }

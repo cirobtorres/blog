@@ -53,7 +53,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-background ring-stone-100/10 gap-4 rounded-xl p-4 ring-1 duration-100 max-w-xs group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
+          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-stone-100 dark:bg-stone-925 ring-stone-100/10 gap-4 rounded-xl p-4 ring-1 duration-100 max-w-xs group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
           className,
         )}
         {...props}
@@ -86,7 +86,7 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end bg-container",
+        "-mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end bg-stone-200 dark:bg-stone-900",
         className,
       )}
       {...props}
@@ -134,7 +134,7 @@ function AlertDialogDescription({
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
       className={cn(
-        "text-neutral-500 *:[a]:hover:text-neutral-100 text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3 bg-background",
+        "text-neutral-500 *:[a]:hover:text-neutral-100 text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3 bg-stone-100 dark:bg-stone-925",
         className,
       )}
       {...props}

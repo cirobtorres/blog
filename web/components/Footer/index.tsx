@@ -3,7 +3,7 @@ import { Link } from "../Links";
 
 export function Footer() {
   return (
-    <footer className="h-footer flex items-center justify-center px-6 text-center border-t bg-container">
+    <footer className="h-footer flex items-center justify-center px-6 text-center border-t bg-stone-200 dark:bg-stone-900">
       <div className="max-w-300 mx-auto">
         <p className="text-xs text-neutral-500">
           Built with{" "}

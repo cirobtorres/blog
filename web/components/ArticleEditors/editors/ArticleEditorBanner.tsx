@@ -1,6 +1,6 @@
 export function ArticleEditorBanner() {
   return (
-    <fieldset className="relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden bg-container not-dark:shadow">
+    <fieldset className="relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden bg-stone-200 dark:bg-stone-900 not-dark:shadow">
       <label
         id="article-banner"
         htmlFor="article-banner"

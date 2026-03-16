@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-import { PublishButton } from "./buttons/PublishButton";
-import { SaveButton } from "./buttons/SaveButton";
-import { OptionsButton } from "./buttons/OptionsButton";
 import { ArticleEditorTitle } from "../ArticleEditors/editors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../ArticleEditors/editors/ArticleEditorSubtitle";
 import { ArticleEditorBanner } from "../ArticleEditors/editors/ArticleEditorBanner";
@@ -12,9 +9,11 @@ import { convertToLargeDate } from "../../utils/date";
 import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../utils/variants";
 import { publishArticle } from "../../services/article/publishArticle";
-import { sonnerToastPromise } from "../Sooner";
 import { Alert } from "../Alert";
 import { FieldsetError } from "../Fieldset";
+import { sonnerToastPromise } from "../../utils/sooner";
+import { Button } from "../Buttons";
+import Spinner from "../Spinner";
 
 const profileId = "321";
 
@@ -96,60 +95,105 @@ export function ArticleCreate() {
     async () => {},
     null,
   );
+
   return (
-    <form className="relative w-full grid grid-cols-[minmax(0,var(--container-4xl))_1fr]">
-      <div className="w-full max-w-4xl mx-auto p-2 flex flex-col gap-2">
-        <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
-        {publishState.error ? (
-          <Alert title="Erros" variant="alert">
-            {publishState.error.title &&
-              publishState.error.title.errors.map(
-                (err: string[], index: number) => (
-                  <p key={"title-" + index}>{err}</p>
-                ),
-              )}
-            {publishState.error.subtitle &&
-              publishState.error.subtitle.errors.map(
-                (err: string[], index: number) => (
-                  <p key={"subtitle-" + index}>{err}</p>
-                ),
-              )}
-          </Alert>
-        ) : null}
-        <ArticleEditorTitle
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          error={publishState.error?.title?.errors}
-        />
-        <FieldsetError error={publishState.error?.title?.errors} />
-        <ArticleEditorSubtitle
-          value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          error={publishState.error?.subtitle?.errors}
-        />
-        <FieldsetError error={publishState.error?.subtitle?.errors} />
-        <ArticleEditorBanner />
-        <BlockList
-          blocks={blocks}
-          setBlocks={setBlocks}
-          blocksErrors={publishState.error?.body?.items}
-        />
-        <AddBlockButton blocks={blocks} setBlocks={setBlocks} />
-      </div>
-      <div className="w-full sticky top-0 grid grid-cols-[max-content_1fr] py-2 px-0 mr-auto ml-0 gap-2 mt-23 mb-auto">
-        <PublishButton
-          label="Publicar"
-          disabled={isPublishPending}
-          action={onPublishAction}
-          className="max-w-xs min-w-60"
-        />
-        <OptionsButton />
-        <div className="flex flex-col gap-2">
-          <SaveButton
-            label="Salvar"
-            action={onPublishAction}
-            className="max-w-xs min-w-60"
-          />
+    <form className="w-full max-w-4xl ml-0 mr-auto min-[1536px]:mx-auto justify-self-center flex-1 flex flex-col gap-2 p-2">
+      <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
+      {publishState.error ? (
+        <Alert title="Erros" variant="default">
+          {publishState.error.title &&
+            publishState.error.title.errors.map(
+              (err: string[], index: number) => (
+                <p key={"title-" + index} className="text-destructive!">
+                  {err}
+                </p>
+              ),
+            )}
+          {publishState.error.subtitle &&
+            publishState.error.subtitle.errors.map(
+              (err: string[], index: number) => (
+                <p key={"subtitle-" + index} className="text-destructive!">
+                  {err}
+                </p>
+              ),
+            )}
+        </Alert>
+      ) : null}
+      <ArticleEditorTitle
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        error={publishState.error?.title?.errors}
+      />
+      <FieldsetError error={publishState.error?.title?.errors} />
+      <ArticleEditorSubtitle
+        value={subtitle}
+        onChange={(e) => setSubtitle(e.target.value)}
+        error={publishState.error?.subtitle?.errors}
+      />
+      <FieldsetError error={publishState.error?.subtitle?.errors} />
+      <ArticleEditorBanner />
+      <BlockList
+        blocks={blocks}
+        setBlocks={setBlocks}
+        blocksErrors={publishState.error?.body?.items}
+      />
+      <AddBlockButton blocks={blocks} setBlocks={setBlocks} />
+      <div className="w-full flex flex-col border rounded bg-stone-900 overflow-hidden">
+        <div className="flex justify-between items-center border-b p-2 gap-10">
+          <div className="flex flex-col">
+            <p className="text-sm">Publicar artigo</p>
+            <p className="text-xs text-neutral-400">
+              Artigos publicados são visíveis a todos os visitantes do site.
+            </p>
+          </div>
+          <Button
+            type="submit"
+            formAction={onPublishAction}
+            className="w-full h-8 max-w-40"
+          >
+            {isPublishPending && <Spinner />} Publicar
+          </Button>
+        </div>
+        <div className="flex justify-between items-center border-b p-2 gap-10">
+          <div className="flex flex-col">
+            <p className="text-sm">Salvar artigo</p>
+            <p className="text-xs text-neutral-400">
+              Artigos salvos não são visíveis aos visitantes do site, ou, se
+              tratarem-se de artigos já publicados, as mudanças salvas não serão
+              visíveis até a publicação.
+            </p>
+          </div>
+          <Button
+            type="submit"
+            formAction={onPublishAction}
+            variant="outline"
+            className="w-full h-8 max-w-40 text-neutral-100 dark:text-neutral-100 bg-emerald-500/75 border-emerald-500"
+          >
+            {isSavePending && <Spinner />} Salvar
+          </Button>
+        </div>
+        <div className="flex justify-between items-center border-b p-2 gap-10">
+          <div className="flex flex-col">
+            <p className="text-sm">Despublicar artigo</p>
+            <p className="text-xs text-neutral-400">
+              Artigos despublicados são removidos da visibilidade dos usuários
+              do site.
+            </p>
+          </div>
+          <Button variant="outline" className="w-full h-8 max-w-40">
+            Despublicar
+          </Button>
+        </div>
+        <div className="flex justify-between items-center p-2 gap-10 bg-linear-to-r from-destructive/25 to-destructive/5">
+          <div className="flex flex-col">
+            <p className="text-sm">Excluir artigo</p>
+            <p className="text-xs text-neutral-300">
+              Artigos excluídos não podem ser recuperados.
+            </p>
+          </div>
+          <Button variant="destructive" className="w-full h-8 max-w-40">
+            Excluir
+          </Button>
         </div>
       </div>
     </form>

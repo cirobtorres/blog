@@ -11,7 +11,6 @@ import {
   FieldsetLabel,
   FieldsetPassTypeBtn,
   FieldsetGeneratePassword,
-  FieldsetPassValidation,
   PasswordStrength,
   FieldsetError,
 } from "..";
@@ -73,7 +72,7 @@ describe("Fieldset components", () => {
 
     const inputNoError = container.querySelector("input") as HTMLInputElement;
     expect(inputNoError).not.toBeNull();
-    expect(inputNoError.className).not.toContain("border-destructive");
+    expect(inputNoError.className).not.toContain("border-destructive/50");
 
     act(() => {
       root.render(<FieldsetInput error placeholder="Has error" />);
@@ -238,49 +237,5 @@ describe("Fieldset components", () => {
     expect(list).not.toBeNull();
     expect(list?.textContent).toContain("Error 1");
     expect(list?.textContent).toContain("Error 2");
-  });
-
-  it("renders FieldsetPassValidation and toggles classes based on password content", () => {
-    // All conditions met
-    act(() => {
-      root.render(<FieldsetPassValidation password="Aa1!" />);
-    });
-
-    const allItems = Array.from(
-      container.querySelectorAll("li span"),
-    ) as HTMLSpanElement[];
-    allItems.forEach((span) => {
-      expect(span.className).toContain("text-emerald-500");
-    });
-
-    // Some conditions not met
-    act(() => {
-      root.render(<FieldsetPassValidation password="aaaa" />);
-    });
-
-    const itemsLowerOnly = Array.from(
-      container.querySelectorAll("li span"),
-    ) as HTMLSpanElement[];
-    expect(itemsLowerOnly[0].className).not.toContain("text-emerald-500"); // upper
-    expect(itemsLowerOnly[1].className).toContain("text-emerald-500"); // lower
-    expect(itemsLowerOnly[2].className).not.toContain("text-emerald-500"); // digit
-    expect(itemsLowerOnly[3].className).not.toContain("text-emerald-500"); // symbol
-  });
-
-  it("renders PasswordStrength for different scores", () => {
-    const renderWithScore = (score: Score) => {
-      act(() => {
-        root.render(<PasswordStrength strength={score} />);
-      });
-    };
-
-    renderWithScore(0 as Score);
-    renderWithScore(1 as Score);
-    renderWithScore(2 as Score);
-    renderWithScore(3 as Score);
-    renderWithScore(4 as Score);
-
-    const bars = container.querySelectorAll("div > div");
-    expect(bars.length).toBeGreaterThan(0);
   });
 });

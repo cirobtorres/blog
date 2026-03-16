@@ -155,7 +155,7 @@ function PaginationEllipsis({
 
 const HomePagination = () => (
   <div className="mx-auto w-full flex justify-center items-center gap-4 my-6">
-    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-container">
+    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -173,7 +173,7 @@ const HomePagination = () => (
       Anterior
     </div>
     <div className="text-sm text-neutral-500">Página 2 de 39</div>
-    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-container">
+    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
       Próxima{" "}
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +190,7 @@ const HomePagination = () => (
         <path d="m9 18 6-6-6-6" />
       </svg>
     </div>
-    <div className="text-sm text-neutral-500 px-2 py-1 border rounded bg-container">
+    <div className="text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
       Última
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { cn, hoverRing } from "../../../utils/variants";
+import { cn } from "../../../utils/variants";
 import { focusWithinRing } from "../utils";
 
 export function ArticleEditorSubtitle({
@@ -8,33 +8,32 @@ export function ArticleEditorSubtitle({
   error?: string[] | undefined;
 }) {
   return (
-    <fieldset
-      className={cn(
-        "relative p-2 pt-6 pr-1 flex flex-col rounded-sm transition-all duration-300 border bg-container not-dark:shadow",
-        error &&
-          error?.length > 0 &&
-          "border-destructive bg-linear-to-r from-destructive/30 to-destructive/10",
-        hoverRing,
-        focusWithinRing,
-      )}
-    >
+    <fieldset className={cn("flex flex-col")}>
+      <label
+        id="article-subtitle-label"
+        htmlFor="article-subtitle-input"
+        className="text-neutral-500 peer-placeholder-shown:text-neutral-900 dark:peer-placeholder-shown:text-neutral-100 font-medium mb-2"
+      >
+        Subtítulo do Artigo
+      </label>
       <textarea
         {...props}
         id="article-subtitle-input"
         name="articleSubtitle"
+        autoFocus
         rows={2}
         maxLength={256}
         spellCheck={false}
-        placeholder=""
-        className="resize-none text-sm rounded transition-all outline-none border-none bg-none peer scrollbar"
+        placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Error, consequuntur."
+        className={cn(
+          "resize-none p-2 text-sm outline-none border not-dark:shadow bg-stone-200 dark:bg-stone-900 rounded-sm transition-all duration-300 peer scrollbar",
+          // hoverRing,
+          focusWithinRing,
+          error
+            ? "placeholder:text-destructive/40 border-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
+            : "placeholder:text-neutral-700",
+        )}
       />
-      <label
-        id="article-subtitle-label"
-        htmlFor="article-subtitle-input"
-        className="absolute origin-left select-none pointer-events-none font-medium pl-3 top-6 transform transition-top duration-100 left-0 text-neutral-900 dark:text-neutral-100 peer-placeholder-shown:left-0 peer-placeholder-shown:translate-x-0 -translate-y-5 peer-focus:-translate-y-5 peer-placeholder-shown:translate-y-0 translate-x-0 peer-focus:translate-x-0 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100"
-      >
-        Subtítulo do Artigo
-      </label>
     </fieldset>
   );
 }

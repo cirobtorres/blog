@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { HoverCard as HoverCardPrimitive } from "radix-ui";
-import { cn } from "../../utils/variants";
+import { cn } from "../utils/variants";
 
 function HoverCard({
   ...props
@@ -31,7 +31,7 @@ function HoverCardContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 border bg-container rounded-lg py-1 px-2 not-dark:shadow duration-100 z-50 origin-(--radix-hover-card-content-transform-origin) outline-hidden",
+          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 border bg-stone-200 dark:bg-stone-900 rounded-lg py-1 px-2 not-dark:shadow duration-100 z-50 origin-(--radix-hover-card-content-transform-origin) outline-hidden",
           className,
         )}
         {...props}

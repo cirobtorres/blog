@@ -108,7 +108,7 @@ export function Header({
     <header
       ref={headerRef}
       className={cn(
-        "z-10 sticky top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-container",
+        "z-10 sticky top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900",
         sticky ? "" : "static",
         className,
       )}
@@ -169,7 +169,7 @@ const UserSignedOff = () => (
     </PopoverTrigger>
     <PopoverContent
       align="end"
-      className="w-30 flex flex-col gap-0 p-1 bg-container [&_a]:text-sm [&_a]:font-normal [&_a]:text-neutral-900 [&_a]:dark:text-neutral-100 [&_a]:transition-background [&_a]:duration-300 [&_a]:hover:bg-stone-800 [&_a]:w-full [&_a]:py-1 [&_a]:px-2"
+      className="w-30 flex flex-col gap-0 p-1 bg-stone-200 dark:bg-stone-900 [&_a]:text-sm [&_a]:font-normal [&_a]:text-neutral-900 [&_a]:dark:text-neutral-100 [&_a]:transition-background [&_a]:duration-300 [&_a]:hover:bg-stone-800 [&_a]:w-full [&_a]:py-1 [&_a]:px-2"
     >
       <Link href={publicWebUrls.signIn}>Entrar</Link>
       <Link href={publicWebUrls.signUp}>Cadastrar</Link>

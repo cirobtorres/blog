@@ -10,9 +10,7 @@ export default async function ForgotPasswordPage() {
   const resetPassToken = cookieStore.has("reset_password_token");
   return (
     <main className="w-full min-h-screen flex justify-center items-center shadow bg-white dark:bg-black">
-      <div
-        className="w-full bg-background" // border-y
-      >
+      <div className="w-full bg-stone-100 dark:bg-stone-925 border-y">
         <div className="w-full max-w-100 mx-auto px-4 sm:px-8 py-8 flex flex-col items-center justify-center">
           <ForgetForm hasToken={resetPassToken} />
 

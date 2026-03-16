@@ -1,3 +1,5 @@
+"use client";
+
 import { cn, focusRing, hoverRing } from "../../utils/variants";
 import { Button } from "../Buttons";
 import { Popover, PopoverContentClipPath, PopoverTrigger } from "../Popover";
@@ -11,7 +13,7 @@ export function AddAccordionButton({
     <Popover>
       <PopoverTrigger
         className={cn(
-          "w-fit cursor-pointer border rounded p-2 mx-auto text-neutral-500 dark:text-neutral-500 bg-container border-stone-300 dark:border-stone-700 dark:bg-stone-800 transition-all duration-300 hover:text-neutral-900 hover:bg-stone-250 dark:hover:text-neutral-100 dark:hover:bg-stone-750 data-[state=open]:text-neutral-900 data-[state=open]:bg-stone-250 dark:data-[state=open]:text-neutral-100 dark:data-[state=open]:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-250 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750 not-dark:shadow",
+          "w-fit cursor-pointer border rounded p-2 mx-auto text-neutral-500 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 border-stone-300 dark:border-stone-700 dark:bg-stone-800 transition-all duration-300 hover:text-neutral-900 hover:bg-stone-250 dark:hover:text-neutral-100 dark:hover:bg-stone-750 data-[state=open]:text-neutral-900 data-[state=open]:bg-stone-250 dark:data-[state=open]:text-neutral-100 dark:data-[state=open]:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-250 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750 not-dark:shadow",
           hoverRing,
           focusRing,
         )}

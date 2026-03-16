@@ -216,7 +216,7 @@ function EditorsAccordionItem({
         !locked && focusWithinRing,
         !locked && hoverRing,
         locked && "border-stone-800",
-        hasError && "border-destructive dark:border-destructive",
+        hasError && "border-destructive/50",
         className,
       )}
       {...props}
@@ -256,7 +256,7 @@ function EditorsAccordionTrigger({
             locked &&
               "pointer-events-none opacity-50 disabled:pointer-events-none aria-disabled:pointer-events-none disabled:opacity-50 aria-disabled:opacity-50",
             hasError
-              ? "bg-linear-to-r from-destructive/30 to-destructive/10"
+              ? "bg-linear-to-r from-destructive/25 to-destructive/5"
               : "bg-stone-200 dark:bg-stone-900",
             className,
           )}
@@ -295,7 +295,7 @@ function EditorsAccordionContent({
       data-slot="accordion-content"
       className={cn(
         "border-t p-1 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden",
-        hasError && "border-destructive",
+        hasError && "border-destructive/50",
       )}
       {...props}
     />

@@ -46,7 +46,7 @@ export default function ArticleContent() {
       <P>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum atque
         eveniet voluptas{" "}
-        <mark className="border rounded-lg italic px-1 py-0.5 text-neutral-700 dark:text-neutral-400 bg-container">
+        <mark className="border rounded-lg italic px-1 py-0.5 text-neutral-700 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900">
           fugit voluptates
         </mark>
         , quod officiis aliquam asperiores, temporibus neque aspernatur expedita

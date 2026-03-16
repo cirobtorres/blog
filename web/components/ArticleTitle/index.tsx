@@ -24,7 +24,7 @@ export default function ArticleTitle() {
       <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
         <Subtitle />
       </div>
-      <div className="w-full bg-container border-y py-2">
+      <div className="w-full bg-stone-200 dark:bg-stone-900 border-y py-2">
         <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
           <div className="flex items-center gap-3 lg:gap-6">
             <Avatar />

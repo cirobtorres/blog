@@ -27,13 +27,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-secondary border-primary disabled:bg-secondary/50 text-neutral-100 hover:bg-secondary/80",
+          "bg-primary/65 border-primary disabled:bg-primary/25 text-neutral-100 hover:bg-primary/80",
         outline:
           "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
-        destructive:
-          "border-destructive bg-linear-to-r from-destructive/50 to-destructive/25",
+        destructive: "border-destructive bg-destructive/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },
@@ -56,7 +55,7 @@ const linkVariants = cva(
         external:
           "font-bold text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2",
         markdown:
-          "border text-base font-medium rounded-lg px-1 py-0.5 bg-container text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
+          "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
         button:
           "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-925 border border-transparent not-disabled:hover:border-stone-400 not-disabled:focus-visible:border-stone-400 dark:not-disabled:hover:border-stone-700 dark:not-disabled:focus-visible:border-stone-700",
       },
@@ -74,12 +73,12 @@ const alertVariants = cva(
       variant: {
         default:
           "[&_p]:text-neutral-900 dark:[&_p]:text-neutral-300 [&_svg]:stroke-neutral-900 dark:[&_svg]:stroke-neutral-100 from-neutral-300/30 to-neutral-300/10 dark:from-neutral-700/30 dark:to-neutral-600/10",
-        info: "[&_p]:text-blue-900 dark:[&_p]:text-neutral-300 border-informative [&_svg]:stroke-blue-900 dark:[&_svg]:stroke-neutral-100 from-informative/30 to-informative/10",
-        warn: "[&_p]:text-yellow-900 dark:[&_p]:text-neutral-100 border-warning [&_svg]:stroke-yellow-900 dark:[&_svg]:stroke-neutral-100 from-warning/50 to-warning/20",
+        info: "[&_p]:text-blue-900 dark:[&_p]:text-neutral-300 border-informative/50 [&_svg]:stroke-blue-900 dark:[&_svg]:stroke-neutral-100 from-informative/25 to-informative/5",
+        warn: "[&_p]:text-yellow-900 dark:[&_p]:text-neutral-100 border-warning/50 [&_svg]:stroke-yellow-900 dark:[&_svg]:stroke-neutral-100 from-warning/25 to-warning/5",
         success:
-          "[&_p]:text-emerald-900 dark:[&_p]:text-neutral-300 border-success [&_svg]:stroke-emerald-900 dark:[&_svg]:stroke-neutral-100 from-success/30 to-success/10",
+          "[&_p]:text-emerald-900 dark:[&_p]:text-neutral-300 border-success/50 [&_svg]:stroke-emerald-900 dark:[&_svg]:stroke-neutral-100 from-success/25 to-success/5",
         alert:
-          "[&_p]:text-rose-900 dark:[&_p]:text-neutral-300 border-destructive [&_svg]:stroke-rose-900 dark:[&_svg]:stroke-neutral-100 from-destructive/30 to-destructive/10",
+          "[&_p]:text-rose-900 dark:[&_p]:text-neutral-300 border-destructive/50 [&_svg]:stroke-rose-900 dark:[&_svg]:stroke-neutral-100 from-destructive/25 to-destructive/5",
       },
     },
     defaultVariants: {

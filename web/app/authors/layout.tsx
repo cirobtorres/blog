@@ -21,10 +21,17 @@ export default async function AuthorLayout({
   return (
     <div className="w-full min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
       <Header />
-      <main className="relative grid grid-cols-[280px_1fr] mx-auto">
-        <aside className="sticky top-0 flex flex-col justify-center items-end ml-auto mr-0 mb-auto mt-25">
-          <Link href="/authors/articles">Artigos</Link>
-          <Link href="/authors/media">Media</Link>
+      <main
+        className="w-full grid grid-cols-[var(--container-xs)_1fr] min-[1536px]:grid-cols-[var(--container-xs)_1fr_minmax(0,var(--container-xs))] mx-auto"
+        // 1552px = calc(var(--container-xs)+8px+var(--container-4xl)+8px+var(--container-xs))
+      >
+        <aside className="w-full max-w-xs h-full border-r flex flex-col items-end pt-25 bg-stone-200 dark:bg-stone-900">
+          <div className="w-full border-b p-2 text-end">
+            <Link href="/authors/articles">Artigos</Link>
+          </div>
+          <div className="w-full border-b p-2 text-end">
+            <Link href="/authors/media">Media</Link>
+          </div>
         </aside>
         {children}
       </main>

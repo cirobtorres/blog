@@ -134,12 +134,6 @@ const SignUpForm = () => {
           className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none"
         >
           Ao clicar em confirmar, você concorda com as{" "}
-          {/* <Link
-            href="/"
-            className="text-xs text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2"
-          >
-            políticas de privacidade e uso de dados
-          </Link>{" "} */}
           <AlertDialog open={termsDialog} onOpenChange={setTermsDialog}>
             <AlertDialogTrigger
               asChild

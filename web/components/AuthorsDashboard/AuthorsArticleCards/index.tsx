@@ -35,7 +35,7 @@ const AuthorsArticleCardLink = ({
     href={href}
     {...props}
     className={cn(
-      "border rounded overflow-hidden transition-shadow duration-300 bg-container",
+      "border rounded overflow-hidden transition-shadow duration-300 bg-stone-200 dark:bg-stone-900",
       focusRing,
       className,
     )}
