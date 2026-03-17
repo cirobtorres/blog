@@ -205,7 +205,7 @@ public class AuthService {
         Jwt jwt = jwtService.decodeToken(oldRefreshToken);
         String type = jwtService.getTokenClaim(jwt, RefreshTokenClaims.TYPE);
 
-        if (!TokenType.REFRESH.getType().equals(type)) {
+        if (!TokenType.REFRESH.getType().toUpperCase().equals(type)) {
             if (!isProd) log.error("AuthService.refresh(): token type is invalid. token type = {}", type);
             throw new RuntimeException("Invalid token.");
         }
