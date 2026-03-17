@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { cn, focusRing, hoverRing } from "../../utils/variants";
 import { Button } from "../Buttons";
 import { Popover, PopoverContentClipPath, PopoverTrigger } from "../Popover";
@@ -9,6 +10,23 @@ export function AddAccordionButton({
 }: {
   addBlock: (type: Blocks["type"]) => void;
 }) {
+  // Hydration--------------------------------------------------------
+  // Garantees to match Client Render + SSR
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="w-fit border rounded p-2 mx-auto opacity-50">
+        <OpenButton />
+      </div>
+    );
+  }
+  // -----------------------------------------------------------------
+
   return (
     <Popover>
       <PopoverTrigger

@@ -13,7 +13,7 @@ export default function ArticleTitle() {
         className="lg:col-start-1 lg:row-start-1 lg:h-150 lg:object-cover w-full border-b dark:border-stone-800"
       /> */}
       <div className="[background-image:radial-gradient(circle,rgba(0,0,0,0.10),rgba(0,0,0,1)),url('https://techgage.com/wp-content/uploads/2022/09/Blender-3.3-with-OneAPI-and-Intel-Arc-GPU.jpg')] lg:col-start-1 lg:row-start-1 lg:h-180 w-full border-b dark:border-stone-800 aspect-video bg-cover" />
-      <div className="lg:col-start-1 lg:row-start-1 lg:px-10 lg:mt-auto lg:mb-0 lg:pt-10 border-t lg:backdrop-blur-xl lg:bg-linear-to-t lg:from-25% lg:from-stone-200 lg:to-stone-200/25 dark:lg:from-stone-925 dark:lg:to-stone-925/25">
+      <div className="lg:col-start-1 lg:row-start-1 lg:px-10 lg:mt-auto lg:mb-0 lg:pt-10 border-t lg:backdrop-blur-xl lg:bg-linear-to-t dark:lg:from-25% not-dark:lg:from-stone-100 not-dark:lg:via-white/75 not-dark:lg:to-white/50 dark:lg:from-stone-925 dark:lg:to-stone-925/25">
         <div className="w-full max-w-article-title p-6 pb-0 lg:mx-auto lg:px-10">
           <section className="col-start-2">
             <ArtBreadcrumb />

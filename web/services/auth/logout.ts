@@ -1,36 +1,24 @@
 "use client";
 
-import { redirect } from "next/navigation";
-import { apiClientUrls } from "../../config/routes";
-import { getSessionUser } from "./session/client/getSessionUser";
+import { apiClientUrls, publicWebUrls } from "../../config/routes";
+import { getAuthorClient } from "./getAuthorClient";
 
-const logout = async (pathname?: string | undefined) => {
-  const isProd = process.env.NODE_ENV === "production";
-
-  const response = await fetch(apiClientUrls.logout, {
+const logout = async (pathname?: string) => {
+  // Logout
+  await fetch(apiClientUrls.logout, {
     method: "POST",
     credentials: "include",
   });
 
-  const {
-    authorized,
-    redirect: redirectTo,
-    user,
-  } = await getSessionUser(pathname);
+  const requiredRoles = getAuthorClient({ pathname }); // Checks if current route requires authority
 
-  // if (!response.ok) {
-  //   if (!isProd) {
-  //     console.error("logout:", response);
-  //   }
-  // }
+  const isProtectedRoute = requiredRoles && requiredRoles.length > 0; // && !pathname?.startsWith("/public");
 
-  // User is authenticated, but he is not auhorized
-  if (!authorized && redirectTo && !user) {
-    // TODO: redirect to previous page ...
-    redirect(redirectTo);
+  if (isProtectedRoute) {
+    window.location.href = publicWebUrls.signIn + "?login=required";
+  } else {
+    window.location.reload(); // If not protected, just refreshes the page
   }
-
-  // User is anonymous, but he is authorized (public routes)
 };
 
 export { logout };

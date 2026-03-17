@@ -9,7 +9,7 @@ const cn = (...inputs: ClassValue[]): string => {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950";
+  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950";
 
 const hoverRing =
   "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";
@@ -18,7 +18,7 @@ const focusRingOTPGroup =
   "outline-none has-aria-invalid:outline-none has-aria-invalid:ring-2 has-aria-invalid:ring-destructive has-aria-invalid:ring-offset-2 has-aria-invalid:ring-offset-stone-900 has-aria-invalid:bg-destructive/15";
 
 const focusRingOTPSlot =
-  "outline-none data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-2 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900 data-[active=true]:ring-offset-stone-100 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
+  "data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-3 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900/25 data-[active=true]:ring-offset-stone-950 dark:data-[active=true]:ring-2 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
 
 const buttonVariants = cva(
   "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow " +
@@ -27,7 +27,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary/65 border-primary disabled:bg-primary/25 text-neutral-100 hover:bg-primary/80",
+          "text-neutral-100 bg-primary/65 border-primary hover:bg-primary/80",
         outline:
           "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost:
@@ -57,7 +57,7 @@ const linkVariants = cva(
         markdown:
           "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
         button:
-          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-925 border border-transparent not-disabled:hover:border-stone-400 not-disabled:focus-visible:border-stone-400 dark:not-disabled:hover:border-stone-700 dark:not-disabled:focus-visible:border-stone-700",
+          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 hover:border-stone-400 focus-visible:border-stone-400 dark:border-stone-700 dark:hover:border-stone-600 dark:focus-visible:border-stone-600",
       },
     },
     defaultVariants: {

@@ -10,7 +10,12 @@ import {
 import { Button } from "../Buttons";
 import FieldsetOTPCode from "../Fieldset/FieldsetOTPCode";
 import Spinner from "../Spinner";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { passChangePermission } from "../../services/auth/password-forgotten/passChangePermission";
 import { forgetEmailPass } from "../../services/auth/password-forgotten/forgetEmailPass";
 import { passChange } from "../../services/auth/password-forgotten/passChange";
@@ -150,14 +155,16 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
   if (isStepSuccess) {
     return (
       <div className="w-full flex flex-col gap-2 mb-6">
-        <h1 className="text-neutral-100 text-3xl font-bold mb-8">
-          Senha salva!
-        </h1>
+        <h1 className="text-3xl font-bold mb-8">Senha salva!</h1>
         <p className="text-sm font-medium text-neutral-500">
           A senha de {email} foi alterada com sucesso.
         </p>
-        <Link href="/" variant="button" className="max-w-30 mx-auto">
-          Home
+        <Link
+          href="/users/sign-in"
+          variant="button"
+          className="max-w-30 mx-auto"
+        >
+          Fazer login
         </Link>
       </div>
     );
@@ -166,9 +173,7 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
   if (hasToken)
     return (
       <div className="w-full flex flex-col gap-2 mb-6">
-        <h1 className="text-neutral-100 text-3xl font-bold mb-8">
-          Esqueceu sua senha?
-        </h1>
+        <h1 className="text-3xl font-bold mb-8">Esqueceu sua senha?</h1>
         <p className="text-sm font-medium text-neutral-500">
           Crie uma nova senha
         </p>
@@ -194,10 +199,8 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
 
   return (
     <div className="flex flex-col gap-2 mb-6">
-      <h1 className="text-neutral-100 text-3xl font-bold mb-8">
-        Esqueceu sua senha?
-      </h1>
-      <p className="text-sm font-medium text-neutral-500">
+      <h1 className="text-3xl font-bold mb-8">Esqueceu sua senha?</h1>
+      <p className="text-sm font-medium text-neutral-600 dark:text-neutral-500">
         Enviaremos um código de validação para seu e-mail
       </p>
       {isStepCode ? (

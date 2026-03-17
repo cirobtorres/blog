@@ -15,7 +15,7 @@ const RenewCodeButton = ({
     variant="outline"
     onClick={onClick}
     disabled={isResending || countdown > 0}
-    className="text-xs min-[450px]:text-sm h-fit py-1 rounded-full"
+    className="text-xs min-[450px]:text-sm h-fit py-1 rounded-full hover:border-stone-400 disabled:opacity-50 disabled:text-neutral-300 disabled:border-stone-400 disabled:bg-stone-400 dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -15,9 +15,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
             Home
           </Link>
 
-          <h1 className="text-neutral-900 dark:text-neutral-100 text-3xl font-bold mb-8">
-            Login
-          </h1>
+          <h1 className="text-3xl font-bold mb-8">Login</h1>
 
           {login === "required" && (
             <Alert title="Negado" variant="alert">
@@ -38,7 +36,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
 
           <LoginProviders />
 
-          <p className="text-xs font-medium text-neutral-500">
+          <p className="text-xs font-medium text-neutral-600 dark:text-neutral-500">
             Para se cadastrar, clique{" "}
             <Link
               href={publicWebUrls.signUp}
@@ -54,7 +52,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
           <SignUpInfo />
         </div>
       </div>
-      <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,0.25)),radial-gradient(circle,rgba(255,255,255,0.0),rgba(255,255,255,0.25)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
+      <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,0.25)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
     </main>
   );
 }

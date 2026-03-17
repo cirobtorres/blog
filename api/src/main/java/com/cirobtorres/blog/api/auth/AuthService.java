@@ -140,9 +140,11 @@ public class AuthService {
         );
 
         UserIdentity userIdentity = user
-                .getIdentities().stream()
+                .getIdentities()
+                .stream()
                 .filter(i -> i.getProvider() == UserIdentityProvider.LOCAL)
-                .findFirst().orElseThrow();
+                .findFirst()
+                .orElseThrow();
 
         // Email code
         String token = auditTokenService.createEmailCode(userIdentity, AuditTokenType.EMAIL_VALIDATION);
@@ -174,7 +176,7 @@ public class AuthService {
 
         // Delete old code (if exists)
         // if (existingToken.isPresent()) {
-        //     LocalDateTime lastGenerated = existingToken.get().getExpiryDate().minusHours(1);
+        //     LocalDateTime lastGenerated = existingToken.get().getExpiresAt().minusHours(1);
         //     if (lastGenerated.isAfter(LocalDateTime.now().minusSeconds(60))) {
         //         log.warn("User {} is requesting too many codes.", userId);
         //         throw new TooManyRequestsException("Aguarde um minuto antes de solicitar um novo código.");

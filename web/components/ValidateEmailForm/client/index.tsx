@@ -110,16 +110,16 @@ export default function ValidateEmailFormClient({
   if (isSuccess)
     return (
       <div className="w-screen flex items-center justify-center border-y shadow bg-stone-925">
-        <div className="h-80 w-full my-auto flex items-center justify-center bg-neutral-100 dark:bg-stone-925">
+        <div className="h-80 w-full my-auto flex items-center justify-center bg-stone-100 dark:bg-stone-925">
           <div className="flex flex-col gap-4 mx-4 text-center">
-            <h1 className="font-bold text-3xl text-neutral-100">
+            <h1 className="font-bold text-3xl text-neutral-900 dark:text-neutral-100">
               Email validado com sucesso!
             </h1>
             <Link
               href="/"
               className={cn(
                 linkVariants({ variant: "button" }),
-                "max-w-40 mx-auto border dark:border-stone-700 focus-visible:border-stone-400 dark:focus-visible:border-stone-700 dark:bg-stone-900",
+                "max-w-40 mx-auto border",
               )}
             >
               Retornar
@@ -130,18 +130,18 @@ export default function ValidateEmailFormClient({
     );
 
   return (
-    <div className="w-screen flex items-center justify-center border-y shadow-md bg-neutral-100 dark:bg-stone-925">
+    <div className="w-screen flex items-center justify-center border-y shadow-md bg-stone-100 dark:bg-stone-925">
       <form
         action={validateCodeAction}
         className="w-full max-w-120 flex flex-col justify-center items-center px-8 py-16"
       >
-        <h1 className="text-2xl mb-6 min-[450px]:text-3xl font-bold text-neutral-100">
+        <h1 className="text-2xl mb-6 min-[450px]:text-3xl font-bold">
           Cheque o seu email
         </h1>
         <div className="mb-3 flex flex-col justify-center items-center">
-          <p className="text-xs min-[450px]:text-base text-neutral-400 text-center font-normal">
+          <p className="text-xs min-[450px]:text-base text-neutral-600 dark:text-neutral-400 text-center font-normal">
             Por favor, verifique o código de 6 dígitos que enviamos para{" "}
-            <b className="text-neutral-100">{email}</b>.
+            <b className="text-neutral-600 dark:text-neutral-100">{email}</b>.
           </p>
         </div>
         <div className="mb-3 w-full h-px inline-grid">
@@ -161,12 +161,14 @@ export default function ValidateEmailFormClient({
             countdown={countdownRenewCode}
           />
           {resendCodeState?.ok && (
-            <p className="text-xs font-medium text-neutral-500">
+            <p className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
               Código enviado para{" "}
-              <strong className="text-neutral-100">{email}</strong>
+              <strong className="text-neutral-600 dark:text-neutral-100">
+                {email}
+              </strong>
             </p>
           )}
-          <small className="text-[10px] min-[450px]:text-xs font-bold text-neutral-500">
+          <small className="text-[10px] min-[450px]:text-xs font-bold text-neutral-600 dark:text-neutral-400">
             O código é válido por 1 hora
           </small>
         </div>
@@ -185,14 +187,14 @@ export default function ValidateEmailFormClient({
             disabled={code.length < 6 || isPendingValidateCode}
             className={cn(
               buttonVariants(),
-              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900",
+              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded disabled:opacity-50 disabled:text-neutral-300 disabled:border-stone-400 disabled:bg-stone-400 dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900",
             )}
           >
             {isPendingValidateCode && <Spinner />} Confirmar
           </Button>
         </div>
         <FieldsetError error={validateCodeState.error?.form?.errors} />
-        <p className="text-xs min-[450px]:text-sm text-center text-neutral-400 font-normal">
+        <p className="text-xs min-[450px]:text-sm text-center text-neutral-600 dark:text-neutral-400 font-normal">
           Não consegue fazer login?{" "}
           <Link
             href="/" // TODO

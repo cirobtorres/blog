@@ -47,7 +47,7 @@ public class AuditTokenService {
                 .tokenHash(hashedToken)
                 .tokenType(tokenType)
                 .userIdentity(localIdentity)
-                .expiryDate(LocalDateTime.now().plusHours(1))
+                .expiresAt(LocalDateTime.now().plusHours(1))
                 .revoked(false)
                 .build();
         verificationTokenRepository.save(token);
@@ -57,7 +57,7 @@ public class AuditTokenService {
     private String generateRandomCode() {
         if (!isProd) log.info("VerificationTokenService.generateRandomCode() BEGIN");
         int length = 6;
-        String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String chars = "0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {

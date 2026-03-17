@@ -106,8 +106,8 @@ public class AuditToken {
             return this;
         }
 
-        public Builder expiryDate(LocalDateTime expiryDate) {
-            this.expiresAt = expiryDate;
+        public Builder expiresAt(LocalDateTime expiresAt) {
+            this.expiresAt = expiresAt;
             return this;
         }
 

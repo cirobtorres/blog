@@ -4,7 +4,7 @@ import { Link } from "./Links";
 const Separation = () => (
   <div className="w-full flex items-center">
     <Hr />
-    <span className="text-sm  text-neutral-400 dark:text-neutral-500 pointer-events-none mx-2">
+    <span className="text-sm  text-neutral-600 dark:text-neutral-500 pointer-events-none mx-2">
       ou
     </span>
     <Hr />
@@ -18,18 +18,18 @@ const Hr = () => (
 const SignUpInfo = () => {
   return (
     <>
-      <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-500">
         As contas criadas aqui são para fins de interação com o autor deste
         website, especialmente por meio de comentários nas publicações, e podem
         ser excluídas facilmente a qualquer momento.
       </p>
 
-      <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-500">
         Não armazenamos no banco mais que o necessário, como nome e e-mail, e
         não enviamos e-mails insuportáveis de newsletters ou promocionais .
       </p>
 
-      <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-500">
         Para mais informações como feedbacks ou report de bugs, por favor entrar
         em contato por meio do{" "}
         <Link
@@ -43,7 +43,7 @@ const SignUpInfo = () => {
 
       <Hr />
 
-      <p className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+      <p className="text-xs font-medium text-neutral-600 dark:text-neutral-500">
         O código deste site está disponível no{" "}
         <Link
           href={externalUrls.blogGitHub}
