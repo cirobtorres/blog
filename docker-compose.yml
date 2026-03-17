@@ -7,7 +7,7 @@ services:
     environment:
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
-      - API_URL_SERVER=${API_URL_SERVER}
+      - API_URL=${API_URL_SERVER}
       - RSA_PRIVATE_CONTENT=${RSA_PRIVATE_CONTENT}
       - RSA_PUBLIC_CONTENT=${RSA_PUBLIC_CONTENT}
       - POSTGRES_HOST=database

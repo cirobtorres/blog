@@ -312,7 +312,8 @@ public class AuthService {
             return;
         }
 
-        Optional<UserIdentity> localIdentity = identities.stream()
+        Optional<UserIdentity> localIdentity = identities
+                .stream()
                 .filter(i -> i.getProvider() == UserIdentityProvider.LOCAL)
                 .findFirst();
 
@@ -332,7 +333,8 @@ public class AuthService {
             // No LOCAL account. Instead, user might have one or more provider identities
             String userName = identities.getFirst().getName();
 
-            List<String> providerNames = identities.stream()
+            List<String> providerNames = identities
+                    .stream()
                     .map(UserIdentity::getProvider)
                     .map(this::formatProviderName)
                     .toList();
