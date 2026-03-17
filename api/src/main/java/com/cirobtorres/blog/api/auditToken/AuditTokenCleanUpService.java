@@ -11,20 +11,20 @@ import java.time.LocalDateTime;
 
 @Service
 public class AuditTokenCleanUpService {
-    private final AuditTokenRepository repository;
+    private final AuditTokenRepository auditTokenRepository;
     private static final Logger log = LoggerFactory.getLogger(AuditTokenCleanUpService.class);
 
     public AuditTokenCleanUpService(
-            AuditTokenRepository repository
+            AuditTokenRepository auditTokenRepository
     ) {
-        this.repository = repository;
+        this.auditTokenRepository = auditTokenRepository;
     }
 
     @Scheduled(cron = "0 0 3 * * *")
     @Transactional
     public void deleteExpiredTokens() {
         LocalDateTime now = LocalDateTime.now();
-        long deletedCount = repository.deleteInvalidTokens(now);
+        long deletedCount = auditTokenRepository.deleteInvalidTokens(now);
         if (deletedCount > 0) {
             log.info("AuditTokens deleted: {}", deletedCount);
         }

@@ -21,6 +21,7 @@ const protectedWebUrls = {
 };
 
 const apiServerUrls = {
+  // Authentication
   login: API_SERVER + "/auth/login",
   register: API_SERVER + "/auth/register",
   emailCode: API_SERVER + "/auth/validation",
@@ -30,6 +31,10 @@ const apiServerUrls = {
   passResetCode: API_SERVER + "/auth/password-reset-code",
   passwordReset: API_SERVER + "/auth/password-reset",
   me: API_SERVER + "/users/me",
+  // Articles
+  article: {
+    create: API_SERVER + "/articles",
+  },
 };
 
 const apiClientUrls = {

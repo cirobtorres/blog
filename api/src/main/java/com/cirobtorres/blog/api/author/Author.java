@@ -1,6 +1,6 @@
 package com.cirobtorres.blog.api.author;
 
-import com.cirobtorres.blog.api.article.Article;
+import com.cirobtorres.blog.api.article.entities.Article;
 import com.cirobtorres.blog.api.user.entities.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -52,6 +52,14 @@ public class Author {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Article> getArticles() {

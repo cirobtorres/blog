@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.article;
+package com.cirobtorres.blog.api.article.dtos;
 
 import java.util.UUID;
 

@@ -1,5 +1,6 @@
-package com.cirobtorres.blog.api.article;
+package com.cirobtorres.blog.api.article.entities;
 
+import com.cirobtorres.blog.api.article.enums.ArticleStatus;
 import com.cirobtorres.blog.api.author.Author;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -28,10 +29,10 @@ public class Article {
     private String title;
 
     @Column(length = 200)
-    private String description;
+    private String subtitle;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    private String body;
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -84,20 +85,20 @@ public class Article {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
-    public String getContent() {
-        return content;
+    public String getBody() {
+        return body;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getSlug() {

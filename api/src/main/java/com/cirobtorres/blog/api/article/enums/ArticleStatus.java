@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.article;
+package com.cirobtorres.blog.api.article.enums;
 
 public enum ArticleStatus {
     DRAFT,      // visible to author

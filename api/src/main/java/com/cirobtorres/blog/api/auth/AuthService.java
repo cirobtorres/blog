@@ -284,7 +284,7 @@ public class AuthService {
             throw new UserUnauthorizedException("Invalid token.");
         }
 
-        if (auditToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+        if (auditToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException("Invalid token.");
         }
 
@@ -359,7 +359,7 @@ public class AuthService {
 
         // Validations
         if (!auditToken.isValid()) {
-            if (!isProd) log.warn("Token is invalid. revoked={}, expired_at={}", auditToken.isRevoked(), auditToken.getExpiryDate());
+            if (!isProd) log.warn("Token is invalid. revoked={}, expired_at={}", auditToken.isRevoked(), auditToken.getExpiresAt());
             throw new RuntimeException("Token is invalid.");
         }
 

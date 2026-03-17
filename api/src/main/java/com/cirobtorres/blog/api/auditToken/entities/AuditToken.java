@@ -27,7 +27,7 @@ public class AuditToken {
     private AuditTokenType tokenType;
 
     @Column(nullable = false)
-    private LocalDateTime expiryDate;
+    private LocalDateTime expiresAt;
 
     @Column(nullable = false)
     private boolean revoked;
@@ -44,7 +44,7 @@ public class AuditToken {
         this.tokenHash = builder.tokenHash;
         this.tokenType = builder.tokenType;
         this.userIdentity = builder.userIdentity;
-        this.expiryDate = builder.expiryDate;
+        this.expiresAt = builder.expiresAt;
         this.revoked = builder.revoked;
     }
 
@@ -61,8 +61,8 @@ public class AuditToken {
     public AuditTokenType getTokenType() { return tokenType; }
     public void setTokenType(AuditTokenType tokenType) { this.tokenType = tokenType; }
 
-    public LocalDateTime getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(LocalDateTime expiryDate) { this.expiryDate = expiryDate; }
+    public LocalDateTime getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
 
     public boolean isRevoked() { return revoked; }
     public void setRevoked(boolean revoked) { this.revoked = revoked; }
@@ -73,7 +73,7 @@ public class AuditToken {
     public LocalDateTime getCreatedAt() { return createdAt; }
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
+        return LocalDateTime.now().isAfter(this.expiresAt);
     }
 
     public boolean isValid() {
@@ -88,7 +88,7 @@ public class AuditToken {
         private String tokenHash;
         private AuditTokenType tokenType;
         private UserIdentity userIdentity;
-        private LocalDateTime expiryDate;
+        private LocalDateTime expiresAt;
         private boolean revoked;
 
         public Builder tokenHash(String tokenHash) {
@@ -107,7 +107,7 @@ public class AuditToken {
         }
 
         public Builder expiryDate(LocalDateTime expiryDate) {
-            this.expiryDate = expiryDate;
+            this.expiresAt = expiryDate;
             return this;
         }
 

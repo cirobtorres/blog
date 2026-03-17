@@ -19,5 +19,5 @@ public interface AuditTokenRepository extends JpaRepository<AuditToken, UUID> {
 
     @Modifying @Transactional void deleteByUserIdentityAndTokenType(UserIdentity userIdentity, AuditTokenType auditTokenType);
 
-    @Modifying @Query("DELETE FROM AuditToken t WHERE t.revoked = true OR t.expiryDate < :now") long deleteInvalidTokens(LocalDateTime now);
+    @Modifying @Query("DELETE FROM AuditToken t WHERE t.revoked = true OR t.expiresAt < :now") long deleteInvalidTokens(LocalDateTime now);
 }

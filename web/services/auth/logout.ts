@@ -18,11 +18,11 @@ const logout = async (pathname?: string | undefined) => {
     user,
   } = await getSessionUser(pathname);
 
-  if (!response.ok) {
-    if (!isProd) {
-      console.error("logout:", response);
-    }
-  }
+  // if (!response.ok) {
+  //   if (!isProd) {
+  //     console.error("logout:", response);
+  //   }
+  // }
 
   // User is authenticated, but he is not auhorized
   if (!authorized && redirectTo && !user) {

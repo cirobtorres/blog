@@ -1,6 +1,6 @@
 "use server";
 
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getSessionUser } from "../../services/auth/session/server/getSessionUser";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -11,12 +11,9 @@ export default async function AuthorLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { authorized, redirect: redirectPath, user } = await getSessionUser();
+  const { authorized } = await getSessionUser();
 
-  if (!authorized && redirectPath) {
-    if (!!user) redirect(redirectPath);
-    notFound();
-  }
+  if (!authorized) notFound();
 
   return (
     <div className="w-full min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">

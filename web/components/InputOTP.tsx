@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
-import { cn, focusRingOTPSlot } from "../../utils/variants";
+import { cn, focusRingOTPSlot } from "../utils/variants";
 
 function InputOTP({
   className,

@@ -74,7 +74,7 @@ public class JwtService {
                 .issuer(issuer)
                 .issuedAt(issuedAt)
                 .expiresAt(expiresAt)
-                .claim("type", type)
+                .claim("type", type.toUpperCase())
                 .claim("authorities", finalAuthorities)
                 .build();
 
@@ -93,7 +93,7 @@ public class JwtService {
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusMillis(expAccToken))
-                .claim("type", TokenType.ACCESS.getType())
+                .claim("type", TokenType.ACCESS.getType().toUpperCase())
                 .claim("authorities", finalAuthorities)
                 .claim("provider", provider != null ? provider : "LOCAL")
                 .build();
@@ -109,7 +109,7 @@ public class JwtService {
                 .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plusMillis(expRefToken))
-                .claim("type", TokenType.REFRESH.getType())
+                .claim("type", TokenType.REFRESH.getType().toUpperCase())
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -148,7 +148,7 @@ public class JwtService {
 
             String type = jwt.getClaimAsString("type");
             if (type != null) {
-                auths.add("TOKEN_TYPE_" + type);
+                auths.add(type.toUpperCase());
             }
 
             if (!isProd && auths.isEmpty()) {

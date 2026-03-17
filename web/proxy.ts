@@ -6,7 +6,6 @@ import {
 } from "./services/helpers/serve-actions";
 import { apiServerUrls, publicWebUrls } from "./config/routes";
 import { PROTECTED_ROUTES } from "./config/protected";
-import { getAuthorServer } from "./services/auth/getAuthorServer";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,6 +14,7 @@ export async function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get("refresh_token")?.value;
 
   let isExpired = true;
+
   if (accessToken) {
     try {
       const payload = extractPayload(accessToken);

@@ -28,7 +28,7 @@ import java.util.UUID;
 public class AuthController {
     private final AuthService authService;
     private final JwtService jwtService;
-    private final String clientUrl;
+    // private final String clientUrl;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
@@ -37,7 +37,7 @@ public class AuthController {
             AuthService authService,
             JwtService jwtService
     ) {
-        this.clientUrl = apiApplicationProperties.getFrontend().getUrl();
+        // this.clientUrl = apiApplicationProperties.getFrontend().getUrl();
         this.authService = authService;
         this.jwtService = jwtService;
         this.isProd = apiApplicationProperties.getApplication().isProduction();

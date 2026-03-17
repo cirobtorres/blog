@@ -1,0 +1,32 @@
+package com.cirobtorres.blog.api.token;
+
+import com.cirobtorres.blog.api.token.interfaces.RefreshTokenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+@Service
+public class RefreshTokenCleanUpService {
+    private final RefreshTokenRepository refreshTokenRepository;
+    private static final Logger log = LoggerFactory.getLogger(RefreshTokenCleanUpService.class);
+
+    public RefreshTokenCleanUpService(
+            RefreshTokenRepository repository
+    ) {
+        this.refreshTokenRepository = repository;
+    }
+
+    @Scheduled(cron = "0 0 3 * * *")
+    @Transactional
+    public void deleteExpiredTokens() {
+        LocalDateTime now = LocalDateTime.now();
+        long deletedCount = refreshTokenRepository.deleteInvalidTokens(now);
+        if (deletedCount > 0) {
+            log.info("RefreshTokens deleted: {}", deletedCount);
+        }
+    }
+}

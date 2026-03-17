@@ -8,16 +8,18 @@ import { AddBlockButton, BlockList } from "../ArticleEditors/blocks";
 import { convertToLargeDate } from "../../utils/date";
 import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../utils/variants";
-import { publishArticle } from "../../services/article/publishArticle";
+import {
+  publishArticle,
+  publishArticleValidation,
+} from "../../services/article/publishArticle";
 import { Alert } from "../Alert";
 import { FieldsetError } from "../Fieldset";
 import { sonnerToastPromise } from "../../utils/sooner";
 import { Button } from "../Buttons";
 import Spinner from "../Spinner";
 
-const profileId = "321";
-
 export function ArticleCreate() {
+  // const isProd = process.env.NODE_ENV === "production";
   const [blocks, setBlocks] = React.useState<Blocks[]>([]);
   const [title, setTitle] = React.useState("");
   const [subtitle, setSubtitle] = React.useState("");
@@ -29,10 +31,13 @@ export function ArticleCreate() {
       async (prevState: ArticleState) => {
         const formData = new FormData();
 
-        formData.set("profileId", profileId);
         formData.set("title", title);
         formData.set("subtitle", subtitle);
         formData.set("body", JSON.stringify(blocks));
+
+        // if (!isProd) {
+        //   console.log("ArticleCreate", title, subtitle, blocks);
+        // }
 
         const success = (serverResponse: ArticleState) => {
           const now = convertToLargeDate(
@@ -68,7 +73,22 @@ export function ArticleCreate() {
           return <p>Artigo não publicado</p>;
         };
 
-        const result = publishArticle(prevState, formData);
+        const validation = await publishArticleValidation(prevState, formData);
+
+        if (!validation.ok) return validation;
+
+        const validatedFormData = new FormData();
+        const {
+          title: validatedTitle,
+          subtitle: validatedSubtitle,
+          body: validatedBody,
+        } = validation.data;
+
+        validatedFormData.set("title", validatedTitle);
+        validatedFormData.set("subtitle", validatedSubtitle);
+        validatedFormData.set("body", JSON.stringify(validatedBody));
+
+        const result = publishArticle(prevState, validatedFormData);
 
         const promise: Promise<ArticleState> = new Promise(
           (resolve, reject) => {
@@ -116,6 +136,34 @@ export function ArticleCreate() {
                   {err}
                 </p>
               ),
+            )}
+          {publishState.error.body &&
+            publishState.error.body.errors.map(
+              (err: string[], index: number) => (
+                <p key={"body-" + index} className="text-destructive!">
+                  {err}
+                </p>
+              ),
+            )}
+          {publishState.error.body.items &&
+            publishState.error.body.items.map(
+              ({
+                properties: {
+                  data: {
+                    properties: { body: obj },
+                  },
+                },
+              }: {
+                properties: {
+                  data: { properties: { body: { errors: string[] } } };
+                };
+              }) => {
+                return obj.errors.map((err: string, idx: number) => (
+                  <p key={"body-err-" + idx} className="text-destructive!">
+                    {err}
+                  </p>
+                ));
+              },
             )}
         </Alert>
       ) : null}

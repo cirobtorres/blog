@@ -1,13 +1,6 @@
 type ArticleState = {
   ok: boolean;
   success: string | null;
-  error: ZodError<{
-    email: string;
-    password: string;
-  }>;
-  data: {
-    id: string;
-    link: string;
-    updated_at: Date;
-  } | null;
+  error: ZodError<ActionStateError>;
+  data: Record<string, string> | Record<Blocks[]> | null;
 };

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,4 +30,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID
     WHERE r.tokenHash = :hash AND r.revoked = false
     """)
     int revokeIfNotRevoked(String hash, Instant now);
+
+    @Modifying @Query("DELETE FROM RefreshToken r WHERE r.revoked = true OR r.revokedAt < :now OR r.expiresAt < :now") long deleteInvalidTokens(LocalDateTime now);
 }

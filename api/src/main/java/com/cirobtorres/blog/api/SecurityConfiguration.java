@@ -119,11 +119,10 @@ public class SecurityConfiguration {
                                 HttpMethod.POST,
                                 "/auth/password-reset"
                         ).hasAuthority("PASSWORD_RESET")
-                        // ).access((authentication, context) -> {
-                        //     boolean isResetToken = authentication.get() instanceof JwtAuthenticationToken jwtAuth
-                        //             && "PASSWORD_RESET".equals(jwtAuth.getToken().getClaim("type"));
-                        //     return new AuthorizationDecision(isResetToken);
-                        // })
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/articles"
+                        ).hasAuthority("AUTHOR")
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()
                 )
