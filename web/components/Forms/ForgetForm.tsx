@@ -154,7 +154,7 @@ export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
 
   if (isStepSuccess) {
     return (
-      <div className="w-full flex flex-col gap-2 mb-6">
+      <div className="w-full flex flex-col items-center gap-2 mb-6">
         <h1 className="text-3xl font-bold mb-8">Senha salva!</h1>
         <p className="text-sm font-medium text-neutral-500">
           A senha de {email} foi alterada com sucesso.

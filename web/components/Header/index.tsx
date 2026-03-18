@@ -161,7 +161,7 @@ const UserSignedOff = () => (
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:bg-stone-800"
+        className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
       >
         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />

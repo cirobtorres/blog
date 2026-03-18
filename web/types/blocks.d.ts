@@ -1,9 +1,18 @@
 type UpdateBlocks = Partial<Record<string, unknown>>;
 
-type BlockType<T extends object> = T & {
+type BlockType =
+  | "html"
+  | "code"
+  | "accordion"
+  | "alert"
+  | "image"
+  | "images"
+  | "video";
+
+type AccordionBlock<T extends object> = T & {
   id: string;
   locked: boolean;
-  type: "html" | "code" | "accordion" | "alert" | "image" | "images";
+  type: BlockType;
 };
 
 type HtmlEditor = { body: string };
@@ -14,9 +23,9 @@ type ImageEditor = null;
 type ImagesEditor = null;
 
 type Blocks =
-  | BlockType<{ data: HtmlEditor }>
-  | BlockType<{ data: CodeEditor }>
-  | BlockType<{ data: AccordionEditor }>
-  | BlockType<{ data: AlertEditor }>
-  | BlockType<{ data: ImageEditor }>
-  | BlockType<{ data: ImagesEditor }>;
+  | AccordionBlock<{ data: HtmlEditor }>
+  | AccordionBlock<{ data: CodeEditor }>
+  | AccordionBlock<{ data: AccordionEditor }>
+  | AccordionBlock<{ data: AlertEditor }>
+  | AccordionBlock<{ data: ImageEditor }>
+  | AccordionBlock<{ data: ImagesEditor }>;

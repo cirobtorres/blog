@@ -145,7 +145,7 @@ export function ArticleCreate() {
                 </p>
               ),
             )}
-          {publishState.error.body.items &&
+          {publishState.error.body?.items &&
             publishState.error.body.items.map(
               ({
                 properties: {

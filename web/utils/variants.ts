@@ -32,7 +32,8 @@ const buttonVariants = cva(
           "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
-        destructive: "border-destructive bg-destructive/50",
+        destructive:
+          "border-destructive bg-destructive/50 dark:border-destructive/50 dark:bg-destructive/25",
         link: "text-primary underline-offset-4 hover:underline",
       },
     },

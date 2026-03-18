@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
-  "w-full cursor-pointer flex items-center gap-1 text-xs p-1 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-700 font-normal transition-[background-color,box-shadow] duration-300 rounded";
+  "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800 font-normal transition-[background-color,box-shadow] duration-300 rounded";
 
 const UserSignedIn = ({
   user,
@@ -58,7 +58,10 @@ const UserSignedIn = ({
             <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
               Usuário
             </p>
-            <Link href="/" className={cn(elStyleItem, "pl-4")}>
+            <Link
+              href="/"
+              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
+            >
               <PreferencesIcon />
               Preferências
             </Link>
@@ -69,14 +72,14 @@ const UserSignedIn = ({
             </p>
             <Link
               href={protectedWebUrls.authors}
-              className={cn(elStyleItem, "pl-4")}
+              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
             >
               <AuthorIcon />
               Autor
             </Link>
             <Link
               href={protectedWebUrls.authors}
-              className={cn(elStyleItem, "pl-4")}
+              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
             >
               <MediaIcon />
               Media
@@ -86,15 +89,15 @@ const UserSignedIn = ({
             <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
               Tema
             </p>
-            <p className={cn(elStyleItem, "pl-4")}>
+            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
               <LightThemeIcon />
               Claro
             </p>
-            <p className={cn(elStyleItem, "pl-4")}>
+            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
               <DarkThemeIcon />
               Escuro
             </p>
-            <p className={cn(elStyleItem, "pl-4")}>
+            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
               <CustomSystemThemeIcon />
               Sistema
             </p>
@@ -107,7 +110,7 @@ const UserSignedIn = ({
               }}
               className={elStyleItem}
             >
-              <LogoutIcon />
+              {/* <LogoutIcon /> */}
               Sair
             </button>
           </div>
