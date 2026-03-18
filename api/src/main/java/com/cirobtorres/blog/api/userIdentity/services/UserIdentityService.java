@@ -49,15 +49,17 @@ public class UserIdentityService {
         if (!isProd) log.info("UserIdentityService.createLocalUser(): pictureUrl={}", pictureUrl);
         User user = userRepository.findByEmail(email).orElseGet(User::new);
 
-        UserIdentity userIdentity = new UserIdentity();
-        userIdentity.setUser(user);
-        userIdentity.setName(name);
-        userIdentity.setPictureUrl(pictureUrl);
-        userIdentity.setProvider(UserIdentityProvider.LOCAL);
-        userIdentity.setProviderUserId(email);
-        userIdentity.setProviderEmail(email);
-        userIdentity.setIsProviderEmailVerified(false);
-        userIdentity.setPasswordHash(passwordEncoder.encode(password));
+        UserIdentity userIdentity = UserIdentity
+                .builder()
+                .user(user)
+                .name(name)
+                .pictureUrl(pictureUrl)
+                .provider(UserIdentityProvider.LOCAL)
+                .providerUserId(email)
+                .providerEmail(email)
+                .isProviderEmailVerified(false)
+                .passwordHash(passwordEncoder.encode(password))
+                .build();
 
         user.addIdentity(userIdentity);
         user.setEmail(email);
@@ -128,12 +130,14 @@ public class UserIdentityService {
 
         userRepository.save(user);
 
-        UserIdentity userIdentity = new UserIdentity();
-        userIdentity.setUser(user);
-        userIdentity.setName(name);
-        userIdentity.setPictureUrl(pictureUrl);
-        userIdentity.setProvider(provider);
-        userIdentity.setProviderUserId(providerUserId);
+        UserIdentity userIdentity = UserIdentity
+                .builder()
+                .user(user)
+                .name(name)
+                .pictureUrl(pictureUrl)
+                .provider(provider)
+                .providerUserId(providerUserId)
+                .build();
 
         if (email != null) {
             userIdentity.setProviderEmail(email);

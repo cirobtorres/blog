@@ -86,9 +86,6 @@ spring:
     activate:
       on-profile: development
 
-  # datasource.url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?prepareThreshold=0
-
-  # How Hibernate interacts with the database schema on application startup
   jpa:
     show-sql: false
     hibernate:

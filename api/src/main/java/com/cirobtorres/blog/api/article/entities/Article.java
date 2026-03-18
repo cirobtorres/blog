@@ -21,7 +21,7 @@ public class Article {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id") // Nullable
+    @JoinColumn(name = "author_id") // NULLABLE
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
 
@@ -33,6 +33,9 @@ public class Article {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
+
+    @Column(name = "banner_url")
+    private String bannerUrl;
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -58,13 +61,80 @@ public class Article {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @Deprecated // Hibernate
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
     public Article() {}
 
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private Article(Builder builder) {
+        this.author = builder.author;
+        this.title = builder.title;
+        this.subtitle = builder.subtitle;
+        this.body = builder.body;
+        this.bannerUrl = builder.bannerUrl;
+        this.slug = builder.slug;
+        this.status = builder.status;
+        this.publishedAt = builder.publishedAt;
+    }
+
+    public static class Builder {
+        private Author author;
+        private String title;
+        private String subtitle;
+        private String body;
+        private String bannerUrl;
+        private String slug;
+        private ArticleStatus status;
+        private LocalDateTime publishedAt;
+
+        public Builder author(Author author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder subtitle(String subtitle) {
+            this.subtitle = subtitle;
+            return this;
+        }
+
+        public Builder body(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder bannerUrl(String bannerUrl) {
+            this.bannerUrl = bannerUrl;
+            return this;
+        }
+
+        public Builder slug(String slug) {
+            this.slug = slug;
+            return this;
+        }
+
+        public Builder status(ArticleStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder publishedAt(LocalDateTime publishedAt) {
+            this.publishedAt = publishedAt;
+            return this;
+        }
+
+        public Article build() {
+            return new Article(this);
+        }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -72,7 +142,6 @@ public class Article {
     public Author getAuthor() {
         return author;
     }
-
     public void setAuthor(Author author) {
         this.author = author;
     }
@@ -80,7 +149,6 @@ public class Article {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -88,7 +156,6 @@ public class Article {
     public String getSubtitle() {
         return subtitle;
     }
-
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
@@ -96,15 +163,16 @@ public class Article {
     public String getBody() {
         return body;
     }
-
     public void setBody(String body) {
         this.body = body;
     }
 
+    public String getBannerUrl() { return bannerUrl; }
+    public void setBannerUrl(String bannerUrl) { this.bannerUrl = bannerUrl; }
+
     public String getSlug() {
         return slug;
     }
-
     public void setSlug(String slug) {
         this.slug = slug;
     }
@@ -112,7 +180,6 @@ public class Article {
     public int getCommentCount() {
         return commentCount;
     }
-
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
     }
@@ -120,23 +187,19 @@ public class Article {
     public int getLikeCount() {
         return likeCount;
     }
-
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
     public ArticleStatus getStatus() { return status; }
-
     public void setStatus(ArticleStatus status) { this.status = status; }
 
     public LocalDateTime getPublishedAt() { return publishedAt; }
-
     public void setPublishedAt(LocalDateTime publishedAt) { this.publishedAt = publishedAt; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -144,7 +207,6 @@ public class Article {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }

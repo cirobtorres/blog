@@ -30,7 +30,7 @@ const apiServerUrls = {
   passResetEmailRequest: API_SERVER + "/auth/password-reset-email-request",
   passResetCode: API_SERVER + "/auth/password-reset-code",
   passwordReset: API_SERVER + "/auth/password-reset",
-  me: API_SERVER + "/users/me",
+  me: API_SERVER + "/auth/me",
   // Articles
   article: {
     create: API_SERVER + "/articles",
@@ -42,7 +42,7 @@ const apiClientUrls = {
   github: API_CLIENT + "/oauth2/authorization/github",
   microsoft: "/", // TODO
   linkedin: "/", // TODO
-  me: API_CLIENT + "/users/me",
+  me: API_CLIENT + "/auth/me",
   logout: API_CLIENT + "/auth/logout",
 };
 

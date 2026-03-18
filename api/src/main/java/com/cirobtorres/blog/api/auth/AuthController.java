@@ -6,10 +6,7 @@ import com.cirobtorres.blog.api.auditToken.dtos.AuditTokenDTO;
 import com.cirobtorres.blog.api.token.dtos.PassResTokenDTO;
 import com.cirobtorres.blog.api.token.dtos.TokensDTO;
 import com.cirobtorres.blog.api.token.services.JwtService;
-import com.cirobtorres.blog.api.user.dtos.UserLoginDTO;
-import com.cirobtorres.blog.api.user.dtos.UserPasswordDTO;
-import com.cirobtorres.blog.api.user.dtos.UserRegisterDTO;
-import com.cirobtorres.blog.api.user.dtos.UserEmailDTO;
+import com.cirobtorres.blog.api.user.dtos.*;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -28,7 +25,6 @@ import java.util.UUID;
 public class AuthController {
     private final AuthService authService;
     private final JwtService jwtService;
-    // private final String clientUrl;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
@@ -37,7 +33,6 @@ public class AuthController {
             AuthService authService,
             JwtService jwtService
     ) {
-        // this.clientUrl = apiApplicationProperties.getFrontend().getUrl();
         this.authService = authService;
         this.jwtService = jwtService;
         this.isProd = apiApplicationProperties.getApplication().isProduction();
@@ -78,6 +73,12 @@ public class AuthController {
         TokensDTO tokens = authService.register(userRegisterDTO);
         jwtService.addTokensToCookies(response, tokens);
         return ResponseEntity.created(URI.create("/api/users/me")).build();
+    }
+
+    @GetMapping("me")
+    public ResponseEntity<UserDTO> me(Authentication auth) {
+        UserDTO user = authService.getUser(auth);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
     }
 
     @PostMapping("refresh")

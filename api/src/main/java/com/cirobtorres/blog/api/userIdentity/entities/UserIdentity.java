@@ -48,7 +48,7 @@ public class UserIdentity {
     @Column(name = "last_authenticated_at")
     private LocalDateTime lastAuthenticatedAt;
 
-    @Column(name = "password_hash") // Local users only
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(name = "linked_at", nullable = false, updatable = false)
@@ -62,10 +62,82 @@ public class UserIdentity {
         this.linkedAt = LocalDateTime.now();
     }
 
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    public UserIdentity() {}
+
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private UserIdentity(Builder builder) {
+        this.user = builder.user;
+        this.name = builder.name;
+        this.pictureUrl = builder.pictureUrl;
+        this.provider = builder.provider;
+        this.providerUserId = builder.providerUserId;
+        this.providerEmail = builder.providerEmail;
+        this.isProviderEmailVerified = builder.isProviderEmailVerified;
+        this.passwordHash = builder.passwordHash;
+    }
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private User user;
+        private String name;
+        private String pictureUrl;
+        private UserIdentityProvider provider;
+        private String providerUserId;
+        private String providerEmail;
+        private Boolean isProviderEmailVerified;
+        private String passwordHash;
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder pictureUrl(String pictureUrl) {
+            this.pictureUrl = pictureUrl;
+            return this;
+        }
+
+        public Builder provider(UserIdentityProvider provider) {
+            this.provider = provider;
+            return this;
+        }
+
+        public Builder providerUserId(String providerUserId) {
+            this.providerUserId = providerUserId;
+            return this;
+        }
+
+        public Builder providerEmail(String providerEmail) {
+            this.providerEmail = providerEmail;
+            return this;
+        }
+
+        public Builder isProviderEmailVerified(boolean isProviderEmailVerified) {
+            this.isProviderEmailVerified = isProviderEmailVerified;
+            return this;
+        }
+
+        public Builder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+            return this;
+        }
+
+        public UserIdentity build() {
+            return new UserIdentity(this);
+        }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -73,7 +145,6 @@ public class UserIdentity {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
@@ -81,7 +152,6 @@ public class UserIdentity {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -89,7 +159,6 @@ public class UserIdentity {
     public String getPictureUrl() {
         return pictureUrl;
     }
-
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }
@@ -97,7 +166,6 @@ public class UserIdentity {
     public UserIdentityProvider getProvider() {
         return provider;
     }
-
     public void setProvider(UserIdentityProvider provider) {
         this.provider = provider;
     }
@@ -105,7 +173,6 @@ public class UserIdentity {
     public String getProviderUserId() {
         return providerUserId;
     }
-
     public void setProviderUserId(String providerUserId) {
         this.providerUserId = providerUserId;
     }
@@ -113,7 +180,6 @@ public class UserIdentity {
     public String getProviderEmail() {
         return providerEmail;
     }
-
     public void setProviderEmail(String providerEmail) {
         this.providerEmail = providerEmail;
     }
@@ -121,31 +187,19 @@ public class UserIdentity {
     public Boolean isProviderEmailVerified() {
         return isProviderEmailVerified;
     }
-
-    public void setIsProviderEmailVerified(Boolean isProviderEmailVerified) {
-        this.isProviderEmailVerified = isProviderEmailVerified;
-    }
+    public void setIsProviderEmailVerified(Boolean isProviderEmailVerified) { this.isProviderEmailVerified = isProviderEmailVerified; }
 
     public LocalDateTime isProviderEmailVerifiedAt() {
         return isProviderEmailVerifiedAt;
     }
-
-    public void setIsProviderEmailVerifiedAt(LocalDateTime isProviderEmailVerifiedAt) {
-        this.isProviderEmailVerifiedAt = isProviderEmailVerifiedAt;
-    }
+    public void setIsProviderEmailVerifiedAt(LocalDateTime isProviderEmailVerifiedAt) { this.isProviderEmailVerifiedAt = isProviderEmailVerifiedAt; }
 
     public LocalDateTime getLastAuthenticatedAt() {
         return lastAuthenticatedAt;
     }
+    public void setLastAuthenticatedAt(LocalDateTime lastAuthenticatedAt) { this.lastAuthenticatedAt = lastAuthenticatedAt; }
 
-    public void setLastAuthenticatedAt(LocalDateTime lastAuthenticatedAt) {
-        this.lastAuthenticatedAt = lastAuthenticatedAt;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
+    public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
@@ -153,7 +207,6 @@ public class UserIdentity {
     public LocalDateTime getLinkedAt() {
         return linkedAt;
     }
-
     public void setLinkedAt(LocalDateTime linkedAt) {
         this.linkedAt = linkedAt;
     }
@@ -161,7 +214,6 @@ public class UserIdentity {
     public boolean isEnabled() {
         return enabled;
     }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

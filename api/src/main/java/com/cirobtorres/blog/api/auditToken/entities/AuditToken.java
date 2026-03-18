@@ -38,8 +38,10 @@ public class AuditToken {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
     public AuditToken() {}
 
+    // BUILDER----------------------------------------------------------------------------------------------------
     private AuditToken(Builder builder) {
         this.tokenHash = builder.tokenHash;
         this.tokenType = builder.tokenType;
@@ -47,39 +49,6 @@ public class AuditToken {
         this.expiresAt = builder.expiresAt;
         this.revoked = builder.revoked;
     }
-
-    // Getters e Setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-
-    public String getTokenHash() { return tokenHash; }
-    public void setTokenHash(String token) { this.tokenHash = token; }
-
-    public UserIdentity getUserIdentity() { return userIdentity; }
-    public void setUserIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; }
-
-    public AuditTokenType getTokenType() { return tokenType; }
-    public void setTokenType(AuditTokenType tokenType) { this.tokenType = tokenType; }
-
-    public LocalDateTime getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
-
-    public boolean isRevoked() { return revoked; }
-    public void setRevoked(boolean revoked) { this.revoked = revoked; }
-
-    public LocalDateTime getRevokedAt() { return revokedAt; }
-    public void setRevokedAt(LocalDateTime revokedAt) { this.revokedAt = revokedAt; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiresAt);
-    }
-
-    public boolean isValid() {
-        return !revoked && !isExpired();
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -119,5 +88,38 @@ public class AuditToken {
         public AuditToken build() {
             return new AuditToken(this);
         }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+
+    public String getTokenHash() { return tokenHash; }
+    public void setTokenHash(String tokenHash) { this.tokenHash = tokenHash; }
+
+    public UserIdentity getUserIdentity() { return userIdentity; }
+    public void setUserIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; }
+
+    public AuditTokenType getTokenType() { return tokenType; }
+    public void setTokenType(AuditTokenType tokenType) { this.tokenType = tokenType; }
+
+    public LocalDateTime getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+
+    public boolean isRevoked() { return revoked; }
+    public void setRevoked(boolean revoked) { this.revoked = revoked; }
+
+    public LocalDateTime getRevokedAt() { return revokedAt; }
+    public void setRevokedAt(LocalDateTime revokedAt) { this.revokedAt = revokedAt; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    // HELPERS----------------------------------------------------------------------------------------------------
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(this.expiresAt);
+    }
+    public boolean isValid() {
+        return !revoked && !isExpired();
     }
 }

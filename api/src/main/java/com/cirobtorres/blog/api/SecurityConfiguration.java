@@ -112,7 +112,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/auth/validation",
-                                "/users/me",
+                                "/auth/me",
                                 "/articles"
                         ).permitAll()
                         .requestMatchers(

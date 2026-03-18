@@ -34,13 +34,13 @@ public class User {
     private LocalDateTime lastLogin;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted; // User delete his account
+    private boolean isDeleted;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Column(name = "is_banned")
-    private boolean isBanned; // Banned by moderator
+    private boolean isBanned;
 
     @Column(name = "banned_at")
     private LocalDateTime bannedAt;
@@ -67,10 +67,41 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    public User() {}
+
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private User(Builder builder) {
+        this.email = builder.email;
+        this.authorities = builder.authorities;
+        this.authorities.addAll(builder.authorities); // ManyToMany (Unidirectional or Bidirectional)
+    }
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private String email;
+        private Set<Authority> authorities = new HashSet<>();
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder authorities(Set<Authority> authorities) {
+            this.authorities = authorities;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -89,87 +120,36 @@ public class User {
         identity.setUser(null);
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
 
-    public LocalDateTime getLastLogin() {
-        return lastLogin;
-    }
+    public boolean isDeleted() { return isDeleted; }
+    public void setDeleted(boolean deleted) { isDeleted = deleted; }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
-    }
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public boolean isBanned() {
-        return isBanned;
-    }
-
+    public boolean isBanned() { return isBanned; }
     public void setBanned(boolean banned) { isBanned = banned; }
 
-    public LocalDateTime getBannedAt() {
-        return bannedAt;
-    }
+    public LocalDateTime getBannedAt() { return bannedAt; }
+    public void setBannedAt(LocalDateTime bannedAt) { this.bannedAt = bannedAt; }
 
-    public void setBannedAt(LocalDateTime bannedAt) {
-        this.bannedAt = bannedAt;
-    }
+    public LocalDateTime getBannedUntil() { return bannedUntil; }
+    public void setBannedUntil(LocalDateTime bannedUntil) { this.bannedUntil = bannedUntil; }
 
-    public LocalDateTime getBannedUntil() {
-        return bannedUntil;
-    }
-
-    public void setBannedUntil(LocalDateTime bannedUntil) {
-        this.bannedUntil = bannedUntil;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
+    public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public Set<Authority> getAuthorities() { return authorities; }
+    public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
 
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }

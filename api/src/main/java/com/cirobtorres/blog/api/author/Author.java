@@ -35,6 +35,9 @@ public class Author {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @Column(name = "picture_url")
+    private String pictureUrl;
+
     @OneToMany(mappedBy = "author")
     private List<Article> articles;
 
@@ -46,10 +49,31 @@ public class Author {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    public Author() {}
+
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private Author(Builder builder) {
+        this.user = builder.user;
+    }
+
+    public static class Builder {
+        private User user;
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Author build() {
+            return new Author(this);
+        }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -57,15 +81,16 @@ public class Author {
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
 
+    public String getPictureUrl() { return pictureUrl; }
+    public void setPictureUrl(String pictureUrl) { this.pictureUrl = pictureUrl; }
+
     public List<Article> getArticles() {
         return articles;
     }
-
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
@@ -73,7 +98,6 @@ public class Author {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -81,7 +105,6 @@ public class Author {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }

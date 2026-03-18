@@ -14,13 +14,33 @@ public class Authority {
 
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private AuthorityType name; // USER, AUTHOR, ADMIN, SUPER_ADMIN
+    private AuthorityType name; // USER, AUTHOR
 
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    public Authority() {}
+
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private Authority(Builder builder) {
+        this.name = builder.name;
+    }
+
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private AuthorityType name;
+
+        public Builder authorityType(AuthorityType name) {
+            this.name = name;
+            return this;
+        }
+
+        public Authority build() { return new Authority(this); }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() { return id; }
-
     public void setId(UUID id) { this.id = id; }
 
     public AuthorityType getName() { return name; }
-
     public void setName(AuthorityType name) { this.name = name; }
 }

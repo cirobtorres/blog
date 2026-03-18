@@ -16,12 +16,10 @@ import com.cirobtorres.blog.api.token.enums.TokenType;
 import com.cirobtorres.blog.api.token.interfaces.AuthorityExtractorRepository;
 import com.cirobtorres.blog.api.token.interfaces.RefreshTokenRepository;
 import com.cirobtorres.blog.api.token.services.JwtService;
-import com.cirobtorres.blog.api.user.dtos.UserEmailDTO;
-import com.cirobtorres.blog.api.user.dtos.UserPasswordDTO;
-import com.cirobtorres.blog.api.user.dtos.UserRegisterDTO;
+import com.cirobtorres.blog.api.user.dtos.*;
 import com.cirobtorres.blog.api.user.entities.User;
-import com.cirobtorres.blog.api.user.dtos.UserLoginDTO;
 import com.cirobtorres.blog.api.user.repositories.UserRepository;
+import com.cirobtorres.blog.api.user.services.UserService;
 import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
 import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import com.cirobtorres.blog.api.userIdentity.repositories.UserIdentityRepository;
@@ -56,6 +54,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuditTokenService auditTokenService;
     private final AuditTokenRepository auditTokenRepository;
+    private final UserService userService;
     private final UserIdentityService userIdentityService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthorityExtractorRepository authorityExtractor;
@@ -71,6 +70,7 @@ public class AuthService {
             JwtService jwtService,
             AuditTokenService auditTokenService,
             AuditTokenRepository auditTokenRepository,
+            UserService userService,
             UserIdentityService userIdentityService,
             RefreshTokenRepository refreshTokenRepository,
             AuthorityExtractorRepository authorityExtractor
@@ -82,6 +82,7 @@ public class AuthService {
         this.jwtService = jwtService;
         this.auditTokenService = auditTokenService;
         this.auditTokenRepository = auditTokenRepository;
+        this.userService = userService;
         this.userIdentityService = userIdentityService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.authorityExtractor = authorityExtractor;
@@ -155,6 +156,15 @@ public class AuthService {
     }
 
     @Transactional
+    public UserDTO getUser(Authentication auth) {
+        if (!isProd) log.info("AuthService.getUser(): BEGIN");
+        UserDTO user = userService.getAuthenticatedUserDTO(auth);
+        if (!isProd) log.info("AuthService.getUser(): user={}", user != null);
+        if (!isProd) log.info("AuthService.getUser(): END");
+        return user;
+    }
+
+    @Transactional
     public void renewCode(UUID userId) throws MessagingException, NoSuchAlgorithmException {
         if (!isProd) log.info("AuthService.renewCode()");
         // Locate user
@@ -173,15 +183,6 @@ public class AuthService {
                 userIdentity,
                 AuditTokenType.EMAIL_VALIDATION
         );
-
-        // Delete old code (if exists)
-        // if (existingToken.isPresent()) {
-        //     LocalDateTime lastGenerated = existingToken.get().getExpiresAt().minusHours(1);
-        //     if (lastGenerated.isAfter(LocalDateTime.now().minusSeconds(60))) {
-        //         log.warn("User {} is requesting too many codes.", userId);
-        //         throw new TooManyRequestsException("Aguarde um minuto antes de solicitar um novo código.");
-        //     }
-        // }
 
         // Create code
         String token = auditTokenService.createEmailCode(
@@ -390,6 +391,7 @@ public class AuthService {
 
     @Transactional
     public void passwordReset(UserPasswordDTO passwordDTO) {
+        if (!isProd) log.info("AuthService.passwordReset(): BEGIN");
         if (!isProd) log.info("AuthService.passwordReset(): passwordDTO={}", passwordDTO.password());
         // Get userId from JWT subject
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -427,7 +429,7 @@ public class AuthService {
         User user = userIdentity.getUser();
 
         if (!Boolean.TRUE.equals(userIdentity.isProviderEmailVerified())) {
-            throw new SecurityException("Email não verificado.");
+            throw new SecurityException("User identity email is unvalidated or was not verified.");
         }
 
         return user;
@@ -437,40 +439,50 @@ public class AuthService {
         User user = userIdentity.getUser();
 
         if (!userIdentity.isEnabled()) {
-            throw new DisabledException("Usuário trancado.");
+            throw new DisabledException("User enabled = false.");
         }
 
         if (user.isBanned()) {
-            throw new LockedException("Usuário banido.");
+            throw new LockedException("User banned = true.");
         }
 
         return user;
     }
 
     private TokensDTO loginTokens(User user) throws NoSuchAlgorithmException {
+        if (!isProd) log.info("AuthService.loginTokens(): BEGIN");
         List<String> authorities = authorityExtractor.fromUser(user);
         String subject = user.getId().toString();
+
         String accessToken = jwtService.createAccessToken(subject, authorities, "LOCAL");
         String refreshToken = jwtService.createRefreshToken(subject);
-        RefreshToken refreshTokenEntity = new RefreshToken();
-        refreshTokenEntity.setUserId(user.getId());
 
-        String refreshTokenHash = jwtService.hashToken(refreshToken);
-        refreshTokenEntity.setTokenHash(refreshTokenHash);
-        refreshTokenEntity.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS));
-        refreshTokenEntity.setRevoked(false);
+        if (!isProd) log.info("AuthService.loginTokens(): accessToken={} refreshToken={}", accessToken, refreshToken);
+
+        RefreshToken refreshTokenEntity = RefreshToken
+                .builder()
+                .userId(user.getId())
+                .tokenHash(jwtService.hashToken(refreshToken))
+                .expiresAt(Instant.now().plus(7, ChronoUnit.DAYS))
+                .revoked(false)
+                .build();
 
         refreshTokenRepository.save(refreshTokenEntity);
 
-        if (!isProd) log.info("AuthService.loginTokens(): accessToken={} refreshToken={}", accessToken, refreshToken);
-        return new TokensDTO(accessToken, refreshToken);
+        TokensDTO tokensDTO = new TokensDTO(accessToken, refreshToken);
+
+        if (!isProd) log.info("AuthService.loginTokens(): tokensDTO={}", tokensDTO);
+        if (!isProd) log.info("AuthService.loginTokens(): END");
+        return tokensDTO;
     }
 
     private PassResTokenDTO passResetToken(User user) {
+        if (!isProd) log.info("AuthService.passResetToken(): BEGIN");
         List<String> authorities = authorityExtractor.fromUser(user);
         String subject = user.getId().toString();
         Instant issuedAt = Instant.now();
         Instant expiresAt = issuedAt.plus(15, ChronoUnit.MINUTES);
+
         String passResetToken = jwtService.createToken(
                 subject,
                 authorities,
@@ -479,10 +491,16 @@ public class AuthService {
                 expiresAt,
                 null
         );
-        return new PassResTokenDTO(passResetToken);
+
+        PassResTokenDTO passResTokenDTO = new PassResTokenDTO(passResetToken);
+
+        if (!isProd) log.info("AuthService.passResetToken(): passResTokenDTO={}", passResTokenDTO);
+        if (!isProd) log.info("AuthService.passResetToken(): END");
+        return passResTokenDTO;
     }
 
     private void userExistsLocally(String email) {
+        if (!isProd) log.info("AuthService.userExistsLocally(): email={}", email);
         userRepository.findByEmail(email).ifPresent(user -> {
             boolean hasLocalIdentity = user
                     .getIdentities()
@@ -497,6 +515,7 @@ public class AuthService {
     }
 
     private String formatProviderName(UserIdentityProvider provider) {
+        if (!isProd) log.info("AuthService.formatProviderName(): provider={}", provider);
         return switch (provider) {
             case GOOGLE -> "ao Google";
             case GITHUB -> "ao GitHub";

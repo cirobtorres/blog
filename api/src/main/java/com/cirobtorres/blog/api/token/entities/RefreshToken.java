@@ -25,7 +25,7 @@ public class RefreshToken {
     private UUID userId;
 
     @Column(name = "token_hash", nullable = false, unique = true, length = 64)
-    private String tokenHash; // Do never save an unhashed token!
+    private String tokenHash;
 
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
@@ -35,32 +35,74 @@ public class RefreshToken {
     private Instant createdAt;
 
     @Column(nullable = false)
-    private boolean revoked; // Not reusable
+    private boolean revoked;
 
     @Column(name = "revoked_at")
     private Instant revokedAt;
 
-    // @Column(name = "replaced_by_token_hash")
-    // private String replacedByTokenHash;
+     @Column(name = "replaced_by_token_hash")
+     private String replacedByTokenHash;
 
-    // @Column(name = "ip_address")
-    // private String ipAddress;
+    // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    public RefreshToken() {}
 
-    // @Column(name = "user_agent")
-    // private String userAgent;
+    // BUILDER----------------------------------------------------------------------------------------------------
+    private RefreshToken(Builder builder) {
+        this.userId = builder.userId;
+        this.tokenHash = builder.tokenHash;
+        this.expiresAt = builder.expiresAt;
+        this.revoked = builder.revoked;
+        this.revokedAt = builder.revokedAt;
+    }
 
+    public static Builder builder() { return new Builder(); }
+
+    public static class Builder {
+        private UUID userId;
+        private String tokenHash;
+        private Instant expiresAt;
+        private boolean revoked;
+        private Instant revokedAt;
+
+        public Builder userId(UUID userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder tokenHash(String tokenHash) {
+            this.tokenHash = tokenHash;
+            return this;
+        }
+
+        public Builder expiresAt(Instant expiresAt) {
+            this.expiresAt = expiresAt;
+            return this;
+        }
+
+        public Builder revoked(boolean revoked) {
+            this.revoked = revoked;
+            return this;
+        }
+
+        public Builder revokedAt(Instant revokedAt) {
+            this.revokedAt = revokedAt;
+            return this;
+        }
+
+        public RefreshToken build() {
+            return new RefreshToken(this);
+        }
+    }
+
+    // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() {
         return id;
     }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
     public UUID getUserId() {
         return userId;
     }
-
     public void setUserId(UUID userId) {
         this.userId = userId;
     }
@@ -68,7 +110,6 @@ public class RefreshToken {
     public String getTokenHash() {
         return tokenHash;
     }
-
     public void setTokenHash(String tokenHash) {
         this.tokenHash = tokenHash;
     }
@@ -76,7 +117,6 @@ public class RefreshToken {
     public Instant getExpiresAt() {
         return expiresAt;
     }
-
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
     }
@@ -84,7 +124,6 @@ public class RefreshToken {
     public boolean isRevoked() {
         return revoked;
     }
-
     public void setRevoked(boolean revoked) {
         this.revoked = revoked;
     }
@@ -92,7 +131,6 @@ public class RefreshToken {
     public Instant getRevokedAt() {
         return revokedAt;
     }
-
     public void setRevokedAt(Instant revokedAt) {
         this.revokedAt = revokedAt;
     }
@@ -100,32 +138,10 @@ public class RefreshToken {
     public Instant getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    // public String getReplacedByTokenHash() {
-    //     return replacedByTokenHash;
-    // }
-
-    // public void setReplacedByTokenHash(String replacedByTokenHash) {
-    //     this.replacedByTokenHash = replacedByTokenHash;
-    // }
-
-    // public String getIpAddress() {
-    //     return ipAddress;
-    // }
-
-    // public void setIpAddress(String ipAddress) {
-    //     this.ipAddress = ipAddress;
-    // }
-
-    // public String getUserAgent() {
-    //     return userAgent;
-    // }
-
-    // public void setUserAgent(String userAgent) {
-    //     this.userAgent = userAgent;
-    // }
+    public String getReplacedByTokenHash() { return replacedByTokenHash; }
+    public void setReplacedByTokenHash(String replacedByTokenHash) { this.replacedByTokenHash = replacedByTokenHash; }
 }

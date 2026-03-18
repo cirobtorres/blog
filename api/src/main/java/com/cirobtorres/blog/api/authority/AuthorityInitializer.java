@@ -21,8 +21,12 @@ public class AuthorityInitializer implements ApplicationRunner {
         for (AuthorityType authorityEnum : AuthorityType.values()) {
             authorityRepository.findByName(authorityEnum)
                     .orElseGet(() -> {
-                        Authority authority = new Authority();
-                        authority.setName(authorityEnum);
+                        // Authority authority = new Authority();
+                        // authority.setName(authorityEnum);
+                        Authority authority = Authority
+                                .builder()
+                                .authorityType(authorityEnum)
+                                .build();
                         return authorityRepository.save(authority);
                     });
         }

@@ -22,7 +22,6 @@ public class ApiApplicationProperties {
         public String getUrl() {
             return url;
         }
-
         public void setUrl(String url) {
             this.url = url;
         }
@@ -38,7 +37,6 @@ public class ApiApplicationProperties {
         public String getPrivateKey() {
             return privateKey;
         }
-
         public void setPrivateKey(String privateKey) {
             this.privateKey = privateKey;
         }
@@ -46,7 +44,6 @@ public class ApiApplicationProperties {
         public String getPublicKey() {
             return publicKey;
         }
-
         public void setPublicKey(String publicKey) {
             this.publicKey = publicKey;
         }
@@ -54,7 +51,6 @@ public class ApiApplicationProperties {
         public String getUrl() {
             return url;
         }
-
         public void setUrl(String url) {
             this.url = url;
         }
@@ -62,7 +58,6 @@ public class ApiApplicationProperties {
         public String getMailerFrom() {
             return mailerFrom;
         }
-
         public void setMailerFrom(String mailerFrom) {
             this.mailerFrom = mailerFrom;
         }
@@ -70,7 +65,6 @@ public class ApiApplicationProperties {
         public boolean isProduction() {
             return production;
         }
-
         public void setProduction(boolean production) {
             this.production = production;
         }
@@ -86,7 +80,6 @@ public class ApiApplicationProperties {
         public String getIssuer() {
             return issuer;
         }
-
         public void setIssuer(String issuer) {
             this.issuer = issuer;
         }
@@ -94,7 +87,6 @@ public class ApiApplicationProperties {
         public long getExpAccToken() {
             return expAccToken;
         }
-
         public void setExpAccToken(long expAccToken) {
             this.expAccToken = expAccToken;
         }
@@ -102,7 +94,6 @@ public class ApiApplicationProperties {
         public long getExpRefToken() {
             return expRefToken;
         }
-
         public void setExpRefToken(long expRefToken) {
             this.expRefToken = expRefToken;
         }
@@ -110,7 +101,6 @@ public class ApiApplicationProperties {
         public String getAccTokenPath() {
             return accTokenPath;
         }
-
         public void setAccTokenPath(String accTokenPath) {
             this.accTokenPath = accTokenPath;
         }
@@ -118,7 +108,6 @@ public class ApiApplicationProperties {
         public String getRefTokenPath() {
             return refTokenPath;
         }
-
         public void setRefTokenPath(String refTokenPath) {
             this.refTokenPath = refTokenPath;
         }

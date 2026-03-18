@@ -49,6 +49,7 @@ public class UserService {
                 currentProvider = providerClaim.toUpperCase();
             }
         }
+
         // Fallback: LOCAL login
         else if (auth.getDetails() instanceof Map) {
             @SuppressWarnings("unchecked")

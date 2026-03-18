@@ -120,16 +120,19 @@ public class JwtService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
 
         List<String> authorities = authorityExtractor.fromUser(user); // Lazy
-
         String tokenSubject = user.getId().toString();
+
         String accessToken = createAccessToken(tokenSubject, authorities, provider);
         String refreshToken = createRefreshToken(tokenSubject);
 
-        RefreshToken refreshTokenEntity = new RefreshToken();
-        refreshTokenEntity.setUserId(user.getId());
-        refreshTokenEntity.setTokenHash(hashToken(refreshToken));
-        refreshTokenEntity.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS));
-        refreshTokenEntity.setRevoked(false);
+        RefreshToken refreshTokenEntity = RefreshToken
+                .builder()
+                .userId(user.getId())
+                .tokenHash(hashToken(refreshToken))
+                .expiresAt(Instant.now().plus(7, ChronoUnit.DAYS))
+                .revoked(false)
+                .build();
+
         refreshTokenRepository.save(refreshTokenEntity);
 
         return new TokensDTO(accessToken, refreshToken);

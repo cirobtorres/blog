@@ -43,9 +43,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("me")
-    public ResponseEntity<UserDTO> me(Authentication auth) {
-        UserDTO user = userService.getAuthenticatedUserDTO(auth);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
-    }
+    // @GetMapping("me")
+    // public ResponseEntity<UserDTO> me(Authentication auth) {
+    //     UserDTO user = userService.getAuthenticatedUserDTO(auth);
+    //     return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
+    // }
 }
