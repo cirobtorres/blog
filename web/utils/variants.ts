@@ -9,7 +9,7 @@ const cn = (...inputs: ClassValue[]): string => {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950";
+  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary";
 
 const hoverRing =
   "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";
@@ -21,7 +21,7 @@ const focusRingOTPSlot =
   "data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-3 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900/25 data-[active=true]:ring-offset-stone-950 dark:data-[active=true]:ring-2 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
 
 const buttonVariants = cva(
-  "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow " +
+  "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow focus-visible:border-primary dark:focus-visible:border-primary " +
     focusRing,
   {
     variants: {
@@ -29,12 +29,12 @@ const buttonVariants = cva(
         default:
           "text-neutral-100 bg-primary/65 border-primary hover:bg-primary/80",
         outline:
-          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:bg-stone-900 dark:hover:text-neutral-100",
         ghost:
-          "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 focus-visible:border-stone-400 dark:hover:text-neutral-100 dark:focus-visible:border-stone-700",
+          "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
         destructive:
-          "border-destructive bg-destructive/50 dark:border-destructive/50 dark:bg-destructive/25",
-        link: "text-primary underline-offset-4 hover:underline",
+          "border-destructive bg-destructive/50 dark:border-destructive/50 dark:bg-destructive/25 focus-visible:border-destructive dark:focus-visible:border-destructive",
+        link: "text-primary bg-stone-200 dark:bg-stone-925 hover:border-stone-400 dark:hover:bg-stone-900 dark:hover:border-stone-600",
       },
     },
     defaultVariants: {
@@ -56,9 +56,9 @@ const linkVariants = cva(
         external:
           "font-bold text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2",
         markdown:
-          "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2",
+          "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2 focus-visible:border-primary dark:focus-visible:border-primary",
         button:
-          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 hover:border-stone-400 focus-visible:border-stone-400 dark:border-stone-700 dark:hover:border-stone-600 dark:focus-visible:border-stone-600",
+          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 hover:border-stone-400 focus-visible:border-primary dark:border-stone-700 dark:hover:border-stone-600 focus-visible:border-primary dark:focus-visible:border-primary",
       },
     },
     defaultVariants: {

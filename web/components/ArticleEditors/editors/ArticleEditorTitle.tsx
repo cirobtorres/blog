@@ -1,5 +1,5 @@
 import { cn } from "../../../utils/variants";
-import { focusWithinRing } from "../utils";
+import { focusVisibleRing } from "../utils";
 
 export function ArticleEditorTitle({
   error,
@@ -24,11 +24,11 @@ export function ArticleEditorTitle({
         rows={2}
         maxLength={128}
         spellCheck={false}
-        placeholder="Lorem, ipsum dolor."
+        placeholder=""
         className={cn(
           "resize-none p-2 text-sm outline-none border not-dark:shadow bg-stone-200 dark:bg-stone-900 rounded-sm transition-all duration-300 peer scrollbar",
           // hoverRing,
-          focusWithinRing,
+          focusVisibleRing,
           error
             ? "placeholder:text-destructive/40 border-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
             : "placeholder:text-neutral-700",

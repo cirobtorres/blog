@@ -37,7 +37,7 @@ export default function SignUpPage() {
           <h1 className="text-3xl font-bold mb-8">Cadastrar</h1>
 
           <Alert title="Site em construção" variant="warn">
-            Contas cadastradas aqui poderão ser apagadas no futuro.
+            Contas cadastradas aqui serão apagadas no futuro.
           </Alert>
 
           <Suspense fallback={SignUpFormLoad()}>

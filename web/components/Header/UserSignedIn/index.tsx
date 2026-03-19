@@ -1,9 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { cn, focusRing } from "../../../utils/variants";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { Link } from "../../Links";
 import { protectedWebUrls } from "../../../config/routes";
-import { usePathname } from "next/navigation";
 import { logout } from "../../../services/auth/logout";
 import { Dispatch, SetStateAction } from "react";
 
@@ -18,7 +19,6 @@ const UserSignedIn = ({
   user: AuthSessionConfirmed;
   setUserState: Dispatch<SetStateAction<AuthSession | null>>;
 }) => {
-  const pathname = usePathname();
   return (
     <div className="ml-auto mr-0">
       <Popover>
@@ -105,7 +105,7 @@ const UserSignedIn = ({
           <div className={elStyleWrapper}>
             <button
               onClick={async () => {
-                await logout(pathname);
+                await logout();
                 setUserState({ ok: false, data: null });
               }}
               className={elStyleItem}

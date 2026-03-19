@@ -1,15 +1,15 @@
 "use server";
 
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
+// import { getSessionUser } from "../../../services/auth/session/server/getSessionUser";
 import { ArticleCreate } from "../../../components/Forms/ArticleCreate";
-import { getSessionUser } from "../../../services/auth/session/server/getSessionUser";
 
 export default async function AuthorsArticlesPage() {
-  const { authorized, user } = await getSessionUser();
+  // const { authorized, user } = await getSessionUser();
 
-  if (!authorized) notFound();
+  // if (!authorized) notFound();
 
-  if (!user) return;
+  // if (!user) return;
 
   return <ArticleCreate />;
 }

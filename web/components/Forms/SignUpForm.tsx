@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
+import { cn, focusRing } from "../../utils/variants";
 
 const SignUpForm = () => {
   const [name, setName] = React.useState("");
@@ -143,7 +144,14 @@ const SignUpForm = () => {
                 setTermsDialog(!termsDialog);
               }}
             >
-              <span className="cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 transition-colors duration-300">
+              <span
+                role="button"
+                tabIndex={0}
+                className={cn(
+                  "cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 rounded transition-[colors,box-shadow] duration-300",
+                  focusRing,
+                )}
+              >
                 políticas de privacidade e uso de dados
               </span>
             </AlertDialogTrigger>
