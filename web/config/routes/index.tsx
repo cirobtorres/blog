@@ -17,7 +17,8 @@ const pubWebUrlsAbsPath = {
 };
 
 const protectedWebUrls = {
-  authors: "/authors",
+  authors: "/users/authors",
+  media: "/users/authors/media",
 };
 
 const apiServerUrls = {

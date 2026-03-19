@@ -319,8 +319,8 @@ export function HtmlEditor({
             }
             className={cn(
               editorState?.isActiveHeading2
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800 hover:bg-stone-450 dark:hover:bg-stone-750"
+                : "[&_svg]:stroke-neutral-400 dark:[&_svg]:stroke-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
               "cursor-pointer transition-all duration-300",
               focusRing,
             )}
@@ -727,4 +727,4 @@ export function HtmlEditor({
 }
 
 const btnGroupStyle =
-  "flex [&_button]:border [&_button]:first:rounded-l [&_button]:border-r-0 [&_button]:last:border-r [&_button]:last:rounded-r [&_button]:focus-visible:z-10";
+  "flex [&_button]:border [&_button]:first:rounded-l [&_button]:border-r-0 [&_button]:last:border-r [&_button]:last:rounded-r [&_button]:focus-visible:z-10 [&_button]:focus-visible:border-transparent";

@@ -117,7 +117,7 @@ export function ArticleCreate() {
   );
 
   return (
-    <form className="w-full max-w-4xl ml-0 mr-auto min-[1536px]:mx-auto justify-self-center flex-1 flex flex-col gap-2 p-2">
+    <form className="w-full max-w-4xl mx-auto flex-1 flex flex-col gap-2 p-2">
       <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
       {publishState.error ? (
         <Alert title="Erros" variant="default">
@@ -215,7 +215,7 @@ export function ArticleCreate() {
             type="submit"
             formAction={onPublishAction}
             variant="outline"
-            className="w-full h-8 max-w-40 text-neutral-100 dark:text-neutral-100 bg-emerald-500/75 border-emerald-500"
+            className="w-full h-8 max-w-40 text-neutral-100 dark:text-neutral-100 bg-emerald-500/75 border-emerald-500 dark:bg-emerald-500/75 dark:border-emerald-500"
           >
             {isSavePending && <Spinner />} Salvar
           </Button>

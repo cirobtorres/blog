@@ -9,7 +9,7 @@ import {
   Disable,
   Drag,
   MoveDownward,
-} from "./accordion-buttons";
+} from "./accordionButtons";
 
 const focusWithinRing =
   "has-[[data-slot=accordion-trigger]:focus-visible]:outline-none has-[[data-slot=accordion-trigger]:focus-visible]:ring-3 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-900/25 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-100 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-neutral-950";
@@ -40,13 +40,14 @@ function EditorsAccordionItem({
     <AccordionPrimitive.Item
       data-slot="accordion-item"
       className={cn(
-        "w-full h-full rounded-sm overflow-hidden border not-dark:shadow",
+        "w-full h-full rounded overflow-hidden border not-dark:shadow",
         !locked && focusRing,
         !locked && focusWithinRing,
-        locked && "border-stone-800",
-        hasError
-          ? "border-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
-          : "bg-stone-200 dark:bg-stone-900",
+        locked
+          ? "bg-stone-900 border-stone-800"
+          : hasError
+            ? "border-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
+            : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-primary dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 group",
         className,
       )}
       {...props}
@@ -95,11 +96,11 @@ function EditorsAccordionTrigger({
           <span className="text-sm">{label}</span>
         </div>
       </AccordionPrimitive.Trigger>
-      <div className="flex items-center gap-0.5 px-1.5">
+      <div className="flex items-center gap-1 px-1.5">
         <Disable onDisable={onDisable} locked={locked} />
         <Delete onDelete={onDelete} locked={locked} />
         <MoveDownward moveDownward={moveDownward} locked={locked} />
-        <Drag />
+        <Drag locked={locked} />
       </div>
     </AccordionPrimitive.Header>
   );

@@ -78,7 +78,7 @@ const UserSignedIn = ({
               Autor
             </Link>
             <Link
-              href={protectedWebUrls.authors}
+              href={protectedWebUrls.media}
               className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
             >
               <MediaIcon />
@@ -110,7 +110,6 @@ const UserSignedIn = ({
               }}
               className={elStyleItem}
             >
-              {/* <LogoutIcon /> */}
               Sair
             </button>
           </div>
@@ -245,25 +244,6 @@ const CustomSystemThemeIcon = () => (
     <path d="M22 13v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
     <path d="M8 21h8" />
     <circle cx="18" cy="6" r="3" />
-  </svg>
-);
-
-const LogoutIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="size-3"
-  >
-    <path d="m16 17 5-5-5-5" />
-    <path d="M21 12H9" />
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
   </svg>
 );
 

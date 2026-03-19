@@ -20,6 +20,9 @@ const focusRingOTPGroup =
 const focusRingOTPSlot =
   "data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-3 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900/25 data-[active=true]:ring-offset-stone-950 dark:data-[active=true]:ring-2 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
 
+const focusVisibleRing =
+  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 focus-visible:border-primary dark:focus-visible:border-primary";
+
 const buttonVariants = cva(
   "border cursor-pointer disabled:cursor-not-allowed rounded bg-clip-padding text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow focus-visible:border-primary dark:focus-visible:border-primary " +
     focusRing,
@@ -29,11 +32,11 @@ const buttonVariants = cva(
         default:
           "text-neutral-100 bg-primary/65 border-primary hover:bg-primary/80",
         outline:
-          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:bg-stone-900 dark:hover:text-neutral-100",
+          "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600",
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100",
         destructive:
-          "border-destructive bg-destructive/50 dark:border-destructive/50 dark:bg-destructive/25 focus-visible:border-destructive dark:focus-visible:border-destructive",
+          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 hover:border-destructive/75 dark:hover:border-destructive/75 hover:bg-destructive/30 dark:hover:bg-destructive/30 focus-visible:border-destructive dark:focus-visible:border-destructive",
         link: "text-primary bg-stone-200 dark:bg-stone-925 hover:border-stone-400 dark:hover:bg-stone-900 dark:hover:border-stone-600",
       },
     },
@@ -94,6 +97,7 @@ export {
   hoverRing,
   focusRingOTPGroup,
   focusRingOTPSlot,
+  focusVisibleRing,
   buttonVariants,
   linkVariants,
   alertVariants,

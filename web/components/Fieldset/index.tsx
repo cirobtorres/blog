@@ -33,11 +33,11 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     placeholder={props.placeholder ?? ""}
     aria-invalid={!!error}
     className={cn(
-      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-[transform,box-shadow] duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border peer",
+      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
       error
         ? "text-neutral-100 border-destructive/50 focus:placeholder:text-destructive/50"
-        : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500",
+        : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 hover:border-stone-400 dark:hover:border-stone-600",
       className,
     )}
   />

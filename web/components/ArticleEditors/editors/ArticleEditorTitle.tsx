@@ -1,5 +1,4 @@
-import { cn } from "../../../utils/variants";
-import { focusVisibleRing } from "../utils";
+import { cn, focusVisibleRing } from "../../../utils/variants";
 
 export function ArticleEditorTitle({
   error,

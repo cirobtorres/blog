@@ -180,6 +180,51 @@ export function AddAccordionButton({
 }: {
   addBlock: (type: Blocks["type"]) => void;
 }) {
+  return (
+    <div className="w-fit mx-auto border rounded-xl p-2 not-dark:shadow dark:bg-stone-900">
+      <div className="w-fit mx-auto flex gap-1">
+        {buttons.map((prop, index) => (
+          <div key={index} className={addAccDivStyle}>
+            <Button
+              type="button"
+              onClick={() => addBlock(prop.blockType)}
+              className={cn(
+                addAccBtnStyle,
+                "cursor-pointer flex justify-center items-center size-14 shrink-0 not-dark:shadow outline-none rounded-lg border transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:border-stone-500 dark:active:text-neutral-100 dark:active:bg-stone-700 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 peer",
+              )}
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
+            >
+              {prop.children}
+            </Button>
+            <p
+              className={cn(
+                "w-fit text-xs text-center text-neutral-600 transition-all duration-300 dark:peer-hover:text-neutral-100 dark:peer-active:text-neutral-100 dark:peer-focus-within:text-neutral-100",
+              )}
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
+            >
+              {prop.label}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="py-2 pb-0">
+        <p className="text-center text-sm text-primary pointer-events-none">
+          Editores
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function AddAccordionButtonDeprecated({
+  addBlock,
+}: {
+  addBlock: (type: Blocks["type"]) => void;
+}) {
   // Hydration--------------------------------------------------------
   // Garantees to match Client Render + SSR
   const [mounted, setMounted] = React.useState(false);

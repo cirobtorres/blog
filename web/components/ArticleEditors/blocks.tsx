@@ -78,8 +78,6 @@ const BlockList = ({
       const newMap: Record<string, BlockPropertyErrors> = {};
 
       blocksErrors.forEach((item, index) => {
-        // No momento que o erro chega, o índice 'index'
-        // corresponde exatamente ao bloco no array 'blocks'
         const blockId = blocks[index]?.id;
 
         if (blockId && item.properties) {
@@ -89,13 +87,10 @@ const BlockList = ({
 
       setInternalErrorMap(newMap);
     } else {
-      // Se não houver erros (ex: limpou o form), reseta o mapa
       setInternalErrorMap({});
     }
-    // IMPORTANTE: blocks não deve ser dependência aqui para não
-    // re-mapear os erros quando você apenas mover os blocos.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blocksErrors]);
+  }, [blocksErrors]); // BLOCKS CANNOT BE A DEPENDENCY!!
 
   const moveDownward = React.useCallback(
     (id: string) => {
