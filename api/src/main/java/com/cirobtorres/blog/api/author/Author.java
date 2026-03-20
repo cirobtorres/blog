@@ -1,6 +1,6 @@
 package com.cirobtorres.blog.api.author;
 
-import com.cirobtorres.blog.api.article.entities.Article;
+import com.cirobtorres.blog.api.article.entities.Articles;
 import com.cirobtorres.blog.api.user.entities.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -39,7 +39,7 @@ public class Author {
     private String pictureUrl;
 
     @OneToMany(mappedBy = "author")
-    private List<Article> articles;
+    private List<Articles> articles;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -88,10 +88,10 @@ public class Author {
     public String getPictureUrl() { return pictureUrl; }
     public void setPictureUrl(String pictureUrl) { this.pictureUrl = pictureUrl; }
 
-    public List<Article> getArticles() {
+    public List<Articles> getArticles() {
         return articles;
     }
-    public void setArticles(List<Article> articles) {
+    public void setArticles(List<Articles> articles) {
         this.articles = articles;
     }
 

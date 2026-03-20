@@ -1,6 +1,6 @@
 package com.cirobtorres.blog.api.article.entities;
 
-import com.cirobtorres.blog.api.article.enums.ArticleStatus;
+import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.author.Author;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "articles")
 @EntityListeners(AuditingEntityListener.class)
-public class Article {
+public class Articles {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -48,7 +48,7 @@ public class Article {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ArticleStatus status = ArticleStatus.DRAFT;
+    private ArticlesStatus status = ArticlesStatus.DRAFT;
 
     @Column(name = "published_at")
     private LocalDateTime publishedAt;
@@ -62,10 +62,10 @@ public class Article {
     private LocalDateTime updatedAt;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
-    public Article() {}
+    public Articles() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------
-    private Article(Builder builder) {
+    private Articles(Builder builder) {
         this.author = builder.author;
         this.title = builder.title;
         this.subtitle = builder.subtitle;
@@ -83,7 +83,7 @@ public class Article {
         private String body;
         private String bannerUrl;
         private String slug;
-        private ArticleStatus status;
+        private ArticlesStatus status;
         private LocalDateTime publishedAt;
 
         public Builder author(Author author) {
@@ -116,7 +116,7 @@ public class Article {
             return this;
         }
 
-        public Builder status(ArticleStatus status) {
+        public Builder status(ArticlesStatus status) {
             this.status = status;
             return this;
         }
@@ -126,8 +126,8 @@ public class Article {
             return this;
         }
 
-        public Article build() {
-            return new Article(this);
+        public Articles build() {
+            return new Articles(this);
         }
     }
 
@@ -191,8 +191,8 @@ public class Article {
         this.likeCount = likeCount;
     }
 
-    public ArticleStatus getStatus() { return status; }
-    public void setStatus(ArticleStatus status) { this.status = status; }
+    public ArticlesStatus getStatus() { return status; }
+    public void setStatus(ArticlesStatus status) { this.status = status; }
 
     public LocalDateTime getPublishedAt() { return publishedAt; }
     public void setPublishedAt(LocalDateTime publishedAt) { this.publishedAt = publishedAt; }

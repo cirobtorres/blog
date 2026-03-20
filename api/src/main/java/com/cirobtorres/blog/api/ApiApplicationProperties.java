@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "api-properties")
 public class ApiApplicationProperties {
-    private final Frontend frontend = new Frontend();
     private final Application application = new Application();
+    private final Frontend frontend = new Frontend();
     private final Jwt jwt = new Jwt();
 
     public Frontend getFrontend() { return frontend; }
@@ -16,22 +16,14 @@ public class ApiApplicationProperties {
     }
     public Jwt getJwt() { return jwt; }
 
-    public static class Frontend {
-        private String url;
-
-        public String getUrl() {
-            return url;
-        }
-        public void setUrl(String url) {
-            this.url = url;
-        }
-    }
-
     public static class Application {
         private String privateKey;
         private String publicKey;
         private String url;
         private String mailerFrom;
+        private String mediaUpServName;
+        private String mediaUpServKey;
+        private String mediaUpServSecret;
         private boolean production;
 
         public String getPrivateKey() {
@@ -62,11 +54,31 @@ public class ApiApplicationProperties {
             this.mailerFrom = mailerFrom;
         }
 
+        public String getMediaUpServName() { return mediaUpServName; }
+        public void setMediaUpServName(String mediaUpServName) { this.mediaUpServName = mediaUpServName; }
+
+        public String getMediaUpServKey() { return mediaUpServKey; }
+        public void setMediaUpServKey(String mediaUpServKey) { this.mediaUpServKey = mediaUpServKey; }
+
+        public String getMediaUpServSecret() { return mediaUpServSecret; }
+        public void setMediaUpServSecret(String mediaUpServSecret) { this.mediaUpServSecret = mediaUpServSecret; }
+
         public boolean isProduction() {
             return production;
         }
         public void setProduction(boolean production) {
             this.production = production;
+        }
+    }
+
+    public static class Frontend {
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 

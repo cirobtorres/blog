@@ -129,9 +129,7 @@ public class UserIdentity {
             return this;
         }
 
-        public UserIdentity build() {
-            return new UserIdentity(this);
-        }
+        public UserIdentity build() { return new UserIdentity(this); }
     }
 
     // GETTERS / SETTERS------------------------------------------------------------------------------------------

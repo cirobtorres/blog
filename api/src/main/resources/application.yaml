@@ -54,6 +54,9 @@ api-properties:
     privateKey: ${RSA_PRIVATE_CONTENT}
     publicKey: ${RSA_PUBLIC_CONTENT}
     mailerFrom: ${MAILER_FROM}
+    mediaUpServName: ${CLOUDINARY_NAME}
+    mediaUpServKey: ${CLOUDINARY_API_KEY}
+    mediaUpServSecret: ${CLOUDINARY_API_SECRET}
   jwt:
     issuer: ${API_URL}
     expAccToken: 900000 # 900000 = 15 min; 3600000 = 60 min
@@ -152,7 +155,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   # ddl-auto: none            # DEFAULT. No DDL operations (fully manual control of DB schema)
   # ddl-auto: validate        # Validates the existing schema. If mismatched, app won't start
   # ddl-auto: update          # Updates incrementally for classes with @Entity annotation, never to remove columns/drop tables

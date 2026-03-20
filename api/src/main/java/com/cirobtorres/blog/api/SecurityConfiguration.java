@@ -5,8 +5,6 @@ import com.cirobtorres.blog.api.oauth2.BlogOidcUserService;
 import com.cirobtorres.blog.api.oauth2.OAuth2SuccessHandler;
 import com.cirobtorres.blog.api.token.JwtAuthenticationFilter;
 import jakarta.servlet.http.Cookie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -40,13 +38,10 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
     private final String frontUrl;
-    // private final boolean isProd;
-    private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     public SecurityConfiguration(
             ApiApplicationProperties apiApplicationProperties
     ) {
-        // this.isProd = apiApplicationProperties.getApplication().isProduction();
         this.frontUrl = apiApplicationProperties.getFrontend().getUrl();
     }
 
@@ -94,8 +89,8 @@ public class SecurityConfiguration {
                                 "/auth/validation",
                                 "/auth/renew-code",
                                 "/auth/password-reset-email-request",
-                                "/auth/password-reset-code",
-                                "/auth/password-reset"
+                                "/auth/password-reset-code"
+                                // "/auth/password-reset"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -113,7 +108,7 @@ public class SecurityConfiguration {
                                 HttpMethod.GET,
                                 "/auth/validation",
                                 "/auth/me",
-                                "/articles"
+                                "/articles/**"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
@@ -123,6 +118,29 @@ public class SecurityConfiguration {
                                 HttpMethod.POST,
                                 "/articles"
                         ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                "/media/sync/**"
+                        ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/media/**"
+                        ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/media/**"
+                        ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/articles/**"
+                        ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/articles/**"
+                        ).hasAuthority("AUTHOR")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/auth/password-reset"
+                        ).hasAuthority("PASSWORD_RESET")
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -154,7 +172,7 @@ public class SecurityConfiguration {
 
         var converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            // Get authorities (USER, ADMIN, AUTHOR, etc)
+            // Get authorities (USER, AUTHOR)
             var authorities = authoritiesConverter.convert(jwt);
             var finalAuthorities = new ArrayList<>(authorities);
 
@@ -173,7 +191,6 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(frontUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));

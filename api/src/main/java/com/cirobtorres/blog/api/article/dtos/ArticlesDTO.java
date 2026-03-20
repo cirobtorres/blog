@@ -2,7 +2,7 @@ package com.cirobtorres.blog.api.article.dtos;
 
 import java.util.UUID;
 
-public record ArticleDTO(
+public record ArticlesDTO(
         String title,
         String description,
         String content,

@@ -1,7 +1,9 @@
 package com.cirobtorres.blog.api.article.dtos;
 
-public record CreateArticleDTO(
+public record CreateArticlesDTO(
         String title,
         String subtitle,
-        String body
+        String body,
+        String slug,
+        String bannerUrl
 ) {}
