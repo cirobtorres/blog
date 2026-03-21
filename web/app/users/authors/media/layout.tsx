@@ -1,7 +1,5 @@
-import {
-  AddFilesButton,
-  AddFolderButton,
-} from "../../../../components/Authors/Media/AddMediaAssetsButtons";
+import { AddFilesButton } from "../../../../components/Authors/Media/AddMediaAssetsButtons/AddFilesButton";
+import { AddFolderButton } from "../../../../components/Authors/Media/AddMediaAssetsButtons/AddFolderButton";
 
 export default function MediaLayout({
   children,

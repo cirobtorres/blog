@@ -89,8 +89,8 @@ public class SecurityConfiguration {
                                 "/auth/validation",
                                 "/auth/renew-code",
                                 "/auth/password-reset-email-request",
-                                "/auth/password-reset-code"
-                                // "/auth/password-reset"
+                                "/auth/password-reset-code",
+                                "/media/**"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -104,43 +104,14 @@ public class SecurityConfiguration {
                                 "/auth/password-reset-email-request",
                                 "/auth/password-reset-code"
                         ).permitAll()
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/auth/validation",
-                                "/auth/me",
-                                "/articles/**"
-                        ).permitAll()
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/auth/password-reset"
-                        ).hasAuthority("PASSWORD_RESET")
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/articles"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                "/media/sync/**"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/media/**"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/media/**"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/articles/**"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/articles/**"
-                        ).hasAuthority("AUTHOR")
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/auth/password-reset"
-                        ).hasAuthority("PASSWORD_RESET")
+                        .requestMatchers(HttpMethod.POST, "/auth/password-reset").hasAuthority("PASSWORD_RESET")
+                        .requestMatchers(HttpMethod.GET, "/auth/validation", "/auth/me", "/articles/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/articles").hasAuthority("AUTHOR")
+                        .requestMatchers("/media/sync/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.POST, "/media/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.DELETE, "/media/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.POST, "/articles/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -193,7 +164,7 @@ public class SecurityConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(frontUrl));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN"));
         config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

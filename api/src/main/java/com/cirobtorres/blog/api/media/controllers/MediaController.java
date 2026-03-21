@@ -5,6 +5,7 @@ import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.services.MediaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,7 +48,8 @@ public class MediaController {
 
     @PostMapping("/sync/import")
     public ResponseEntity<Void> importMedia(
-            @RequestBody List<MediaDTO> mediaList
+            @RequestBody List<MediaDTO> mediaList,
+            Authentication auth
     ) {
         mediaService.saveAll(mediaList);
         return ResponseEntity.status(HttpStatus.CREATED).build();

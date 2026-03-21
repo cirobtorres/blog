@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
-import { cn } from "../../utils/variants";
-import { Button } from "../Buttons";
+import { cn } from "../utils/variants";
+import { Button } from "./Buttons";
 
 function AlertDialog({
   ...props
@@ -86,7 +86,7 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end bg-stone-200 dark:bg-stone-900",
+        "rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end bg-stone-200 dark:bg-stone-900", // -mx-4 -mb-4
         className,
       )}
       {...props}
@@ -149,12 +149,8 @@ function AlertDialogAction({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action> &
   Pick<React.ComponentProps<typeof Button>, "variant">) {
   return (
-    <Button variant={variant} asChild>
-      <AlertDialogPrimitive.Action
-        data-slot="alert-dialog-action"
-        className={className}
-        {...props}
-      />
+    <Button asChild variant={variant} className={className}>
+      <AlertDialogPrimitive.Action data-slot="alert-dialog-action" {...props} />
     </Button>
   );
 }
@@ -166,15 +162,86 @@ function AlertDialogCancel({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel> &
   Pick<React.ComponentProps<typeof Button>, "variant">) {
   return (
-    <Button variant={variant} asChild>
-      <AlertDialogPrimitive.Cancel
-        data-slot="alert-dialog-cancel"
-        className={cn(className)}
-        {...props}
-      />
+    <Button asChild variant={variant} className={className}>
+      <AlertDialogPrimitive.Cancel data-slot="alert-dialog-cancel" {...props} />
     </Button>
   );
 }
+
+const AlertDialogExitConfirmation = ({
+  children,
+  onConfirm,
+  location = "header",
+}: {
+  children: string;
+  onConfirm: () => void;
+  location?: "header" | "footer";
+}) => (
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      {location === "header" ? (
+        <Button
+          variant="outline"
+          className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </Button>
+      ) : (
+        <Button variant="outline" className="w-full max-w-30 h-8">
+          Cancelar
+        </Button>
+      )}
+    </AlertDialogTrigger>
+    <AlertDialogContent className="ring-4 border-4 p-0 overflow-hidden">
+      <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
+        <AlertDialogTitle>Sair sem salvar?</AlertDialogTitle>
+        <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </AlertDialogCancel>
+      </AlertDialogHeader>
+      <AlertDialogDescription className="sr-only">
+        {children}
+      </AlertDialogDescription>
+      <div className="px-4">
+        <p className="text-sm text-neutral-500">{children}</p>
+      </div>
+      <AlertDialogFooter className="flex justify-between items-center sm:justify-between flex-row sm:flex-row">
+        <AlertDialogCancel className="w-full max-w-20 h-8">
+          Voltar
+        </AlertDialogCancel>
+        <AlertDialogAction onClick={onConfirm} className="w-full max-w-20 h-8">
+          Sair
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
 
 export {
   AlertDialog,
@@ -189,4 +256,5 @@ export {
   AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogExitConfirmation,
 };

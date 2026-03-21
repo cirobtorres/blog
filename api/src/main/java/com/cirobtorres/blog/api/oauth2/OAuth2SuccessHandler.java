@@ -23,7 +23,6 @@ import java.util.UUID;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtService jwtService;
     private final String webUrl;
-    // private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
     public OAuth2SuccessHandler(
@@ -32,7 +31,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     ) {
         this.jwtService = jwtService;
         this.webUrl = apiApplicationProperties.getFrontend().getUrl();
-        // this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Override

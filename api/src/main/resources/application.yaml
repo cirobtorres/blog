@@ -54,7 +54,7 @@ api-properties:
     privateKey: ${RSA_PRIVATE_CONTENT}
     publicKey: ${RSA_PUBLIC_CONTENT}
     mailerFrom: ${MAILER_FROM}
-    mediaUpServName: ${CLOUDINARY_NAME}
+    mediaUpServName: ${CLOUDINARY_CLOUD_NAME}
     mediaUpServKey: ${CLOUDINARY_API_KEY}
     mediaUpServSecret: ${CLOUDINARY_API_SECRET}
   jwt:

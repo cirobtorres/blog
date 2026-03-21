@@ -109,9 +109,9 @@ const signUpSchema = z.object({
 });
 
 const publishArticleValidation = async (
-  prevState: ArticleState,
+  prevState: ActionState,
   formData: FormData,
-): Promise<ArticleState> => {
+): Promise<ActionState> => {
   // const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
@@ -147,9 +147,9 @@ const publishArticleValidation = async (
 };
 
 const publishArticle = async (
-  prevState: ArticleState,
+  prevState: ActionState,
   formData: FormData,
-): Promise<ArticleState> => {
+): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
 
   const cookieStore = await cookies();

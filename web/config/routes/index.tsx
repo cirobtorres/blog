@@ -36,6 +36,9 @@ const apiServerUrls = {
   article: {
     create: API_SERVER + "/articles",
   },
+  media: {
+    syncImport: API_SERVER + "/media/sync/import",
+  },
 };
 
 const apiClientUrls = {

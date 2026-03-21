@@ -1,0 +1,23 @@
+type Cloudinary = {
+  api_key: string;
+  asset_id: string;
+  public_id: string;
+  version_id: string;
+  url: string;
+  secure_url: string;
+  etag: string;
+  folder: string;
+  format: string;
+  bytes: number;
+  width: number;
+  height: number;
+  original_filename: string;
+  placeholder: false;
+  resource_type: string;
+  signature: string;
+  tags: [];
+  type: string;
+  version: number;
+  duration: number | null;
+  created_at: Date;
+};

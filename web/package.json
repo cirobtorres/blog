@@ -30,6 +30,7 @@
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-pt-br": "^3.0.2",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "generate-password-ts": "^1.6.5",
     "input-otp": "^1.4.2",

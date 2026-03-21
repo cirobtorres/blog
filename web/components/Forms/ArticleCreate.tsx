@@ -19,7 +19,6 @@ import { Button } from "../Buttons";
 import Spinner from "../Spinner";
 
 export function ArticleCreate() {
-  // const isProd = process.env.NODE_ENV === "production";
   const [blocks, setBlocks] = React.useState<Blocks[]>([]);
   const [title, setTitle] = React.useState("");
   const [subtitle, setSubtitle] = React.useState("");
@@ -28,18 +27,14 @@ export function ArticleCreate() {
 
   const [publishState, onPublishAction, isPublishPending] =
     React.useActionState(
-      async (prevState: ArticleState) => {
+      async (prevState: ActionState) => {
         const formData = new FormData();
 
         formData.set("title", title);
         formData.set("subtitle", subtitle);
         formData.set("body", JSON.stringify(blocks));
 
-        // if (!isProd) {
-        //   console.log("ArticleCreate", title, subtitle, blocks);
-        // }
-
-        const success = (serverResponse: ArticleState) => {
+        const success = (serverResponse: ActionState) => {
           const now = convertToLargeDate(
             new Date(serverResponse.data?.updated_at ?? new Date()),
           );
@@ -90,14 +85,12 @@ export function ArticleCreate() {
 
         const result = publishArticle(prevState, validatedFormData);
 
-        const promise: Promise<ArticleState> = new Promise(
-          (resolve, reject) => {
-            result.then((data) => {
-              if (data.ok) resolve(result);
-              else reject(result);
-            });
-          },
-        );
+        const promise: Promise<ActionState> = new Promise((resolve, reject) => {
+          result.then((data) => {
+            if (data.ok) resolve(result);
+            else reject(result);
+          });
+        });
 
         sonnerToastPromise(promise, success, error, "Publicando artigo...");
 

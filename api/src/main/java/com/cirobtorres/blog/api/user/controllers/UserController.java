@@ -1,11 +1,7 @@
 package com.cirobtorres.blog.api.user.controllers;
 
 import com.cirobtorres.blog.api.user.repositories.UserRepository;
-import com.cirobtorres.blog.api.user.dtos.UserDTO;
 import com.cirobtorres.blog.api.user.entities.User;
-import com.cirobtorres.blog.api.user.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +15,12 @@ import java.util.UUID;
 @RequestMapping("users")
 public class UserController {
     private final UserRepository userRepository;
-    private final UserService userService;
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(
-            UserRepository userRepository,
-            UserService userService
+            UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-        this.userService = userService;
     }
 
     @DeleteMapping
@@ -42,10 +34,4 @@ public class UserController {
         userRepository.delete(user);
         return ResponseEntity.noContent().build();
     }
-
-    // @GetMapping("me")
-    // public ResponseEntity<UserDTO> me(Authentication auth) {
-    //     UserDTO user = userService.getAuthenticatedUserDTO(auth);
-    //     return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
-    // }
 }

@@ -18,9 +18,9 @@ public class Media {
     @Column(nullable = false)
     private String name;
 
-    private String folder; // Folder path (ex: "blender/renders")
+    private String folder;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "public_id", nullable = false, unique = true)
     private String publicId;
 
     @Column(nullable = false)
@@ -31,15 +31,15 @@ public class Media {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MediaType type; // Enum: IMAGE, VIDEO, AUDIO
+    private MediaType type; // Enum: IMAGE, VIDEO
 
     private Long size; // Bytes
 
-    private Integer width; // Audio = NULLABLE
+    private Integer width;
 
-    private Integer height; // Audio = NULLABLE
+    private Integer height;
 
-    private Double duration; // Audio/videos
+    private Double duration; // videos
 
     @Column(name = "alt_text")
     private String alt;

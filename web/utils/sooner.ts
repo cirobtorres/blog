@@ -2,9 +2,9 @@ import { JSX } from "react";
 import { toast } from "sonner";
 
 export const sonnerToastPromise = (
-  promise: Promise<ArticleState>,
-  success: (data: ArticleState) => JSX.Element,
-  error: (data: ArticleState) => JSX.Element,
+  promise: Promise<ActionState>,
+  success: (data: ActionState) => JSX.Element,
+  error: (data: ActionState) => JSX.Element,
   loading: string = "Carregando...",
 ) => {
   return toast.promise(promise, {

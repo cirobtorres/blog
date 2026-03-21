@@ -13,12 +13,14 @@ type User = {
   updatedAt: Date;
 };
 
-type SessionUser =
-  | {
-      ok: true;
-      data: User;
-    }
-  | {
-      ok: false;
-      data: null;
-    };
+type SessionUser = UserSignedIn | UserSignedOut;
+
+type UserSignedIn = {
+  ok: true;
+  data: User;
+};
+
+type UserSignedOut = {
+  ok: false;
+  data: null;
+};

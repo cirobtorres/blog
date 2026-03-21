@@ -1,0 +1,64 @@
+"use server";
+
+import { cookies } from "next/headers";
+import { apiServerUrls } from "../../config/routes";
+
+export async function syncWithSpringBoot(
+  cloudinaryResults: Cloudinary[],
+  folder: string,
+) {
+  const mediaDTOs = cloudinaryResults.map((res) => ({
+    name: res.original_filename,
+    folder: folder,
+    publicId: res.public_id,
+    url: res.secure_url,
+    extension: res.format,
+    type: res.resource_type.toUpperCase() === "VIDEO" ? "VIDEO" : "IMAGE",
+    size: res.bytes,
+    width: res.width,
+    height: res.height,
+    duration: res.duration || null,
+    alt: "",
+  }));
+
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  if (!accessToken)
+    return {
+      ok: false,
+      success: null,
+      error: "Erro de autenticação. Token vencido.",
+      data: null,
+    };
+
+  const response = await fetch(apiServerUrls.media.syncImport, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(mediaDTOs),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    console.error(
+      "syncWithSpringBoot: Failed to sync data between Cloudinary and Server.",
+      response.status,
+    );
+    return {
+      ok: false,
+      success: null,
+      error: "Erro ao salvar os arquivos no server.",
+      data: null,
+    };
+  }
+
+  return {
+    ok: true,
+    success: "Arquivos salvos e sincronizados com sucesso!",
+    error: null,
+    data: cloudinaryResults,
+  };
+}

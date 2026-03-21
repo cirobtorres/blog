@@ -107,7 +107,7 @@ public class AuthService {
                 UserIdentityProvider.LOCAL,
                 userLoginDTO.email()
         ).orElseThrow(
-                () -> new UserUnauthorizedException("E-mail ou senha incorretos")
+                () -> new UserUnauthorizedException("Email or password incorrect.")
         );
 
         // Validation
@@ -117,7 +117,7 @@ public class AuthService {
         );
 
         if (!passwordsMatch) {
-            throw new UserUnauthorizedException("E-mail ou senha incorretos");
+            throw new UserUnauthorizedException("Email or password incorrect.");
         }
 
         // User
