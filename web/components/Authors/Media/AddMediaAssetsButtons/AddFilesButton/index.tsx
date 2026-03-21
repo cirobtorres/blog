@@ -297,7 +297,7 @@ export function AddFilesButton() {
               revisar os nomes, tamanhos e tipos de {files.length} arquivo(s)
               antes de confirmar o salvamento.
             </AlertDialogDescription>
-            <div className="p-6 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4">
+            <div className="p-5 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4 m-1 scrollbar">
               {files.map((file, index) => (
                 <FilePreviewCard
                   key={index}

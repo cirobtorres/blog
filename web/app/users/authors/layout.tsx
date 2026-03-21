@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { UserButton } from "../../../components/Authors/UserButton";
 import { cn } from "../../../utils/variants";
+import { DashedBackground } from "../../../components/DashedBackground";
 
 export default async function AuthorLayout({
   children,
@@ -50,18 +51,7 @@ export default async function AuthorLayout({
         </nav>
       </aside>
       {children}
-      <HazardBorder className="border-l" />
+      <DashedBackground className="border-l" />
     </main>
   );
 }
-
-const HazardBorder = ({ className }: { className?: string }) => {
-  return (
-    <div
-      className={cn(
-        "w-full h-full shrink-0 bg-fixed bg-[repeating-linear-gradient(315deg,#d6d3d1_0,#d6d3d1_1px,transparent_0,transparent_50%)] dark:bg-[repeating-linear-gradient(315deg,#292524_0,#292524_1px,transparent_0,transparent_50%)] bg-size-[10px_10px]",
-        className,
-      )}
-    />
-  );
-};

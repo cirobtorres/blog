@@ -41,7 +41,7 @@ export default async function AuthorsPage() {
     <div className="h-full max-w-4xl mx-auto flex justify-center items-center">
       {articlesFromDB.length > 0 ? (
         <AuthorsArticleCards>
-          {articlesFromDB.map((props, index) => {
+          {articlesFromDB.map((props) => {
             const year = props.createdAt.getFullYear();
             const month = props.createdAt.getMonth();
             const day = props.createdAt.getDay();
@@ -54,7 +54,7 @@ export default async function AuthorsPage() {
                 <AuthorsArticleCard id={props.id}>
                   <AuthorsArticleCardImage
                     id={props.id}
-                    src={"https://picsum.photos/200/300?random=" + index + 1}
+                    src="https://placehold.co/1920x1080/000/fff/jpeg"
                   />
                   <AuthorsArticleDescription>
                     <AuthorsArticleCardTitle>

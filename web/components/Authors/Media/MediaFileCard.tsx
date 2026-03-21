@@ -3,6 +3,7 @@ import { cn, focusRing } from "../../../utils/variants";
 import { Checkbox } from "../../Fieldset/Checkbox";
 import { Button } from "../../Buttons";
 import Link from "next/link";
+import { DashedBackground } from "../../DashedBackground";
 
 const MediaFileCard = ({
   publicId,
@@ -20,7 +21,7 @@ const MediaFileCard = ({
           htmlFor={"card-" + publicId}
           className="relative w-full h-full overflow-hidden"
         >
-          <HazardBorder />
+          <DashedBackground />
           <Checkbox
             id={"card-" + publicId}
             className="absolute z-10 size-6 rounded left-2 top-2"
@@ -61,17 +62,6 @@ const MediaFileCard = ({
     </div>
   </article>
 );
-
-const HazardBorder = ({ className }: { className?: string }) => {
-  return (
-    <div
-      className={cn(
-        "w-full h-full shrink-0 bg-fixed bg-[repeating-linear-gradient(315deg,#d6d3d1_0,#d6d3d1_1px,transparent_0,transparent_50%)] dark:bg-[repeating-linear-gradient(315deg,#292524_0,#292524_1px,transparent_0,transparent_50%)] bg-size-[10px_10px]",
-        className,
-      )}
-    />
-  );
-};
 
 const ExpandButton = ({ url }: { url: string }) => (
   <Link

@@ -76,6 +76,45 @@ const MediaFileCardsLoading = () => (
   </section>
 );
 
+export default async function AuthorsMediaPage() {
+  const cookie = cookies();
+  const accessToken = (await cookie).get("access_token");
+  return (
+    <>
+      <div className="flex items-center gap-2">
+        <label htmlFor="select-all">
+          <Checkbox id="select-all" className="size-6" />
+        </label>
+        <div className="flex items-center gap-2 [&_span]:text-sm [&_span]:text-nowrap [&_span]:text-neutral-600 dark:[&_span]:text-neutral-500">
+          <span>1 pasta</span>
+          <span>-</span>
+          <span>1 asset</span>
+        </div>
+        <Button variant="destructive" className="h-8 w-full max-w-30">
+          Excluir
+        </Button>
+        <Button variant="link" className="h-8 w-full max-w-30">
+          Mover
+        </Button>
+      </div>
+      <section className="flex flex-col items-start justify-center gap-2">
+        <h2 className="text-xl">Pastas &#40;7&#41;</h2>
+        <div className="flex items-center gap-2">
+          <MediaFoldersHeader />
+        </div>
+        <div className="w-full grid grid-cols-4 items-center gap-2">
+          <MediaFolders />
+        </div>
+        <HomePagination />
+      </section>
+      <hr className="dark:border-stone-800" />
+      <Suspense fallback={<MediaFileCardsLoading />}>
+        <MediaFileCards accessToken={accessToken?.value} />
+      </Suspense>
+    </>
+  );
+}
+
 const MediaPagination = ({
   first,
   last,
@@ -206,6 +245,7 @@ const MediaFileCards = async ({ accessToken }: { accessToken?: string }) => {
         Arquivos &#40;{totalElements}&#41;
       </h2>
       <MediaFilesHeader sort={sort} />
+      <MediaPagination {...pageControl} />
       <div className="w-full grid grid-cols-3 items-center gap-2">
         {media.map(({ ...props }) => (
           <MediaFileCard key={props.publicId} {...props} />
@@ -215,45 +255,6 @@ const MediaFileCards = async ({ accessToken }: { accessToken?: string }) => {
     </section>
   );
 };
-
-export default async function AuthorsMediaPage() {
-  const cookie = cookies();
-  const accessToken = (await cookie).get("access_token");
-  return (
-    <>
-      <div className="flex items-center gap-2">
-        <label htmlFor="select-all">
-          <Checkbox id="select-all" className="size-6" />
-        </label>
-        <div className="flex items-center gap-2 [&_span]:text-sm [&_span]:text-nowrap [&_span]:text-neutral-600 dark:[&_span]:text-neutral-500">
-          <span>1 pasta</span>
-          <span>-</span>
-          <span>1 asset</span>
-        </div>
-        <Button variant="destructive" className="h-8 w-full max-w-30">
-          Excluir
-        </Button>
-        <Button variant="link" className="h-8 w-full max-w-30">
-          Mover
-        </Button>
-      </div>
-      <section className="flex flex-col items-start justify-center gap-2">
-        <h2 className="text-xl">Pastas &#40;7&#41;</h2>
-        <div className="flex items-center gap-2">
-          <MediaFoldersHeader />
-        </div>
-        <div className="w-full grid grid-cols-4 items-center gap-2">
-          <MediaFolders />
-        </div>
-        <HomePagination />
-      </section>
-      <hr className="dark:border-stone-800" />
-      <Suspense fallback={<MediaFileCardsLoading />}>
-        <MediaFileCards accessToken={accessToken?.value} />
-      </Suspense>
-    </>
-  );
-}
 
 const MediaFolders = () =>
   Array.from({ length: 7 }).map((_, index) => (

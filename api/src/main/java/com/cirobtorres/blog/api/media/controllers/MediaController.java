@@ -41,7 +41,7 @@ public class MediaController {
     public ResponseEntity<Page<MediaDTO>> listPaged(
             @RequestParam(defaultValue = "Home") String folder,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "12") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return ResponseEntity.ok(mediaService.listAllPaged(folder, pageable));
