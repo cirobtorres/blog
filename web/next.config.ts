@@ -14,11 +14,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "picsum.photos",
+        hostname: "avatars.githubusercontent.com",
       },
       {
         protocol: "https",
-        hostname: "avatars.githubusercontent.com",
+        hostname: "res.cloudinary.com",
       },
     ],
   },

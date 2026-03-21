@@ -10,7 +10,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react";
-import { cn } from "../../../utils/variants";
+import { cn, focusRing } from "../../../utils/variants";
 import { usePathname } from "next/navigation";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../HoverCard";
 import { protectedWebUrls } from "../../../config/routes";
@@ -26,8 +26,9 @@ export function HomePathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <HomeIcon />
@@ -53,8 +54,9 @@ export function ArticlesPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <SquarePenIcon />
@@ -80,8 +82,9 @@ export function MediaPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <AttachFileIcon />
@@ -107,8 +110,9 @@ export function TagPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <BookmarkCheckIcon />
@@ -134,8 +138,9 @@ export function UsersPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <UsersIcon />
@@ -161,8 +166,9 @@ export function AboutPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
             currentLink && "bg-stone-200 dark:bg-stone-800",
+            focusRing,
           )}
         >
           <SlidersHorizontalIcon />

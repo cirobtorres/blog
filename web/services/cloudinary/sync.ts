@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../config/routes";
+import { revalidatePath } from "next/cache";
 
 export async function syncWithSpringBoot(
   cloudinaryResults: Cloudinary[],
@@ -50,14 +51,16 @@ export async function syncWithSpringBoot(
     return {
       ok: false,
       success: null,
-      error: "Erro ao salvar os arquivos no server.",
+      error: "Erro ao salvar os arquivos no servidor.",
       data: null,
     };
   }
 
+  revalidatePath("/users/authors/media");
+
   return {
     ok: true,
-    success: "Arquivos salvos e sincronizados com sucesso!",
+    success: "Arquivos salvos com sucesso!",
     error: null,
     data: cloudinaryResults,
   };

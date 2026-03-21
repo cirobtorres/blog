@@ -52,10 +52,10 @@ const FilePreviewCard = ({
   }, [file, isImage, isVideo]);
 
   return (
-    <div className="relative group flex items-center gap-3 p-3 rounded-xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
-      <div className="w-16 h-16 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 shrink-0 flex items-center justify-center border">
+    <div className="relative group flex items-center gap-3 p-3 rounded-lg border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
+      <div className="size-30 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 shrink-0 flex items-center justify-center">
         {(isImage || isVideo) && preview ? (
-          <div className="relative size-20">
+          <div className="relative size-full">
             <Image
               src={preview}
               alt={file.name}
@@ -94,7 +94,6 @@ const FilePreviewCard = ({
           </svg>
         )}
       </div>
-
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate dark:text-stone-200">
           {file.name}
@@ -103,7 +102,6 @@ const FilePreviewCard = ({
           {(file.size / 1024 / 1024).toFixed(2)} MB
         </p>
       </div>
-
       <button
         onClick={onRemove}
         className="opacity-0 group-hover:opacity-100 absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-opacity"

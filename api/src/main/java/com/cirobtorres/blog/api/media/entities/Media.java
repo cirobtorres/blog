@@ -4,12 +4,14 @@ import com.cirobtorres.blog.api.media.enums.MediaType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "media")
+@EntityListeners(AuditingEntityListener.class)
 public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

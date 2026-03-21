@@ -8,6 +8,8 @@ import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
@@ -30,6 +32,33 @@ public class MediaService {
         this.cloudinary = cloudinary;
         this.mediaRepository = mediaRepository;
         this.objectMapper = objectMapper;
+    }
+
+    public List<MediaDTO> listAllMediaDTO() {
+        return mediaRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public long countFilesByFolder(String folder) {
+        return mediaRepository.countByFolder(folder);
+    }
+
+    public Page<MediaDTO> listAllPaged(String folder, Pageable pageable) {
+        Page<Media> entityPage;
+
+        if (folder == null || folder.isEmpty()) {
+            entityPage = mediaRepository.findByFolder("Home", pageable);
+        } else {
+            entityPage = mediaRepository.findByFolder(folder, pageable);
+        }
+
+        return entityPage.map(this::convertToDTO);
+    }
+
+    public List<String> listAllFolders() {
+        return mediaRepository.findAllUniqueFolders();
     }
 
     public List<Map<String, Object>> findOrphanFiles(String folderPath) throws Exception {
@@ -116,5 +145,22 @@ public class MediaService {
                 .duration(dto.duration())
                 .alt(dto.alt())
                 .build();
+    }
+
+    private MediaDTO convertToDTO(Media entity) {
+        return new MediaDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getFolder(),
+                entity.getPublicId(),
+                entity.getUrl(),
+                entity.getExtension(),
+                entity.getType(),
+                entity.getSize(),
+                entity.getWidth(),
+                entity.getHeight(),
+                entity.getDuration(),
+                entity.getAlt()
+        );
     }
 }

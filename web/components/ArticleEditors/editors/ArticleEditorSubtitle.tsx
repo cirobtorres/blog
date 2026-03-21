@@ -1,4 +1,4 @@
-import { cn, focusVisibleRing } from "../../../utils/variants";
+import { cn, focusWithinRing } from "../../../utils/variants";
 
 export function ArticleEditorSubtitle({
   error,
@@ -26,7 +26,7 @@ export function ArticleEditorSubtitle({
         className={cn(
           "resize-none p-2 text-sm outline-none border not-dark:shadow bg-stone-200 dark:bg-stone-900 rounded-sm transition-all duration-300 peer scrollbar",
           // hoverRing,
-          focusVisibleRing,
+          focusWithinRing,
           error
             ? "placeholder:text-destructive/40 border-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
             : "placeholder:text-neutral-700",

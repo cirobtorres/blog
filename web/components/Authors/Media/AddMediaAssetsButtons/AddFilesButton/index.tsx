@@ -187,7 +187,7 @@ export function AddFilesButton() {
         </Button>
       </AlertDialogTrigger>
       {openStep === "upload" && (
-        <AlertDialogContent className="ring-4 border-4 max-w-200 p-0 overflow-hidden">
+        <AlertDialogContent className="ring-4 border-4 max-w-200 gap-0 p-0 overflow-hidden">
           <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
             <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
             <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
@@ -212,7 +212,7 @@ export function AddFilesButton() {
             seu computador para esta zona ou alternar entre upload local e via
             URL usando as abas abaixo.
           </AlertDialogDescription>
-          <div className="flex flex-col gap-4 p-8 pt-0">
+          <div className="flex flex-col gap-4 p-8 pt-2">
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList variant="line">
                 <TabsTrigger value="pc" className="cursor-pointer">
@@ -279,7 +279,7 @@ export function AddFilesButton() {
         </AlertDialogContent>
       )}
       {openStep === "preview" && (
-        <AlertDialogContent className="ring-4 border-4 max-w-200 p-0 overflow-hidden">
+        <AlertDialogContent className="ring-4 border-4 max-w-200 gap-0 p-0 overflow-hidden">
           <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
             <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
             <AlertDialogExitConfirmation
@@ -297,7 +297,7 @@ export function AddFilesButton() {
               revisar os nomes, tamanhos e tipos de {files.length} arquivo(s)
               antes de confirmar o salvamento.
             </AlertDialogDescription>
-            <div className="p-6 max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-6 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4">
               {files.map((file, index) => (
                 <FilePreviewCard
                   key={index}

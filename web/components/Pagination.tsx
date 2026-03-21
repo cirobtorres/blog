@@ -47,7 +47,7 @@ function PaginationLink({
     <Button
       asChild
       variant={isActive ? "outline" : "ghost"}
-      className={cn(className)}
+      className={cn("h-8", className)}
     >
       <Link
         aria-current={isActive ? "page" : undefined}

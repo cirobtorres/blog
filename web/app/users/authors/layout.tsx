@@ -10,9 +10,9 @@ import {
   HomePathLink,
   UsersPathLink,
 } from "../../../components/Authors/Media/AsideNavButtons";
-import Image from "next/image";
-import { cn, focusRing } from "../../../utils/variants";
 import Link from "next/link";
+import { UserButton } from "../../../components/Authors/UserButton";
+import { cn } from "../../../utils/variants";
 
 export default async function AuthorLayout({
   children,
@@ -45,40 +45,23 @@ export default async function AuthorLayout({
           <div className="w-full flex flex-col gap-2 mt-auto">
             <AboutPathLink />
             <div className="w-full h-px bg-stone-700" />
-            <div
-              tabIndex={0}
-              className={cn(
-                "size-11 p-1 mx-2 flex items-center justify-start gap-2 rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-200 dark:hover:bg-stone-800 group",
-                focusRing,
-              )}
-            >
-              {(user as User).pictureUrl ? (
-                <Image
-                  src={(user as User).pictureUrl as string}
-                  alt={"Avatar de " + (user as User).name}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              ) : (
-                <span
-                  className={cn(
-                    "size-full p-1 shrink-0 flex justify-center items-center rounded-full bg-primary",
-                  )}
-                >
-                  {(user as User).name
-                    .toUpperCase()
-                    .split(" ")
-                    .map((i) => i[0])
-                    .splice(0, 2)
-                    .join("")}
-                </span>
-              )}
-            </div>
+            <UserButton user={user as User} />
           </div>
         </nav>
       </aside>
       {children}
+      <HazardBorder className="border-l" />
     </main>
   );
 }
+
+const HazardBorder = ({ className }: { className?: string }) => {
+  return (
+    <div
+      className={cn(
+        "w-full h-full shrink-0 bg-fixed bg-[repeating-linear-gradient(315deg,#d6d3d1_0,#d6d3d1_1px,transparent_0,transparent_50%)] dark:bg-[repeating-linear-gradient(315deg,#292524_0,#292524_1px,transparent_0,transparent_50%)] bg-size-[10px_10px]",
+        className,
+      )}
+    />
+  );
+};

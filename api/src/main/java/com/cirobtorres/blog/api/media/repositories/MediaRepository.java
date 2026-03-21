@@ -1,6 +1,8 @@
 package com.cirobtorres.blog.api.media.repositories;
 
 import com.cirobtorres.blog.api.media.entities.Media;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,13 @@ public interface MediaRepository extends JpaRepository<Media, UUID> {
     List<String> findAllPublicIds(); // All folders
 
     List<Media> findByFolderOrderByCreatedAtDesc(String folder);
+
+    @Query("SELECT DISTINCT m.folder FROM Media m WHERE m.folder IS NOT NULL")
+    List<String> findAllUniqueFolders();
+
+    long countByFolder(String folder);
+
+    Page<Media> findByFolder(String folder, Pageable pageable);
+
+    Page<Media> findAll(Pageable pageable);
 }

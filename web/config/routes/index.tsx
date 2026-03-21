@@ -37,6 +37,8 @@ const apiServerUrls = {
     create: API_SERVER + "/articles",
   },
   media: {
+    list: API_SERVER + "/media",
+    count: API_SERVER + "/media/count",
     syncImport: API_SERVER + "/media/sync/import",
   },
 };

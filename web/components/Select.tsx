@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
-import { cn } from "../utils/variants";
+import { cn, focusRing, focusWithinRing } from "../utils/variants";
 
 function Select({
   ...props
@@ -43,7 +43,9 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "rounded border border-stone-300 dark:border-stone-700 dark:bg-stone-800 data-placeholder:text-muted-foreground dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 bg-transparent py-2 pr-2 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "cursor-pointer rounded border border-stone-300 dark:border-stone-700 dark:bg-stone-800 dark:hover:bg-stone-750 dark:hover:border-stone-600 data-placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 bg-transparent py-2 pr-2 pl-2.5 text-sm transition-all duration-300 select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        focusRing,
+        focusWithinRing,
         className,
       )}
       {...props}
@@ -116,7 +118,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "focus:bg-stone-200 dark:focus:bg-stone-800 focus:text-neutral-600 dark:focus:text-neutral-100 not-data-[variant=destructive]:focus:**:text-neutral-600 dark:not-data-[variant=destructive]:focus:**:text-neutral-100 gap-1.5 rounded py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "cursor-pointer focus:bg-stone-200 dark:focus:bg-stone-725 focus:text-neutral-600 dark:focus:text-neutral-100 not-data-[variant=destructive]:focus:**:text-neutral-600 dark:not-data-[variant=destructive]:focus:**:text-neutral-100 gap-1.5 rounded py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       {...props}
