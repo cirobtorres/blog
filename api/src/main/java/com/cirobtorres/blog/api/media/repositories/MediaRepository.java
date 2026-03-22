@@ -11,20 +11,17 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MediaRepository extends JpaRepository<Media, UUID> {
-    @Query("SELECT m.publicId FROM Media m WHERE m.folder = :folder")
-    List<String> findAllPublicIdsByFolder(@Param("folder") String folder); // Folder x
+    @Query(value = "SELECT m FROM Media m WHERE m.folder.path = :path", countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path")
+    Page<Media> findByFolderPath(@Param("path") String path, Pageable pageable);
+
+    @Query("SELECT m.publicId FROM Media m WHERE m.folder.path = :path")
+    List<String> findAllPublicIdsByFolderPath(@Param("path") String path);
+
+    @Query("SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path")
+    long countByFolderPath(@Param("path") String path);
 
     @Query("SELECT m.publicId FROM Media m")
-    List<String> findAllPublicIds(); // All folders
+    List<String> findAllPublicIds();
 
-    List<Media> findByFolderOrderByCreatedAtDesc(String folder);
-
-    @Query("SELECT DISTINCT m.folder FROM Media m WHERE m.folder IS NOT NULL")
-    List<String> findAllUniqueFolders();
-
-    long countByFolder(String folder);
-
-    Page<Media> findByFolder(String folder, Pageable pageable);
-
-    Page<Media> findAll(Pageable pageable);
+    List<Media> findByFolderPathOrderByCreatedAtDesc(String path);
 }

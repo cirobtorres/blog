@@ -1,6 +1,7 @@
 package com.cirobtorres.blog.api.media.entities;
 
 import com.cirobtorres.blog.api.media.enums.MediaType;
+import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,7 +21,9 @@ public class Media {
     @Column(nullable = false)
     private String name;
 
-    private String folder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "folder_id")
+    private MediaFolder folder;
 
     @Column(name = "public_id", nullable = false, unique = true)
     private String publicId;
@@ -80,7 +83,7 @@ public class Media {
 
     public static class Builder {
         private String name;
-        private String folder;
+        private MediaFolder folder;
         private String publicId;
         private String url;
         private String extension;
@@ -97,7 +100,7 @@ public class Media {
             return this;
         }
 
-        public Builder folder(String folder) {
+        public Builder folder(MediaFolder folder) {
             this.folder = folder;
             return this;
         }
@@ -174,8 +177,8 @@ public class Media {
     public MediaType getType() { return type; }
     public void setType(MediaType type) { this.type = type; }
 
-    public String getFolder() { return folder; }
-    public void setFolder(String folder) { this.folder = folder; }
+    public MediaFolder getFolder() { return folder; }
+    public void setFolder(MediaFolder folder) { this.folder = folder; }
 
     public Long getSize() { return size; }
     public void setSize(Long size) { this.size = size; }

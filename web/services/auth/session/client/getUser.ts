@@ -1,6 +1,6 @@
 "use client";
 
-import { apiClientUrls } from "../../../../config/routes";
+import { apiClientUrls } from "../../../../routing/routes";
 
 const getUser = async (): Promise<AuthSession> => {
   const isProd = process.env.NODE_ENV === "production";

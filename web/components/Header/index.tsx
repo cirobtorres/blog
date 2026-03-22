@@ -4,7 +4,7 @@ import React from "react";
 import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
 import { cn, linkVariants } from "../../utils/variants";
-import { externalUrls, publicWebUrls } from "../../config/routes";
+import { externalUrls, publicWebUrls } from "../../routing/routes";
 import { Skeleton } from "../Skeleton";
 import getUser from "../../services/auth/session/client/getUser";
 import UserSignedIn from "./UserSignedIn";

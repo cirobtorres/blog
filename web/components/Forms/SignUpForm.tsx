@@ -11,7 +11,6 @@ import {
 } from "../Fieldset";
 import Spinner from "../Spinner";
 import { signUp } from "../../services/auth/signUp";
-import { Button } from "../Buttons";
 import { Checkbox } from "../Fieldset/Checkbox";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
 import {
@@ -26,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from "../AlertDialog";
 import { cn, focusRing } from "../../utils/variants";
+import { Button } from "../Button";
 
 const SignUpForm = () => {
   const [name, setName] = React.useState("");

@@ -7,7 +7,7 @@ import {
   parseSetCookie,
 } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { apiServerUrls, publicWebUrls } from "../../config/routes";
+import { apiServerUrls, publicWebUrls } from "../../routing/routes";
 import * as z from "zod";
 
 const signUpSchema = z.object({

@@ -7,7 +7,7 @@ import {
   extractPayload,
   extractTokenFromHeader,
 } from "../helpers/serve-actions";
-import { apiServerUrls } from "../../config/routes";
+import { apiServerUrls } from "../../routing/routes";
 import { NextResponse } from "next/server";
 
 const HtmlBlockSchema = z

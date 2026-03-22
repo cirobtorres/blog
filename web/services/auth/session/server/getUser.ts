@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../../../config/routes";
+import { apiServerUrls } from "../../../../routing/routes";
 
 export const getUser = async (): Promise<SessionUser> => {
   const cookieStore = await cookies();

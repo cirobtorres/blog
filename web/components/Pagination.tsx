@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { cn } from "../utils/variants";
-import { Button } from "./Buttons";
 import Link from "next/link";
+import { Button } from "./Button";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -50,9 +50,9 @@ function PaginationLink({
       className={cn("h-8", className)}
     >
       <Link
+        data-active={isActive}
         aria-current={isActive ? "page" : undefined}
         data-slot="pagination-link"
-        data-active={isActive}
         {...props}
       />
     </Button>
@@ -153,51 +153,7 @@ function PaginationEllipsis({
   );
 }
 
-const HomePagination = () => (
-  <div className="mx-auto w-full flex justify-center items-center gap-4 my-6">
-    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-4 inline-start"
-      >
-        <path d="m15 18-6-6 6-6" />
-      </svg>{" "}
-      Anterior
-    </div>
-    <div className="text-sm text-neutral-500">Página 2 de 39</div>
-    <div className="flex items-center text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
-      Próxima{" "}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-4 inline-end"
-      >
-        <path d="m9 18 6-6-6-6" />
-      </svg>
-    </div>
-    <div className="text-sm text-neutral-500 px-2 py-1 border rounded bg-stone-200 dark:bg-stone-900">
-      Última
-    </div>
-  </div>
-);
-
 export {
-  HomePagination,
   Pagination,
   PaginationContent,
   PaginationEllipsis,

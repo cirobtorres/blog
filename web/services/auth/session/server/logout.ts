@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { apiClientUrls } from "../../../../config/routes";
+import { apiClientUrls } from "../../../../routing/routes";
 import { revalidatePath } from "next/cache";
 import { getAuthorClient } from "../../getAuthorClient";
 

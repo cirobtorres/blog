@@ -1,5 +1,5 @@
 // services/auth/session/server/getAuthorClient.ts
-import { ROUTES_PERMISSIONS } from "../../config/protected";
+import { ROUTES_PERMISSIONS } from "../../routing/protected";
 
 const getAuthorClient = ({ pathname }: { pathname?: string }) => {
   if (!pathname) return ["USER"];

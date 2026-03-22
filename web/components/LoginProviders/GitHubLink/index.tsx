@@ -1,4 +1,4 @@
-import { apiClientUrls } from "../../../config/routes";
+import { apiClientUrls } from "../../../routing/routes";
 import { cn, focusRing } from "../../../utils/variants";
 
 const GitHubLink = ({

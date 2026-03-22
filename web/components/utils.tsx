@@ -1,4 +1,4 @@
-import { externalUrls } from "../config/routes";
+import { externalUrls } from "../routing/routes";
 import { Link } from "./Links";
 
 const Separation = () => (

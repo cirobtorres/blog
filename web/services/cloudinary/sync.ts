@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../config/routes";
+import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
 export async function syncWithSpringBoot(

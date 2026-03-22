@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { sonnerToastPromise } from "../../../utils/sooner";
-import { Button } from "../../Buttons";
-import Spinner from "../../Spinner";
-import deleteMedia from "../../../services/cloudinary/delete";
+import { sonnerToastPromise } from "../../../../../utils/sooner";
+import Spinner from "../../../../Spinner";
+import deleteMedia from "../../../../../services/cloudinary/delete";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -14,7 +13,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../AlertDialog";
+} from "../../../../AlertDialog";
+import { Button } from "../../../../Button";
 
 export default function DeleteMediaButton({ id }: { id: string }) {
   return (

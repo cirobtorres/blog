@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 import type { Variants, Transition } from "motion/react";
 import { motion, useAnimation } from "motion/react";
-import { cn } from "../../../../../../utils/variants";
+import { cn } from "../../../../../utils/variants";
 
 const DURATION = 0.5;
 const REPEAT_DELAY = 2;

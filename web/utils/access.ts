@@ -1,4 +1,4 @@
-import { ROUTES_PERMISSIONS } from "../config/protected";
+import { ROUTES_PERMISSIONS } from "../routing/protected";
 
 type Route = keyof typeof ROUTES_PERMISSIONS;
 

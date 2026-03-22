@@ -1,9 +1,9 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
-import { buttonVariants, cn } from "../../utils/variants";
+import { buttonVariants, cn } from "../utils/variants";
 
-function Button({
+export function Button({
   className,
   variant = "default",
   asChild = false,
@@ -23,5 +23,3 @@ function Button({
     />
   );
 }
-
-export { Button, buttonVariants };

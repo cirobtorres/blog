@@ -1,6 +1,6 @@
 import LoginProviders from "../../../components/LoginProviders";
 import { Link } from "../../../components/Links";
-import { publicWebUrls } from "../../../config/routes";
+import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
 import SignInForm from "../../../components/Forms/SignInForm";

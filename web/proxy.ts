@@ -4,8 +4,8 @@ import {
   extractTokenFromHeader,
   extractPayload,
 } from "./services/helpers/serve-actions";
-import { apiServerUrls, publicWebUrls } from "./config/routes";
-import { PROTECTED_ROUTES, ROUTES_PERMISSIONS } from "./config/protected";
+import { apiServerUrls, publicWebUrls } from "./routing/routes";
+import { PROTECTED_ROUTES, ROUTES_PERMISSIONS } from "./routing/protected";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

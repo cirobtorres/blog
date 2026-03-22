@@ -1,74 +1,108 @@
 import Image from "next/image";
-import { cn, focusRing } from "../../../utils/variants";
-import { Checkbox } from "../../Fieldset/Checkbox";
-import { Button } from "../../Buttons";
 import Link from "next/link";
-import { DashedBackground } from "../../DashedBackground";
-import { MediaPagination } from "./MediaPagination";
-import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
+import { cn, focusRing } from "../../../../../utils/variants";
+import { Checkbox } from "../../../../Fieldset/Checkbox";
+import { DashedBackground } from "../../../../DashedBackground";
+import MediaPagination from "./MediaPagination";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../Select";
-import { apiServerUrls } from "../../../config/routes";
+} from "../../../../Select";
+import { apiServerUrls } from "../../../../../routing/routes";
+import { Button } from "../../../../Button";
 import DeleteMediaButton from "./DeleteMediaButton";
 import EditMediaButton from "./EditMediaButton";
 
-export async function MediaFileCards({
+export default async function MediaFileCards({
   accessToken,
+  searchParams,
 }: {
   accessToken?: string;
+  searchParams?: { page?: string; size?: string; folder?: string };
 }) {
-  const mediaResponse = await fetch(apiServerUrls.media.root, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
+  const currentPage = searchParams?.page || "0";
+  const currentFolder = searchParams?.folder || "Home";
+
+  const mediaResponse = await fetch(
+    `${apiServerUrls.media.root}?page=${currentPage}&folder=${currentFolder}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
     },
-  });
+  );
+
+  const countResponse = await fetch(
+    apiServerUrls.media.count + "?folder=Home",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
+    },
+  );
+
+  let mediaComp;
+  let countComp;
 
   if (!mediaResponse.ok) {
-    return <NoCardsFoundPlaceholder mediaResponse={mediaResponse} />;
+    mediaComp = (
+      <>
+        <div className="opacity-50 flex items-center gap-2">
+          <div className="w-40 h-8 rounded border dark:bg-stone-800" />
+          <div className="w-22 h-8 rounded border dark:bg-stone-800" />
+        </div>
+        <NoCardsFoundPlaceholder mediaResponse={mediaResponse} />
+      </>
+    );
+  } else {
+    const { content: media, page }: MediaResponsePageable =
+      await mediaResponse.json();
+
+    mediaComp = (
+      <>
+        <div className="w-full flex justify-between items-center gap-2">
+          <MediaFilesMutation />
+          <MediaFilesSorting />
+        </div>
+        <MediaPagination {...page} />
+        <div className="w-full grid grid-cols-3 items-center gap-2">
+          {media.map(({ ...props }) => (
+            <MediaFileCard key={props.publicId} props={props} />
+          ))}
+        </div>
+        <MediaPagination {...page} />
+      </>
+    );
   }
 
-  const {
-    content: media,
-    totalElements,
-    totalPages,
-    first,
-    last,
-    number: currentPage,
-    sort,
-  }: MediaResponsePageable = await mediaResponse.json();
-
-  const pageControl = {
-    first,
-    last,
-    currentPage,
-    totalPages,
-  };
+  if (!countResponse.ok) {
+    countComp = <h2 className="text-xl flex items-center">Arquivos</h2>;
+  } else {
+    const count = await countResponse.json();
+    countComp = (
+      <h2 className="text-xl flex items-center">Arquivos &#40;{count}&#41;</h2>
+    );
+  }
 
   return (
     <section className="flex flex-col items-start justify-center gap-2">
-      <h2 className="text-xl flex items-center">
-        Arquivos &#40;{totalElements}&#41;
-      </h2>
-      <MediaFilesHeader sort={sort} />
-      <MediaPagination {...pageControl} />
-      <div className="w-full grid grid-cols-3 items-center gap-2">
-        {media.map(({ ...props }) => (
-          <MediaFileCard key={props.publicId} props={props} />
-        ))}
-      </div>
-      <MediaPagination {...pageControl} />
+      {countComp}
+      {mediaComp}
     </section>
   );
 }
 
-const MediaFilesHeader = ({ sort }: { sort: MediaSort }) => (
+const MediaFilesSorting = () => (
   <div className="flex items-center gap-2">
     <Popover>
       <PopoverTrigger asChild>
@@ -90,7 +124,9 @@ const MediaFilesHeader = ({ sort }: { sort: MediaSort }) => (
           </svg>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="rounded"></PopoverContent>
+      <PopoverContent align="end" className="rounded">
+        <p>TODO</p>
+      </PopoverContent>
     </Popover>
     <Popover>
       <PopoverTrigger asChild>
@@ -114,7 +150,7 @@ const MediaFilesHeader = ({ sort }: { sort: MediaSort }) => (
           </svg>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start">
+      <PopoverContent align="end" className="rounded">
         <Select>
           <SelectTrigger className="w-full flex-1">
             <SelectValue placeholder="createdAt" />
@@ -150,11 +186,33 @@ const MediaFilesHeader = ({ sort }: { sort: MediaSort }) => (
   </div>
 );
 
+// TODO (incomplete): selectedFiles = files selected with the checkbox
+const MediaFilesMutation = ({
+  selectedFiles = 0,
+}: {
+  selectedFiles?: number;
+}) => (
+  <div className="flex items-center gap-2">
+    <label htmlFor="files-select-all">
+      <Checkbox id="files-select-all" className="size-6" />
+    </label>
+    <div className="flex items-center gap-2 [&_span]:text-sm [&_span]:text-nowrap [&_span]:text-neutral-600 dark:[&_span]:text-neutral-500">
+      <span>{selectedFiles} pastas</span>
+    </div>
+    <Button variant="destructive" disabled className="h-8 w-full max-w-30">
+      Excluir
+    </Button>
+    <Button variant="link" disabled className="h-8 w-full max-w-30">
+      Mover
+    </Button>
+  </div>
+);
+
 const MediaFileCard = ({
   props,
   isPriority = false,
 }: {
-  props: CloudinaryServer;
+  props: Media;
   isPriority?: boolean;
 }) => (
   <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-150 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">

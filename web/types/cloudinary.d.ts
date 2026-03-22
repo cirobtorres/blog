@@ -1,3 +1,4 @@
+// Comes from Cloudinary
 type Cloudinary = {
   api_key: string;
   asset_id: string;
@@ -22,7 +23,8 @@ type Cloudinary = {
   created_at: string;
 };
 
-type CloudinaryServer = {
+// Comes from server
+type Media = {
   id: string;
   name: string;
   folder: string;
@@ -40,25 +42,15 @@ type CloudinaryServer = {
   updatedAt: string;
 };
 
+// Comes from server (pagination)
 type MediaResponsePageable = {
-  content: CloudinaryServer[];
-  empty: boolean;
-  first: boolean;
-  last: boolean;
-  number: number; // Current page
-  size: number; // Size of the pages
-  numberOfElements: number; // Total elements on that page
-  totalElements: number; // Total elements on the db (for that query)
-  totalPages: number; // Number of pages
-  sort: MediaSort; // Sort rules requested by the client
-  pageable: {
-    offset: number;
-    pageNumber: number;
-    pageSize: number;
-    paged: boolean;
-    unpaged: boolean;
-    sort: MediaSort; // Sort rules returned from the server
-  };
+  content: Media[];
+  page: MediaPagination;
 };
 
-type MediaSort = { empty: boolean; sorted: boolean; unsorted: boolean };
+type MediaPagination = {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
+};

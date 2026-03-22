@@ -3,9 +3,7 @@
 import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import { cn } from "../utils/variants";
-import { Button } from "./Buttons";
-import Spinner from "./Spinner";
-import { sonnerToastPromise } from "../utils/sooner";
+import { Button } from "./Button";
 
 function AlertDialog({
   ...props

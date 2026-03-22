@@ -23,7 +23,7 @@ public class ArticlesService {
                 .subtitle(dto.subtitle())
                 .body(dto.body())
                 .slug(dto.slug())
-                .bannerUrl(dto.bannerUrl())
+                .banner(dto.media())
                 .build();
 
         return articlesRepository.save(article);

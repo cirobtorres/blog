@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import { apiServerUrls } from "../../../config/routes";
+import { apiServerUrls } from "../../../routing/routes";
 
 const signUpSchema = z.object({
   email: z.email("E-mail inválido").trim().toLowerCase(),

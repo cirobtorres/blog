@@ -2,8 +2,8 @@
 
 import React from "react";
 import { cn, focusRing } from "../../utils/variants";
-import { Button } from "../Buttons";
 import { Popover, PopoverContentClipPath, PopoverTrigger } from "../Popover";
+import { Button } from "../Button";
 
 const addAccDivStyle =
   "size-full flex flex-col justify-center items-center gap-1";

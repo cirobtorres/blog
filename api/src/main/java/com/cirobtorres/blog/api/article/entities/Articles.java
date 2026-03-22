@@ -2,6 +2,8 @@ package com.cirobtorres.blog.api.article.entities;
 
 import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.author.Author;
+import com.cirobtorres.blog.api.media.entities.Media;
+import com.cirobtorres.blog.api.media.enums.MediaType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -34,8 +36,9 @@ public class Articles {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String body;
 
-    @Column(name = "banner_url")
-    private String bannerUrl;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "banner_media_id")
+    private Media banner;
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -70,7 +73,7 @@ public class Articles {
         this.title = builder.title;
         this.subtitle = builder.subtitle;
         this.body = builder.body;
-        this.bannerUrl = builder.bannerUrl;
+        this.banner = builder.banner;
         this.slug = builder.slug;
         this.status = builder.status;
         this.publishedAt = builder.publishedAt;
@@ -81,7 +84,7 @@ public class Articles {
         private String title;
         private String subtitle;
         private String body;
-        private String bannerUrl;
+        private Media banner;
         private String slug;
         private ArticlesStatus status;
         private LocalDateTime publishedAt;
@@ -106,8 +109,8 @@ public class Articles {
             return this;
         }
 
-        public Builder bannerUrl(String bannerUrl) {
-            this.bannerUrl = bannerUrl;
+        public Builder banner(Media media) {
+            this.banner = media;
             return this;
         }
 
@@ -167,8 +170,13 @@ public class Articles {
         this.body = body;
     }
 
-    public String getBannerUrl() { return bannerUrl; }
-    public void setBannerUrl(String bannerUrl) { this.bannerUrl = bannerUrl; }
+    public Media getBanner() { return banner; }
+    public void setBanner(Media banner) {
+        if (banner != null && banner.getType() != MediaType.IMAGE) {
+            throw new IllegalArgumentException("Banner type must be IMAGE.");
+        }
+        this.banner = banner;
+    }
 
     public String getSlug() {
         return slug;

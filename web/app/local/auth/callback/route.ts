@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { pubWebUrlsAbsPath } from "../../../../config/routes";
+import { pubWebUrlsAbsPath } from "../../../../routing/routes";
 
 export async function GET() {
   return NextResponse.redirect(pubWebUrlsAbsPath.home);

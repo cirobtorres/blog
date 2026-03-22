@@ -2,7 +2,6 @@
 
 import React from "react";
 import { validateOTP } from "../../../services/auth/validateOTP";
-import { Button, buttonVariants } from "../../Buttons";
 import { cn, linkVariants } from "../../../utils/variants";
 import { Link } from "../../Links";
 import { FieldsetError } from "../../Fieldset";
@@ -11,6 +10,7 @@ import Spinner from "../../Spinner";
 import FieldsetOTPCode from "../../Fieldset/FieldsetOTPCode";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import RenewCodeButton from "./RenewCodeButton";
+import { Button } from "../../Button";
 
 interface ValidateEmailFormProps {
   email: string;
@@ -175,20 +175,15 @@ export default function ValidateEmailFormClient({
         <div className="mb-6 w-full flex justify-between items-center gap-2">
           <Link
             href="/"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded",
-            )}
+            variant="outline"
+            className="h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded"
           >
             Voltar
           </Link>
           <Button
             type="submit"
             disabled={code.length < 6 || isPendingValidateCode}
-            className={cn(
-              buttonVariants(),
-              "h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded disabled:opacity-50 disabled:text-neutral-300 disabled:border-stone-400 disabled:bg-stone-400 dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900",
-            )}
+            className="h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded disabled:opacity-50 disabled:text-neutral-300 disabled:border-stone-400 disabled:bg-stone-400 dark:disabled:text-stone-700 dark:disabled:border-stone-800 dark:disabled:bg-stone-900"
           >
             {isPendingValidateCode && <Spinner />} Confirmar
           </Button>

@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Button } from "../Buttons";
 import { logout } from "../../services/auth/session/server/logout";
 import Spinner from "../Spinner";
+import { Button } from "../Button";
 
 export function LogoutButton() {
   const [, action, isPending] = React.useActionState(async () => {

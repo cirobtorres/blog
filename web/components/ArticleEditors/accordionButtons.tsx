@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
-import { Button } from "../Buttons";
+import { Button } from "../Button";
 
 const buttonSizes = "w-7 h-9";
 
@@ -155,7 +155,7 @@ const Delete = ({
           Excluir
           <AlertDialogCancel
             onClick={handleCloseDialog}
-            className="size-8! border-transparent" // bg-stone-800
+            className="size-8! border-transparent"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

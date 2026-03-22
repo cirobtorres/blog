@@ -4,11 +4,15 @@ import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.enums.MediaType;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
+import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
+import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,15 +27,19 @@ import java.util.UUID;
 public class MediaService {
     private final Cloudinary cloudinary;
     private final MediaRepository mediaRepository;
+    private final MediaFolderRepository mediaFolderRepository;
     private final ObjectMapper objectMapper;
+    private static final Logger log = LoggerFactory.getLogger(MediaService.class);
 
     public MediaService(
             Cloudinary cloudinary,
             MediaRepository mediaRepository,
+            MediaFolderRepository mediaFolderRepository,
             ObjectMapper objectMapper
     ) {
         this.cloudinary = cloudinary;
         this.mediaRepository = mediaRepository;
+        this.mediaFolderRepository = mediaFolderRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -39,24 +47,15 @@ public class MediaService {
         return mediaRepository.findAll().stream().map(this::convertToDTO).toList();
     }
 
-    public long countFilesByFolder(String folder) {
-        return mediaRepository.countByFolder(folder);
+    public long countFilesByFolder(String folderPath) {
+        return mediaRepository.countByFolderPath(folderPath);
     }
 
-    public Page<MediaDTO> listAllPaged(String folder, Pageable pageable) {
-        Page<Media> entityPage;
-
-        if (folder == null || folder.isEmpty()) {
-            entityPage = mediaRepository.findByFolder("Home", pageable);
-        } else {
-            entityPage = mediaRepository.findByFolder(folder, pageable);
-        }
-
+    @Transactional
+    public Page<MediaDTO> listAllPaged(String folderPath, Pageable pageable) {
+        String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
+        Page<Media> entityPage = mediaRepository.findByFolderPath(targetPath, pageable);
         return entityPage.map(this::convertToDTO);
-    }
-
-    public List<String> listAllFolders() {
-        return mediaRepository.findAllUniqueFolders();
     }
 
     public List<Map<String, Object>> findOrphanFiles(String folderPath) throws Exception {
@@ -76,7 +75,7 @@ public class MediaService {
         );
 
         // Lists all public_ids from ArticlesMediaService
-        List<String> localPublicIds = mediaRepository.findAllPublicIdsByFolder(folderPath);
+        List<String> localPublicIds = mediaRepository.findAllPublicIdsByFolderPath(folderPath);
 
         // Filters all public_ids from Cloudinary that do not exist on ArticlesMediaService
         return cloudinaryResources
@@ -89,8 +88,8 @@ public class MediaService {
                 .toList();
     }
 
-    public List<Media> listAllInFolder(String folder) {
-        return mediaRepository.findByFolderOrderByCreatedAtDesc(folder);
+    public List<Media> listAllInFolder(String folderPath) {
+        return mediaRepository.findByFolderPathOrderByCreatedAtDesc(folderPath);
     }
 
     @Transactional
@@ -110,7 +109,7 @@ public class MediaService {
     }
 
     public void putMedia(UUID id) {
-
+        // TODO
     }
 
     @Transactional
@@ -133,10 +132,12 @@ public class MediaService {
     }
 
     private Media convertToEntity(MediaDTO dto) {
-        return new Media
-                .Builder()
+        MediaFolder folder = mediaFolderRepository.findByPath(dto.folder())
+                .orElseThrow(() -> new RuntimeException("Folder not found: " + dto.folder()));
+
+        return Media.builder()
                 .name(dto.name())
-                .folder(dto.folder())
+                .folder(folder)
                 .publicId(dto.publicId())
                 .url(dto.url())
                 .extension(dto.extension())
@@ -153,7 +154,7 @@ public class MediaService {
         return new MediaDTO(
                 entity.getId(),
                 entity.getName(),
-                entity.getFolder(),
+                entity.getFolder() != null ? entity.getFolder().getPath() : "Home",
                 entity.getPublicId(),
                 entity.getUrl(),
                 entity.getExtension(),

@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import { Button } from "../Buttons";
 import {
   Fieldset,
   FieldsetInput,
@@ -11,6 +10,7 @@ import {
 import { signIn } from "../../services/auth/signIn";
 import Spinner from "../Spinner";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
+import { Button } from "../Button";
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");

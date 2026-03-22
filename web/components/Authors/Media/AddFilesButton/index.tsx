@@ -11,26 +11,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   AlertDialogExitConfirmation,
-} from "../../../../AlertDialog";
-import { Button } from "../../../../Buttons";
-import { cn, focusRing } from "../../../../../utils/variants";
-import { Tabs, TabsList, TabsTrigger } from "../../../../Tabs";
+} from "../../../AlertDialog";
+import { cn, focusRing } from "../../../../utils/variants";
+import { Tabs, TabsList, TabsTrigger } from "../../../Tabs";
 import { MediaPullRequestIcon } from "./MediaPullRequestIcon";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import { getCloudinarySignature } from "../../../../../services/cloudinary/signature";
-import { convertToLargeDate } from "../../../../../utils/date";
-import { syncWithSpringBoot } from "../../../../../services/cloudinary/sync";
+import { sonnerToastPromise } from "../../../../utils/sooner";
+import { getCloudinarySignature } from "../../../../services/cloudinary/signature";
+import { convertToLargeDate } from "../../../../utils/date";
+import { syncWithSpringBoot } from "../../../../services/cloudinary/sync";
 import FilePreviewCard from "./FilePreviewCard";
-import Spinner from "../../../../Spinner";
+import Spinner from "../../../Spinner";
+import { Button } from "../../../Button";
 
-const initialState: ActionState = {
-  ok: false,
-  success: null,
-  error: null,
-  data: null,
-};
-
-export function AddFilesButton() {
+export function AddFilesButton({
+  existingFolders,
+}: {
+  existingFolders: string[];
+}) {
   const [tab, setTab] = React.useState("pc");
   const [isDragging, setIsDragging] = React.useState(false);
   const [files, setFiles] = React.useState<File[]>([]);
@@ -150,7 +147,12 @@ export function AddFilesButton() {
 
       return result;
     },
-    initialState,
+    {
+      ok: false,
+      success: null,
+      error: null,
+      data: null,
+    } as ActionState,
   );
 
   return (
@@ -302,6 +304,7 @@ export function AddFilesButton() {
                 <FilePreviewCard
                   key={index}
                   file={file}
+                  existingFolders={existingFolders}
                   onRemove={() => {
                     const newFiles = files.filter((_, i) => i !== index);
                     setFiles(newFiles);
@@ -322,11 +325,10 @@ export function AddFilesButton() {
               </AlertDialogExitConfirmation>
               <Button
                 type="submit"
-                variant="default"
                 disabled={isPending}
                 className="w-full max-w-30 h-8"
               >
-                {isPending && <Spinner />}Salvar
+                {isPending && <Spinner />} Salvar
               </Button>
             </AlertDialogFooter>
           </form>

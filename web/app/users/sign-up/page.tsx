@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Link } from "../../../components/Links";
 import { Skeleton } from "../../../components/Skeleton";
 import LoginProviders from "../../../components/LoginProviders";
-import { publicWebUrls } from "../../../config/routes";
+import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
 import SignUpForm from "../../../components/Forms/SignUpForm";

@@ -1,7 +1,6 @@
 package com.cirobtorres.blog.api.media.controllers;
 
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
-import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.services.MediaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,41 +26,27 @@ public class MediaController {
         this.mediaService = mediaService;
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> countByFolder(@RequestParam(defaultValue = "") String folder) {
-        return ResponseEntity.ok(mediaService.countFilesByFolder(folder));
-    }
-
-    // @GetMapping
-    // public ResponseEntity<List<MediaDTO>> listAll() {
-    //     return ResponseEntity.ok(mediaService.listAllMediaDTO());
-    // }
-
     @GetMapping
     public ResponseEntity<Page<MediaDTO>> listPaged(
             @RequestParam(defaultValue = "Home") String folder,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size
+            Pageable pageable
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return ResponseEntity.ok(mediaService.listAllPaged(folder, pageable));
     }
 
-    @GetMapping(params = "folder")
-    public ResponseEntity<List<Media>> listByFolder(
-            @RequestParam String folder
-    ) {
-        List<Media> mediaList = mediaService.listAllInFolder(folder);
-        return ResponseEntity.ok(mediaList);
+    @GetMapping("/count")
+    public ResponseEntity<Long> countFilesByFolder(@RequestParam(defaultValue = "") String folder) { // Home = ""
+        return ResponseEntity.ok(mediaService.countFilesByFolder(folder));
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> put(
             @PathVariable UUID id
-    ) throws Exception {
+    ) {
         mediaService.putMedia(id);
         return ResponseEntity.noContent().build();
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable UUID id

@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { Button } from "./Buttons";
 import { cn } from "../utils/variants";
+import { Button } from "./Button";
 
 function Dialog({
   ...props

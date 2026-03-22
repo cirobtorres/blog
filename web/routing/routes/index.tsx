@@ -42,6 +42,11 @@ const apiServerUrls = {
     count: API_SERVER + "/media/count",
     syncImport: API_SERVER + "/media/sync/import",
   },
+  mediaFolders: {
+    root: API_SERVER + "/media/folders",
+    count: API_SERVER + "/media/folders/count",
+    exists: API_SERVER + "/media/folders/exists",
+  },
 };
 
 const apiClientUrls = {

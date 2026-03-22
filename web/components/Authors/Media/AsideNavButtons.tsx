@@ -13,7 +13,7 @@ import React, {
 import { cn, focusRing } from "../../../utils/variants";
 import { usePathname } from "next/navigation";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../HoverCard";
-import { protectedWebUrls } from "../../../config/routes";
+import { protectedWebUrls } from "../../../routing/routes";
 
 export function HomePathLink() {
   const path = "";

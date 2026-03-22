@@ -1,4 +1,6 @@
-import { cn } from "../../../utils/variants";
+"use client";
+
+import { cn } from "../../../../../utils/variants";
 import {
   Pagination,
   PaginationContent,
@@ -7,46 +9,49 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "../../Pagination";
+} from "../../../../Pagination";
+import { useSearchParams } from "next/navigation";
 
-export function MediaPagination({
-  first,
-  last,
-  currentPage,
+export default function MediaPagination({
+  number,
   totalPages,
-}: {
-  first: boolean;
-  last: boolean;
-  currentPage: number;
-  totalPages: number;
-}) {
-  // Spring returns first page as zero, since these are list indexes
-  const page = currentPage + 1;
+}: MediaPagination) {
+  const searchParams = useSearchParams();
+  const currentPage = number;
+  const displayPage = currentPage + 1;
+  const isFirst = currentPage === 0;
+  const isLast = currentPage >= totalPages - 1;
+
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber.toString());
+    return `?${params.toString()}`;
+  };
 
   const generatePages = () => {
     const items: (number | string)[] = [];
-
     if (totalPages <= 1) return items;
 
     items.push(1);
 
-    if (page > 3) {
+    if (displayPage > 3) {
       items.push("ellipsis-start");
     }
 
-    for (
-      let i = Math.max(2, page - 1);
-      i <= Math.min(totalPages - 1, page + 1);
-      i++
-    ) {
+    const start = Math.max(2, displayPage - 1);
+    const end = Math.min(totalPages - 1, displayPage + 1);
+
+    for (let i = start; i <= end; i++) {
       items.push(i);
     }
 
-    if (page < totalPages - 2) {
+    if (displayPage < totalPages - 2) {
       items.push("ellipsis-end");
     }
 
-    items.push(totalPages);
+    if (totalPages > 1 && !items.includes(totalPages)) {
+      items.push(totalPages);
+    }
 
     return items;
   };
@@ -59,18 +64,18 @@ export function MediaPagination({
         <PaginationContent className="my-6">
           <PaginationItem>
             <PaginationPrevious
-              href={`?page=${currentPage - 1}`}
-              disabled={first}
+              href={createPageURL(currentPage - 1)}
               className={cn(
                 "w-24 border-none rounded-lg",
-                first && "pointer-events-none opacity-50",
+                isFirst && "pointer-events-none opacity-25",
               )}
             />
           </PaginationItem>
+
           {pageItems.map((item, index) => {
             if (typeof item === "string") {
               return (
-                <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationItem key={`${item}-${index}`}>
                   <PaginationEllipsis />
                 </PaginationItem>
               );
@@ -78,22 +83,22 @@ export function MediaPagination({
             return (
               <PaginationItem key={item}>
                 <PaginationLink
-                  href={`?page=${item - 1}`}
+                  href={createPageURL(item - 1)}
                   className="rounded-lg size-8"
-                  isActive={page === item}
+                  isActive={displayPage === item}
                 >
                   {item}
                 </PaginationLink>
               </PaginationItem>
             );
           })}
+
           <PaginationItem>
             <PaginationNext
-              href={`?page=${currentPage + 1}`}
-              disabled={last}
+              href={createPageURL(currentPage + 1)}
               className={cn(
                 "w-24 border-none rounded-lg",
-                last && "pointer-events-none opacity-50",
+                isLast && "pointer-events-none opacity-25",
               )}
             />
           </PaginationItem>

@@ -1,19 +1,15 @@
 import Image from "next/image";
 import React from "react";
-import { DashedBackground } from "../../../../../DashedBackground";
-import {
-  Fieldset,
-  FieldsetInput,
-  FieldsetLabel,
-} from "../../../../../Fieldset";
+import { DashedBackground } from "../../../../DashedBackground";
+import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../../../Select";
-import { Button } from "../../../../../Buttons";
+} from "../../../../Select";
+import { Button } from "../../../../Button";
 
 const generateVideoThumbnail = (file: File): Promise<string> => {
   return new Promise((resolve) => {
@@ -42,9 +38,11 @@ const generateVideoThumbnail = (file: File): Promise<string> => {
 
 export default function FilePreviewCard({
   file,
+  existingFolders,
   onRemove,
 }: {
   file: File;
+  existingFolders: string[];
   onRemove: () => void;
 }) {
   const [preview, setPreview] = React.useState<string | null>(null);
@@ -132,7 +130,11 @@ export default function FilePreviewCard({
               <SelectValue placeholder="Pasta" />
             </SelectTrigger>
             <SelectContent position="popper">
-              <SelectItem value="Home">Home</SelectItem>
+              {existingFolders.map((folder) => (
+                <SelectItem key={folder} value={folder}>
+                  {folder}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">

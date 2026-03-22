@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../config/routes";
+import { apiServerUrls } from "../../routing/routes";
 
 export default async function editMedia(
   prevState: ActionState,

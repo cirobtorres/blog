@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import { apiServerUrls } from "../../../config/routes";
+import { apiServerUrls } from "../../../routing/routes";
 import { cookies } from "next/headers";
 
 const signUpSchema = z.object({

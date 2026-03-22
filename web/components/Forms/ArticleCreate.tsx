@@ -15,8 +15,8 @@ import {
 import { Alert } from "../Alert";
 import { FieldsetError } from "../Fieldset";
 import { sonnerToastPromise } from "../../utils/sooner";
-import { Button } from "../Buttons";
 import Spinner from "../Spinner";
+import { Button } from "../Button";
 
 export function ArticleCreate() {
   const [blocks, setBlocks] = React.useState<Blocks[]>([]);

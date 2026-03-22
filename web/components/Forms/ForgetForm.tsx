@@ -7,15 +7,9 @@ import {
   FieldsetInput,
   FieldsetLabel,
 } from "../Fieldset";
-import { Button } from "../Buttons";
 import FieldsetOTPCode from "../Fieldset/FieldsetOTPCode";
 import Spinner from "../Spinner";
-import {
-  redirect,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { passChangePermission } from "../../services/auth/password-forgotten/passChangePermission";
 import { forgetEmailPass } from "../../services/auth/password-forgotten/forgetEmailPass";
 import { passChange } from "../../services/auth/password-forgotten/passChange";
@@ -23,6 +17,7 @@ import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
 import { translations } from "@zxcvbn-ts/language-pt-br";
 import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
 import { Link } from "../Links";
+import { Button } from "../Button";
 
 export default function ForgetForm({ hasToken }: { hasToken?: boolean }) {
   const [email, setEmail] = React.useState("");

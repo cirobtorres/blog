@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { apiServerUrls, publicWebUrls } from "../../config/routes";
+import { apiServerUrls, publicWebUrls } from "../../routing/routes";
 import { cookies } from "next/headers";
 import { parseSetCookie } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";

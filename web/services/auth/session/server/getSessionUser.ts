@@ -1,6 +1,6 @@
 "use server";
 
-import { publicWebUrls } from "../../../../config/routes";
+import { publicWebUrls } from "../../../../routing/routes";
 import { getUser } from "./getUser";
 
 export async function getSessionUser() {

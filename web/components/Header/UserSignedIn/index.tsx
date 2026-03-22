@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { cn, focusRing } from "../../../utils/variants";
-import { protectedWebUrls } from "../../../config/routes";
+import { protectedWebUrls } from "../../../routing/routes";
 import { Link } from "../../Links";
 import { logout } from "../../../services/auth/session/server/logout";
 import Spinner from "../../Spinner";

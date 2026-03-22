@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,21 +11,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../../AlertDialog";
-import { Button } from "../../Buttons";
-import { sonnerToastPromise } from "../../../utils/sooner";
-import Spinner from "../../Spinner";
-import editMedia from "../../../services/cloudinary/edit";
-import { DashedBackground } from "../../DashedBackground";
-import Image from "next/image";
-import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
+} from "../../../../AlertDialog";
+import Spinner from "../../../../Spinner";
+import editMedia from "../../../../../services/cloudinary/edit";
+import { DashedBackground } from "../../../../DashedBackground";
+import { sonnerToastPromise } from "../../../../../utils/sooner";
+import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../Select";
+} from "../../../../Select";
+import { Button } from "../../../../Button";
 
 export default function EditMediaButton({
   id,

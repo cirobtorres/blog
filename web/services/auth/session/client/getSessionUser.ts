@@ -1,6 +1,6 @@
 "use client";
 
-import { publicWebUrls } from "../../../../config/routes";
+import { publicWebUrls } from "../../../../routing/routes";
 import { getAuthorClient } from "../../getAuthorClient";
 import getUser from "./getUser";
 

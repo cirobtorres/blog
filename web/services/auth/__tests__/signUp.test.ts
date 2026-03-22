@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { publicWebUrls } from "../../../config/routes";
+import { publicWebUrls } from "../../../routing/routes";
 import { signUp } from "../signUp";
 
 const mockCookies = jest.fn();

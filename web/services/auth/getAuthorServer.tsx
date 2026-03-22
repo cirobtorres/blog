@@ -1,6 +1,6 @@
 "use server";
 
-import { ROUTES_PERMISSIONS } from "../../config/protected";
+import { ROUTES_PERMISSIONS } from "../../routing/protected";
 import { headers } from "next/headers";
 import { isRoute } from "../../utils/access";
 

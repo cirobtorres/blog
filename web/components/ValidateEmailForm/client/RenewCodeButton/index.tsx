@@ -1,5 +1,5 @@
 import { cn } from "../../../../utils/variants";
-import { Button } from "../../../Buttons";
+import { Button } from "../../../Button";
 
 const RenewCodeButton = ({
   onClick,
