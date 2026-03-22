@@ -47,8 +47,8 @@ export function AddFolderButton() {
           Criar pasta
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="ring-4 border-4 max-w-200 p-0 overflow-hidden">
-        <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
+      <AlertDialogContent className="max-w-lg">
+        <AlertDialogHeader>
           <AlertDialogTitle>Criar pasta</AlertDialogTitle>
           <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
             <svg
@@ -67,29 +67,29 @@ export function AddFolderButton() {
             </svg>
           </AlertDialogCancel>
         </AlertDialogHeader>
-        <AlertDialogDescription className="sr-only"></AlertDialogDescription>
-        <div className="w-full flex flex-row items-center gap-2 px-4">
+        <AlertDialogDescription className="sr-only">
+          Área de criação de pastas. Você pode criar pastas na raiz, em Home, ou
+          até mesmo criar pastas dentro de outras pastas, para melhor
+          organização dos seus arquivos de media.
+        </AlertDialogDescription>
+        <div className="flex flex-col gap-2 p-4">
           <Fieldset className="flex-1">
             <FieldsetInput id="folder-name" />
             <FieldsetLabel htmlFor="folder-name" label="Nome" />
           </Fieldset>
           <Select>
             <SelectTrigger className="w-full flex-1">
-              <SelectValue placeholder="Teste" />
+              <SelectValue placeholder="Home" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
-                {Array.from({ length: 50 }).map((_, index) => (
-                  <SelectItem key={index} value={"teste-" + index}>
-                    Teste-{index}
-                  </SelectItem>
-                ))}
+                <SelectItem value="Home">Home</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
         <FieldsetError />
-        <AlertDialogFooter className="flex justify-between items-center sm:justify-between flex-row sm:flex-row">
+        <AlertDialogFooter>
           <AlertDialogCancel className="w-full max-w-30 h-8">
             Cancelar
           </AlertDialogCancel>

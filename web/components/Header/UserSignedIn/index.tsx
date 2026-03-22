@@ -1,24 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import { cn, focusRing } from "../../../utils/variants";
+import React, { Dispatch, SetStateAction } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
-import { Link } from "../../Links";
+import { cn, focusRing } from "../../../utils/variants";
 import { protectedWebUrls } from "../../../config/routes";
-import { logout } from "../../../services/auth/logout";
-import { Dispatch, SetStateAction } from "react";
+import { Link } from "../../Links";
+import { logout } from "../../../services/auth/session/server/logout";
+import Spinner from "../../Spinner";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
   "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800 font-normal transition-[background-color,box-shadow] duration-300 rounded";
 
-const UserSignedIn = ({
+export default function UserSignedIn({
   user,
   setUserState,
 }: {
   user: AuthSessionConfirmed;
   setUserState: Dispatch<SetStateAction<AuthSession | null>>;
-}) => {
+}) {
+  const [, action, isPending] = React.useActionState(async () => {
+    const result = await logout();
+    if (result.ok) setUserState({ ok: false, data: null });
+  }, null);
+
   return (
     <div className="ml-auto mr-0">
       <Popover>
@@ -78,6 +84,13 @@ const UserSignedIn = ({
               Autor
             </Link>
             <Link
+              href={protectedWebUrls.write}
+              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
+            >
+              <WriteIcon />
+              Escrever
+            </Link>
+            <Link
               href={protectedWebUrls.media}
               className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
             >
@@ -85,7 +98,7 @@ const UserSignedIn = ({
               Media
             </Link>
           </div>
-          <div className={cn(elStyleWrapper, "border-b")}>
+          {/* <div className={cn(elStyleWrapper, "border-b")}>
             <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
               Tema
             </p>
@@ -101,23 +114,17 @@ const UserSignedIn = ({
               <CustomSystemThemeIcon />
               Sistema
             </p>
-          </div>
-          <div className={elStyleWrapper}>
-            <button
-              onClick={async () => {
-                await logout();
-                setUserState({ ok: false, data: null });
-              }}
-              className={elStyleItem}
-            >
-              Sair
+          </div> */}
+          <form action={action} className={elStyleWrapper}>
+            <button type="submit" disabled={isPending} className={elStyleItem}>
+              {isPending && <Spinner />} Sair
             </button>
-          </div>
+          </form>
         </PopoverContent>
       </Popover>
     </div>
   );
-};
+}
 
 const PreferencesIcon = () => (
   <svg
@@ -155,6 +162,28 @@ const AuthorIcon = () => (
     <path d="M19 14v6" />
     <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 .825.178" />
     <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l2.116-.962" />
+  </svg>
+);
+
+const WriteIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="size-3"
+  >
+    <path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" />
+    <path d="M2 6h4" />
+    <path d="M2 10h4" />
+    <path d="M2 14h4" />
+    <path d="M2 18h4" />
+    <path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
   </svg>
 );
 
@@ -246,5 +275,3 @@ const CustomSystemThemeIcon = () => (
     <circle cx="18" cy="6" r="3" />
   </svg>
 );
-
-export default UserSignedIn;

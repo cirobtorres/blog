@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.media.services;
 
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.entities.Media;
+import com.cirobtorres.blog.api.media.enums.MediaType;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.api.ApiResponse;
@@ -35,10 +36,7 @@ public class MediaService {
     }
 
     public List<MediaDTO> listAllMediaDTO() {
-        return mediaRepository.findAll()
-                .stream()
-                .map(this::convertToDTO)
-                .toList();
+        return mediaRepository.findAll().stream().map(this::convertToDTO).toList();
     }
 
     public long countFilesByFolder(String folder) {
@@ -111,21 +109,25 @@ public class MediaService {
         }
     }
 
+    public void putMedia(UUID id) {
+
+    }
+
     @Transactional
     public void deleteMedia(UUID id) throws Exception {
-        Media media = mediaRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Media id={" + id + "} does not exist.")
-                );
+        Media media = mediaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Media id={" + id + "} does not exist."));
 
-        // Cloudinary first
-        cloudinary
-                .uploader()
-                .destroy(
-                        media.getPublicId(),
-                        ObjectUtils.emptyMap()
-                );
+        String resourceType = "image";
+        if (media.getType() == MediaType.VIDEO) resourceType = "video";
+        if (media.getType() == MediaType.RAW) resourceType = "raw";
+
+        Map destroyParams = ObjectUtils.asMap("resource_type", resourceType);
+        Map response = cloudinary.uploader().destroy(media.getPublicId(), destroyParams);
+
+        if (!"ok".equals(response.get("result")) && !"not_found".equals(response.get("result"))) {
+            throw new RuntimeException("Cloudinary delete fail: " + response.get("result"));
+        }
 
         mediaRepository.delete(media);
     }

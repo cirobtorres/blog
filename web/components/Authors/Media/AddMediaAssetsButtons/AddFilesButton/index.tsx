@@ -16,12 +16,12 @@ import { Button } from "../../../../Buttons";
 import { cn, focusRing } from "../../../../../utils/variants";
 import { Tabs, TabsList, TabsTrigger } from "../../../../Tabs";
 import { MediaPullRequestIcon } from "./MediaPullRequestIcon";
-import { FilePreviewCard } from "./FilePreviewCard";
 import { sonnerToastPromise } from "../../../../../utils/sooner";
 import { getCloudinarySignature } from "../../../../../services/cloudinary/signature";
-import Spinner from "../../../../Spinner";
 import { convertToLargeDate } from "../../../../../utils/date";
 import { syncWithSpringBoot } from "../../../../../services/cloudinary/sync";
+import FilePreviewCard from "./FilePreviewCard";
+import Spinner from "../../../../Spinner";
 
 const initialState: ActionState = {
   ok: false,
@@ -279,8 +279,8 @@ export function AddFilesButton() {
         </AlertDialogContent>
       )}
       {openStep === "preview" && (
-        <AlertDialogContent className="ring-4 border-4 max-w-200 gap-0 p-0 overflow-hidden">
-          <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
+        <AlertDialogContent>
+          <AlertDialogHeader>
             <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
             <AlertDialogExitConfirmation
               onConfirm={() => {
@@ -310,7 +310,7 @@ export function AddFilesButton() {
                 />
               ))}
             </div>
-            <AlertDialogFooter className="flex justify-between items-center sm:justify-between flex-row sm:flex-row">
+            <AlertDialogFooter>
               <AlertDialogExitConfirmation
                 location="footer"
                 onConfirm={() => {
@@ -322,8 +322,8 @@ export function AddFilesButton() {
               </AlertDialogExitConfirmation>
               <Button
                 type="submit"
-                disabled={isPending}
                 variant="default"
+                disabled={isPending}
                 className="w-full max-w-30 h-8"
               >
                 {isPending && <Spinner />}Salvar

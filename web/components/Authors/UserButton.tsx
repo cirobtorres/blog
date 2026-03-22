@@ -2,6 +2,7 @@ import Image from "next/image";
 import { cn, focusRing } from "../../utils/variants";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { Link } from "../Links";
+import { LogoutButton } from "./LogoutButton";
 
 export function UserButton({ user }: { user: User }) {
   return (
@@ -62,12 +63,7 @@ export function UserButton({ user }: { user: User }) {
           >
             Profile settings
           </Link>
-          <Link
-            href="#"
-            className="w-full font-normal p-1 text-destructive hover:text-destructive dark:hover:text-destructive hover:bg-stone-300 dark:hover:bg-stone-800"
-          >
-            Sair
-          </Link>
+          <LogoutButton />
         </div>
       </PopoverContent>
     </Popover>

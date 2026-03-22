@@ -4,6 +4,8 @@ import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import { cn } from "../utils/variants";
 import { Button } from "./Buttons";
+import Spinner from "./Spinner";
+import { sonnerToastPromise } from "../utils/sooner";
 
 function AlertDialog({
   ...props
@@ -53,7 +55,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-stone-100 dark:bg-stone-925 ring-stone-100/10 gap-4 rounded-xl p-4 ring-1 duration-100 max-w-xs group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
+          "ring-4 border-4 max-w-200 overflow-hidden data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-stone-100 dark:bg-stone-925 ring-stone-100/10 rounded-xl duration-100 group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none",
           className,
         )}
         {...props}
@@ -70,7 +72,7 @@ function AlertDialogHeader({
     <div
       data-slot="alert-dialog-header"
       className={cn(
-        "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+        "relative h-14.25 border-b p-4 dark:bg-stone-900 grid grid-rows-[auto_1fr] justify-between items-center place-items-center text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
         className,
       )}
       {...props}
@@ -86,7 +88,7 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-        "rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end bg-stone-200 dark:bg-stone-900", // -mx-4 -mb-4
+        "flex justify-between items-center rounded-b-xl border-t p-4 gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 bg-stone-200 dark:bg-stone-900",
         className,
       )}
       {...props}
@@ -205,8 +207,8 @@ const AlertDialogExitConfirmation = ({
         </Button>
       )}
     </AlertDialogTrigger>
-    <AlertDialogContent className="ring-4 border-4 p-0 overflow-hidden">
-      <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
+    <AlertDialogContent className="max-w-xs">
+      <AlertDialogHeader>
         <AlertDialogTitle>Sair sem salvar?</AlertDialogTitle>
         <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
           <svg
@@ -228,10 +230,10 @@ const AlertDialogExitConfirmation = ({
       <AlertDialogDescription className="sr-only">
         {children}
       </AlertDialogDescription>
-      <div className="px-4">
+      <div className="p-4">
         <p className="text-sm text-neutral-500">{children}</p>
       </div>
-      <AlertDialogFooter className="flex justify-between items-center sm:justify-between flex-row sm:flex-row">
+      <AlertDialogFooter>
         <AlertDialogCancel className="w-full max-w-20 h-8">
           Voltar
         </AlertDialogCancel>

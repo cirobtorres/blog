@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
   extractTokenFromHeader,
   parseSetCookie,
@@ -93,7 +93,22 @@ const signIn = async (
         return redirect(publicWebUrls.validateEmail);
       }
     }
-    return redirect("/");
+    const headersList = await headers();
+    let redirectUrl = "/";
+    const referer = headersList.get("referer");
+    if (referer) {
+      const refererUrl = new URL(referer);
+      const callbackPath =
+        refererUrl.searchParams.get("redirect") ||
+        refererUrl.searchParams.get("callback");
+
+      if (callbackPath) {
+        redirectUrl = callbackPath.startsWith("/")
+          ? decodeURIComponent(callbackPath)
+          : "/";
+      }
+    }
+    return redirect(redirectUrl);
   }
 
   if (!isProd) {

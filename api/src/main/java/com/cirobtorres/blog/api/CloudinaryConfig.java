@@ -21,7 +21,7 @@ public class CloudinaryConfig {
                 "cloud_name", apiApplicationProperties.getApplication().getMediaUpServName(),
                 "api_key", apiApplicationProperties.getApplication().getMediaUpServKey(),
                 "api_secret", apiApplicationProperties.getApplication().getMediaUpServSecret(),
-                "secure", true // Https
+                "secure", apiApplicationProperties.getApplication().isProduction()
         ));
     }
 }

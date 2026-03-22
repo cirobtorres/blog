@@ -34,6 +34,7 @@ type CloudinaryServer = {
   width: number;
   height: number;
   duration: number | null;
+  caption: string;
   alt: string;
   createdAt: string;
   updatedAt: string;

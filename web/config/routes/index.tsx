@@ -18,6 +18,7 @@ const pubWebUrlsAbsPath = {
 
 const protectedWebUrls = {
   authors: "/users/authors",
+  write: "/users/authors/articles",
   media: "/users/authors/media",
 };
 
@@ -37,7 +38,7 @@ const apiServerUrls = {
     create: API_SERVER + "/articles",
   },
   media: {
-    list: API_SERVER + "/media",
+    root: API_SERVER + "/media",
     count: API_SERVER + "/media/count",
     syncImport: API_SERVER + "/media/sync/import",
   },

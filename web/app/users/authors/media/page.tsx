@@ -1,60 +1,13 @@
 "use server";
 
+import { cookies } from "next/headers";
+import { Suspense } from "react";
 import { Button } from "../../../../components/Buttons";
 import { Checkbox } from "../../../../components/Fieldset/Checkbox";
 import { cn, focusRing } from "../../../../utils/variants";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  HomePagination,
-} from "../../../../components/Pagination";
 import { FolderUpIcon } from "../../../../components/Icons";
-import { MediaFileCard } from "../../../../components/Authors/Media/MediaFileCard";
-import { apiServerUrls } from "../../../../config/routes";
-import { cookies } from "next/headers";
-import { Suspense } from "react";
+import { MediaFileCards } from "../../../../components/Authors/Media/MediaFileCards";
 import { Skeleton } from "../../../../components/Skeleton";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../../components/Popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../components/Select";
-
-const NoCardsFoundPlaceholder = ({
-  mediaResponse,
-}: {
-  mediaResponse: Response;
-}) => (
-  <div className="w-full max-w-xl mx-auto opacity-50 mt-4 min-h-80 rounded-xl border grid grid-rows-[40px_1fr] overflow-hidden">
-    <div className="w-full h-full border-b flex items-center justify-start px-3 gap-2 dark:bg-stone-800">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="size-2 rounded-full dark:bg-white" />
-      ))}
-    </div>
-    <div className="w-full h-full flex flex-col justify-center items-center gap-2 px-10 dark:bg-stone-900">
-      <strong className="text-7xl">{mediaResponse.status}</strong>
-      {mediaResponse.statusText && (
-        <div className="px-10">
-          <p className="text-xl text-center line-clamp-3">
-            {mediaResponse.statusText}
-          </p>
-        </div>
-      )}
-    </div>
-  </div>
-);
 
 const MediaFileCardsLoading = () => (
   <section className="flex flex-col items-start justify-center gap-2">
@@ -105,7 +58,7 @@ export default async function AuthorsMediaPage() {
         <div className="w-full grid grid-cols-4 items-center gap-2">
           <MediaFolders />
         </div>
-        <HomePagination />
+        {/* <HomePagination /> */}
       </section>
       <hr className="dark:border-stone-800" />
       <Suspense fallback={<MediaFileCardsLoading />}>
@@ -114,147 +67,6 @@ export default async function AuthorsMediaPage() {
     </>
   );
 }
-
-const MediaPagination = ({
-  first,
-  last,
-  currentPage,
-  totalPages,
-}: {
-  first: boolean;
-  last: boolean;
-  currentPage: number;
-  totalPages: number;
-}) => {
-  // Spring returns first page as zero, since these are list indexes
-  const page = currentPage + 1;
-
-  const generatePages = () => {
-    const items: (number | string)[] = [];
-
-    if (totalPages <= 1) return items;
-
-    items.push(1);
-
-    if (page > 3) {
-      items.push("ellipsis-start");
-    }
-
-    for (
-      let i = Math.max(2, page - 1);
-      i <= Math.min(totalPages - 1, page + 1);
-      i++
-    ) {
-      items.push(i);
-    }
-
-    if (page < totalPages - 2) {
-      items.push("ellipsis-end");
-    }
-
-    items.push(totalPages);
-
-    return items;
-  };
-
-  const pageItems = generatePages();
-
-  return (
-    totalPages > 1 && (
-      <Pagination>
-        <PaginationContent className="my-6">
-          <PaginationItem>
-            <PaginationPrevious
-              href={`?page=${currentPage - 1}`}
-              disabled={first}
-              className={cn(
-                "w-24 border-none rounded-lg",
-                first && "pointer-events-none opacity-50",
-              )}
-            />
-          </PaginationItem>
-          {pageItems.map((item, index) => {
-            if (typeof item === "string") {
-              return (
-                <PaginationItem key={`ellipsis-${index}`}>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              );
-            }
-            return (
-              <PaginationItem key={item}>
-                <PaginationLink
-                  href={`?page=${item - 1}`}
-                  className="rounded-lg size-8"
-                  isActive={page === item}
-                >
-                  {item}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-          <PaginationItem>
-            <PaginationNext
-              href={`?page=${currentPage + 1}`}
-              disabled={last}
-              className={cn(
-                "w-24 border-none rounded-lg",
-                last && "pointer-events-none opacity-50",
-              )}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    )
-  );
-};
-
-const MediaFileCards = async ({ accessToken }: { accessToken?: string }) => {
-  const mediaResponse = await fetch(apiServerUrls.media.list, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!mediaResponse.ok) {
-    return <NoCardsFoundPlaceholder mediaResponse={mediaResponse} />;
-  }
-
-  const {
-    content: media,
-    totalElements,
-    totalPages,
-    first,
-    last,
-    number: currentPage,
-    sort,
-  }: MediaResponsePageable = await mediaResponse.json();
-
-  const pageControl = {
-    first,
-    last,
-    currentPage,
-    totalPages,
-  };
-
-  return (
-    <section className="flex flex-col items-start justify-center gap-2">
-      <h2 className="text-xl flex items-center">
-        Arquivos &#40;{totalElements}&#41;
-      </h2>
-      <MediaFilesHeader sort={sort} />
-      <MediaPagination {...pageControl} />
-      <div className="w-full grid grid-cols-3 items-center gap-2">
-        {media.map(({ ...props }) => (
-          <MediaFileCard key={props.publicId} {...props} />
-        ))}
-      </div>
-      <MediaPagination {...pageControl} />
-    </section>
-  );
-};
 
 const MediaFolders = () =>
   Array.from({ length: 7 }).map((_, index) => (
@@ -358,86 +170,4 @@ const MediaFoldersHeader = () => (
       </svg>
     </Button>
   </>
-);
-
-const MediaFilesHeader = ({ sort }: { sort: MediaSort }) => (
-  <div className="flex items-center gap-2">
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-40 h-8">
-          Mais recentes{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className=""
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="rounded"></PopoverContent>
-    </Popover>
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-22 h-8">
-          Filtros{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className=""
-          >
-            <path d="M2 5h20" />
-            <path d="M6 12h12" />
-            <path d="M9 19h6" />
-          </svg>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="start">
-        <Select>
-          <SelectTrigger className="w-full flex-1">
-            <SelectValue placeholder="createdAt" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="createdAt">createdAt</SelectItem>
-            <SelectItem value="updatedAt">updatedAt</SelectItem>
-            <SelectItem value="type">type</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="w-full flex-1">
-            <SelectValue placeholder="is" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="is">is</SelectItem>
-            <SelectItem value="isNot">is not</SelectItem>
-            <SelectItem value="isGreaterThan">is greater than</SelectItem>
-            <SelectItem value="isGreaterThanOrEqualTo">
-              is greater than or equal to
-            </SelectItem>
-            <SelectItem value="isLowerThan">is lower than</SelectItem>
-            <SelectItem value="isLowerThanOrEqualTo">
-              is lower than or equal to
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Button variant="link" className="h-9.5">
-          Adicionar filtros
-        </Button>
-      </PopoverContent>
-    </Popover>
-  </div>
 );

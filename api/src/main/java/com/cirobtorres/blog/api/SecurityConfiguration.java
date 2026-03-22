@@ -84,6 +84,7 @@ public class SecurityConfiguration {
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                         .ignoringRequestMatchers(
                                 "/auth/login",
+                                "/auth/logout",
                                 "/auth/register",
                                 "/auth/refresh",
                                 "/auth/validation",

@@ -40,13 +40,13 @@ const generateVideoThumbnail = (file: File): Promise<string> => {
   });
 };
 
-const FilePreviewCard = ({
+export default function FilePreviewCard({
   file,
   onRemove,
 }: {
   file: File;
   onRemove: () => void;
-}) => {
+}) {
   const [preview, setPreview] = React.useState<string | null>(null);
   const isImage = file.type.startsWith("image/");
   const isVideo = file.type.startsWith("video/");
@@ -143,7 +143,7 @@ const FilePreviewCard = ({
       </div>
     </div>
   );
-};
+}
 
 const PreviewCard = ({
   file,
@@ -216,5 +216,3 @@ const PreviewCard = ({
     </div>
   </article>
 );
-
-export { FilePreviewCard };

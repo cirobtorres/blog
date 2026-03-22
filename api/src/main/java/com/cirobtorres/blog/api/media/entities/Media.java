@@ -46,6 +46,9 @@ public class Media {
     @Column(name = "alt_text")
     private String alt;
 
+    @Column(name = "caption")
+    private String caption;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
@@ -70,6 +73,7 @@ public class Media {
         this.height = builder.height;
         this.duration = builder.duration;
         this.alt = builder.alt;
+        this.caption = builder.caption;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -86,6 +90,7 @@ public class Media {
         private Integer height;
         private Double duration;
         private String alt;
+        private String caption;
 
         public Builder name(String name) {
             this.name = name;
@@ -142,6 +147,11 @@ public class Media {
             return this;
         }
 
+        public Builder caption(String caption) {
+            this.caption = caption;
+            return this;
+        }
+
         public Media build() { return new Media(this); }
     }
 
@@ -181,6 +191,9 @@ public class Media {
 
     public String getAlt() { return alt; }
     public void setAlt(String alt) { this.alt = alt; }
+
+    public String getCaption() { return caption; }
+    public void setCaption(String caption) { this.caption = caption; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

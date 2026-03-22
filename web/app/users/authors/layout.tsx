@@ -12,7 +12,6 @@ import {
 } from "../../../components/Authors/Media/AsideNavButtons";
 import Link from "next/link";
 import { UserButton } from "../../../components/Authors/UserButton";
-import { cn } from "../../../utils/variants";
 import { DashedBackground } from "../../../components/DashedBackground";
 
 export default async function AuthorLayout({

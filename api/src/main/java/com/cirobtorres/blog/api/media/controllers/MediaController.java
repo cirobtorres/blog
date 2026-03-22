@@ -55,6 +55,13 @@ public class MediaController {
         return ResponseEntity.ok(mediaList);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> put(
+            @PathVariable UUID id
+    ) throws Exception {
+        mediaService.putMedia(id);
+        return ResponseEntity.noContent().build();
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable UUID id
