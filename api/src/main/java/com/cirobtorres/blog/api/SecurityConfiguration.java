@@ -3,8 +3,10 @@ package com.cirobtorres.blog.api;
 import com.cirobtorres.blog.api.oauth2.BlogOAuth2UserService;
 import com.cirobtorres.blog.api.oauth2.BlogOidcUserService;
 import com.cirobtorres.blog.api.oauth2.OAuth2SuccessHandler;
-import com.cirobtorres.blog.api.token.JwtAuthenticationFilter;
+import com.cirobtorres.blog.api.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.Cookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -38,6 +40,7 @@ import java.util.List;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
     private final String frontUrl;
+    private final static Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     public SecurityConfiguration(
             ApiApplicationProperties apiApplicationProperties
@@ -144,17 +147,16 @@ public class SecurityConfiguration {
 
         var converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            // Get authorities (USER, AUTHOR)
             var authorities = authoritiesConverter.convert(jwt);
             var finalAuthorities = new ArrayList<>(authorities);
 
-            // Adds "type" as a temporary authority
-            // The user has authority to change its password as long as the duration of the token
             String type = jwt.getClaimAsString("type");
-            if (type != null) {
-                finalAuthorities.add(new SimpleGrantedAuthority(type)); // PASSWORD_RESET
-            }
 
+            // Ignores "ACCESS" and "REFRESH"; these are just token metadata, not permissions.
+            // The only exception is PASSWORD_RESET.
+            if ("PASSWORD_RESET".equals(type)) {
+                finalAuthorities.add(new SimpleGrantedAuthority("PASSWORD_RESET"));
+            }
             return finalAuthorities;
         });
         return converter;

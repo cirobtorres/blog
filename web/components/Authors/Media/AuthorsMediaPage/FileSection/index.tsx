@@ -197,7 +197,11 @@ const MediaFilesMutation = ({
       <Checkbox id="files-select-all" className="size-6" />
     </label>
     <div className="flex items-center gap-2 [&_span]:text-sm [&_span]:text-nowrap [&_span]:text-neutral-600 dark:[&_span]:text-neutral-500">
-      <span>{selectedFiles} pastas</span>
+      <span>
+        {selectedFiles != 1
+          ? selectedFiles + " arquivos"
+          : selectedFiles + " arquivo"}
+      </span>
     </div>
     <Button variant="destructive" disabled className="h-8 w-full max-w-30">
       Excluir

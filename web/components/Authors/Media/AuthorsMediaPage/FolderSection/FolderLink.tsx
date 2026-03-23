@@ -4,16 +4,16 @@ import type { Transition, Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-import { cn } from "../utils/variants";
+import { cn } from "../../../../../utils/variants";
 import Link from "next/link";
 
-export interface FolderUpIconHandle {
+export interface FolderLinkHandle {
   startAnimation: () => void;
   stopAnimation: () => void;
 }
 
-interface FolderUpIconProps extends HTMLAttributes<HTMLDivElement> {
-  folderId: string;
+interface FolderLinkProps extends HTMLAttributes<HTMLDivElement> {
+  href: string;
   size?: number;
 }
 
@@ -27,9 +27,9 @@ const ARROW_TRANSITION: Transition = {
   duration: 0.5,
 };
 
-const FolderUpIcon = forwardRef<FolderUpIconHandle, FolderUpIconProps>(
+const FolderLink = forwardRef<FolderLinkHandle, FolderLinkProps>(
   (
-    { onMouseEnter, onMouseLeave, className, folderId, size = 28, ...props },
+    { onMouseEnter, onMouseLeave, className, href, size = 28, ...props },
     ref,
   ) => {
     const controls = useAnimation();
@@ -66,7 +66,7 @@ const FolderUpIcon = forwardRef<FolderUpIconHandle, FolderUpIconProps>(
     );
 
     return (
-      <Link href={"/authors/media/" + folderId} className={cn(className)}>
+      <Link href={href} className={cn(className)}>
         <div
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -100,6 +100,6 @@ const FolderUpIcon = forwardRef<FolderUpIconHandle, FolderUpIconProps>(
   },
 );
 
-FolderUpIcon.displayName = "FolderUpIcon";
+FolderLink.displayName = "FolderLink";
 
-export { FolderUpIcon };
+export { FolderLink };

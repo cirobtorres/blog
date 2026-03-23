@@ -4,11 +4,7 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
-export default async function deleteFolder({
-  folderPath,
-}: {
-  folderPath: string;
-}) {
+export default async function deleteFolder({ folder }: { folder: string }) {
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
 
@@ -19,7 +15,7 @@ export default async function deleteFolder({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ path: folderPath }),
+      body: JSON.stringify({ path: folder }),
     });
     if (!response.ok) {
       console.error(response.status);

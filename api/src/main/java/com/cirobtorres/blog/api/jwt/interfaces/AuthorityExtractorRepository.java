@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.token.interfaces;
+package com.cirobtorres.blog.api.jwt.interfaces;
 
 import com.cirobtorres.blog.api.user.entities.User;
 import org.springframework.security.oauth2.jwt.Jwt;

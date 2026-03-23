@@ -3,9 +3,9 @@ package com.cirobtorres.blog.api.auth;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.auditToken.dtos.AuditTokenDTO;
-import com.cirobtorres.blog.api.token.dtos.PassResTokenDTO;
-import com.cirobtorres.blog.api.token.dtos.TokensDTO;
-import com.cirobtorres.blog.api.token.services.JwtService;
+import com.cirobtorres.blog.api.jwt.dtos.PassResTokenDTO;
+import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
+import com.cirobtorres.blog.api.jwt.services.JwtService;
 import com.cirobtorres.blog.api.user.dtos.*;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;

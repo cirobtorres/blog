@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.token.entities;
+package com.cirobtorres.blog.api.jwt.entities;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;

@@ -10,10 +10,8 @@ export async function getSessionUser(pathname?: string | undefined): Promise<{
   user: User | null;
 }> {
   const session = await getUser();
-  // TODO: test for multiple authorities.
-  // Right now I'm only requesting ["/authors"],
-  // but what happens if the page needs
-  // ["/authors", "/admin"]?
+  // Right now I'm only requesting ["/authors"].
+  // But what happens if the page needs ["/authors", "/admin"]?
   const requiredRoles = getAuthorClient({ pathname });
 
   if (!session.ok || !session.data) {

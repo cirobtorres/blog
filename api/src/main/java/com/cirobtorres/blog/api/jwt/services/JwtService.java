@@ -1,12 +1,12 @@
-package com.cirobtorres.blog.api.token.services;
+package com.cirobtorres.blog.api.jwt.services;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.token.dtos.TokensDTO;
-import com.cirobtorres.blog.api.token.entities.RefreshToken;
-import com.cirobtorres.blog.api.token.enums.RefreshTokenClaims;
-import com.cirobtorres.blog.api.token.enums.TokenType;
-import com.cirobtorres.blog.api.token.interfaces.AuthorityExtractorRepository;
-import com.cirobtorres.blog.api.token.interfaces.RefreshTokenRepository;
+import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
+import com.cirobtorres.blog.api.jwt.entities.RefreshToken;
+import com.cirobtorres.blog.api.jwt.enums.RefreshTokenClaims;
+import com.cirobtorres.blog.api.jwt.enums.TokenType;
+import com.cirobtorres.blog.api.jwt.interfaces.AuthorityExtractorRepository;
+import com.cirobtorres.blog.api.jwt.interfaces.RefreshTokenRepository;
 import com.cirobtorres.blog.api.user.entities.User;
 import com.cirobtorres.blog.api.user.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -81,12 +81,9 @@ public class JwtService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    // public String createAccessToken(String subject, List<String> authorities, List<String> scopes) {
     public String createAccessToken(String subject, List<String> authorities, String provider) {
-        List<String> finalAuthorities = new ArrayList<>(
-                authorities != null ? authorities : List.of()
-        );
-        // if (scopes != null) finalAuthorities.addAll(scopes);
+        List<String> finalAuthorities = new ArrayList<>(authorities != null ? authorities : List.of());
+
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject(subject)
@@ -149,14 +146,10 @@ public class JwtService {
             if (auths == null) auths = new ArrayList<>();
             else auths = new ArrayList<>(auths);
 
-            String type = jwt.getClaimAsString("type");
-            if (type != null) {
-                auths.add(type.toUpperCase());
-            }
-
-            if (!isProd && auths.isEmpty()) {
-                log.warn("JwtService.parseToken: No authorities found for subject: {}", subject);
-            }
+            // String type = jwt.getClaimAsString("type");
+            // if (type != null) {
+            //     auths.add(type.toUpperCase());
+            // }
 
             List<SimpleGrantedAuthority> authorities = auths.stream()
                     .map(SimpleGrantedAuthority::new)
@@ -183,7 +176,7 @@ public class JwtService {
             byte[] encodedHash = digest.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(encodedHash); // From bytes to Hex String
         } catch (NoSuchAlgorithmException e) {
-            if (!isProd) log.error("JwtService.hashToken(): {}", e.getMessage());
+            if (!isProd) log.error("JwtService.hashToken(): e.getMessage()={}", e.getMessage());
             throw e;
         }
     }

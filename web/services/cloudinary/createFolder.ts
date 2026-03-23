@@ -14,7 +14,6 @@ export default async function createFolder(
   prevState: ActionState,
   formData: FormData,
 ) {
-  const isProd = process.env.NODE_ENV === "production";
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const rawData = Object.fromEntries(formData.entries());
@@ -33,9 +32,6 @@ export default async function createFolder(
     });
 
     if (!response.ok) {
-      if (!isProd) {
-        console.error(response);
-      }
       return {
         ok: false,
         success: null,
@@ -99,9 +95,16 @@ export async function createFolderValidation(
       body: JSON.stringify({ path: newPath }),
     });
 
-    const alreadyExists: boolean = await validation.json();
-
-    if (alreadyExists) {
+    if (!validation.ok) {
+      if (validation.status === 404) {
+        return {
+          ok: true,
+          success: null,
+          error: null,
+          data: newPath,
+        };
+      }
+    } else {
       return {
         ok: false,
         success: null,
@@ -111,14 +114,13 @@ export async function createFolderValidation(
         data: null,
       };
     }
-  } catch (e) {
-    console.log("Create folder validation error:", e);
-  }
-
+  } catch (e) {}
   return {
-    ok: true,
+    ok: false,
     success: null,
-    error: null,
-    data: newPath,
+    error: {
+      folderName: { errors: ["Ocorreu algum erro."] },
+    },
+    data: null,
   };
 }

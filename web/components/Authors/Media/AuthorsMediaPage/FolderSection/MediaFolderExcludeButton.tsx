@@ -17,9 +17,9 @@ import Spinner from "../../../../Spinner";
 import deleteFolder from "../../../../../services/cloudinary/deleteFolder";
 
 export default function MediaFolderExcludeButton({
-  folderPath,
+  folder,
 }: {
-  folderPath: string;
+  folder: string;
 }) {
   return (
     <AlertDialog>
@@ -70,7 +70,7 @@ export default function MediaFolderExcludeButton({
             <div>
               <p className="text-sm text-neutral-600 dark:text-neutral-500">
                 Tem certeza que gostaria de excluir a pasta{" "}
-                <strong className="text-primary">{folderPath}</strong>?
+                <strong className="text-primary">{folder}</strong>?
               </p>
               <p className="text-sm font-bold text-destructive underline underline-offset-2">
                 Essa ação não poderá ser desfeita!
@@ -81,7 +81,7 @@ export default function MediaFolderExcludeButton({
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <DeleteFolderAction folderPath={folderPath} />
+            <DeleteFolderAction folder={folder} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -89,7 +89,7 @@ export default function MediaFolderExcludeButton({
   );
 }
 
-const DeleteFolderAction = ({ folderPath }: { folderPath: string }) => {
+const DeleteFolderAction = ({ folder }: { folder: string }) => {
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
       return (
@@ -103,7 +103,7 @@ const DeleteFolderAction = ({ folderPath }: { folderPath: string }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFolder({ folderPath });
+    const result = deleteFolder({ folder });
 
     const promise: Promise<ActionState> = new Promise((resolve, reject) => {
       result.then((data) => {

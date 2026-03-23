@@ -34,7 +34,6 @@ public class UserService {
 
     @Transactional
     public UserDTO getAuthenticatedUserDTO(Authentication auth) {
-        if (!isProd) log.info("UserService.getAuthenticatedUserDTO()");
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             return null;
         }
@@ -59,8 +58,6 @@ public class UserService {
 
         final String providerToMatch = currentProvider;
 
-        if (!isProd) log.info("UserService.getAuthenticatedUserDTO(): providerToMatch={}", providerToMatch);
-
         List<String> authorities = auth
                 .getAuthorities()
                 .stream()
@@ -70,11 +67,12 @@ public class UserService {
         return userRepository.findById(userId)
                 .map(user -> {
                     // Find correct userIdentity
-                    UserIdentity activeIdentity = user.getIdentities().stream()
+                    UserIdentity activeIdentity = user
+                            .getIdentities()
+                            .stream()
                             .filter(id -> id.getProvider().name().equals(providerToMatch))
                             .findFirst()
-                            // If fails, gets the first one it can find
-                            .orElseGet(() -> user.getIdentities().iterator().next());
+                            .orElseGet(() -> user.getIdentities().iterator().next()); // If fails, gets the first one it can find
 
                     return new UserDTO(
                             user.getId(),
@@ -87,6 +85,8 @@ public class UserService {
                             user.getUpdatedAt()
                     );
                 })
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(
+                        () -> new UserNotFoundException("User not found.")
+                );
     }
 }

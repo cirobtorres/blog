@@ -54,3 +54,10 @@ type MediaPagination = {
   totalElements: number;
   totalPages: number;
 };
+
+type MediaFolder = {
+  path: string;
+  name: string;
+  subfolderCount: number;
+  fileCount: number;
+};

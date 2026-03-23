@@ -115,8 +115,6 @@ const publishArticleValidation = async (
   // const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
-  // if (!isProd) console.log(rawData);
-
   const result = signUpSchema.safeParse({
     ...rawData,
   });

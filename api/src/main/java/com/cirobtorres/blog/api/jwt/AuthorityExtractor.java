@@ -1,6 +1,6 @@
-package com.cirobtorres.blog.api.token;
+package com.cirobtorres.blog.api.jwt;
 
-import com.cirobtorres.blog.api.token.interfaces.AuthorityExtractorRepository;
+import com.cirobtorres.blog.api.jwt.interfaces.AuthorityExtractorRepository;
 import com.cirobtorres.blog.api.user.entities.User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;

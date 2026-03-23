@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.token.enums;
+package com.cirobtorres.blog.api.jwt.enums;
 
 public enum TokenType {
     ACCESS("access"),

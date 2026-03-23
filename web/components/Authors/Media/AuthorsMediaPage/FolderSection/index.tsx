@@ -1,22 +1,27 @@
-import { apiServerUrls } from "../../../../../routing/routes";
+"use server";
+
+import { apiServerUrls, protectedWebUrls } from "../../../../../routing/routes";
 import { cn, focusRing } from "../../../../../utils/variants";
 import { Button } from "../../../../Button";
 import { Checkbox } from "../../../../Fieldset/Checkbox";
-import { FolderUpIcon } from "../../../../Icons";
+import { FolderLink } from "./FolderLink";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
 import MediaFolderExcludeButton from "./MediaFolderExcludeButton";
 
 export default async function MediaFolderCards({
   accessToken,
+  currentPath,
   searchParams,
 }: {
   accessToken?: string;
-  searchParams?: { folder?: string };
+  currentPath?: string[];
+  searchParams?: { page?: string; size?: string };
 }) {
-  const currentFolder = searchParams?.folder || "Home";
+  const currentFolder = currentPath ? currentPath.join("/") : "Home";
+  const queryFolder = "?folder=" + encodeURIComponent(currentFolder);
 
   const mediaFolders = await fetch(
-    apiServerUrls.mediaFolders.root + "?folder=" + currentFolder,
+    apiServerUrls.mediaFolders.root + queryFolder,
     {
       method: "GET",
       headers: {
@@ -36,7 +41,7 @@ export default async function MediaFolderCards({
     cache: "no-store",
   });
 
-  const folders: string[] = await mediaFolders.json();
+  const folders: MediaFolder[] = await mediaFolders.json();
   const count: number = await countFolders.json();
 
   return (
@@ -47,33 +52,25 @@ export default async function MediaFolderCards({
         <MediaFolderSorting />
       </div>
       <div className="w-full grid items-center grid-cols-4 gap-2">
-        {folders.map((folderPath) => (
-          <MediaFolderCard key={folderPath} folderPath={folderPath} />
+        {folders.map((folder) => (
+          <MediaFolderCard key={folder.path} folder={folder} />
         ))}
       </div>
     </section>
   );
 }
 
-const MediaFolderCard = ({
-  folderPath,
-  folders = 0,
-  files = 0,
-}: {
-  folderPath: string;
-  folders?: number;
-  files?: number;
-}) => {
-  const folderName = folderPath.split("/").pop();
-  const id = folderPath.replace("/", "-").toLowerCase();
+const MediaFolderCard = ({ folder }: { folder: MediaFolder }) => {
+  const folderName = folder.path.split("/").pop();
+  const id = folder.path.replace("/", "-").toLowerCase();
   return (
     <label
       htmlFor={"folder-" + id}
       className="relative w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary focus-within:bg-stone-300 dark:focus-within:bg-stone-800 group"
     >
       <Checkbox id={"folder-" + id} />
-      <FolderUpIcon
-        folderId={id}
+      <FolderLink
+        href={protectedWebUrls.media + "/" + folder.path}
         className={cn(
           "rounded-lg p-3 transition-all duration-300 border border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925 group-hover:border-stone-400 dark:group-hover:border-stone-700 group-hover:bg-stone-300 dark:group-hover:bg-stone-900 group-focus-within:border-stone-400 dark:group-focus-within:border-stone-700 group-focus-within:bg-stone-300 dark:group-focus-within:bg-stone-900",
           focusRing,
@@ -82,8 +79,13 @@ const MediaFolderCard = ({
       <div className="flex flex-col gap-1 overflow-hidden">
         <p className="text-neutral-100 truncate">{folderName}</p>
         <p className="text-xs text-nowrap text-neutral-400">
-          {folders != 1 ? folders + " pastas" : folders + " pasta"},{" "}
-          {files != 1 ? files + " arquivos" : files + " arquivo"}
+          {folder.subfolderCount != 1
+            ? folder.subfolderCount + " pastas"
+            : folder.subfolderCount + " pasta"}
+          ,{" "}
+          {folder.fileCount != 1
+            ? folder.fileCount + " arquivos"
+            : folder.fileCount + " arquivo"}
         </p>
       </div>
       <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
@@ -104,7 +106,7 @@ const MediaFolderCard = ({
             <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
           </svg>
         </Button>
-        <MediaFolderExcludeButton folderPath={folderPath} />
+        <MediaFolderExcludeButton folder={folder.path} />
       </div>
     </label>
   );

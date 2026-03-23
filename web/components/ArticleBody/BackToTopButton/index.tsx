@@ -28,14 +28,7 @@ export default function BackToTopButton() {
     window.addEventListener("scroll", onScroll);
     onScroll();
 
-    // if (process.env.NODE_ENV !== "production") {
-    //   console.log("BackToTopButton: MOUNT");
-    // } // DEBUG
-
     return () => {
-      // if (process.env.NODE_ENV !== "production") {
-      //   console.log("BackToTopButton: UNMOUNT");
-      // } // DEBUG
       window.removeEventListener("scroll", onScroll);
     };
   }, []);

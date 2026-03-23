@@ -27,17 +27,9 @@ export const ProgressBar = () => {
       }
     };
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log("ProgressBar: MOUNT");
-    } // DEBUG
-
     window.addEventListener("scroll", lineProgressOnScroll);
     return () => {
       // Cleanup
-
-      if (process.env.NODE_ENV !== "production") {
-        console.log("ProgressBar: UNMOUNT");
-      } // DEBUG
 
       window.removeEventListener("scroll", lineProgressOnScroll);
     };

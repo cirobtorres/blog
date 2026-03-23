@@ -8,14 +8,14 @@ import com.cirobtorres.blog.api.auditToken.repositories.AuditTokenRepository;
 import com.cirobtorres.blog.api.auditToken.services.AuditTokenService;
 import com.cirobtorres.blog.api.exceptions.*;
 import com.cirobtorres.blog.api.mailer.MailService;
-import com.cirobtorres.blog.api.token.dtos.PassResTokenDTO;
-import com.cirobtorres.blog.api.token.dtos.TokensDTO;
-import com.cirobtorres.blog.api.token.entities.RefreshToken;
-import com.cirobtorres.blog.api.token.enums.RefreshTokenClaims;
-import com.cirobtorres.blog.api.token.enums.TokenType;
-import com.cirobtorres.blog.api.token.interfaces.AuthorityExtractorRepository;
-import com.cirobtorres.blog.api.token.interfaces.RefreshTokenRepository;
-import com.cirobtorres.blog.api.token.services.JwtService;
+import com.cirobtorres.blog.api.jwt.dtos.PassResTokenDTO;
+import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
+import com.cirobtorres.blog.api.jwt.entities.RefreshToken;
+import com.cirobtorres.blog.api.jwt.enums.RefreshTokenClaims;
+import com.cirobtorres.blog.api.jwt.enums.TokenType;
+import com.cirobtorres.blog.api.jwt.interfaces.AuthorityExtractorRepository;
+import com.cirobtorres.blog.api.jwt.interfaces.RefreshTokenRepository;
+import com.cirobtorres.blog.api.jwt.services.JwtService;
 import com.cirobtorres.blog.api.user.dtos.*;
 import com.cirobtorres.blog.api.user.entities.User;
 import com.cirobtorres.blog.api.user.repositories.UserRepository;
@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -157,16 +158,21 @@ public class AuthService {
 
     @Transactional
     public UserDTO getUser(Authentication auth) {
-        if (!isProd) log.info("AuthService.getUser(): BEGIN");
-        UserDTO user = userService.getAuthenticatedUserDTO(auth);
-        if (!isProd) log.info("AuthService.getUser(): user={}", user != null);
-        if (!isProd) log.info("AuthService.getUser(): END");
-        return user;
+        // List<String> authorities = auth.getAuthorities().stream()
+        //         .map(GrantedAuthority::getAuthority)
+        //         .filter(a -> {
+        //             if(a != null) {
+        //                 return !a.equalsIgnoreCase("ACCESS");
+        //             }
+        //             return false;
+        //         })
+        //         .distinct()
+        //         .toList();
+        return userService.getAuthenticatedUserDTO(auth);
     }
 
     @Transactional
     public void renewCode(UUID userId) throws MessagingException, NoSuchAlgorithmException {
-        if (!isProd) log.info("AuthService.renewCode()");
         // Locate user
         UserIdentity userIdentity = userIdentityRepository
                 .findLocalIdentityByUserId(userId)
@@ -189,7 +195,6 @@ public class AuthService {
                 userIdentity,
                 AuditTokenType.EMAIL_VALIDATION
         );
-        if (!isProd) log.info("AuthService.renewCode(): code {} generated for user {}", token, userIdentity.getId());
 
         // Send email
         mailService.sendValidationEmail(
@@ -197,19 +202,16 @@ public class AuthService {
                 userIdentity.getName(),
                 token
         );
-        if (!isProd) log.info("AuthService.renewCode(): sending audit token to email");
     }
 
     @Transactional
     public TokensDTO refresh(String oldRefreshToken) throws NoSuchAlgorithmException {
         // Validation
-        if (!isProd) log.error("AuthService.refresh(): oldRefreshToken = {}", oldRefreshToken);
 
         Jwt jwt = jwtService.decodeToken(oldRefreshToken);
         String type = jwtService.getTokenClaim(jwt, RefreshTokenClaims.TYPE);
 
         if (!TokenType.REFRESH.getType().toUpperCase().equals(type)) {
-            if (!isProd) log.error("AuthService.refresh(): token type is invalid. token type = {}", type);
             throw new RuntimeException("Invalid token.");
         }
 
@@ -217,20 +219,17 @@ public class AuthService {
         Optional<RefreshToken> storedRefreshToken = refreshTokenRepository.findByTokenHash(renewRefreshTokenHash);
 
         if (storedRefreshToken.isEmpty()) {
-            if (!isProd) log.error("AuthService.refresh(): Token NOT FOUND.");
             throw new RuntimeException("Token NOT FOUND.");
         }
 
         UUID userId = storedRefreshToken.get().getUserId();
 
         if (storedRefreshToken.get().isRevoked()) {
-            if (!isProd) log.error("AuthService.refresh(): Token is REVOKED. storedRefreshToken.get() = {}", storedRefreshToken.get());
             refreshTokenRepository.revokeAllByUserId(storedRefreshToken.get().getUserId(), Instant.now());
             throw new RuntimeException("Token is REVOKED.");
         }
 
         if (storedRefreshToken.get().getExpiresAt().isBefore(Instant.now())) {
-            if (!isProd) log.error("AuthService.refresh(): Token is EXPIRED. storedRefreshToken.get().getExpiresAt() = {}", storedRefreshToken.get().getExpiresAt());
             throw new RuntimeException("Token is EXPIRED.");
         }
 
@@ -241,16 +240,12 @@ public class AuthService {
         );
 
         if (updated == 0) {
-            if (!isProd) log.error("AuthService.refresh(): old token. This token is already revoked/expired.");
             throw new RuntimeException("Invalid token.");
         }
 
         // Locate user
         User user = userRepository.findById(userId).orElseThrow(
-                () -> {
-                    if (!isProd) log.error("AuthService.refresh(): user not found.");
-                    return new RuntimeException("User not found.");
-                }
+                () -> new RuntimeException("User not found.")
         );
 
         // Login
@@ -265,25 +260,16 @@ public class AuthService {
         AuditToken auditToken = auditTokenRepository
                 .findByTokenHash(hashedTokenValue)
                 .orElseThrow(
-                () -> {
-                    if (!isProd) log.error("AuthService.validateEmail(): token not found.");
-                    return new TokenNotFoundException("Invalid token.");
-                }
+                () -> new TokenNotFoundException("Invalid token.")
         );
 
         if (auditToken.getTokenType() != AuditTokenType.EMAIL_VALIDATION) {
-            log.error("AuthService.validateEmail(): attempt to validate email token with invalid token. TokenType = {}", auditToken.getTokenType());
-            // TODO: send security email
             throw new UserUnauthorizedException("Invalid token.");
         }
 
         UserIdentity userIdentity = auditToken.getUserIdentity();
 
         if (!userIdentity.getUser().getId().equals(userId)) {
-            log.error(
-                    "Cross validation attempt: User1={} tried to authenticate User2={}",
-                    userId, userIdentity.getUser().getId()
-            );
             throw new UserUnauthorizedException("Invalid token.");
         }
 
@@ -307,7 +293,6 @@ public class AuthService {
 
     @Transactional
     public void passwordResetEmailCodeRequest(UserEmailDTO userEmailDTO) throws NoSuchAlgorithmException, MessagingException {
-        if (!isProd) log.info("AuthService.passwordResetEmailCodeRequest(): userEmail={}", userEmailDTO.email());
         List<UserIdentity> identities = userIdentityRepository.findAllByProviderEmail(userEmailDTO.email());
 
         if (identities.isEmpty()) {
@@ -352,24 +337,18 @@ public class AuthService {
 
     @Transactional
     public PassResTokenDTO passwordResetCodeConfirmation(AuditTokenDTO auditTokenDTO) throws NoSuchAlgorithmException {
-        if (!isProd) log.info("AuthService.passwordResetCodeConfirmation(): auditTokenDTO={}", auditTokenDTO.token());
         // Query
         String hash = jwtService.hashToken(auditTokenDTO.token());
 
         AuditToken auditToken = auditTokenRepository.findByTokenHash(hash)
-                .orElseThrow(() -> {
-                    if (!isProd) log.warn("Token is invalid. No token_hash matched");
-                    return new RuntimeException("Token is invalid.");
-                });
+                .orElseThrow(() -> new RuntimeException("Token is invalid."));
 
         // Validations
         if (!auditToken.isValid()) {
-            if (!isProd) log.warn("Token is invalid. revoked={}, expired_at={}", auditToken.isRevoked(), auditToken.getExpiresAt());
             throw new RuntimeException("Token is invalid.");
         }
 
         if (auditToken.getTokenType() != AuditTokenType.PASSWORD_RESET) {
-            if (!isProd) log.warn("Token is invalid. token_type={}", auditToken.getTokenType());
             throw new RuntimeException("Token is invalid.");
         }
 
@@ -391,37 +370,25 @@ public class AuthService {
 
     @Transactional
     public void passwordReset(UserPasswordDTO passwordDTO) {
-        if (!isProd) log.info("AuthService.passwordReset(): BEGIN");
-        if (!isProd) log.info("AuthService.passwordReset(): passwordDTO={}", passwordDTO.password());
         // Get userId from JWT subject
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userIdString = authentication.getName();
         UUID userId = UUID.fromString(userIdString);
 
-        if (!isProd) log.info("AuthService.passwordReset(): userId={}", userId);
-
         // Locate user
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    if (!isProd) log.info("AuthService.passwordReset(): user not found");
-                    return new RuntimeException("User not found.");
-                });
+                .orElseThrow(() -> new RuntimeException("User not found."));
 
         UserIdentity userIdentity = user.getIdentities().stream()
                 .filter(id -> id.getProvider() == UserIdentityProvider.LOCAL)
                 .findFirst()
-                .orElseThrow(() -> {
-                    if (!isProd) log.info("AuthService.passwordReset(): userIdentity not found");
-                    return new RuntimeException("This user is not a LOCAL user.");
-                });
+                .orElseThrow(() -> new RuntimeException("This user is not a LOCAL user."));
 
         // New passwordHash
         String newPasswordHash = passwordEncoder.encode(passwordDTO.password());
         userIdentity.setPasswordHash(newPasswordHash);
         // userIdentity.setLastAuthenticatedAt(LocalDateTime.now());
         userIdentityRepository.save(userIdentity); // User CASCADE is enough to save userIdentity.passwordHash
-
-        if (!isProd) log.info("AuthService.passwordReset(): password updated.");
     }
 
     // Helpers----------------------------------------------------------------------------------------------------
@@ -450,14 +417,11 @@ public class AuthService {
     }
 
     private TokensDTO loginTokens(User user) throws NoSuchAlgorithmException {
-        if (!isProd) log.info("AuthService.loginTokens(): BEGIN");
         List<String> authorities = authorityExtractor.fromUser(user);
         String subject = user.getId().toString();
 
         String accessToken = jwtService.createAccessToken(subject, authorities, "LOCAL");
         String refreshToken = jwtService.createRefreshToken(subject);
-
-        if (!isProd) log.info("AuthService.loginTokens(): accessToken={} refreshToken={}", accessToken, refreshToken);
 
         RefreshToken refreshTokenEntity = RefreshToken
                 .builder()
@@ -471,13 +435,10 @@ public class AuthService {
 
         TokensDTO tokensDTO = new TokensDTO(accessToken, refreshToken);
 
-        if (!isProd) log.info("AuthService.loginTokens(): tokensDTO={}", tokensDTO);
-        if (!isProd) log.info("AuthService.loginTokens(): END");
         return tokensDTO;
     }
 
     private PassResTokenDTO passResetToken(User user) {
-        if (!isProd) log.info("AuthService.passResetToken(): BEGIN");
         List<String> authorities = authorityExtractor.fromUser(user);
         String subject = user.getId().toString();
         Instant issuedAt = Instant.now();
@@ -494,13 +455,10 @@ public class AuthService {
 
         PassResTokenDTO passResTokenDTO = new PassResTokenDTO(passResetToken);
 
-        if (!isProd) log.info("AuthService.passResetToken(): passResTokenDTO={}", passResTokenDTO);
-        if (!isProd) log.info("AuthService.passResetToken(): END");
         return passResTokenDTO;
     }
 
     private void userExistsLocally(String email) {
-        if (!isProd) log.info("AuthService.userExistsLocally(): email={}", email);
         userRepository.findByEmail(email).ifPresent(user -> {
             boolean hasLocalIdentity = user
                     .getIdentities()
@@ -515,7 +473,6 @@ public class AuthService {
     }
 
     private String formatProviderName(UserIdentityProvider provider) {
-        if (!isProd) log.info("AuthService.formatProviderName(): provider={}", provider);
         return switch (provider) {
             case GOOGLE -> "ao Google";
             case GITHUB -> "ao GitHub";

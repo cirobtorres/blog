@@ -4,7 +4,7 @@ import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.auditToken.entities.AuditToken;
 import com.cirobtorres.blog.api.auditToken.enums.AuditTokenType;
 import com.cirobtorres.blog.api.auditToken.repositories.AuditTokenRepository;
-import com.cirobtorres.blog.api.token.services.JwtService;
+import com.cirobtorres.blog.api.jwt.services.JwtService;
 import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;

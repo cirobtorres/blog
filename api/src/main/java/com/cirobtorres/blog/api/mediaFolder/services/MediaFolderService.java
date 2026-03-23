@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.mediaFolder.services;
 
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
@@ -22,11 +23,8 @@ public class MediaFolderService {
         this.mediaFolderRepository = mediaFolderRepository;
     }
 
-    public List<String> listSubfolders(String parentPath) {
-        return mediaFolderRepository.findByParentPath(parentPath)
-                .stream()
-                .map(MediaFolder::getPath)
-                .toList();
+    public List<MediaFolderCountDTO> listSubfolders(String parentPath) {
+        return mediaFolderRepository.findSubfoldersWithCounts(parentPath);
     }
 
     @Transactional
@@ -63,14 +61,14 @@ public class MediaFolderService {
 
     @Modifying
     @Transactional
-    public void deleteFolder(MediaFolderDTO mediaFolderDTO) {
-        String path = mediaFolderDTO.path();
+    public void deleteFolder(MediaFolderCountDTO mediaFolderCountDTO) {
+        String path = mediaFolderCountDTO.path();
         mediaFolderRepository.deleteByPath(path);
     }
 
     @Transactional
-    public Boolean existsByPath(MediaFolderDTO mediaFolderDTO) {
-        String path = mediaFolderDTO.path();
+    public Boolean existsByPath(MediaFolderCountDTO mediaFolderCountDTO) {
+        String path = mediaFolderCountDTO.path();
         return mediaFolderRepository.existsByPath(path);
     }
 

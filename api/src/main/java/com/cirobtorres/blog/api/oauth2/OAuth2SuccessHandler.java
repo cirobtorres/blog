@@ -1,8 +1,8 @@
 package com.cirobtorres.blog.api.oauth2;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.token.dtos.TokensDTO;
-import com.cirobtorres.blog.api.token.services.JwtService;
+import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
+import com.cirobtorres.blog.api.jwt.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
@@ -43,7 +43,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String domainUserId = Objects.requireNonNull(oauthUser).getAttribute("domainUserId");
 
         if (domainUserId == null || domainUserId.isBlank()) {
-            log.error("OAuth2SuccessHandler.onAuthenticationSuccess(): Login OAuth2 failed: domainUserId is missing");
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Authentication error.");
             return;
         }

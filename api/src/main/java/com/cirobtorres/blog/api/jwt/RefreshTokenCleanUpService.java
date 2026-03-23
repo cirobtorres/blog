@@ -1,6 +1,6 @@
-package com.cirobtorres.blog.api.token;
+package com.cirobtorres.blog.api.jwt;
 
-import com.cirobtorres.blog.api.token.interfaces.RefreshTokenRepository;
+import com.cirobtorres.blog.api.jwt.interfaces.RefreshTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;

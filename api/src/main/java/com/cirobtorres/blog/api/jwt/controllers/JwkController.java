@@ -1,10 +1,10 @@
-package com.cirobtorres.blog.api.token.controllers;
+package com.cirobtorres.blog.api.jwt.controllers;
 
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.Map;
 
-import com.cirobtorres.blog.api.token.services.JwtService;
+import com.cirobtorres.blog.api.jwt.services.JwtService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,6 +1,6 @@
-package com.cirobtorres.blog.api.token.interfaces;
+package com.cirobtorres.blog.api.jwt.interfaces;
 
-import com.cirobtorres.blog.api.token.entities.RefreshToken;
+import com.cirobtorres.blog.api.jwt.entities.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

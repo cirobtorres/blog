@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.mediaFolder.controllers;
 
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.services.MediaFolderService;
@@ -25,7 +26,7 @@ public class MediaFolderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> listChildFolders(
+    public ResponseEntity<List<MediaFolderCountDTO>> listChildFolders(
             @RequestParam(defaultValue = "Home") String folder
     ) {
         return ResponseEntity.ok(mediaFolderService.listSubfolders(folder));
@@ -41,17 +42,17 @@ public class MediaFolderController {
 
     @DeleteMapping
     public ResponseEntity<MediaFolder> deleteFolder(
-            @RequestBody @Valid MediaFolderDTO mediaFolderDTO
+            @RequestBody @Valid MediaFolderCountDTO mediaFolderCountDTO
     ) {
-        mediaFolderService.deleteFolder(mediaFolderDTO);
+        mediaFolderService.deleteFolder(mediaFolderCountDTO);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/exists")
     public ResponseEntity<Boolean> existsByPath(
-            @RequestBody @Valid MediaFolderDTO mediaFolderDTO
+            @RequestBody @Valid MediaFolderCountDTO mediaFolderCountDTO
     ) {
-        return ResponseEntity.ok(mediaFolderService.existsByPath(mediaFolderDTO));
+        return ResponseEntity.ok(mediaFolderService.existsByPath(mediaFolderCountDTO));
     }
 
     @GetMapping("/count")
