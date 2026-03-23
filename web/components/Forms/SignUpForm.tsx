@@ -204,7 +204,7 @@ const SignUpForm = () => {
       </fieldset>
       <FieldsetError error={state.error?.termsCheckbox?.errors} />
       <FieldsetError error={state.error?.form?.errors} />
-      <Button type="submit" disabled={pending} className="rounded h-10.5">
+      <Button type="submit" disabled={pending} className="rounded h-9.5">
         {pending && <Spinner />} {pending ? "Cadastrando" : "Confirmar"}
       </Button>
     </form>

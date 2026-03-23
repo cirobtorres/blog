@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   EditorContent,
   getMarkRange,
@@ -16,11 +17,9 @@ import History from "@tiptap/extension-history";
 import Highlight from "@tiptap/extension-highlight";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
-
 import OrderedList from "@tiptap/extension-ordered-list";
 import { cn, focusRing } from "../../../utils/variants";
 import { Skeleton } from "../../Skeleton";
-import React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +32,9 @@ import {
   AlertDialogTrigger,
 } from "../../AlertDialog";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
+
+const btnGroupStyle =
+  "flex [&_button]:border [&_button]:first:rounded-l [&_button]:border-r-0 [&_button]:last:border-r [&_button]:last:rounded-r [&_button]:focus-visible:z-10 [&_button]:focus-visible:border-transparent";
 
 const validateAllowedUri = (
   url: string,
@@ -52,7 +54,7 @@ const validateAllowedUri = (
       return false; // Invalid URL
     }
 
-    const disallowedDomains = [""]; // TODO (Tiptap link disallowedDomains)
+    const disallowedDomains = [""];
     const domain = parsedUrl.hostname;
 
     const disallowedProtocols = ["ftp", "file", "mailto"];
@@ -84,7 +86,7 @@ const validateAllowedAutoLink = (url: string) => {
       ? new URL(url)
       : new URL(`https://${url}`);
 
-    const disallowedDomains = [""]; // TODO (Tiptap link disallowedDomains)
+    const disallowedDomains = [""];
     const domain = parsedUrl.hostname;
 
     return !disallowedDomains.includes(domain);
@@ -135,10 +137,7 @@ export function HtmlEditor({
   });
 
   const updateLink = React.useCallback(() => {
-    if (!editor || !editor.view || !editor.state || !editor.commands) {
-      console.warn("Editor não está disponível no momento da atualização.");
-      return;
-    }
+    if (!editor || !editor.state) return;
 
     try {
       const { state, schema } = editor;
@@ -146,8 +145,12 @@ export function HtmlEditor({
       const { from } = selection;
       const $from = state.doc.resolve(from);
       const linkMark = schema.marks.link;
-
       const range = getMarkRange($from, linkMark);
+
+      const displayContent =
+        textLinkInput && textLinkInput.trim() !== ""
+          ? textLinkInput
+          : linkInput;
 
       if (range) {
         editor
@@ -157,18 +160,12 @@ export function HtmlEditor({
             { from: range.from, to: range.to },
             {
               type: "text",
-              text: textLinkInput || linkInput,
-              marks: [
-                {
-                  type: "link",
-                  attrs: { href: linkInput },
-                },
-              ],
+              text: displayContent,
+              marks: [{ type: "link", attrs: { href: linkInput } }],
             },
           )
           .run();
       } else {
-        // Fallback
         editor
           .chain()
           .focus()
@@ -177,44 +174,39 @@ export function HtmlEditor({
           .run();
       }
     } catch (e) {
-      console.error("Erro ao atualizar link:", e);
+      console.error("Error updating link:", e);
     }
   }, [editor, linkInput, textLinkInput]);
 
   const setLink = React.useCallback(() => {
     if (!editor) return;
 
-    // Empty
+    // Default behave: if linkInput is left empty, removes link.
     if (linkInput === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
 
-    if (textLinkInput && textLinkInput.trim() !== "") {
-      editor
-        .chain()
-        .focus()
-        .insertContentAt(editor.state.selection, {
-          type: "text",
-          text: textLinkInput,
-          marks: [
-            {
-              type: "link",
-              attrs: {
-                href: linkInput,
-              },
+    // Which text to display. If no textLinkInput, linkInput is used instead
+    const displayContent =
+      textLinkInput && textLinkInput.trim() !== "" ? textLinkInput : linkInput;
+
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "text",
+        text: displayContent,
+        marks: [
+          {
+            type: "link",
+            attrs: {
+              href: linkInput,
             },
-          ],
-        })
-        .run();
-    } else {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: linkInput })
-        .run();
-    }
+          },
+        ],
+      })
+      .run();
   }, [editor, linkInput, textLinkInput]);
 
   const getKeyboardSelection = () => {
@@ -497,14 +489,15 @@ export function HtmlEditor({
               </button>
             </AlertDialogTrigger>
             <AlertDialogContent className="sm:max-w-md gap-2">
-              <AlertDialogHeader className="block">
-                <AlertDialogTitle className="w-full flex items-center justify-between text-xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>
                   Hyperlink
                   <AlertDialogCancel
                     onClick={() => {
                       setIsDialogOpen(false);
                       editor.chain().focus();
                     }}
+                    className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -523,39 +516,36 @@ export function HtmlEditor({
                   </AlertDialogCancel>
                 </AlertDialogTitle>
               </AlertDialogHeader>
-              <div className="flex flex-col gap-2">
-                <AlertDialogDescription className="text-xs">
-                  Crie um texto para o hiperlink. Se você deixar o texto vazio,
-                  o texto será o próprio link.
+              <div className="flex flex-col gap-2 p-4">
+                <AlertDialogDescription className="text-sm">
+                  Se você deixar o texto vazio, o texto será o próprio link.
                 </AlertDialogDescription>
-                <div className="flex flex-col gap-2">
-                  <Fieldset>
-                    <FieldsetInput
-                      id="text-link"
-                      value={textLinkInput}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setTextLinkInput(e.target.value)
-                      }
-                      // placeholder=""
-                      // className=""
-                      // {...props}
-                    />
-                    <FieldsetLabel htmlFor="text-link" label="Texto" />
-                  </Fieldset>
-                  <Fieldset>
-                    <FieldsetInput
-                      id="text-url"
-                      value={linkInput}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setLinkInput(e.target.value)
-                      }
-                      // placeholder=""
-                      // className=""
-                      // {...props}
-                    />
-                    <FieldsetLabel htmlFor="text-url" label="URL" />
-                  </Fieldset>
-                </div>
+                <Fieldset>
+                  <FieldsetInput
+                    id="text-link"
+                    value={textLinkInput}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setTextLinkInput(e.target.value)
+                    }
+                    // placeholder=""
+                    // className=""
+                    // {...props}
+                  />
+                  <FieldsetLabel htmlFor="text-link" label="Texto" />
+                </Fieldset>
+                <Fieldset>
+                  <FieldsetInput
+                    id="text-url"
+                    value={linkInput}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setLinkInput(e.target.value)
+                    }
+                    // placeholder=""
+                    // className=""
+                    // {...props}
+                  />
+                  <FieldsetLabel htmlFor="text-url" label="URL" />
+                </Fieldset>
               </div>
               <AlertDialogFooter className="p-2">
                 <div className="flex-1">
@@ -725,6 +715,3 @@ export function HtmlEditor({
     </>
   );
 }
-
-const btnGroupStyle =
-  "flex [&_button]:border [&_button]:first:rounded-l [&_button]:border-r-0 [&_button]:last:border-r [&_button]:last:rounded-r [&_button]:focus-visible:z-10 [&_button]:focus-visible:border-transparent";

@@ -17,7 +17,7 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const passRef = useRef(null);
 
-  const [state, action, pending] = useActionState(
+  const [state, action, isPending] = useActionState(
     async (prevState: SignInActionState) => {
       const formData = new FormData();
 
@@ -65,8 +65,8 @@ export default function SignInForm() {
         strErrors={state.error.strength?.errors}
       />
       <FieldsetError error={state.error.form?.errors} />
-      <Button disabled={pending} className="rounded h-10.5">
-        {pending && <Spinner />} {pending ? "Carregando" : "Confirmar"}
+      <Button disabled={isPending} className="rounded h-9.5">
+        {isPending && <Spinner />} {isPending ? "Carregando" : "Confirmar"}
       </Button>
     </form>
   );

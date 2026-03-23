@@ -241,7 +241,7 @@ const MediaFileCard = ({
           {props.url && <ExpandButton url={props.url} />}
           <DownloadButton />
           <EditMediaButton {...props} />
-          <DeleteMediaButton id={props.id} />
+          <DeleteMediaButton {...props} />
         </div>
       </div>
       <div className="w-full flex justify-between items-center gap-2 p-2 border-t">

@@ -24,7 +24,7 @@ const focusWithinRing =
   "focus-within:outline-none focus-within:ring-3 dark:focus-within:ring-2 focus-within:ring-stone-900/25 dark:focus-within:ring-stone-100 focus-within:ring-offset-2 focus-within:ring-offset-stone-950 focus-within:border-primary dark:focus-within:border-primary";
 
 const buttonVariants = cva(
-  "cursor-pointer border disabled:cursor-not-allowed rounded text-sm font-medium [&_svg:not([class*='size-'])]:size-4 inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 [&_svg]:pointer-events-none shrink-0 [&_svg]:shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow focus-visible:border-primary dark:focus-visible:border-primary " +
+  "cursor-pointer border disabled:cursor-not-allowed rounded text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none group/button select-none h-10.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow focus-visible:border-primary dark:focus-visible:border-primary [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 " +
     focusRing,
   {
     variants: {

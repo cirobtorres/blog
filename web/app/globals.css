@@ -235,10 +235,6 @@
         inset !important;
   }
 
-  /* input:-webkit-autofill + label {
-    color: var(--primary) !important;
-  } */
-
   /* Makes sure peer-placeholder-shown works with autofill (usually it doesn't), otherwise label might get stuck */
   input:-webkit-autofill:not(:placeholder-shown) + label {
     filter: none; /* Browser re-render */

@@ -16,7 +16,15 @@ import {
 } from "../../../../AlertDialog";
 import { Button } from "../../../../Button";
 
-export default function DeleteMediaButton({ id }: { id: string }) {
+export default function DeleteMediaButton({
+  id,
+  name,
+  extension,
+}: {
+  id: string;
+  name: string;
+  extension: string;
+}) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -41,36 +49,45 @@ export default function DeleteMediaButton({ id }: { id: string }) {
           </svg>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-xs">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Excluir arquivo</AlertDialogTitle>
-          <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </AlertDialogCancel>
-        </AlertDialogHeader>
-        <AlertDialogDescription className="text-sm text-neutral-600 dark:text-neutral-500 p-4">
-          Tem certeza que gostaria de excluir o arquivo? Essa ação não poderá
-          ser desfeita!
-        </AlertDialogDescription>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="w-full max-w-30 h-8">
-            Cancelar
-          </AlertDialogCancel>
-          <DeleteMediaAction id={id} />
-        </AlertDialogFooter>
+      <AlertDialogContent asChild className="max-w-xs">
+        <form>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir arquivo</AlertDialogTitle>
+            <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </AlertDialogCancel>
+          </AlertDialogHeader>
+          <AlertDialogDescription asChild>
+            <div className="p-4">
+              <p className="text-sm text-neutral-600 dark:text-neutral-500">
+                Excluir{" "}
+                <span className="text-neutral-100 font-bold">
+                  {name}.{extension}
+                </span>
+                ?
+              </p>
+            </div>
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="w-full max-w-30 h-8">
+              Cancelar
+            </AlertDialogCancel>
+            <DeleteMediaAction id={id} />
+          </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );
@@ -104,15 +121,14 @@ const DeleteMediaAction = ({ id }: { id: string }) => {
     return result;
   }, null);
   return (
-    <form action={action}>
-      <Button
-        type="submit"
-        variant="default"
-        disabled={isPending}
-        className="w-full max-w-30 h-8"
-      >
-        {isPending && <Spinner />} Salvar
-      </Button>
-    </form>
+    <Button
+      type="submit"
+      variant="destructive"
+      formAction={action}
+      disabled={isPending}
+      className="w-full max-w-30 h-8"
+    >
+      {isPending && <Spinner />} Excluir
+    </Button>
   );
 };

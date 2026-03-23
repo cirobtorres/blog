@@ -53,7 +53,9 @@ export const ProgressBar = () => {
       aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className="fixed top-full left-0 h-1 w-full lg:hidden inline-grid"
+      // border: top-[calc(100%+1px)]
+      // No border: top-full
+      className="fixed top-[calc(100%+1px)] left-0 h-1 w-full lg:hidden inline-grid"
     >
       <div
         ref={progressBarRef}

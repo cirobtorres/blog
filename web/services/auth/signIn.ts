@@ -7,7 +7,11 @@ import {
   parseSetCookie,
 } from "../helpers/serve-actions";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { apiServerUrls, publicWebUrls } from "../../routing/routes";
+import {
+  apiServerUrls,
+  protectedWebUrls,
+  publicWebUrls,
+} from "../../routing/routes";
 import * as z from "zod";
 
 const signUpSchema = z.object({
@@ -88,27 +92,31 @@ const signIn = async (
     });
 
     if (userResponse.ok) {
-      const userData = await userResponse.json();
+      const userData: User = await userResponse.json();
       if (!userData.isProviderEmailVerified) {
         return redirect(publicWebUrls.validateEmail);
       }
-    }
-    const headersList = await headers();
-    let redirectUrl = "/";
-    const referer = headersList.get("referer");
-    if (referer) {
-      const refererUrl = new URL(referer);
-      const callbackPath =
-        refererUrl.searchParams.get("redirect") ||
-        refererUrl.searchParams.get("callback");
+      const headersList = await headers();
+      let redirectUrl = "/";
+      const referer = headersList.get("referer");
+      if (referer) {
+        const refererUrl = new URL(referer);
+        const callbackPath =
+          refererUrl.searchParams.get("redirect") ||
+          refererUrl.searchParams.get("callback");
 
-      if (callbackPath) {
-        redirectUrl = callbackPath.startsWith("/")
-          ? decodeURIComponent(callbackPath)
-          : "/";
+        if (callbackPath) {
+          redirectUrl = callbackPath.startsWith("/")
+            ? decodeURIComponent(callbackPath)
+            : "/";
+        } else {
+          if (userData.authorities.includes("AUTHOR")) {
+            return redirect(protectedWebUrls.authors);
+          }
+        }
       }
+      return redirect(redirectUrl);
     }
-    return redirect(redirectUrl);
   }
 
   if (!isProd) {

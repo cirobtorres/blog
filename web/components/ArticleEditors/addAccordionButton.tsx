@@ -1,15 +1,51 @@
 "use client";
 
 import React from "react";
-import { cn, focusRing } from "../../utils/variants";
-import { Popover, PopoverContentClipPath, PopoverTrigger } from "../Popover";
+import { cn } from "../../utils/variants";
 import { Button } from "../Button";
 
-const addAccDivStyle =
-  "size-full flex flex-col justify-center items-center gap-1";
-
-const addAccBtnStyle =
-  "size-12 rounded aspect-square border-stone-400 dark:border-stone-700 bg-stone-300 dark:bg-stone-800 transition-all duration-300 dark:hover:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-300 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750";
+export function AddAccordionButton({
+  addBlock,
+}: {
+  addBlock: (type: Blocks["type"]) => void;
+}) {
+  return (
+    <div className="w-fit mx-auto border rounded-xl p-2 not-dark:shadow dark:bg-stone-900">
+      <div className="w-fit mx-auto flex gap-1">
+        {buttons.map((prop, index) => (
+          <div
+            key={index}
+            className="size-full flex flex-col justify-center items-center gap-1"
+          >
+            <Button
+              type="button"
+              onClick={() => addBlock(prop.blockType)}
+              variant="outline"
+              className={cn(
+                "size-14 shrink-0 [&_svg]:size-6 rounded-lg text-neutral-500 bg-stone-850 hover:not-disabled:border-stone-600 hover:not-disabled:bg-stone-800 hover:not-disabled:text-neutral-100 active:not-disabled:border-stone-500 active:not-disabled:text-neutral-100 active:not-disabled:bg-stone-700 focus-within:not-disabled:bg-stone-800 focus-within:not-disabled:border-primary focus-within:not-disabled:text-neutral-100 dark:text-neutral-500 dark:bg-stone-850 dark:hover:not-disabled:border-stone-600 dark:hover:not-disabled:bg-stone-800 dark:hover:not-disabled:text-neutral-100 dark:active:not-disabled:border-stone-500 dark:active:not-disabled:text-neutral-100 dark:active:not-disabled:bg-stone-700 dark:focus-within:not-disabled:bg-stone-800 dark:focus-within:not-disabled:border-primary dark:focus-within:not-disabled:text-neutral-100 peer",
+              )}
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
+            >
+              {prop.children}
+            </Button>
+            <p
+              className={cn(
+                "w-fit text-xs text-center text-neutral-600 dark:text-neutral-500 transition-all duration-300 peer-disabled:opacity-50 dark:peer-disabled:opacity-50 peer-hover:peer-not-disabled:text-neutral-100 peer-active:peer-not-disabled:text-neutral-100 peer-focus-within:peer-not-disabled:text-neutral-100 dark:peer-hover:peer-not-disabled:text-neutral-100 dark:peer-active:peer-not-disabled:text-neutral-100 dark:peer-focus-within:peer-not-disabled:text-neutral-100",
+              )}
+              style={{
+                animationDelay: `${index * 50}ms`,
+              }}
+            >
+              {prop.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const buttons: {
   children: React.ReactNode;
@@ -174,145 +210,3 @@ const buttons: {
     label: "Vídeos",
   },
 ];
-
-export function AddAccordionButton({
-  addBlock,
-}: {
-  addBlock: (type: Blocks["type"]) => void;
-}) {
-  return (
-    <div className="w-fit mx-auto border rounded-xl p-2 not-dark:shadow dark:bg-stone-900">
-      <div className="w-fit mx-auto flex gap-1">
-        {buttons.map((prop, index) => (
-          <div key={index} className={addAccDivStyle}>
-            <Button
-              type="button"
-              onClick={() => addBlock(prop.blockType)}
-              className={cn(
-                addAccBtnStyle,
-                "cursor-pointer flex justify-center items-center size-14 shrink-0 not-dark:shadow outline-none rounded-lg border transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:border-stone-500 dark:active:text-neutral-100 dark:active:bg-stone-700 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 peer",
-              )}
-              style={{
-                animationDelay: `${index * 50}ms`,
-              }}
-            >
-              {prop.children}
-            </Button>
-            <p
-              className={cn(
-                "w-fit text-xs text-center text-neutral-600 transition-all duration-300 dark:peer-hover:text-neutral-100 dark:peer-active:text-neutral-100 dark:peer-focus-within:text-neutral-100",
-              )}
-              style={{
-                animationDelay: `${index * 50}ms`,
-              }}
-            >
-              {prop.label}
-            </p>
-          </div>
-        ))}
-      </div>
-      <div className="py-2 pb-0">
-        <p className="text-center text-sm text-primary pointer-events-none">
-          Editores
-        </p>
-      </div>
-    </div>
-  );
-}
-
-export function AddAccordionButtonDeprecated({
-  addBlock,
-}: {
-  addBlock: (type: Blocks["type"]) => void;
-}) {
-  // Hydration--------------------------------------------------------
-  // Garantees to match Client Render + SSR
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="w-fit border rounded p-2 mx-auto opacity-50">
-        <OpenButton />
-      </div>
-    );
-  }
-  // -----------------------------------------------------------------
-
-  return (
-    <Popover>
-      <PopoverTrigger
-        className={cn(
-          "w-fit cursor-pointer border rounded p-2 mx-auto text-neutral-500 dark:text-neutral-500 bg-stone-200 border-stone-300 dark:border-stone-700 dark:bg-stone-800 transition-all duration-300 hover:text-neutral-900 hover:bg-stone-250 dark:hover:text-neutral-100 dark:hover:bg-stone-750 data-[state=open]:text-neutral-900 data-[state=open]:bg-stone-250 dark:data-[state=open]:text-neutral-100 dark:data-[state=open]:bg-stone-750 focus-visible:text-neutral-900 focus-visible:bg-stone-250 dark:focus-visible:text-neutral-100 dark:focus-visible:bg-stone-750 not-dark:shadow",
-          focusRing,
-        )}
-      >
-        <OpenButton />
-      </PopoverTrigger>
-      <PopoverContentClipPath
-        side="top"
-        className="rounded-lg p-2 not-dark:shadow"
-      >
-        <div className="w-40 grid grid-cols-3 gap-1">
-          {buttons.map((prop, index) => (
-            <div key={index} className={addAccDivStyle}>
-              <Button
-                type="button"
-                onClick={() => addBlock(prop.blockType)}
-                className={cn(
-                  addAccBtnStyle,
-                  mounted ? "animate-balloon" : "opacity-0",
-                  "flex justify-center items-center size-11 cursor-pointer outline-none border transition-all duration-300 dark:text-neutral-500 dark:bg-stone-900 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:border-stone-550 dark:active:text-neutral-100 dark:active:bg-stone-750 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 peer",
-                )}
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                }}
-              >
-                {prop.children}
-              </Button>
-              <p
-                className={cn(
-                  mounted ? "animate-fade-in-up" : "opacity-0",
-                  "w-fit text-xs text-center text-neutral-600 transition-all duration-300 dark:peer-hover:text-neutral-100 dark:peer-active:text-neutral-100 dark:peer-focus-within:text-neutral-100",
-                )}
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                }}
-              >
-                {prop.label}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="py-2 pb-0">
-          <p className="text-center text-sm text-primary pointer-events-none">
-            Editores
-          </p>
-        </div>
-      </PopoverContentClipPath>
-    </Popover>
-  );
-}
-
-const OpenButton = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 .83.18 2 2 0 0 0 .83-.18l8.58-3.9a1 1 0 0 0 0-1.831z" />
-    <path d="M16 17h6" />
-    <path d="M19 14v6" />
-    <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 .825.178" />
-    <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l2.116-.962" />
-  </svg>
-);

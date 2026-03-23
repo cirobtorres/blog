@@ -8,6 +8,8 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
@@ -150,48 +152,54 @@ const Delete = ({
           </svg>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="gap-2 p-0">
-        <AlertDialogTitle className="text-lg flex justify-between items-center p-4 pb-0">
-          Excluir
-          <AlertDialogCancel
-            onClick={handleCloseDialog}
-            className="size-8! border-transparent"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      <AlertDialogContent className="max-w-xs">
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            Excluir
+            <AlertDialogCancel
+              onClick={handleCloseDialog}
+              className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
             >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </AlertDialogCancel>
-        </AlertDialogTitle>
-        <AlertDialogDescription className="py-2 px-4 border-y dark:bg-stone-900">
-          Tem certeza que deseja excluir este bloco? Essa ação não poderá ser
-          desfeita!
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </AlertDialogCancel>
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogDescription asChild>
+          <div className="p-4">
+            <p className="text-sm text-neutral-600 dark:text-neutral-500">
+              <strong className="text-destructive uppercase">excluir</strong>{" "}
+              este bloco?
+            </p>
+          </div>
         </AlertDialogDescription>
-        <div className="flex justify-end items-center gap-2 p-4 pt-0">
+        <AlertDialogFooter>
           <AlertDialogCancel
             onClick={handleCloseDialog}
             className=" w-full max-w-22 h-8! bg-stone-800"
           >
             Cancelar
           </AlertDialogCancel>
-          <AlertDialogAction
+          <Button
             onClick={onDelete}
             variant="destructive"
-            className=" w-full max-w-22 h-8!"
+            className="w-full max-w-22 h-8!"
           >
-            Confirmar
-          </AlertDialogAction>
-        </div>
+            Excluir
+          </Button>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );

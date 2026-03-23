@@ -22,7 +22,6 @@ export default async function AuthorsMediaPage({
           searchParams={resolvedParams}
         />
       </Suspense>
-      <hr className="dark:border-stone-800" />
       <Suspense fallback={<MediaFileCardsLoading />}>
         <MediaFileCards
           accessToken={accessToken?.value}

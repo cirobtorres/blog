@@ -112,7 +112,7 @@ export function AddFolderButton({
           Criar pasta
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-lg">
+      <AlertDialogContent asChild className="max-w-lg">
         <form action={action}>
           <AlertDialogHeader>
             <AlertDialogTitle>Criar pasta</AlertDialogTitle>
