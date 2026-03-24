@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.mediaFolder.services;
 
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -76,5 +77,16 @@ public class MediaFolderService {
     public Long countAllFolders() {
         String homeFolder = "Home";
         return mediaFolderRepository.countByNameNot(homeFolder);
+    }
+
+    @Transactional
+    public List<MediaFoldersDTO> listAllFolders() {
+        return mediaFolderRepository
+                .findAllProjectedBy()
+                .stream()
+                .map(mediaFolder ->
+                        new MediaFoldersDTO(mediaFolder.getPath())
+                )
+                .toList();
     }
 }

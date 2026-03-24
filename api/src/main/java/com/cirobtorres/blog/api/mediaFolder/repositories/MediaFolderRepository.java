@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.mediaFolder.repositories;
 
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
+import com.cirobtorres.blog.api.mediaFolder.interfaces.MediaFolderPathOnly;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,6 +16,7 @@ public interface MediaFolderRepository extends JpaRepository<MediaFolder, UUID> 
     List<MediaFolder> findByParentPath(String path);
     void deleteByPath(String path);
     long countByNameNot(String name);
+    List<MediaFolderPathOnly> findAllProjectedBy();
 
     @Query("""
         SELECT new com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO(

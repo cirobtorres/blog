@@ -50,9 +50,7 @@ export default async function MediaLayout({
           <AddFolderButton
             existingFolders={folders.map((folder) => folder.path)}
           />
-          <AddFilesButton
-            existingFolders={folders.map((folder) => folder.path)}
-          />
+          <AddFilesButton />
         </div>
       </div>
       <MediaBreadcrumb />

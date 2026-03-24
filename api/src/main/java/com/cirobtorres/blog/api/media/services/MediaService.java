@@ -147,6 +147,7 @@ public class MediaService {
                 .height(dto.height())
                 .duration(dto.duration())
                 .alt(dto.alt())
+                .caption(dto.caption())
                 .build();
     }
 
@@ -163,7 +164,8 @@ public class MediaService {
                 entity.getWidth(),
                 entity.getHeight(),
                 entity.getDuration(),
-                entity.getAlt()
+                entity.getAlt(),
+                entity.getCaption()
         );
     }
 }

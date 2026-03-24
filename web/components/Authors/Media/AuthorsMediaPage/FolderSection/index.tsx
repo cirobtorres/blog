@@ -7,6 +7,7 @@ import { Checkbox } from "../../../../Fieldset/Checkbox";
 import { FolderLink } from "./FolderLink";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
 import MediaFolderExcludeButton from "./MediaFolderExcludeButton";
+import { Skeleton } from "../../../../Skeleton";
 
 export default async function MediaFolderCards({
   accessToken,
@@ -59,6 +60,36 @@ export default async function MediaFolderCards({
     </section>
   );
 }
+
+export const MediaFolderCardsLoading = async () => (
+  <div className="w-full flex flex-col gap-2">
+    <h2 className="text-xl flex items-center">
+      Pastas &#40;
+      <Skeleton className="size-6" />
+      &#41;
+    </h2>
+    <div className="w-full flex justify-between items-center gap-2">
+      <div className="flex items-center gap-2">
+        <Skeleton className="size-6" />
+        <Skeleton className="w-14 h-4" />
+        <Skeleton className="w-30 h-8" />
+        <Skeleton className="w-30 h-8" />
+      </div>
+      <div className="flex items-center gap-2">
+        <Skeleton className="w-40 h-8" />
+        <Skeleton className="w-22 h-8" />
+      </div>
+    </div>
+    <div className="w-full grid grid-cols-4 items-center gap-2">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          className="w-full max-w-70 h-18 shrink-0 rounded"
+        />
+      ))}
+    </div>
+  </div>
+);
 
 const MediaFolderCard = ({ folder }: { folder: MediaFolder }) => {
   const folderName = folder.path.split("/").pop();

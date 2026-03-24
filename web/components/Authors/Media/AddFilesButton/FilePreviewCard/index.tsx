@@ -2,50 +2,22 @@ import Image from "next/image";
 import React from "react";
 import { DashedBackground } from "../../../../DashedBackground";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../Select";
 import { Button } from "../../../../Button";
-
-const generateVideoThumbnail = (file: File): Promise<string> => {
-  return new Promise((resolve) => {
-    const video = document.createElement("video");
-    video.preload = "metadata";
-    video.src = URL.createObjectURL(file);
-    video.muted = true;
-    video.playsInline = true;
-
-    video.onloadeddata = () => {
-      video.currentTime = 1; // Frame of second === 1
-    };
-
-    video.onseeked = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext("2d");
-      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageUrl = canvas.toDataURL("image/jpeg");
-      URL.revokeObjectURL(video.src);
-      resolve(imageUrl);
-    };
-  });
-};
+import { generateVideoThumbnail } from "./GenerateVideoThumbnail";
+import { FolderSelectBuilder } from "../../../FolderSelectBuidler";
 
 export default function FilePreviewCard({
   file,
-  existingFolders,
   onRemove,
 }: {
   file: File;
-  existingFolders: string[];
   onRemove: () => void;
 }) {
   const [preview, setPreview] = React.useState<string | null>(null);
+  const [name, setName] = React.useState<string>(file.name);
+  const [alt, setAlt] = React.useState<string>("");
+  const [caption, setCaption] = React.useState<string>("");
+  const [folder, setFolder] = React.useState("Home");
   const isImage = file.type.startsWith("image/");
   const isVideo = file.type.startsWith("video/");
   const isAudio = file.type.startsWith("audio/");
@@ -98,25 +70,39 @@ export default function FilePreviewCard({
         </svg>
       )}
       <div className="w-full h-full flex flex-col gap-2 mb-auto">
+        <Fieldset>
+          <FieldsetInput
+            id="name-input"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <FieldsetLabel id="name-label" label="Name" htmlFor="name-input" />
+        </Fieldset>
+        <Fieldset>
+          <FieldsetInput
+            id="caption-input"
+            name="caption"
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+          />
+          <FieldsetLabel
+            id="caption-label"
+            label="Legenda"
+            htmlFor="caption-input"
+          />
+        </Fieldset>
         <div className="flex flex-col gap-1">
           <Fieldset>
-            <FieldsetInput id="caption-input" />
-            <FieldsetLabel
-              id="caption-label"
-              label="Caption"
-              htmlFor="caption-input"
+            <FieldsetInput
+              id="alt-input"
+              name="alt"
+              value={alt}
+              onChange={(e) => setAlt(e.target.value)}
             />
-          </Fieldset>
-          <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
-            A legenda da imagem.
-          </p>
-        </div>
-        <div className="flex flex-col gap-1">
-          <Fieldset>
-            <FieldsetInput id="alt-input" />
             <FieldsetLabel
               id="alt-label"
-              label="Alternative Text"
+              label="Texto Alternativo"
               htmlFor="alt-input"
             />
           </Fieldset>
@@ -125,23 +111,14 @@ export default function FilePreviewCard({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <Select>
-            <SelectTrigger className="w-full flex-1">
-              <SelectValue placeholder="Pasta" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              {existingFolders.map((folder) => (
-                <SelectItem key={folder} value={folder}>
-                  {folder}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <FolderSelectBuilder
+            selectedFolder={folder}
+            setSelectedFolder={setFolder}
+          />
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
             A pasta onde o arquivo será salvo.
           </p>
         </div>
-        <DashedBackground className="h-full flex-1 rounded border"></DashedBackground>
       </div>
     </div>
   );

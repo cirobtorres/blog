@@ -1,21 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
-import { cn, focusRing } from "../../../../../utils/variants";
 import { Checkbox } from "../../../../Fieldset/Checkbox";
 import { DashedBackground } from "../../../../DashedBackground";
 import MediaPagination from "./MediaPagination";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../Select";
 import { apiServerUrls } from "../../../../../routing/routes";
 import { Button } from "../../../../Button";
 import DeleteMediaButton from "./DeleteMediaButton";
 import EditMediaButton from "./EditMediaButton";
+import { Skeleton } from "../../../../Skeleton";
+import { ExpandButton } from "./ExpandButton";
+import { DownloadButton } from "./Download";
+import { MediaFilesSorting } from "./MediaFilesSorting";
 
 export default async function MediaFileCards({
   accessToken,
@@ -101,90 +95,6 @@ export default async function MediaFileCards({
     </section>
   );
 }
-
-const MediaFilesSorting = () => (
-  <div className="flex items-center gap-2">
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-40 h-8">
-          Mais recentes{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className=""
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="rounded">
-        <p>TODO</p>
-      </PopoverContent>
-    </Popover>
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-22 h-8">
-          Filtros{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className=""
-          >
-            <path d="M2 5h20" />
-            <path d="M6 12h12" />
-            <path d="M9 19h6" />
-          </svg>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="end" className="rounded">
-        <Select>
-          <SelectTrigger className="w-full flex-1">
-            <SelectValue placeholder="createdAt" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="createdAt">createdAt</SelectItem>
-            <SelectItem value="updatedAt">updatedAt</SelectItem>
-            <SelectItem value="type">type</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="w-full flex-1">
-            <SelectValue placeholder="is" />
-          </SelectTrigger>
-          <SelectContent position="popper">
-            <SelectItem value="is">is</SelectItem>
-            <SelectItem value="isNot">is not</SelectItem>
-            <SelectItem value="isGreaterThan">is greater than</SelectItem>
-            <SelectItem value="isGreaterThanOrEqualTo">
-              is greater than or equal to
-            </SelectItem>
-            <SelectItem value="isLowerThan">is lower than</SelectItem>
-            <SelectItem value="isLowerThanOrEqualTo">
-              is lower than or equal to
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Button variant="link" className="h-9.5">
-          Adicionar filtros
-        </Button>
-      </PopoverContent>
-    </Popover>
-  </div>
-);
 
 // TODO (incomplete): selectedFiles = files selected with the checkbox
 const MediaFilesMutation = ({
@@ -293,51 +203,37 @@ const NoCardsFoundPlaceholder = ({
   </div>
 );
 
-const ExpandButton = ({ url }: { url: string }) => (
-  <Link
-    href={url}
-    target="_blank"
-    className={cn(
-      "outline-none select-none size-8 p-2 border cursor-pointer rounded bg-clip-padding inline-flex items-center justify-center transition-all duration-300 shrink-0 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 focus-visible:border-primary dark:focus-visible:border-primary",
-      focusRing,
-    )}
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M8 3H5a2 2 0 0 0-2 2v3" />
-      <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
-      <path d="M3 16v3a2 2 0 0 0 2 2h3" />
-      <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
-    </svg>
-  </Link>
-);
-
-const DownloadButton = () => (
-  <Button variant="outline" className="size-8 not-dark:shadow-none">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className=""
-    >
-      <path d="M12 15V3" />
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <path d="m7 10 5 5 5-5" />
-    </svg>
-  </Button>
+export const MediaFileCardsLoading = async () => (
+  <section className="flex flex-col items-start justify-center gap-2">
+    <h2 className="text-xl flex items-center">
+      Arquivos &#40;{<Skeleton className="size-6" />}&#41;
+    </h2>
+    <div className="w-full flex justify-between items-center gap-2">
+      <div className="flex items-center gap-2">
+        <Skeleton className="size-7" />
+        <Skeleton className="w-14 h-6" />
+        <Skeleton className="w-30 h-8" />
+        <Skeleton className="w-30 h-8" />
+      </div>
+      <div className="flex items-center gap-2">
+        <Skeleton className="w-40 h-8" />
+        <Skeleton className="w-22 h-8" />
+      </div>
+    </div>
+    <div className="w-full flex justify-center items-center gap-1">
+      <Skeleton className="w-20 h-8" />
+      <Skeleton className="size-8" />
+      <Skeleton className="size-8" />
+      <Skeleton className="size-8" />
+      <Skeleton className="w-20 h-8" />
+    </div>
+    <div className="w-full grid grid-cols-3 items-center gap-2">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          className="w-full max-w-100 h-65 shrink-0 overflow-hidden rounded-lg not-dark:shadow"
+        />
+      ))}
+    </div>
+  </section>
 );

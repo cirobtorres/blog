@@ -1,6 +1,7 @@
 package com.cirobtorres.blog.api.mediaFolder.entities;
 
 import com.cirobtorres.blog.api.media.entities.Media;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

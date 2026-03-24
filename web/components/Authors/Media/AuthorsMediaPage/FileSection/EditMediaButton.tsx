@@ -17,25 +17,19 @@ import editMedia from "../../../../../services/cloudinary/edit";
 import { DashedBackground } from "../../../../DashedBackground";
 import { sonnerToastPromise } from "../../../../../utils/sooner";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../Select";
 import { Button } from "../../../../Button";
+import { FolderSelectBuilder } from "../../../FolderSelectBuidler";
 
 export default function EditMediaButton({
   id,
   url,
-  name,
+  name: currentName,
   type,
   size,
   extension,
-  folder: serverFolder,
-  alt: serverAlt,
-  caption: serverCaption,
+  folder: currentFolder,
+  alt: currentAlt,
+  caption: currentCaption,
 }: {
   id: string;
   url: string;
@@ -47,9 +41,52 @@ export default function EditMediaButton({
   alt: string;
   caption: string;
 }) {
-  const [alt, setAlt] = React.useState(serverAlt);
-  const [caption, setCaption] = React.useState(serverCaption);
-  const [folder, setFolder] = React.useState(serverFolder);
+  const [name, setName] = React.useState(currentName);
+  const [alt, setAlt] = React.useState(currentAlt);
+  const [caption, setCaption] = React.useState(currentCaption);
+  const [folder, setFolder] = React.useState(currentFolder);
+
+  const [, action, isPending] = React.useActionState(
+    async (prevState: ActionState) => {
+      const success = (serverResponse: ActionState) => {
+        return (
+          <div className="flex flex-col">
+            <p>{serverResponse.success}</p>
+          </div>
+        );
+      };
+
+      const error = (serverResponse: ActionState) => {
+        return <p>{serverResponse.error}</p>;
+      };
+
+      const formData = new FormData();
+      formData.set("id", id);
+      formData.set("name", name);
+      formData.set("alt", alt);
+      formData.set("caption", caption);
+      formData.set("folder", folder);
+
+      const result = editMedia(prevState, formData);
+
+      const promise: Promise<ActionState> = new Promise((resolve, reject) => {
+        result.then((data) => {
+          if (data.ok) resolve(result);
+          else reject(result);
+        });
+      });
+
+      sonnerToastPromise(promise, success, error, "Alterando arquivo...");
+
+      return result;
+    },
+    {
+      ok: false,
+      success: null,
+      error: null,
+      data: null,
+    },
+  );
 
   return (
     <AlertDialog>
@@ -73,86 +110,107 @@ export default function EditMediaButton({
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Editar arquivo</AlertDialogTitle>
-          <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </AlertDialogCancel>
-        </AlertDialogHeader>
-        <AlertDialogDescription className="sr-only">
-          Aqui você pode editar seu arquivo.
-        </AlertDialogDescription>
-        <div className="p-4">
-          <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
-            <Card
-              url={url}
-              name={name}
-              type={type}
-              size={size}
-              extension={extension}
-            />
-            <div className="w-full h-full flex flex-col gap-2 mb-auto">
-              <div className="flex flex-col gap-1">
-                <Fieldset>
-                  <FieldsetInput id="caption-input" />
-                  <FieldsetLabel
-                    id="caption-label"
-                    label="Caption"
-                    htmlFor="caption-input"
+        <form action={action}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Editar arquivo</AlertDialogTitle>
+            <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </AlertDialogCancel>
+          </AlertDialogHeader>
+          <AlertDialogDescription className="sr-only">
+            Aqui você pode editar seu arquivo.
+          </AlertDialogDescription>
+          <div className="p-4">
+            <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
+              <Card
+                url={url}
+                name={name}
+                type={type}
+                size={size}
+                extension={extension}
+              />
+              <div className="w-full h-full flex flex-col gap-2 mb-auto">
+                <div className="flex flex-col gap-1">
+                  <Fieldset>
+                    <FieldsetInput
+                      id="name-input"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <FieldsetLabel
+                      id="name-label"
+                      label="name"
+                      htmlFor="name-input"
+                    />
+                  </Fieldset>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Fieldset>
+                    <FieldsetInput
+                      id="caption-input"
+                      value={caption}
+                      onChange={(e) => setCaption(e.target.value)}
+                    />
+                    <FieldsetLabel
+                      id="caption-label"
+                      label="Caption"
+                      htmlFor="caption-input"
+                    />
+                  </Fieldset>
+                  <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
+                    A legenda da imagem.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Fieldset>
+                    <FieldsetInput
+                      id="alt-input"
+                      value={alt}
+                      onChange={(e) => setAlt(e.target.value)}
+                    />
+                    <FieldsetLabel
+                      id="alt-label"
+                      label="Alt"
+                      htmlFor="alt-input"
+                    />
+                  </Fieldset>
+                  <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
+                    O texto que será exibido caso o link da imagem não funcione.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <FolderSelectBuilder
+                    currentFolder={currentFolder}
+                    selectedFolder={folder}
+                    setSelectedFolder={setFolder}
                   />
-                </Fieldset>
-                <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
-                  A legenda da imagem.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <Fieldset>
-                  <FieldsetInput id="alt-input" />
-                  <FieldsetLabel
-                    id="alt-label"
-                    label="Alternative Text"
-                    htmlFor="alt-input"
-                  />
-                </Fieldset>
-                <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
-                  O texto que será exibido caso o link da imagem não funcione.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1">
-                <Select>
-                  <SelectTrigger className="w-full flex-1">
-                    <SelectValue placeholder="Pasta" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="Home">Home</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
-                  A pasta onde o arquivo será salvo.
-                </p>
+                  <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
+                    A pasta onde o arquivo será salvo.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="w-full max-w-30 h-8">
-            Cancelar
-          </AlertDialogCancel>
-          <EditMediaAction id={id} />
-        </AlertDialogFooter>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="w-full max-w-30 h-8">
+              Cancelar
+            </AlertDialogCancel>
+            <EditMediaAction isPending={isPending} />
+          </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );
@@ -183,31 +241,6 @@ const Card = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
             className="absolute object-contain p-px"
           />
-          {/* <Button
-            type="button"
-            variant="outline"
-            onClick={onRemove}
-            className="absolute top-2 right-2 size-8 not-dark:shadow-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className=""
-            >
-              <path d="M10 11v6" />
-              <path d="M14 11v6" />
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-              <path d="M3 6h18" />
-              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-          </Button> */}
         </div>
         <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
           {/* <ExcludeButton /> */}
@@ -234,54 +267,15 @@ const Card = ({
   </article>
 );
 
-const EditMediaAction = ({ id }: { id: string }) => {
-  const [, action, isPending] = React.useActionState(
-    async (prevState: ActionState) => {
-      const success = (serverResponse: ActionState) => {
-        return (
-          <div className="flex flex-col">
-            <p>{serverResponse.success}</p>
-          </div>
-        );
-      };
-
-      const error = (serverResponse: ActionState) => {
-        return <p>{serverResponse.error}</p>;
-      };
-
-      const formData = new FormData();
-      formData.set("id", id);
-
-      const result = editMedia(prevState, formData);
-
-      const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-        result.then((data) => {
-          if (data.ok) resolve(result);
-          else reject(result);
-        });
-      });
-
-      sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
-
-      return result;
-    },
-    {
-      ok: false,
-      success: null,
-      error: null,
-      data: null,
-    },
-  );
+const EditMediaAction = ({ isPending }: { isPending: boolean }) => {
   return (
-    <form action={action}>
-      <Button
-        type="submit"
-        variant="default"
-        disabled={isPending}
-        className="w-full max-w-30 h-8"
-      >
-        {isPending && <Spinner />} Salvar
-      </Button>
-    </form>
+    <Button
+      type="submit"
+      variant="default"
+      disabled={isPending}
+      className="w-full max-w-30 h-8"
+    >
+      {isPending && <Spinner />} Salvar
+    </Button>
   );
 };

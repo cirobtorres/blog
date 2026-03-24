@@ -3,21 +3,13 @@
 import Link from "next/link";
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "../../Breadcrumb";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../DropDownMenu";
-import { Button } from "../../Button";
 import { usePathname } from "next/navigation";
+import { cn, focusRing } from "../../../utils/variants";
 
 export default function MediaBreadcrumb() {
   const pathname = usePathname();
@@ -34,7 +26,15 @@ export default function MediaBreadcrumb() {
             return (
               <BreadcrumbItem key={path}>
                 <BreadcrumbLink asChild>
-                  <Link href={path}>{path}</Link>
+                  <Link
+                    href={path}
+                    className={cn(
+                      "rounded border border-transparent transition-all duration-300",
+                      focusRing,
+                    )}
+                  >
+                    {path}
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             );
@@ -44,7 +44,15 @@ export default function MediaBreadcrumb() {
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href="/users/authors/media/Home">Home</Link>
+            <Link
+              href="/users/authors/media/Home"
+              className={cn(
+                "rounded border border-transparent transition-all duration-300",
+                focusRing,
+              )}
+            >
+              Home
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         {/* {folders.length > 0 && (

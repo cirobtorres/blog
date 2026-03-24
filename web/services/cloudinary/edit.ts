@@ -11,7 +11,7 @@ export default async function editMedia(
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const entries = Object.fromEntries(formData.entries());
-  const { id } = entries;
+  const { id, caption, name, alt, folder } = entries;
 
   try {
     const response = await fetch(apiServerUrls.media.root + "/" + id, {
@@ -20,6 +20,7 @@ export default async function editMedia(
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      // body: JSON.stringify({ name, caption, alt, folder }), // TODO
     });
 
     if (!response.ok) {

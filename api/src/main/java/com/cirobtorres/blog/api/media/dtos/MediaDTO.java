@@ -19,6 +19,7 @@ public record MediaDTO(
         Integer width, // NULLABLE (audio)
         Integer height, // NULLABLE (audio)
         Double duration, // NULLABLE (video)
-        String alt
+        String alt,
+        String caption
 ) {
 }

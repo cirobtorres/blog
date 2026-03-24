@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import MediaFolderCards from "../../../../../components/Authors/Media/AuthorsMediaPage/FolderSection";
-import MediaFileCards from "../../../../../components/Authors/Media/AuthorsMediaPage/FileSection";
+import MediaFolderCards, {
+  MediaFolderCardsLoading,
+} from "../../../../../components/Authors/Media/AuthorsMediaPage/FolderSection";
 
 export default async function AuthorsMediaFolderPage({
   params,
@@ -18,7 +19,7 @@ export default async function AuthorsMediaFolderPage({
   const resolvedParams = await searchParams;
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<MediaFolderCardsLoading />}>
       <MediaFolderCards
         accessToken={accessToken?.value}
         currentPath={currentPath}

@@ -43,7 +43,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "cursor-pointer rounded border border-stone-300 dark:border-stone-700 dark:bg-stone-800 dark:hover:bg-stone-750 dark:hover:border-stone-600 data-placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 bg-transparent py-2 pr-2 pl-2.5 text-sm transition-all duration-300 select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "cursor-auto rounded border border-stone-300 dark:border-stone-700 dark:bg-stone-800 data-placeholder:text-neutral-400 hover:bg-stone-250 hover:border-stone-400 dark:hover:bg-stone-750 dark:hover:border-stone-600 focus:bg-stone-250 focus:border-primary dark:focus:bg-stone-750 dark:focus:border-primary dark:data-placeholder:text-neutral-500 gap-1.5 bg-transparent py-2 pr-2 pl-2.5 text-sm transition-all duration-300 select-none *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
         focusRing,
         focusWithinRing,
         className,
@@ -71,7 +71,7 @@ function SelectContent({
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
         className={cn(
-          "rounded not-dark:shadow bg-stone-200 dark:bg-stone-800 text-neutral-900 dark:text-neutral-500 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 ring-1 p-2 duration-100 relative z-50 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
+          "rounded-xl not-dark:shadow border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-800 text-neutral-900 dark:text-neutral-500 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 min-w-36 p-2 relative z-50 max-h-(--radix-select-content-available-height) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto data-[align-trigger=true]:animate-none",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className,
@@ -118,7 +118,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "cursor-pointer focus:bg-stone-200 dark:focus:bg-stone-725 focus:text-neutral-600 dark:focus:text-neutral-100 not-data-[variant=destructive]:focus:**:text-neutral-600 dark:not-data-[variant=destructive]:focus:**:text-neutral-100 gap-1.5 rounded py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "cursor-pointer transition-all duration-300 focus:bg-stone-200 dark:focus:bg-stone-750 focus:text-neutral-600 dark:focus:text-neutral-300 data-[state=checked]:text-primary data-[state=checked]:bg-stone-250 dark:data-[state=checked]:bg-stone-750 gap-1.5 rounded py-1 pr-8 pl-1.5 text-sm *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
         className,
       )}
       {...props}

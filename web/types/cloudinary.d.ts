@@ -61,3 +61,9 @@ type MediaFolder = {
   subfolderCount: number;
   fileCount: number;
 };
+
+type FolderNode = {
+  name: string;
+  fullPath: string;
+  children: FolderNode[];
+};
