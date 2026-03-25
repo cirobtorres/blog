@@ -11,7 +11,7 @@ import {
 import CopyToClipBoard from "../../CopyToClipBoard";
 import { ZxcvbnResult } from "@zxcvbn-ts/core";
 
-const FieldsetPassword = ({
+export function FieldsetPassword({
   ref,
   value,
   onChange,
@@ -29,7 +29,7 @@ const FieldsetPassword = ({
   strength?: ZxcvbnResult;
   copyToClipboard?: boolean;
   genPassword?: boolean;
-}) => {
+}) {
   const [type, setType] = React.useState<"text" | "password">("password");
   return (
     <>
@@ -42,7 +42,7 @@ const FieldsetPassword = ({
           maxLength={32}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          error={!!passErrors}
+          // error={!!passErrors}
         />
         {copyToClipboard && (
           <CopyToClipBoard
@@ -58,7 +58,11 @@ const FieldsetPassword = ({
           />
         )}
         <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />
-        <FieldsetLabel htmlFor="password" label="Senha" error={!!passErrors} />
+        <FieldsetLabel
+          htmlFor="password"
+          label="Senha"
+          // error={!!passErrors}
+        />
       </Fieldset>
       <FieldsetError error={passErrors} />
       <FieldsetError error={strErrors} />
@@ -83,6 +87,4 @@ const FieldsetPassword = ({
         )}
     </>
   );
-};
-
-export { FieldsetPassword };
+}

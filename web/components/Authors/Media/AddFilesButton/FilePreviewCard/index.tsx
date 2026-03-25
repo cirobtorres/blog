@@ -4,7 +4,7 @@ import { DashedBackground } from "../../../../DashedBackground";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
 import { generateVideoThumbnail } from "./GenerateVideoThumbnail";
-import { FolderSelectBuilder } from "../../../FolderSelectBuidler";
+import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
 
 export default function FilePreviewCard({
   file,

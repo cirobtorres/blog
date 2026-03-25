@@ -18,7 +18,7 @@ import { DashedBackground } from "../../../../DashedBackground";
 import { sonnerToastPromise } from "../../../../../utils/sooner";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
-import { FolderSelectBuilder } from "../../../FolderSelectBuidler";
+import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
 
 export default function EditMediaButton({
   id,

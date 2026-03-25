@@ -1,5 +1,4 @@
-import LoginProviders from "../../../components/LoginProviders";
-import { Link } from "../../../components/Links";
+import { Link, LoginProviders } from "../../../components/Links";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
@@ -8,8 +7,9 @@ import SignInForm from "../../../components/Forms/SignInForm";
 export default async function SignInPage({ searchParams }: PageProps) {
   const { login } = await searchParams;
   return (
-    <main className="h-full min-h-screen grid min-[700px]:grid-cols-[700px_1fr]">
-      <div className="w-full h-full min-h-screen px-4 min-[700px]:px-8 py-8 min-[700px]:border-r not-dark:shadow">
+    <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
+      <LeftBanner />
+      <div className="w-full h-full min-h-screen px-4 min-[700px]:px-8 py-8 not-dark:shadow min-[700px]:border-l">
         <div className="max-w-125 mx-auto h-full flex flex-col justify-center gap-2">
           <Link href="/" className="ml-0 mr-auto mb-4">
             Home
@@ -52,7 +52,10 @@ export default async function SignInPage({ searchParams }: PageProps) {
           <SignUpInfo />
         </div>
       </div>
-      <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,0.25)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
     </main>
   );
 }
+
+const LeftBanner = () => (
+  <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,0.25),rgba(255,255,255,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
+);

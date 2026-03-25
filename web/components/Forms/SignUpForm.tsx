@@ -26,8 +26,9 @@ import {
 } from "../AlertDialog";
 import { cn, focusRing } from "../../utils/variants";
 import { Button } from "../Button";
+import { P } from "../Typography";
 
-const SignUpForm = () => {
+export default function SignUpForm() {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -135,70 +136,18 @@ const SignUpForm = () => {
           className="text-xs text-neutral-900 dark:text-neutral-100 leading-4 font-medium select-none"
         >
           Ao clicar em confirmar, você concorda com as{" "}
-          <AlertDialog open={termsDialog} onOpenChange={setTermsDialog}>
-            <AlertDialogTrigger
-              asChild
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setTermsDialog(!termsDialog);
-              }}
-            >
-              <span
-                role="button"
-                tabIndex={0}
-                className={cn(
-                  "cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 rounded transition-[colors,box-shadow] duration-300",
-                  focusRing,
-                )}
-              >
-                políticas de privacidade e uso de dados
-              </span>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="max-w-xs min-[400px]:max-w-100 min-[460px]:max-w-118.75 min-[550px]:max-w-lg min-[600px]:max-w-xl min-[800px]:max-w-3xl">
-              <AlertDialogHeader className="flex items-center justify-between">
-                <AlertDialogTitle className="text-xl">
-                  Políticas de Privacidade e Uso de Dados
-                </AlertDialogTitle>
-                <AlertDialogCancel>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className=""
-                  >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-                </AlertDialogCancel>
-              </AlertDialogHeader>
-              <AlertDialogDescription
-                asChild
-                className="max-h-100 overflow-y-auto scrollbar"
-              >
-                <div className="flex flex-col gap-4">
-                  <Terms />
-                </div>
-              </AlertDialogDescription>
-              <AlertDialogFooter className="p-2">
-                <AlertDialogCancel className="h-fit py-1 w-24">
-                  Voltar
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => setTermsCheckbox(true)}
-                  className="h-fit py-1 w-24"
-                >
-                  Confirmar
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>{" "}
+          <Dialog
+            trigger={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setTermsDialog(!termsDialog);
+            }}
+            open={termsDialog}
+            onOpenChange={setTermsDialog}
+            action={() => setTermsCheckbox(true)}
+          >
+            Políticas de Privacidade e Uso de Dados
+          </Dialog>{" "}
           do website.
         </label>
       </fieldset>
@@ -209,21 +158,81 @@ const SignUpForm = () => {
       </Button>
     </form>
   );
-};
+}
 
-export default SignUpForm;
+const Dialog = ({
+  children,
+  trigger,
+  action,
+  ...props
+}: React.ComponentProps<typeof AlertDialog> & {
+  children: string;
+  trigger: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  action: React.MouseEventHandler<HTMLButtonElement> | undefined;
+}) => (
+  <AlertDialog {...props}>
+    <AlertDialogTrigger asChild onClick={trigger}>
+      <span
+        role="button"
+        tabIndex={0}
+        className={cn(
+          "cursor-pointer font-medium text-xs text-primary/75 hover:text-primary underline underline-offset-2 rounded transition-all duration-300",
+          focusRing,
+        )}
+      >
+        {children.toLowerCase()}
+      </span>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+          {children}
+          <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className=""
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </AlertDialogCancel>
+        </AlertDialogTitle>
+      </AlertDialogHeader>
+      <AlertDialogDescription className="sr-only">TODO</AlertDialogDescription>
+      <div className="max-h-100 m-2 p-4 overflow-y-auto scrollbar">
+        <Terms />
+      </div>
+      <AlertDialogFooter>
+        <AlertDialogCancel className="w-full max-w-30 h-8">
+          Voltar
+        </AlertDialogCancel>
+        <AlertDialogAction onClick={action} className="w-full max-w-30 h-8">
+          Confirmar
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
 
 const Terms = () => (
   <>
-    <p>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
       dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
       soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
       amet adipisci voluptatum, sapiente expedita.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -235,27 +244,27 @@ const Terms = () => (
       , facilis amet adipisci voluptatum, sapiente expedita. Nisi rerum
       voluptatum ullam aut consequuntur sequi minus tempore recusandae culpa sed
       facere saepe voluptates cumque doloribus, minima reiciendis maxime.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
       dolorem eligendi delectus omnis.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
       dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
       soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
       amet adipisci voluptatum.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -265,8 +274,8 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -276,8 +285,8 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -287,8 +296,8 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -298,8 +307,8 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -309,8 +318,8 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
-    <p>
+    </P>
+    <P>
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
       veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
       consectetur itaque ex, temporibus, error repudiandae quidem doloribus
@@ -320,6 +329,6 @@ const Terms = () => (
       aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
       voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
       Aliquid.
-    </p>
+    </P>
   </>
 );

@@ -7,8 +7,8 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "../../Breadcrumb";
-import { Link } from "../../Links";
+} from "../../../Breadcrumb";
+import { Link } from "../../../Links";
 
 export const ArtBreadcrumb = () => {
   const pathname = usePathname();

@@ -175,8 +175,8 @@ export default function ValidateEmailFormClient({
         <div className="mb-6 w-full flex justify-between items-center gap-2">
           <Link
             href="/"
-            variant="outline"
-            className="h-8 w-full text-xs min-[450px]:h-10 min-[450px]:text-base flex-1 rounded"
+            variant="button"
+            className="w-full h-8 flex-1 text-xs min-[450px]:h-10 min-[450px]:text-base"
           >
             Voltar
           </Link>

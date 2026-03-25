@@ -1,6 +1,6 @@
-import { Alert } from "../../Alert";
-import { Link } from "../../Links";
-import { Blockquote, H2, H3, Li, Ol, P, Ul } from "../../Typography";
+import { Alert } from "../../../Alert";
+import { Link } from "../../../Links";
+import { Blockquote, H2, H3, Li, Ol, P, Ul } from "../../../Typography";
 
 export default function ArticleContent() {
   return (

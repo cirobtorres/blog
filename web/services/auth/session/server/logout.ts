@@ -33,7 +33,8 @@ export async function logout() {
 
   if (isProtectedRoute) {
     redirect(
-      "/users/sign-in?login=required&redirect=" + encodeURIComponent(pathname),
+      "/users/sign-in?login=required&redirect_url=" +
+        encodeURIComponent(pathname),
     );
   }
 

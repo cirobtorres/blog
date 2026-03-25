@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import ArticleTitle from "../../../../../../components/ArticleTitle";
-import ArticleBody from "../../../../../../components/ArticleBody";
 import { Footer } from "../../../../../../components/Footer";
 import { Header } from "../../../../../../components/Header";
-import ArticleComments from "../../../../../../components/ArticleComments";
+import ArticleTitle from "../../../../../../components/Article/ArticleTitle";
+import ArticleBody from "../../../../../../components/Article/ArticleBody";
+import Comments from "../../../../../../components/Comments";
 
 export default async function ArticlePageId() {
   // {params}: {params: Promise<{ year: string; month: string; day: string; slug: string}>}
@@ -17,7 +17,7 @@ export default async function ArticlePageId() {
           <ArticleTitle />
         </Suspense>
         <ArticleBody />
-        <ArticleComments />
+        <Comments />
       </main>
       <Footer />
     </div>

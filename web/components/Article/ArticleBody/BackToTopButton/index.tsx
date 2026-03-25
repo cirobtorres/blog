@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn, focusRing } from "../../../utils/variants";
+import { cn, focusRing } from "../../../../utils/variants";
 
 export default function BackToTopButton() {
   const diameter = 65;

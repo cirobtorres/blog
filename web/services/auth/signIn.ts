@@ -102,7 +102,7 @@ const signIn = async (
       if (referer) {
         const refererUrl = new URL(referer);
         const callbackPath =
-          refererUrl.searchParams.get("redirect") ||
+          refererUrl.searchParams.get("redirect_url") ||
           refererUrl.searchParams.get("callback");
 
         if (callbackPath) {

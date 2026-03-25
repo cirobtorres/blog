@@ -1,7 +1,6 @@
 import { Suspense } from "react";
-import { Link } from "../../../components/Links";
+import { Link, LoginProviders } from "../../../components/Links";
 import { Skeleton } from "../../../components/Skeleton";
-import LoginProviders from "../../../components/LoginProviders";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
@@ -26,9 +25,8 @@ const SignUpFormLoad = () => (
 
 export default function SignUpPage() {
   return (
-    <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
-      <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,0.25),rgba(255,255,255,1)),url('https://imgproxy.flathub.org/insecure/dpr:1/f:webp/rs:fill-down/aHR0cHM6Ly9kbC5mbGF0aHViLm9yZy9tZWRpYS9vcmcvYmxlbmRlci9CbGVuZGVyLzBkNzMxYmE5NzU3NzE5YTQzMDkyMzBhNjhkMmVlY2VkL3NjcmVlbnNob3RzL2ltYWdlLTRfb3JpZy5wbmc')] dark:[background:linear-gradient(90deg,rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://imgproxy.flathub.org/insecure/dpr:1/f:webp/rs:fill-down/aHR0cHM6Ly9kbC5mbGF0aHViLm9yZy9tZWRpYS9vcmcvYmxlbmRlci9CbGVuZGVyLzBkNzMxYmE5NzU3NzE5YTQzMDkyMzBhNjhkMmVlY2VkL3NjcmVlbnNob3RzL2ltYWdlLTRfb3JpZy5wbmc')]" />
-      <div className="w-full h-full min-h-screen px-4 min-[700px]:px-8 py-8 not-dark:shadow min-[700px]:border-l">
+    <main className="h-full min-h-screen grid min-[700px]:grid-cols-[700px_1fr]">
+      <div className="w-full h-full min-h-screen px-4 min-[700px]:px-8 py-8 not-dark:shadow min-[700px]:border-r">
         <div className="max-w-125 mx-auto h-full flex flex-col justify-center gap-2">
           <Link href="/" className="ml-0 mr-auto mb-4">
             Home
@@ -64,6 +62,11 @@ export default function SignUpPage() {
           <SignUpInfo />
         </div>
       </div>
+      <RightBanner />
     </main>
   );
 }
+
+const RightBanner = () => (
+  <div className="grayscale [background:linear-gradient(90deg,rgba(255,255,255,1),rgba(255,255,255,0.25)),url('https://imgproxy.flathub.org/insecure/dpr:1/f:webp/rs:fill-down/aHR0cHM6Ly9kbC5mbGF0aHViLm9yZy9tZWRpYS9vcmcvYmxlbmRlci9CbGVuZGVyLzBkNzMxYmE5NzU3NzE5YTQzMDkyMzBhNjhkMmVlY2VkL3NjcmVlbnNob3RzL2ltYWdlLTRfb3JpZy5wbmc')] dark:[background:linear-gradient(90deg,rgba(0,0,0,1),rgba(0,0,0,0.25)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://imgproxy.flathub.org/insecure/dpr:1/f:webp/rs:fill-down/aHR0cHM6Ly9kbC5mbGF0aHViLm9yZy9tZWRpYS9vcmcvYmxlbmRlci9CbGVuZGVyLzBkNzMxYmE5NzU3NzE5YTQzMDkyMzBhNjhkMmVlY2VkL3NjcmVlbnNob3RzL2ltYWdlLTRfb3JpZy5wbmc')]" />
+);

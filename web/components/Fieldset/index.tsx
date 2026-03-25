@@ -29,9 +29,11 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     className={cn(
       "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
-      error
-        ? "text-neutral-100 border-destructive/50 focus:placeholder:text-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
-        : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
+      // To enable error, comment below
+      "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
+      // error
+      //   ? "text-neutral-100 border-destructive/50 focus:placeholder:text-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
+      //   : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
       className,
     )}
   />
@@ -51,9 +53,11 @@ const FieldsetLabel = ({
     {...props}
     className={cn(
       "absolute origin-left top-1/2 z-10 inset-s-1 px-1.5 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 peer-focus:-translate-y-4.5 peer-placeholder-shown:-translate-y-1/2 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100",
-      error
-        ? "text-destructive peer-focus:text-destructive peer-placeholder-shown:text-destructive"
-        : "text-neutral-900 peer-focus:text-neutral-900 peer-placeholder-shown:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 dark:peer-placeholder-shown:text-neutral-100",
+      // To enable error, comment below
+      "text-neutral-900 peer-focus:text-neutral-900 peer-placeholder-shown:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 dark:peer-placeholder-shown:text-neutral-100",
+      // error
+      //   ? "text-destructive peer-focus:text-destructive peer-placeholder-shown:text-destructive"
+      //   : "text-neutral-900 peer-focus:text-neutral-900 peer-placeholder-shown:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 dark:peer-placeholder-shown:text-neutral-100",
       className,
     )}
   >
@@ -88,7 +92,7 @@ const FieldsetPassTypeBtn = ({
         });
       }}
       className={cn(
-        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-shadow duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-stone-700",
+        "cursor-pointer absolute top-1/2 -translate-y-1/2 right-1.25 size-7 flex items-center justify-center rounded not-dark:shadow transition-all duration-300 text-neutral-900 [&_svg]:stroke-neutral-900 dark:text-neutral-100 dark:[&_svg]:stroke-neutral-100 bg-stone-100 dark:bg-stone-750 border dark:border-stone-600 focus-visible:border-stone-400 dark:focus-visible:border-stone-700",
         focusRing,
       )}
     >
