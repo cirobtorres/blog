@@ -4,9 +4,15 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
-export default async function deleteFolder({ folder }: { folder: string }) {
+export default async function deleteFolder(folder: string) {
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
+  const returnStatement = {
+    ok: false,
+    success: null,
+    error: null,
+    data: null,
+  };
 
   try {
     const response = await fetch(apiServerUrls.mediaFolders.root, {
@@ -17,26 +23,35 @@ export default async function deleteFolder({ folder }: { folder: string }) {
       },
       body: JSON.stringify({ path: folder }),
     });
+
     if (!response.ok) {
-      console.error(response.status);
+      switch (response.status) {
+        case 404:
+          return {
+            ...returnStatement,
+            error: "Pasta não encontrada.",
+          };
+        case 401:
+          return {
+            ...returnStatement,
+            error: "Não autorizado.",
+          };
+      }
+      // Fallback: generic return statement
       return {
-        ok: false,
-        success: null,
-        error: "Erro ao tentar deletar a pasta",
-        data: null,
+        ...returnStatement,
+        error: "Erro ao deletar a pasta.",
       };
     }
   } catch (e) {
     console.error(e);
     return {
-      ok: false,
-      success: null,
-      error: "Erro ao tentar deletar a pasta",
-      data: null,
+      ...returnStatement,
+      error: "Erro ao deletar a pasta.",
     };
   }
 
   revalidatePath("/");
 
-  return { ok: true, success: "Pasta excluída!", error: null, data: null };
+  return { ...returnStatement, ok: true, success: "Pasta excluída!" };
 }

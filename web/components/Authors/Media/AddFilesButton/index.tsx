@@ -28,16 +28,6 @@ export function AddFilesButton() {
   const [openStep, setOpenStep] = React.useState<"upload" | "preview" | null>(
     null,
   );
-  const folder = "Home";
-
-  const addFiles = (newFiles: FileList | null) => {
-    if (newFiles) {
-      const fileArray = Array.from(newFiles);
-      setFiles((prev) => [...prev, ...fileArray]);
-      setOpenStep("preview");
-    }
-  };
-
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState) => {
       const fullUploadFlow = async (): Promise<ActionState> => {
@@ -72,6 +62,7 @@ export function AddFilesButton() {
             cloudinaryResults.push(data);
           }
 
+          const folder = "Home"; // TODO
           return await syncWithSpringBoot(cloudinaryResults, folder);
         } catch (err) {
           console.error("fullUploadFlow:", err);
@@ -126,6 +117,14 @@ export function AddFilesButton() {
       data: null,
     } as ActionState,
   );
+
+  const addFiles = (newFiles: FileList | null) => {
+    if (newFiles) {
+      const fileArray = Array.from(newFiles);
+      setFiles((prev) => [...prev, ...fileArray]);
+      setOpenStep("preview");
+    }
+  };
 
   return (
     <AlertDialog

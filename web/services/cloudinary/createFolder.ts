@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 
 const signUpSchema = z.object({
   folderName: z.string().min(1, "O diretório requer um nome"),
-  folderParent: z.string().min(1, "O diretório requer uma pasta raiz"),
+  folderPath: z.string().min(1, "O diretório requer uma pasta raiz"),
 });
 
 export default async function createFolder(
@@ -79,8 +79,8 @@ export async function createFolderValidation(
     };
   }
 
-  const { folderName, folderParent } = result.data;
-  const newPath = `${folderParent}/${folderName}`;
+  const { folderName, folderPath } = result.data;
+  const newPath = `${folderPath}/${folderName}`;
 
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;

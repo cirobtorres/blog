@@ -18,31 +18,21 @@ import {
   FieldsetInput,
   FieldsetLabel,
 } from "../../../Fieldset";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../Select";
 import Spinner from "../../../Spinner";
 import createFolder, {
   createFolderValidation,
 } from "../../../../services/cloudinary/createFolder";
 import { sonnerToastPromise } from "../../../../utils/sooner";
+import { FolderSelectBuilder } from "../../FolderSelectBuilder";
 
-export function AddFolderButton({
-  existingFolders,
-}: {
-  existingFolders: string[];
-}) {
+export function AddFolderButton() {
   const [folderName, setFolderName] = React.useState("");
-  const [folderParent, setFolderParent] = React.useState("Home");
+  const [folderPath, setFolderPath] = React.useState("Home");
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState) => {
       const formData = new FormData();
       formData.set("folderName", folderName);
-      formData.set("folderParent", folderParent);
+      formData.set("folderPath", folderPath);
 
       const success = (serverResponse: ActionState) => {
         return (
@@ -84,12 +74,12 @@ export function AddFolderButton({
     } as ActionState,
   );
 
-  React.useEffect(() => {
-    if (state.ok) {
-      setFolderName("");
-      setFolderParent("Home");
-    }
-  }, [state]);
+  // React.useEffect(() => {
+  //   if (state.ok) {
+  //     setFolderName("");
+  //     setFolderParent("Home");
+  //   }
+  // }, [state]);
 
   return (
     <AlertDialog>
@@ -158,21 +148,10 @@ export function AddFolderButton({
                 className="px-1"
               />
             </div>
-            <Select value={folderParent} onValueChange={setFolderParent}>
-              <SelectTrigger className="w-full flex-1">
-                <SelectValue placeholder="Home" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                {!existingFolders.includes("Home") && (
-                  <SelectItem value="Home">Home</SelectItem>
-                )}
-                {existingFolders.map((folder) => (
-                  <SelectItem key={folder} value={folder}>
-                    {folder}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <FolderSelectBuilder
+              selectedFolder={folderPath}
+              setSelectedFolder={setFolderPath}
+            />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

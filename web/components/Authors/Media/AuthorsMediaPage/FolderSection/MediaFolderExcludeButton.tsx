@@ -69,11 +69,11 @@ export default function MediaFolderExcludeButton({
           <AlertDialogDescription asChild className="p-4">
             <div>
               <p className="text-sm text-neutral-600 dark:text-neutral-500">
-                Tem certeza que gostaria de excluir a pasta{" "}
-                <strong className="text-primary">{folder}</strong>?
-              </p>
-              <p className="text-sm font-bold text-destructive underline underline-offset-2">
-                Essa ação não poderá ser desfeita!
+                Excluir a pasta{" "}
+                <strong className="text-neutral-900 dark:text-neutral-100">
+                  {folder.split("/").splice(-1)}
+                </strong>
+                ?
               </p>
             </div>
           </AlertDialogDescription>
@@ -103,7 +103,7 @@ const DeleteFolderAction = ({ folder }: { folder: string }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFolder({ folder });
+    const result = deleteFolder(folder);
 
     const promise: Promise<ActionState> = new Promise((resolve, reject) => {
       result.then((data) => {

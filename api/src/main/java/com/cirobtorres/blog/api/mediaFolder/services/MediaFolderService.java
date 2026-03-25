@@ -62,8 +62,8 @@ public class MediaFolderService {
 
     @Modifying
     @Transactional
-    public void deleteFolder(MediaFolderCountDTO mediaFolderCountDTO) {
-        String path = mediaFolderCountDTO.path();
+    public void deleteFolder(MediaFolderDTO mediaFolderDTO) {
+        String path = mediaFolderDTO.path();
         mediaFolderRepository.deleteByPath(path);
     }
 

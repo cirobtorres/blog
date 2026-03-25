@@ -42,10 +42,10 @@ public class MediaFolderController {
     }
 
     @DeleteMapping
-    public ResponseEntity<MediaFolder> deleteFolder(
-            @RequestBody @Valid MediaFolderCountDTO mediaFolderCountDTO
+    public ResponseEntity<Void> deleteFolder(
+            @RequestBody @Valid MediaFolderDTO mediaFolderDTO
     ) {
-        mediaFolderService.deleteFolder(mediaFolderCountDTO);
+        mediaFolderService.deleteFolder(mediaFolderDTO);
         return ResponseEntity.noContent().build();
     }
 
