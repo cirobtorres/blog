@@ -1,6 +1,7 @@
 package com.cirobtorres.blog.api.media.dtos;
 
 import com.cirobtorres.blog.api.media.enums.MediaType;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,7 +11,7 @@ import java.util.UUID;
 public record MediaDTO(
         UUID id,
         @NotBlank String name,
-        @NotBlank String folder,
+        @NotBlank MediaFolderDTO folder,
         @NotBlank String publicId,
         @NotBlank String url,
         @NotBlank String extension,
@@ -21,5 +22,4 @@ public record MediaDTO(
         Double duration, // NULLABLE (video)
         String alt,
         String caption
-) {
-}
+) {}

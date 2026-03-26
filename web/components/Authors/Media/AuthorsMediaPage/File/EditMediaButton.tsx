@@ -9,7 +9,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../../AlertDialog";
 import Spinner from "../../../../Spinner";
@@ -111,25 +110,7 @@ export default function EditMediaButton({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <form action={action}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Editar arquivo</AlertDialogTitle>
-            <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </AlertDialogCancel>
-          </AlertDialogHeader>
+          <AlertDialogHeader>Editar Arquivo</AlertDialogHeader>
           <AlertDialogDescription className="sr-only">
             Aqui você pode editar seu arquivo.
           </AlertDialogDescription>
@@ -192,11 +173,7 @@ export default function EditMediaButton({
                   </p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <FolderSelectBuilder
-                    currentFolder={currentFolder}
-                    selectedFolder={folder}
-                    setSelectedFolder={setFolder}
-                  />
+                  <FolderSelectBuilder />
                   <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
                     A pasta onde o arquivo será salvo.
                   </p>

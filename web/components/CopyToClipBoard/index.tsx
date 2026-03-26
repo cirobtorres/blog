@@ -33,7 +33,7 @@ const CopyToClipBoard = ({
       type="button"
       onClick={handleCopy}
       className={cn(
-        "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-24 border dark:border-stone-600 rounded not-dark:shadow transition-[color,border,box-shadow] duration-300 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-750 focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
+        "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-24 border rounded not-dark:shadow transition-all duration-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 dark:hover:border-stone-650 dark:hover:bg-stone-750 focus-visible:border-stone-300 dark:focus-visible:border-stone-650",
         focusRing,
         className,
       )}

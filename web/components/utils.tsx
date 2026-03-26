@@ -1,4 +1,5 @@
 import { externalUrls } from "../routing/routes";
+import { cn } from "../utils/variants";
 import { Link } from "./Links";
 
 const Separation = () => (
@@ -11,8 +12,13 @@ const Separation = () => (
   </div>
 );
 
-const Hr = () => (
-  <div className="w-full h-px bg-[linear-gradient(to_right,transparent_0%,var(--color-stone-300)_25%,var(--color-stone-300)_75%,transparent_100%)] dark:bg-[linear-gradient(to_right,transparent_0%,var(--color-stone-700)_25%,var(--color-stone-700)_75%,transparent_100%)]" />
+const Hr = ({ className }: { className?: string }) => (
+  <div
+    className={cn(
+      "w-full h-px bg-linear-to-r dark:from-transparent via-stone-400 dark:via-stone-700 dark:to-transparent",
+      className,
+    )}
+  />
 );
 
 const SignUpInfo = () => {

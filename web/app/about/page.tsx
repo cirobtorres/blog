@@ -7,7 +7,7 @@ export default function AboutPage() {
       className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]" // grid-rows-[var(--height-header)_1fr_var(--height-footer)]
     >
       <Header className="fixed" />
-      <main className="mt-header-height">
+      <main className="mt-height-header">
         <div className="px-6 my-6">
           <div className="w-full max-w-300 h-full mx-auto">AboutPage</div>
         </div>

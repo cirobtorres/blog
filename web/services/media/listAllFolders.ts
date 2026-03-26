@@ -29,37 +29,32 @@ export async function listAllFolders() {
     });
 
     // if (refreshRes.ok) {
-    //   // O Spring devolve Set-Cookie, mas em Server Actions você precisaria
-    //   // extrair e setar manualmente se quisesse atualizar o browser aqui.
-    //   // Para simplificar o fetch atual, apenas pegamos o novo token do header:
     //   const setCookie = refreshRes.headers.get("set-cookie");
-    //   // ... lógica para atualizar accessToken localmente para a próxima chamada
+    //   // Updates browser accessToken here...
     // }
 
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
       if (setCookieHeader) {
-        // 1. Extrai o novo token para usar na chamada imediata abaixo
         const newAccessToken = extractTokenFromHeader(
           setCookieHeader,
           "access_token",
         );
         if (newAccessToken) accessToken = newAccessToken;
 
-        // 2. Seta os cookies no Navegador (via Next.js Response)
-        // Nota: O helper applySpringCookies deve ser adaptado para usar cookieStore.set
-        // ou você pode fazer manualmente como abaixo:
+        // Set cookies to the browser
+        // TODO: implement "cookieStore.set" to the helper func "applySpringCookies"
         const cookiesToSet = setCookieHeader.split(/,(?=[^;]+=[^;]+)/);
         cookiesToSet.forEach((cookieStr) => {
-          // O Next.js gerencia a propagação do Set-Cookie para o cliente automaticamente
-          // quando usamos o cookieStore dentro de uma Server Action.
+          // When "cookieStore" is called from a server actions, Next.js handles "Set-Cookies" propagation to browser automatically
           const [nameValue] = cookieStr.split(";");
           const [name, value] = nameValue.split("=");
           cookieStore.set(name.trim(), value.trim(), {
-            httpOnly: true, // Idealmente vindo do header, mas aqui forçamos segurança
-            secure: true,
-            path: "/",
-            sameSite: "lax",
+            // Comes from Spring
+            // httpOnly: true,
+            // secure: true,
+            // path: "/",
+            // sameSite: "lax",
           });
         });
       }

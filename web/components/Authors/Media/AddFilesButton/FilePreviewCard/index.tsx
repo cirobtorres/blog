@@ -8,16 +8,17 @@ import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
 
 export default function FilePreviewCard({
   file,
+  index,
   onRemove,
 }: {
   file: File;
+  index: number;
   onRemove: () => void;
 }) {
   const [preview, setPreview] = React.useState<string | null>(null);
   const [name, setName] = React.useState<string>(file.name);
   const [alt, setAlt] = React.useState<string>("");
   const [caption, setCaption] = React.useState<string>("");
-  const [folder, setFolder] = React.useState("Home");
   const isImage = file.type.startsWith("image/");
   const isVideo = file.type.startsWith("video/");
   const isAudio = file.type.startsWith("audio/");
@@ -70,19 +71,22 @@ export default function FilePreviewCard({
         </svg>
       )}
       <div className="w-full h-full flex flex-col gap-2 mb-auto">
+        <input type="hidden" name={`file_${index}_name`} value={name} />
+        <input type="hidden" name={`file_${index}_alt`} value={alt} />
+        <input type="hidden" name={`file_${index}_caption`} value={caption} />
         <Fieldset>
           <FieldsetInput
-            id="name-input"
-            name="name"
+            id={`name-input-${index}`}
+            name={`file_${index}_name`}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <FieldsetLabel id="name-label" label="Name" htmlFor="name-input" />
+          <FieldsetLabel id="name-label" label="Nome" htmlFor="name-input" />
         </Fieldset>
         <Fieldset>
           <FieldsetInput
-            id="caption-input"
-            name="caption"
+            id={`caption-input-${index}`}
+            name={`file_${index}_caption`}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
           />
@@ -95,8 +99,8 @@ export default function FilePreviewCard({
         <div className="flex flex-col gap-1">
           <Fieldset>
             <FieldsetInput
-              id="alt-input"
-              name="alt"
+              id={`alt-input-${index}`}
+              name={`file_${index}_alt`}
               value={alt}
               onChange={(e) => setAlt(e.target.value)}
             />
@@ -111,10 +115,7 @@ export default function FilePreviewCard({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <FolderSelectBuilder
-            selectedFolder={folder}
-            setSelectedFolder={setFolder}
-          />
+          <FolderSelectBuilder />
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
             A pasta onde o arquivo será salvo.
           </p>

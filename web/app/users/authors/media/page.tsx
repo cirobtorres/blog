@@ -2,12 +2,13 @@
 
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import MediaFileCards, {
-  MediaFileCardsLoading,
-} from "../../../../components/Authors/Media/AuthorsMediaPage/FileSection";
+import { Hr } from "../../../../components/utils";
 import MediaFolderCards, {
   MediaFolderCardsLoading,
-} from "../../../../components/Authors/Media/AuthorsMediaPage/FolderSection";
+} from "../../../../components/Authors/Media/AuthorsMediaPage/Folder/MediaFolderCards";
+import MediaFileCards, {
+  MediaFileCardsLoading,
+} from "../../../../components/Authors/Media/AuthorsMediaPage/File/MediaFileCards";
 
 export default async function AuthorsMediaPage({
   searchParams,
@@ -25,7 +26,7 @@ export default async function AuthorsMediaPage({
           searchParams={resolvedParams}
         />
       </Suspense>
-      <div className="w-full h-px my-6 bg-linear-to-r dark:from-transparent dark:via-stone-700 dark:to-transparent" />
+      <Hr className="my-6" />
       <Suspense fallback={<MediaFileCardsLoading />}>
         <MediaFileCards
           accessToken={accessToken?.value}

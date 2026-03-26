@@ -10,7 +10,7 @@ const signUpSchema = z.object({
   folderPath: z.string().min(1, "O diretório requer uma pasta raiz"),
 });
 
-export default async function createFolder(
+export default async function editFolder(
   prevState: ActionState,
   formData: FormData,
 ) {
@@ -67,8 +67,6 @@ export async function createFolderValidation(
   const result = signUpSchema.safeParse({
     ...rawData,
   });
-
-  console.log(rawData);
 
   if (!result.success) {
     const error = z.treeifyError(result.error).properties;

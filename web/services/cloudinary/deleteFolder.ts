@@ -5,6 +5,7 @@ import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
 export default async function deleteFolder(folder: string) {
+  const rootFolder = "Home";
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const returnStatement = {
@@ -21,7 +22,7 @@ export default async function deleteFolder(folder: string) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ path: folder }),
+      body: JSON.stringify({ path: rootFolder + folder }),
     });
 
     if (!response.ok) {

@@ -32,16 +32,12 @@ function SelectValue({
 
 function SelectTrigger({
   className,
-  size = "default",
   children,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default";
-}) {
+}: React.ComponentProps<typeof SelectPrimitive.Trigger>) {
   return (
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
-      data-size={size}
       className={cn(
         "cursor-auto rounded border border-stone-300 dark:border-stone-700 dark:bg-stone-800 data-placeholder:text-neutral-400 hover:bg-stone-250 hover:border-stone-400 dark:hover:bg-stone-750 dark:hover:border-stone-600 focus:bg-stone-250 focus:border-primary dark:focus:bg-stone-750 dark:focus:border-primary dark:data-placeholder:text-neutral-500 gap-1.5 bg-transparent py-2 pr-2 pl-2.5 text-sm transition-all duration-300 select-none *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*='size-'])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
         focusRing,

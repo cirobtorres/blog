@@ -65,7 +65,7 @@ export default function UserSignedIn({
               Usuário
             </p>
             <Link
-              href="/"
+              href={protectedWebUrls.users}
               className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
             >
               <PreferencesIcon />

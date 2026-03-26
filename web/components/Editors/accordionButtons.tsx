@@ -4,12 +4,11 @@ import React from "react";
 import { cn, focusRing } from "../../utils/variants";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
+  AlertDialogHeaderPrimitive,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
@@ -153,7 +152,7 @@ const Delete = ({
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-xs">
-        <AlertDialogHeader>
+        <AlertDialogHeaderPrimitive>
           <AlertDialogTitle>
             Excluir
             <AlertDialogCancel
@@ -176,7 +175,7 @@ const Delete = ({
               </svg>
             </AlertDialogCancel>
           </AlertDialogTitle>
-        </AlertDialogHeader>
+        </AlertDialogHeaderPrimitive>
         <AlertDialogDescription asChild>
           <div className="p-4">
             <p className="text-sm text-neutral-600 dark:text-neutral-500">

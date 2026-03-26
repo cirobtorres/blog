@@ -81,12 +81,17 @@ public class MediaFolderService {
 
     @Transactional
     public List<MediaFoldersDTO> listAllFolders() {
-        return mediaFolderRepository
-                .findAllProjectedBy()
-                .stream()
-                .map(mediaFolder ->
-                        new MediaFoldersDTO(mediaFolder.getPath())
-                )
-                .toList();
+         return mediaFolderRepository.findAll().stream()
+                 .map(mediaFolder ->
+                         new MediaFoldersDTO(
+                                 mediaFolder.getId(),
+                                 mediaFolder.getParent() != null ?
+                                         mediaFolder.getParent().getId() :
+                                         null,
+                                 mediaFolder.getName(),
+                                 mediaFolder.getPath()
+                         )
+                 )
+                 .toList();
     }
 }

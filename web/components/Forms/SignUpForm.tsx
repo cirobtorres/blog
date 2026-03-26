@@ -21,7 +21,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../AlertDialog";
 import { cn, focusRing } from "../../utils/variants";
@@ -34,7 +33,6 @@ export default function SignUpForm() {
   const [password, setPassword] = React.useState("");
   const [termsDialog, setTermsDialog] = React.useState(false);
   const [termsCheckbox, setTermsCheckbox] = React.useState(true);
-
   const passRef = React.useRef(null);
 
   const options = {
@@ -43,7 +41,7 @@ export default function SignUpForm() {
   zxcvbnOptions.setOptions(options);
   const strength = zxcvbn(password);
 
-  const [state, action, pending] = React.useActionState(
+  const [state, action, isPending] = React.useActionState(
     async (prevState: SignUpActionState) => {
       const formData = new FormData();
 
@@ -153,8 +151,8 @@ export default function SignUpForm() {
       </fieldset>
       <FieldsetError error={state.error?.termsCheckbox?.errors} />
       <FieldsetError error={state.error?.form?.errors} />
-      <Button type="submit" disabled={pending} className="rounded h-9.5">
-        {pending && <Spinner />} {pending ? "Cadastrando" : "Confirmar"}
+      <Button type="submit" disabled={isPending} className="rounded h-9.5">
+        {isPending && <Spinner />} {isPending ? "Cadastrando" : "Confirmar"}
       </Button>
     </form>
   );
@@ -184,28 +182,7 @@ const Dialog = ({
       </span>
     </AlertDialogTrigger>
     <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>
-          {children}
-          <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className=""
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </AlertDialogCancel>
-        </AlertDialogTitle>
-      </AlertDialogHeader>
+      <AlertDialogHeader>{children}</AlertDialogHeader>
       <AlertDialogDescription className="sr-only">TODO</AlertDialogDescription>
       <div className="max-h-100 m-2 p-4 overflow-y-auto scrollbar">
         <Terms />

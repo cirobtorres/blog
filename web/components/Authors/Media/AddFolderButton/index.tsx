@@ -8,7 +8,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../AlertDialog";
 import { Button } from "../../../Button";
@@ -27,13 +26,8 @@ import { FolderSelectBuilder } from "../../FolderSelectBuilder";
 
 export function AddFolderButton() {
   const [folderName, setFolderName] = React.useState("");
-  const [folderPath, setFolderPath] = React.useState("Home");
   const [state, action, isPending] = React.useActionState(
-    async (prevState: ActionState) => {
-      const formData = new FormData();
-      formData.set("folderName", folderName);
-      formData.set("folderPath", folderPath);
-
+    async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
         return (
           <div className="flex flex-col">
@@ -74,13 +68,6 @@ export function AddFolderButton() {
     } as ActionState,
   );
 
-  // React.useEffect(() => {
-  //   if (state.ok) {
-  //     setFolderName("");
-  //     setFolderParent("Home");
-  //   }
-  // }, [state]);
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -104,25 +91,7 @@ export function AddFolderButton() {
       </AlertDialogTrigger>
       <AlertDialogContent asChild className="max-w-lg">
         <form action={action}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Criar pasta</AlertDialogTitle>
-            <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </AlertDialogCancel>
-          </AlertDialogHeader>
+          <AlertDialogHeader>Criar pasta</AlertDialogHeader>
           <AlertDialogDescription className="sr-only">
             Área de criação de pastas. Você pode criar pastas na raiz, em Home,
             ou até mesmo criar pastas dentro de outras pastas, para melhor
@@ -132,13 +101,14 @@ export function AddFolderButton() {
             <div className="flex flex-col">
               <Fieldset className="flex-1">
                 <FieldsetInput
-                  id="folder-name"
+                  id="folderName"
+                  name="folderName"
                   value={folderName}
                   error={state.error?.folderName?.errors}
                   onChange={(e) => setFolderName(e.currentTarget.value)}
                 />
                 <FieldsetLabel
-                  htmlFor="folder-name"
+                  htmlFor="folderName"
                   label="Diretório"
                   error={state.error?.folderName?.errors}
                 />
@@ -148,10 +118,7 @@ export function AddFolderButton() {
                 className="px-1"
               />
             </div>
-            <FolderSelectBuilder
-              selectedFolder={folderPath}
-              setSelectedFolder={setFolderPath}
-            />
+            <FolderSelectBuilder />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

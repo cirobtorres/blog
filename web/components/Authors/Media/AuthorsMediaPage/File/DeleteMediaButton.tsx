@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { sonnerToastPromise } from "../../../../../utils/sooner";
+import Spinner from "../../../../Spinner";
+import deleteMedia from "../../../../../services/cloudinary/delete";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -8,18 +11,18 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../../AlertDialog";
 import { Button } from "../../../../Button";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import Spinner from "../../../../Spinner";
-import deleteFolder from "../../../../../services/cloudinary/deleteFolder";
 
-export default function MediaFolderExcludeButton({
-  folder,
+export default function DeleteMediaButton({
+  id,
+  name,
+  extension,
 }: {
-  folder: string;
+  id: string;
+  name: string;
+  extension: string;
 }) {
   return (
     <AlertDialog>
@@ -45,34 +48,16 @@ export default function MediaFolderExcludeButton({
           </svg>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-xs">
+      <AlertDialogContent asChild className="max-w-xs">
         <form>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir pasta</AlertDialogTitle>
-            <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </AlertDialogCancel>
-          </AlertDialogHeader>
-          <AlertDialogDescription asChild className="p-4">
-            <div>
+          <AlertDialogHeader>Excluir arquivo</AlertDialogHeader>
+          <AlertDialogDescription asChild>
+            <div className="p-4">
               <p className="text-sm text-neutral-600 dark:text-neutral-500">
-                Excluir a pasta{" "}
-                <strong className="text-neutral-900 dark:text-neutral-100">
-                  {folder.split("/").splice(-1)}
-                </strong>
+                Excluir{" "}
+                <span className="text-neutral-100 font-bold">
+                  {name}.{extension}
+                </span>
                 ?
               </p>
             </div>
@@ -81,7 +66,7 @@ export default function MediaFolderExcludeButton({
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <DeleteFolderAction folder={folder} />
+            <DeleteMediaAction id={id} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -89,7 +74,7 @@ export default function MediaFolderExcludeButton({
   );
 }
 
-const DeleteFolderAction = ({ folder }: { folder: string }) => {
+const DeleteMediaAction = ({ id }: { id: string }) => {
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
       return (
@@ -103,7 +88,7 @@ const DeleteFolderAction = ({ folder }: { folder: string }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFolder(folder);
+    const result = deleteMedia({ id });
 
     const promise: Promise<ActionState> = new Promise((resolve, reject) => {
       result.then((data) => {
@@ -119,12 +104,12 @@ const DeleteFolderAction = ({ folder }: { folder: string }) => {
   return (
     <Button
       type="submit"
-      variant="default"
-      disabled={isPending}
+      variant="destructive"
       formAction={action}
+      disabled={isPending}
       className="w-full max-w-30 h-8"
     >
-      {isPending && <Spinner />} Salvar
+      {isPending && <Spinner />} Excluir
     </Button>
   );
 };

@@ -28,6 +28,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogHeaderPrimitive,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../AlertDialog";
@@ -489,7 +490,7 @@ export function HtmlEditor({
               </button>
             </AlertDialogTrigger>
             <AlertDialogContent className="sm:max-w-md gap-2">
-              <AlertDialogHeader>
+              <AlertDialogHeaderPrimitive>
                 <AlertDialogTitle>
                   Hyperlink
                   <AlertDialogCancel
@@ -515,7 +516,7 @@ export function HtmlEditor({
                     </svg>
                   </AlertDialogCancel>
                 </AlertDialogTitle>
-              </AlertDialogHeader>
+              </AlertDialogHeaderPrimitive>
               <div className="flex flex-col gap-2 p-4">
                 <AlertDialogDescription className="text-sm">
                   Se você deixar o texto vazio, o texto será o próprio link.

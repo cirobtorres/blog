@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { ArticleEditorTitle } from "../ArticleEditors/editors/ArticleEditorTitle";
-import { ArticleEditorSubtitle } from "../ArticleEditors/editors/ArticleEditorSubtitle";
-import { ArticleEditorBanner } from "../ArticleEditors/editors/ArticleEditorBanner";
-import { AddBlockButton, BlockList } from "../ArticleEditors/blocks";
+import { ArticleEditorTitle } from "../Editors/editors/ArticleEditorTitle";
+import { ArticleEditorSubtitle } from "../Editors/editors/ArticleEditorSubtitle";
+import { ArticleEditorBanner } from "../Editors/editors/ArticleEditorBanner";
+import { AddBlockButton, BlockList } from "../Editors/blocks";
 import { convertToLargeDate } from "../../utils/date";
 import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../utils/variants";

@@ -3,9 +3,7 @@ package com.cirobtorres.blog.api.media.controllers;
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.services.MediaService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,7 +33,9 @@ public class MediaController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countFilesByFolder(@RequestParam(defaultValue = "") String folder) { // Home = ""
+    public ResponseEntity<Long> countFilesByFolder(
+            @RequestParam(defaultValue = "") String folder
+    ) {
         return ResponseEntity.ok(mediaService.countFilesByFolder(folder));
     }
 
@@ -64,8 +64,7 @@ public class MediaController {
 
     @PostMapping("/sync/import")
     public ResponseEntity<Void> importMedia(
-            @RequestBody List<MediaDTO> mediaList,
-            Authentication auth
+            @RequestBody List<MediaDTO> mediaList
     ) {
         mediaService.saveAll(mediaList);
         return ResponseEntity.status(HttpStatus.CREATED).build();

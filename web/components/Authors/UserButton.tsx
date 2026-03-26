@@ -3,6 +3,7 @@ import { cn, focusRing } from "../../utils/variants";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { Link } from "../Links";
 import { LogoutButton } from "./LogoutButton";
+import { protectedWebUrls } from "../../routing/routes";
 
 export function UserButton({ user }: { user: User }) {
   return (
@@ -58,7 +59,7 @@ export function UserButton({ user }: { user: User }) {
         <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
         <div className="flex flex-col p-2">
           <Link
-            href="#"
+            href={protectedWebUrls.users}
             className="w-full font-normal p-1 text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800"
           >
             Profile settings

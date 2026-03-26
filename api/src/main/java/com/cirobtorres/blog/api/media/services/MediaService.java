@@ -4,6 +4,7 @@ import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.enums.MediaType;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
 import com.cloudinary.Cloudinary;
@@ -43,10 +44,6 @@ public class MediaService {
         this.objectMapper = objectMapper;
     }
 
-    public List<MediaDTO> listAllMediaDTO() {
-        return mediaRepository.findAll().stream().map(this::convertToDTO).toList();
-    }
-
     public long countFilesByFolder(String folderPath) {
         return mediaRepository.countByFolderPath(folderPath);
     }
@@ -58,6 +55,7 @@ public class MediaService {
         return entityPage.map(this::convertToDTO);
     }
 
+    @Transactional
     public List<Map<String, Object>> findOrphanFiles(String folderPath) throws Exception {
         ApiResponse response = cloudinary
                 .api()
@@ -88,13 +86,9 @@ public class MediaService {
                 .toList();
     }
 
-    public List<Media> listAllInFolder(String folderPath) {
-        return mediaRepository.findByFolderPathOrderByCreatedAtDesc(folderPath);
-    }
-
     @Transactional
     public void saveAll(List<MediaDTO> mediaList) {
-        List<String> incomingIds = mediaList.stream().map(MediaDTO::publicId).toList();
+        System.out.println(mediaList.getFirst().folder().path());
         List<String> existingIds = mediaRepository.findAllPublicIds();
 
         List<Media> entitiesToSave = mediaList
@@ -132,8 +126,14 @@ public class MediaService {
     }
 
     private Media convertToEntity(MediaDTO dto) {
-        MediaFolder folder = mediaFolderRepository.findByPath(dto.folder())
-                .orElseThrow(() -> new RuntimeException("Folder not found: " + dto.folder()));
+        MediaFolder folder = mediaFolderRepository.findByPath(dto.folder().path())
+                .orElseGet(() -> {
+                    MediaFolder newFolder = MediaFolder.builder()
+                            .name(extractNameFromPath(dto.folder().path()))
+                            .path(dto.folder().path())
+                            .build();
+                    return mediaFolderRepository.save(newFolder);
+                });
 
         return Media.builder()
                 .name(dto.name())
@@ -152,10 +152,15 @@ public class MediaService {
     }
 
     private MediaDTO convertToDTO(Media entity) {
+        String folderPath =
+                (entity.getFolder() != null) ?
+                        entity.getFolder().getPath() :
+                        "Home";
+
         return new MediaDTO(
                 entity.getId(),
                 entity.getName(),
-                entity.getFolder() != null ? entity.getFolder().getPath() : "Home",
+                new MediaFolderDTO(folderPath),
                 entity.getPublicId(),
                 entity.getUrl(),
                 entity.getExtension(),
@@ -167,5 +172,11 @@ public class MediaService {
                 entity.getAlt(),
                 entity.getCaption()
         );
+    }
+
+    private String extractNameFromPath(String path) {
+        if (path == null || path.equals("Home")) return "Home";
+        String[] parts = path.split("/");
+        return parts[parts.length - 1];
     }
 }

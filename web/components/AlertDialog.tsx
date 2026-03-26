@@ -62,7 +62,7 @@ function AlertDialogContent({
   );
 }
 
-function AlertDialogHeader({
+function AlertDialogHeaderPrimitive({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -75,6 +75,29 @@ function AlertDialogHeader({
       )}
       {...props}
     />
+  );
+}
+
+function AlertDialogHeader({
+  children,
+  className,
+  ...props
+}: Omit<React.ComponentProps<"div">, "children" | "className"> & {
+  children: string;
+  className?: string;
+}) {
+  return (
+    <div
+      {...props}
+      data-slot="alert-dialog-header"
+      className={cn(
+        "relative h-14.25 border-b p-4 dark:bg-stone-900 grid grid-rows-[auto_1fr] justify-between items-center place-items-center text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+        className,
+      )}
+    >
+      <AlertDialogTitle>{children}</AlertDialogTitle>
+      <AlertDialogHeaderCancel />
+    </div>
   );
 }
 
@@ -168,6 +191,27 @@ function AlertDialogCancel({
   );
 }
 
+function AlertDialogHeaderCancel() {
+  return (
+    <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </AlertDialogCancel>
+  );
+}
+
 const AlertDialogExitConfirmation = ({
   children,
   onConfirm,
@@ -206,25 +250,7 @@ const AlertDialogExitConfirmation = ({
       )}
     </AlertDialogTrigger>
     <AlertDialogContent className="max-w-xs">
-      <AlertDialogHeader>
-        <AlertDialogTitle>Sair sem salvar?</AlertDialogTitle>
-        <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
-        </AlertDialogCancel>
-      </AlertDialogHeader>
+      <AlertDialogHeader>Sair sem salvar?</AlertDialogHeader>
       <AlertDialogDescription className="sr-only">
         {children}
       </AlertDialogDescription>
@@ -251,10 +277,12 @@ export {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogHeaderPrimitive,
   AlertDialogMedia,
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
   AlertDialogExitConfirmation,
+  AlertDialogHeaderCancel,
 };

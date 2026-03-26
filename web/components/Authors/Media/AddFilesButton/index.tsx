@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   AlertDialogExitConfirmation,
+  AlertDialogHeaderPrimitive,
 } from "../../../AlertDialog";
 import { cn, focusRing } from "../../../../utils/variants";
 import { Tabs, TabsList, TabsTrigger } from "../../../Tabs";
@@ -29,27 +30,43 @@ export function AddFilesButton() {
     null,
   );
   const [state, action, isPending] = React.useActionState(
-    async (prevState: ActionState) => {
+    async (prevState: ActionState, formData: FormData) => {
       const fullUploadFlow = async (): Promise<ActionState> => {
         try {
-          const cloudinaryResults: Cloudinary[] = [];
+          const cloudinaryResults: CloudinarySave[] = [];
 
-          for (const file of files) {
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const customName = formData.get(`file_${i}_name`) as string;
+            const customAlt = formData.get(`file_${i}_alt`) as string;
+            const customCaption = formData.get(`file_${i}_caption`) as string;
+            const customFolder = formData.get(`file_${i}_folder`) as string;
+
+            // Cloudinary file name = public_id
+            const sanitizedPublicId = customName.replace(/\.[^/.]+$/, "");
+
             const { signature, timestamp, apiKey } =
-              await getCloudinarySignature();
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("signature", signature);
-            formData.append("timestamp", timestamp.toString());
-            formData.append("api_key", apiKey!);
+              await getCloudinarySignature({
+                public_id: sanitizedPublicId,
+                folder: customFolder,
+              });
+
+            const cloudinaryBody = new FormData();
+            cloudinaryBody.append("file", file);
+            cloudinaryBody.append("signature", signature);
+            cloudinaryBody.append("timestamp", timestamp.toString());
+            cloudinaryBody.append("api_key", apiKey!);
+            cloudinaryBody.append("public_id", sanitizedPublicId);
+            cloudinaryBody.append("folder", customFolder);
 
             const endpoint = file.type.startsWith("video") ? "video" : "image";
-            const res = await fetch(
+
+            const response = await fetch(
               `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/${endpoint}/upload`,
-              { method: "POST", body: formData },
+              { method: "POST", body: cloudinaryBody },
             );
 
-            if (!res.ok) {
+            if (!response.ok) {
               return {
                 ok: false,
                 success: null,
@@ -58,12 +75,18 @@ export function AddFilesButton() {
               };
             }
 
-            const data: Cloudinary = await res.json();
-            cloudinaryResults.push(data);
+            const data: Cloudinary = await response.json();
+
+            cloudinaryResults.push({
+              ...data,
+              custom_name: customName,
+              custom_alt: customAlt,
+              custom_caption: customCaption,
+              custom_folder: customFolder,
+            });
           }
 
-          const folder = "Home"; // TODO
-          return await syncWithSpringBoot(cloudinaryResults, folder);
+          return await syncWithSpringBoot(cloudinaryResults);
         } catch (err) {
           console.error("fullUploadFlow:", err);
           return {
@@ -151,6 +174,7 @@ export function AddFilesButton() {
               {files.map((file, index) => (
                 <FilePreviewCard
                   key={index}
+                  index={index}
                   file={file}
                   onRemove={() => {
                     const newFiles = files.filter((_, i) => i !== index);
@@ -240,25 +264,7 @@ const UploadContent = ({
   return (
     openStep === "upload" && (
       <AlertDialogContent className="ring-4 border-4 max-w-200 gap-0 p-0 overflow-hidden">
-        <AlertDialogHeader className="relative h-14.25 flex justify-between items-center border-b p-4 dark:bg-stone-900">
-          <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
-          <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </AlertDialogCancel>
-        </AlertDialogHeader>
+        <AlertDialogHeader>Adicione arquivos</AlertDialogHeader>
         <AlertDialogDescription className="sr-only">
           Área de transferência de arquivos. Você pode arrastar arquivos do seu
           computador para esta zona ou alternar entre upload local e via URL
@@ -339,7 +345,7 @@ const Header = ({
   ) => void;
   setFiles: (value: React.SetStateAction<File[]>) => void;
 }) => (
-  <AlertDialogHeader>
+  <AlertDialogHeaderPrimitive>
     <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
     <AlertDialogExitConfirmation
       onConfirm={() => {
@@ -349,7 +355,7 @@ const Header = ({
     >
       Os arquivos serão descartados. Deseja realmente sair?
     </AlertDialogExitConfirmation>
-  </AlertDialogHeader>
+  </AlertDialogHeaderPrimitive>
 );
 
 const Footer = ({

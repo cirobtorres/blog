@@ -67,7 +67,8 @@ export function FieldsetPassword({
       <FieldsetError error={passErrors} />
       <FieldsetError error={strErrors} />
       {strength && <PasswordStrength strength={strength.score} />}
-      {strength?.feedback.warning !== null &&
+      {strength &&
+        strength.feedback.warning !== null &&
         strength?.feedback.suggestions !== null && (
           <ul className="mx-2">
             <li className="text-xs font-medium text-red-500">

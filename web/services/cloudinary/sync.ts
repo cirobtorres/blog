@@ -4,13 +4,10 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
-export async function syncWithSpringBoot(
-  cloudinaryResults: Cloudinary[],
-  folder: string,
-) {
+export async function syncWithSpringBoot(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
-    name: res.original_filename,
-    folder: folder,
+    name: res.custom_name,
+    folder: { path: res.custom_folder },
     publicId: res.public_id,
     url: res.secure_url,
     extension: res.format,
@@ -19,7 +16,8 @@ export async function syncWithSpringBoot(
     width: res.width,
     height: res.height,
     duration: res.duration || null,
-    alt: "",
+    alt: res.custom_alt,
+    caption: res.custom_caption,
   }));
 
   const cookieStore = await cookies();

@@ -23,6 +23,13 @@ type Cloudinary = {
   created_at: string;
 };
 
+type CloudinarySave = Cloudinary & {
+  custom_alt: string;
+  custom_caption: string;
+  custom_folder: string;
+  custom_name: string;
+};
+
 // Comes from server
 type Media = {
   id: string;
@@ -60,10 +67,4 @@ type MediaFolder = {
   name: string;
   subfolderCount: number;
   fileCount: number;
-};
-
-type FolderNode = {
-  name: string;
-  fullPath: string;
-  children: FolderNode[];
 };

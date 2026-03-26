@@ -51,7 +51,9 @@ public class MediaFolderController {
 
     @GetMapping("/all")
     public ResponseEntity<List<MediaFoldersDTO>> listFolders() {
-        return ResponseEntity.ok(mediaFolderService.listAllFolders());
+        return ResponseEntity.ok(
+                mediaFolderService.listAllFolders()
+        );
     }
 
     @PostMapping("/exists")
