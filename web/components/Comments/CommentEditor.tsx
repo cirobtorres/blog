@@ -5,7 +5,7 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { sonnerToastPromise } from "../../utils/sooner";
+import { sonnerToastPromise, soonerPromise } from "../../utils/sooner";
 import { Button } from "../Button";
 
 export default function CommentEditor({
@@ -22,10 +22,16 @@ export default function CommentEditor({
     }
   }, [editor]);
 
-  const [state, action, isPEnding] = React.useActionState(async () => {
-    const promise: Promise<ActionState> = new Promise((resolve) => {
-      setTimeout(resolve, 2000);
+  const [state, action, isPending] = React.useActionState(async () => {
+    const result: Promise<ActionState> = new Promise((resolve) => {
+      setTimeout(resolve, 2000, {
+        ok: true,
+        success: "Teste",
+        error: null,
+        data: null,
+      });
     });
+    const promise = soonerPromise(result);
 
     sonnerToastPromise(
       promise,
@@ -48,13 +54,13 @@ export default function CommentEditor({
       />
       <div className="flex justify-end items-center gap-0.5">
         <Button
-          disabled={isPEnding}
+          disabled={isPending}
           variant="outline"
           className="w-full max-w-30 h-6"
         >
           Salvar
         </Button>
-        <Button disabled={isPEnding} className="w-full max-w-30 h-6">
+        <Button disabled={isPending} className="w-full max-w-30 h-6">
           Salvar
         </Button>
       </div>

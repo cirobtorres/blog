@@ -9,20 +9,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../AlertDialog";
-import { Button } from "../../../Button";
+} from "../../../../AlertDialog";
+import { Button } from "../../../../Button";
 import {
   Fieldset,
   FieldsetError,
   FieldsetInput,
   FieldsetLabel,
-} from "../../../Fieldset";
-import Spinner from "../../../Spinner";
+} from "../../../../Fieldset";
+import Spinner from "../../../../Spinner";
 import createFolder, {
   createFolderValidation,
-} from "../../../../services/cloudinary/createFolder";
-import { sonnerToastPromise } from "../../../../utils/sooner";
-import { FolderSelectBuilder } from "../../FolderSelectBuilder";
+} from "../../../../../services/cloudinary/createFolder";
+import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
+import { SelectFolder } from "../../../SelectFolder";
 
 export function AddFolderButton() {
   const [folderName, setFolderName] = React.useState("");
@@ -48,14 +48,7 @@ export function AddFolderButton() {
       newFormData.set("path", validation?.data);
 
       const result = createFolder(prevState, newFormData);
-
-      const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-        result.then((data) => {
-          if (data.ok) resolve(result);
-          else reject(result);
-        });
-      });
-
+      const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando pasta...");
 
       return result;
@@ -118,7 +111,7 @@ export function AddFolderButton() {
                 className="px-1"
               />
             </div>
-            <FolderSelectBuilder />
+            <SelectFolder />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

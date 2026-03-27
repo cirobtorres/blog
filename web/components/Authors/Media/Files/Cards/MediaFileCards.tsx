@@ -1,23 +1,26 @@
-import { DashedBackground } from "../../../../DashedBackground";
-import MediaPagination from "./MediaPagination";
 import { apiServerUrls } from "../../../../../routing/routes";
+import { DashedBackground } from "../../../../DashedBackground";
 import { Skeleton } from "../../../../Skeleton";
+import MediaFileCheckbox from "../Header/MediaFileCheckbox";
+import { MediaFilesSorting } from "../Header/MediaFilesSorting";
+import MediaPagination from "../Pagination/MediaPagination";
 import MediaFileCard from "./MediaFileCard";
-import MediaFileCheckbox from "./MediaFileCheckbox";
-import { MediaFilesSorting } from "./MediaFilesSorting";
 
 export default async function MediaFileCards({
   accessToken,
+  currentPath,
   searchParams,
 }: {
   accessToken?: string;
+  currentPath?: string[];
   searchParams?: { page?: string; size?: string; folder?: string };
 }) {
   const currentPage = searchParams?.page || "0";
-  const currentFolder = searchParams?.folder || "Home";
+  const currentFolder = currentPath ? "/" + currentPath.join("/") : "/";
+  const queryFolder = encodeURIComponent(currentFolder);
 
   const mediaResponse = await fetch(
-    `${apiServerUrls.media.root}?page=${currentPage}&folder=${currentFolder}`,
+    `${apiServerUrls.media.root}?page=${currentPage}&folder=${queryFolder}`,
     {
       method: "GET",
       headers: {
@@ -94,7 +97,21 @@ export default async function MediaFileCards({
 }
 
 const MediaFileGhost = () => (
-  <DashedBackground className="opacity-50 w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900"></DashedBackground>
+  <DashedBackground className="opacity-50 relative w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900">
+    <div className="absolute z-10 size-6 rounded left-2 top-2 shrink-0 border bg-stone-200 dark:bg-stone-800" />
+    <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
+      <div className="" />
+      <div className="w-full flex justify-between items-center gap-2 p-2 border-t dark:bg-stone-900">
+        <div className="w-full h-full flex flex-col justify-start gap-1">
+          <div className="w-60 h-7 flex-1 mb-auto mt-0 border rounded bg-stone-200 dark:bg-stone-800" />
+          <div className="flex justify-between items-center gap-1">
+            <div className="w-40 h-4 border rounded bg-stone-200 dark:bg-stone-800" />
+            <div className="w-14 h-6 border rounded bg-stone-200 dark:bg-stone-800" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </DashedBackground>
 );
 
 const NoCardsFoundPlaceholder = ({

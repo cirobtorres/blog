@@ -28,7 +28,7 @@ public class MediaFolderController {
 
     @GetMapping
     public ResponseEntity<List<MediaFolderCountDTO>> listChildFolders(
-            @RequestParam(defaultValue = "Home") String folder
+            @RequestParam String folder
     ) {
         return ResponseEntity.ok(mediaFolderService.listSubfolders(folder));
     }

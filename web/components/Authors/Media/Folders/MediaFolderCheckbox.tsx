@@ -1,5 +1,5 @@
-import { Button } from "../../../../Button";
-import { Checkbox } from "../../../../Fieldset/Checkbox";
+import { Button } from "../../../Button";
+import { Checkbox } from "../../../Fieldset/Checkbox";
 
 export default function MediaFolderCheckbox({
   selectedFolders = 0,

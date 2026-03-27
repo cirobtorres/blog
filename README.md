@@ -91,3 +91,7 @@ $priv -join "" | Set-Content private_final.txt
 $pub = Get-Content jwt-public.pem | Where-Object { $_ -notmatch "-----" }
 $pub -join "" | Set-Content public_final.txt
 ```
+
+# TODO
+
+- Delete a folder from server is not propagating this behave to cloudinary folders (cloudinary folders are not deleted)

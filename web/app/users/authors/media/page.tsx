@@ -5,10 +5,10 @@ import { Suspense } from "react";
 import { Hr } from "../../../../components/utils";
 import MediaFolderCards, {
   MediaFolderCardsLoading,
-} from "../../../../components/Authors/Media/AuthorsMediaPage/Folder/MediaFolderCards";
+} from "../../../../components/Authors/Media/Folders/MediaFolderCards";
 import MediaFileCards, {
   MediaFileCardsLoading,
-} from "../../../../components/Authors/Media/AuthorsMediaPage/File/MediaFileCards";
+} from "../../../../components/Authors/Media/Files/Cards/MediaFileCards";
 
 export default async function AuthorsMediaPage({
   searchParams,
@@ -21,10 +21,7 @@ export default async function AuthorsMediaPage({
   return (
     <>
       <Suspense fallback={<MediaFolderCardsLoading />}>
-        <MediaFolderCards
-          accessToken={accessToken?.value}
-          searchParams={resolvedParams}
-        />
+        <MediaFolderCards accessToken={accessToken?.value} />
       </Suspense>
       <Hr className="my-6" />
       <Suspense fallback={<MediaFileCardsLoading />}>

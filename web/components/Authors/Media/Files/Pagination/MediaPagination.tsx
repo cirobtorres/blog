@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "../../../../../utils/variants";
+import { useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +10,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../../../../Pagination";
-import { useSearchParams } from "next/navigation";
+import { cn } from "../../../../../utils/variants";
 
 export default function MediaPagination({
   number,

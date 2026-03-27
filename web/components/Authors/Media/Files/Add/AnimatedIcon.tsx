@@ -18,13 +18,13 @@ const LOOP_TRANSITION = (index: number): Transition => ({
   ease: "easeInOut",
 });
 
-const MediaPullRequestIcon = ({
+export default function AnimatedIcon({
   className,
   size = 32,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   size?: number;
-}) => {
+}) {
   const controls = useAnimation();
 
   React.useEffect(() => {
@@ -92,6 +92,4 @@ const MediaPullRequestIcon = ({
       </svg>
     </div>
   );
-};
-
-export { MediaPullRequestIcon };
+}

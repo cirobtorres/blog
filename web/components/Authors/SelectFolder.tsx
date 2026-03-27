@@ -10,10 +10,9 @@ import {
   SelectValue,
 } from "../Select";
 import { protectedWebUrls } from "../../routing/routes";
-import Spinner from "../Spinner";
 import { Skeleton } from "../Skeleton";
 
-export function FolderSelectBuilder() {
+export function SelectFolder({ name }: { name?: string }) {
   const { data: folders, isLoading } = useFolders();
   const formatFolders = (
     allFolders: {
@@ -44,12 +43,12 @@ export function FolderSelectBuilder() {
   };
 
   const pathname = usePathname();
-  const subfolder = pathname.split(protectedWebUrls.media).pop();
-  const currentPath = "Home" + subfolder;
+  const path = pathname.split(protectedWebUrls.media).pop();
+  const currentPath = !!path ? path : "/";
   const options = folders ? formatFolders(folders) : [];
 
   return (
-    <Select name="folderPath" defaultValue={currentPath}>
+    <Select name={name ?? "folderPath"} defaultValue={currentPath}>
       {isLoading ? (
         <Skeleton className="h-9.5" />
       ) : (

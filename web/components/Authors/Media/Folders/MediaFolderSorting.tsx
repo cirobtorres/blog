@@ -1,5 +1,5 @@
-import { Button } from "../../../../Button";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
+import { Button } from "../../../Button";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../Popover";
 
 export default function MediaFolderSorting() {
   return (

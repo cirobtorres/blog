@@ -5,7 +5,8 @@ export function useFolders() {
   return useQuery({
     queryKey: ["folders"],
     queryFn: async () => {
-      return await listAllFolders();
+      const data = await listAllFolders();
+      return data;
     },
   });
 }

@@ -4,7 +4,7 @@ import { DashedBackground } from "../../../../DashedBackground";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
 import { generateVideoThumbnail } from "./GenerateVideoThumbnail";
-import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
+import { SelectFolder } from "../../../SelectFolder";
 
 export default function FilePreviewCard({
   file,
@@ -71,9 +71,6 @@ export default function FilePreviewCard({
         </svg>
       )}
       <div className="w-full h-full flex flex-col gap-2 mb-auto">
-        <input type="hidden" name={`file_${index}_name`} value={name} />
-        <input type="hidden" name={`file_${index}_alt`} value={alt} />
-        <input type="hidden" name={`file_${index}_caption`} value={caption} />
         <Fieldset>
           <FieldsetInput
             id={`name-input-${index}`}
@@ -115,7 +112,7 @@ export default function FilePreviewCard({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <FolderSelectBuilder />
+          <SelectFolder name={`file_${index}_folder`} />
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
             A pasta onde o arquivo será salvo.
           </p>

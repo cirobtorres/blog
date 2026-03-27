@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import Spinner from "../../../../Spinner";
-import deleteMedia from "../../../../../services/cloudinary/delete";
+import {
+  sonnerToastPromise,
+  soonerPromise,
+} from "../../../../../../utils/sooner";
+import Spinner from "../../../../../Spinner";
+import deleteMedia from "../../../../../../services/cloudinary/delete";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,10 +15,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../../AlertDialog";
-import { Button } from "../../../../Button";
+} from "../../../../../AlertDialog";
+import { Button } from "../../../../../Button";
 
-export default function DeleteMediaButton({
+export default function DeleteButton({
   id,
   name,
   extension,
@@ -89,14 +92,7 @@ const DeleteMediaAction = ({ id }: { id: string }) => {
     };
 
     const result = deleteMedia({ id });
-
-    const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-      result.then((data) => {
-        if (data.ok) resolve(result);
-        else reject(result);
-      });
-    });
-
+    const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;

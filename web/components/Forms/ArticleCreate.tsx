@@ -14,7 +14,7 @@ import {
 } from "../../services/article/publishArticle";
 import { Alert } from "../Alert";
 import { FieldsetError } from "../Fieldset";
-import { sonnerToastPromise } from "../../utils/sooner";
+import { sonnerToastPromise, soonerPromise } from "../../utils/sooner";
 import Spinner from "../Spinner";
 import { Button } from "../Button";
 
@@ -84,14 +84,7 @@ export function ArticleCreate() {
         validatedFormData.set("body", JSON.stringify(validatedBody));
 
         const result = publishArticle(prevState, validatedFormData);
-
-        const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-          result.then((data) => {
-            if (data.ok) resolve(result);
-            else reject(result);
-          });
-        });
-
+        const promise = soonerPromise(result);
         sonnerToastPromise(promise, success, error, "Publicando artigo...");
 
         return result;

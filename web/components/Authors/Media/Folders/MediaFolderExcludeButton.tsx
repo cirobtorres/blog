@@ -9,11 +9,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../../AlertDialog";
-import { Button } from "../../../../Button";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import Spinner from "../../../../Spinner";
-import deleteFolder from "../../../../../services/cloudinary/deleteFolder";
+} from "../../../AlertDialog";
+import { Button } from "../../../Button";
+import { sonnerToastPromise, soonerPromise } from "../../../../utils/sooner";
+import Spinner from "../../../Spinner";
+import deleteFolder from "../../../../services/cloudinary/deleteFolder";
 
 export default function MediaFolderExcludeButton({
   folder,
@@ -64,14 +64,7 @@ const DeleteFolderAction = ({ folder }: { folder: string }) => {
     };
 
     const result = deleteFolder(folder);
-
-    const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-      result.then((data) => {
-        if (data.ok) resolve(result);
-        else reject(result);
-      });
-    });
-
+    const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;

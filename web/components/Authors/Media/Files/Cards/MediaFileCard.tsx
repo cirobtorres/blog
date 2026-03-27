@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { DashedBackground } from "../../../../DashedBackground";
 import { Checkbox } from "../../../../Fieldset/Checkbox";
-import { ExpandButton } from "./ExpandButton";
-import { DownloadButton } from "./Download";
-import EditMediaButton from "./EditMediaButton";
-import DeleteMediaButton from "./DeleteMediaButton";
+import DownloadButton from "./Buttons/DownloadButton";
+import { ExpandButton } from "./Buttons/ExpandButton";
+import EditButton from "./Buttons/EditButton";
+import DeleteButton from "./Buttons/DeleteButton";
 
 export default function MediaFileCard({
   props,
@@ -39,8 +39,8 @@ export default function MediaFileCard({
           <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
             {props.url && <ExpandButton url={props.url} />}
             <DownloadButton />
-            <EditMediaButton {...props} />
-            <DeleteMediaButton {...props} />
+            <EditButton {...props} />
+            <DeleteButton {...props} />
           </div>
         </div>
         <div className="w-full flex justify-between items-center gap-2 p-2 border-t">
@@ -54,7 +54,7 @@ export default function MediaFileCard({
                 {props.type === "IMAGE" &&
                   " - " + props.width + "x" + props.height}
               </span>
-              <span className="text-xs px-2 py-1 rounded font-bold transition-[colors,background-color] duration-300 dark:text-neutral-500 dark:bg-stone-800 dark:group-hover:bg-stone-750 dark:group-has-data-[state=checked]:bg-stone-750">
+              <span className="text-xs px-2 py-1 rounded font-bold transition-all duration-300 dark:text-neutral-500 dark:bg-stone-800 dark:group-hover:bg-stone-750 dark:group-has-data-[state=checked]:bg-stone-750">
                 {props.type}
               </span>
             </div>

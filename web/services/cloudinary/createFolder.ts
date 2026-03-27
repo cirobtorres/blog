@@ -68,8 +68,6 @@ export async function createFolderValidation(
     ...rawData,
   });
 
-  console.log(rawData);
-
   if (!result.success) {
     const error = z.treeifyError(result.error).properties;
 
@@ -82,7 +80,11 @@ export async function createFolderValidation(
   }
 
   const { folderName, folderPath } = result.data;
-  const newPath = `${folderPath}/${folderName}`;
+  const cloudinaryRoot = "/";
+  const newPath =
+    folderPath === cloudinaryRoot
+      ? `${folderPath}${folderName}`
+      : `${folderPath}/${folderName}`;
 
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;

@@ -18,10 +18,10 @@ public class MediaFolderInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (!folderRepository.existsByPath("Home")) {
+        if (!folderRepository.existsByPath("/")) {
             MediaFolder home = MediaFolder.builder()
                     .name("Home")
-                    .path("Home")
+                    .path("/")
                     .parent(null)
                     .build();
 

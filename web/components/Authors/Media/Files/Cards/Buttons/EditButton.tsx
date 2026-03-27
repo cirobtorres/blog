@@ -10,19 +10,26 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../../AlertDialog";
-import Spinner from "../../../../Spinner";
-import editMedia from "../../../../../services/cloudinary/edit";
-import { DashedBackground } from "../../../../DashedBackground";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
-import { Button } from "../../../../Button";
-import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
+} from "../../../../../AlertDialog";
+import Spinner from "../../../../../Spinner";
+import editMedia from "../../../../../../services/cloudinary/edit";
+import { DashedBackground } from "../../../../../DashedBackground";
+import {
+  sonnerToastPromise,
+  soonerPromise,
+} from "../../../../../../utils/sooner";
+import {
+  Fieldset,
+  FieldsetInput,
+  FieldsetLabel,
+} from "../../../../../Fieldset";
+import { Button } from "../../../../../Button";
+import { SelectFolder } from "../../../../SelectFolder";
 
-export default function EditMediaButton({
+export default function EditButton({
   id,
   url,
-  name: currentName,
+  name: fileName,
   type,
   size,
   extension,
@@ -40,7 +47,7 @@ export default function EditMediaButton({
   alt: string;
   caption: string;
 }) {
-  const [name, setName] = React.useState(currentName);
+  const [name, setName] = React.useState(fileName);
   const [alt, setAlt] = React.useState(currentAlt);
   const [caption, setCaption] = React.useState(currentCaption);
   const [folder, setFolder] = React.useState(currentFolder);
@@ -67,14 +74,7 @@ export default function EditMediaButton({
       formData.set("folder", folder);
 
       const result = editMedia(prevState, formData);
-
-      const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-        result.then((data) => {
-          if (data.ok) resolve(result);
-          else reject(result);
-        });
-      });
-
+      const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
       return result;
@@ -118,7 +118,7 @@ export default function EditMediaButton({
             <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
               <Card
                 url={url}
-                name={name}
+                name={fileName}
                 type={type}
                 size={size}
                 extension={extension}
@@ -173,7 +173,7 @@ export default function EditMediaButton({
                   </p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <FolderSelectBuilder />
+                  <SelectFolder />
                   <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
                     A pasta onde o arquivo será salvo.
                   </p>

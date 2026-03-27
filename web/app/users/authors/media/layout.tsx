@@ -1,7 +1,7 @@
 "use server";
 
-import { AddFolderButton } from "../../../../components/Authors/Media/AddFolderButton";
-import { AddFilesButton } from "../../../../components/Authors/Media/AddFilesButton";
+import { AddFolderButton } from "../../../../components/Authors/Media/Folders/Add";
+import { AddFilesButton } from "../../../../components/Authors/Media/Files/Add/AddFilesButton";
 import MediaBreadcrumb from "../../../../components/Authors/Media/MediaBreadcrumb";
 import MediaFolderProdiver from "../../../../components/Authors/Media/MediaFolderProdiver";
 

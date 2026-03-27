@@ -9,13 +9,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../../AlertDialog";
-import { Button } from "../../../../Button";
-import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
-import { FolderSelectBuilder } from "../../../FolderSelectBuilder";
-import Spinner from "../../../../Spinner";
-import { sonnerToastPromise } from "../../../../../utils/sooner";
-import editFolder from "../../../../../services/cloudinary/editFolder";
+} from "../../../AlertDialog";
+import { Button } from "../../../Button";
+import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../Fieldset";
+import { SelectFolder } from "../../SelectFolder";
+import Spinner from "../../../Spinner";
+import { sonnerToastPromise, soonerPromise } from "../../../../utils/sooner";
+import editFolder from "../../../../services/cloudinary/editFolder";
 
 export default function MediaFolderEditButton({ folder }: { folder: string }) {
   const [folderName, setFolderName] = React.useState(folder.slice(1));
@@ -37,14 +37,7 @@ export default function MediaFolderEditButton({ folder }: { folder: string }) {
       };
 
       const result = editFolder(prevState, formData);
-
-      const promise: Promise<ActionState> = new Promise((resolve, reject) => {
-        result.then((data) => {
-          if (data.ok) resolve(result);
-          else reject(result);
-        });
-      });
-
+      const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
       return result;
@@ -109,7 +102,7 @@ export default function MediaFolderEditButton({ folder }: { folder: string }) {
                 />
                 <FieldsetLabel label="Nome" htmlFor="folderName" />
               </Fieldset>
-              <FolderSelectBuilder />
+              <SelectFolder />
             </div>
           </div>
           <AlertDialogFooter>

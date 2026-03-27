@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cn, focusRing } from "../../../../../utils/variants";
+import { cn, focusRing } from "../../../../../../utils/variants";
 
 export const ExpandButton = ({ url }: { url: string }) => (
   <Link

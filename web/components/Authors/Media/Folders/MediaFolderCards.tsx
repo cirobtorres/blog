@@ -1,22 +1,20 @@
 "use server";
 
-import { apiServerUrls } from "../../../../../routing/routes";
-import { Skeleton } from "../../../../Skeleton";
+import { apiServerUrls } from "../../../../routing/routes";
+import { Skeleton } from "../../../Skeleton";
 import MediaFolderSorting from "./MediaFolderSorting";
 import MediaFolderCheckbox from "./MediaFolderCheckbox";
 import MediaFolderCard from "./MediaFolderCard";
-import { DashedBackground } from "../../../../DashedBackground";
+import { DashedBackground } from "../../../DashedBackground";
 
 export default async function MediaFolderCards({
   accessToken,
   currentPath,
-  searchParams,
 }: {
   accessToken?: string;
   currentPath?: string[];
-  searchParams?: { page?: string; size?: string };
 }) {
-  const currentFolder = currentPath ? "Home/" + currentPath.join("/") : "Home";
+  const currentFolder = currentPath ? "/" + currentPath.join("/") : "/";
   const queryFolder = "?folder=" + encodeURIComponent(currentFolder);
 
   const mediaFolders = await fetch(
@@ -43,7 +41,6 @@ export default async function MediaFolderCards({
   const folders: MediaFolder[] = (await mediaFolders.json()).map(
     (folder: MediaFolder) => ({
       ...folder,
-      path: folder.path.replace("Home", ""),
     }),
   );
   const count: number = await countFolders.json();
@@ -67,12 +64,12 @@ export default async function MediaFolderCards({
 }
 
 const GhostCard = () => (
-  <DashedBackground className="opacity-50 w-full max-w-70 h-18 flex-1 flex shrink-0 items-center gap-2 rounded border not-dark:shadow py-2 px-3">
-    <div className="size-4 shrink-0 border rounded border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925" />
-    <div className="size-13 rounded-lg border border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925" />
+  <DashedBackground className="opacity-50 w-full max-w-70 h-18 flex-1 flex shrink-0 items-center gap-2 rounded border not-dark:shadow py-2 px-3 bg-stone-200 dark:bg-stone-900">
+    <div className="size-4 shrink-0 border rounded bg-stone-200 dark:bg-stone-800" />
+    <div className="size-13 rounded-lg border bg-stone-200 dark:bg-stone-800" />
     <div className="flex flex-1 shrink-0 flex-col gap-1">
-      <div className="shrink-0 w-full max-w-14 h-5 border rounded border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925" />
-      <div className="shrink-0 w-full max-w-28 h-4 border rounded border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925" />
+      <div className="shrink-0 w-full max-w-14 h-5 border rounded bg-stone-200 dark:bg-stone-800" />
+      <div className="shrink-0 w-full max-w-28 h-4 border rounded bg-stone-200 dark:bg-stone-800" />
     </div>
   </DashedBackground>
 );

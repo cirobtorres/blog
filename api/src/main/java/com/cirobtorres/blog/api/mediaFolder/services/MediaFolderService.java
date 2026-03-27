@@ -31,6 +31,7 @@ public class MediaFolderService {
     @Transactional
     public MediaFolder createFolder(MediaFolderDTO mediaFolderDTO) {
         String fullPath = mediaFolderDTO.path();
+        System.out.println(fullPath);
 
         // Validation
         if (mediaFolderRepository.existsByPath(fullPath)) {
@@ -38,20 +39,28 @@ public class MediaFolderService {
         }
 
         // Name
-        String name = fullPath.contains("/")
-                ? fullPath.substring(fullPath.lastIndexOf("/") + 1)
-                : fullPath;
+        String name = fullPath.contains("/") ?
+                fullPath.substring(fullPath.lastIndexOf("/") + 1) :
+                fullPath;
 
         // Parent
         MediaFolder parent = null;
-        if (fullPath.contains("/")) {
-            String parentPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
-            parent = mediaFolderRepository.findByPath(parentPath)
-                    .orElseThrow(() -> new EntityNotFoundException("Parent folder not found: " + parentPath));
+        String parentPath;
+        int lastSlashIndex = fullPath.lastIndexOf("/");
+        if (lastSlashIndex <= 0) {
+            parentPath = "/";
+        } else {
+            parentPath = fullPath.substring(0, lastSlashIndex);
         }
 
+        parent = mediaFolderRepository.findByPath(parentPath)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Parent folder not found: " + parentPath)
+                );
+
         // Building
-        MediaFolder folder = MediaFolder.builder()
+        MediaFolder folder = MediaFolder
+                .builder()
                 .name(name)
                 .path(fullPath)
                 .parent(parent)

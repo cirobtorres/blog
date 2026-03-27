@@ -1,6 +1,6 @@
-import { protectedWebUrls } from "../../../../../routing/routes";
-import { cn, focusRing } from "../../../../../utils/variants";
-import { Checkbox } from "../../../../Fieldset/Checkbox";
+import { protectedWebUrls } from "../../../../routing/routes";
+import { cn, focusRing } from "../../../../utils/variants";
+import { Checkbox } from "../../../Fieldset/Checkbox";
 import { FolderLink } from "./FolderLink";
 import MediaFolderEditButton from "./MediaFolderEditButton";
 import MediaFolderExcludeButton from "./MediaFolderExcludeButton";

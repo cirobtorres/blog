@@ -75,7 +75,7 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "relative flex cursor-default focus:bg-stone-300 focus:text-neutral-900 text-neutral-400 dark:focus:bg-stone-800 dark:focus:text-neutral-100 dark:text-neutral-500 gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 group/dropdown-menu-item items-center outline-hidden select-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 transition-all duration-300",
+        "relative flex cursor-default focus:bg-stone-300 focus:text-neutral-900 text-neutral-400 dark:focus:bg-stone-800 dark:focus:text-neutral-100 dark:text-neutral-500 gap-1.5 rounded border border-transparent px-1.5 py-1 text-sm data-inset:pl-7 group/dropdown-menu-item items-center outline-hidden select-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 transition-all duration-300",
         className,
       )}
       {...props}
@@ -229,7 +229,7 @@ function DropdownMenuSubTrigger({
       data-slot="dropdown-menu-sub-trigger"
       data-inset={inset}
       className={cn(
-        "focus:bg-stone-300 dark:focus:bg-stone-800 data-open:bg-stone-300 data-open:text-neutral-900 dark:data-open:bg-stone-800 dark:data-open:text-neutral-100 gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "focus:bg-stone-300 dark:focus:bg-stone-800 data-open:bg-stone-300 data-open:text-neutral-900 dark:data-open:bg-stone-800 dark:data-open:text-neutral-100 gap-1.5 rounded px-1.5 py-1 text-sm data-inset:pl-7 flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       {...props}
