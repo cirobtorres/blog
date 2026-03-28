@@ -18,13 +18,13 @@ import {
   FieldsetLabel,
 } from "../../../../Fieldset";
 import Spinner from "../../../../Spinner";
-import createFolder, {
-  createFolderValidation,
-} from "../../../../../services/cloudinary/createFolder";
+import { createFolderValidation } from "../../../../../services/media/createFolder";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
 import { SelectFolder } from "../../../SelectFolder";
+import { useCreateFolder } from "../../../../../hooks/useFolders";
 
 export function AddFolderButton() {
+  const { mutateAsync } = useCreateFolder();
   const [folderName, setFolderName] = React.useState("");
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
@@ -44,10 +44,9 @@ export function AddFolderButton() {
 
       if (!validation.ok || !validation.data) return validation;
 
-      const newFormData = new FormData();
-      newFormData.set("path", validation?.data);
+      formData.set("path", validation?.data);
 
-      const result = createFolder(prevState, newFormData);
+      const result = mutateAsync({ prevState, formData });
       const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando pasta...");
 

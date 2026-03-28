@@ -12,7 +12,13 @@ import {
 import { protectedWebUrls } from "../../routing/routes";
 import { Skeleton } from "../Skeleton";
 
-export function SelectFolder({ name }: { name?: string }) {
+export function SelectFolder({
+  defaultValue,
+  name,
+}: {
+  defaultValue?: string;
+  name?: string;
+}) {
   const { data: folders, isLoading } = useFolders();
   const formatFolders = (
     allFolders: {
@@ -48,7 +54,10 @@ export function SelectFolder({ name }: { name?: string }) {
   const options = folders ? formatFolders(folders) : [];
 
   return (
-    <Select name={name ?? "folderPath"} defaultValue={currentPath}>
+    <Select
+      name={name ?? "folderPath"}
+      defaultValue={defaultValue ?? currentPath}
+    >
       {isLoading ? (
         <Skeleton className="h-9.5" />
       ) : (

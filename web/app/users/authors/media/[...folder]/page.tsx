@@ -3,12 +3,12 @@
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { Hr } from "../../../../../components/utils";
-import MediaFolderCards, {
-  MediaFolderCardsLoading,
-} from "../../../../../components/Authors/Media/Folders/MediaFolderCards";
 import MediaFileCards, {
   MediaFileCardsLoading,
 } from "../../../../../components/Authors/Media/Files/Cards/MediaFileCards";
+import FolderCards, {
+  FolderCardsLoading,
+} from "../../../../../components/Authors/Media/Folders/Cards/FolderCards";
 
 export default async function AuthorsMediaFolderPage({
   params,
@@ -24,8 +24,8 @@ export default async function AuthorsMediaFolderPage({
 
   return (
     <>
-      <Suspense fallback={<MediaFolderCardsLoading />}>
-        <MediaFolderCards
+      <Suspense fallback={<FolderCardsLoading />}>
+        <FolderCards
           accessToken={accessToken?.value}
           currentPath={currentPath}
         />

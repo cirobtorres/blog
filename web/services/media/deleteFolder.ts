@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export default async function deleteFolder(path: string) {
   const cookie = await cookies();
@@ -53,6 +53,8 @@ export default async function deleteFolder(path: string) {
     };
   }
 
+  revalidateTag("media-list", "max");
+  revalidateTag("media-count", "max");
   revalidatePath("/");
 
   return { ...returnStatement, ok: true, success: "Pasta excluída!" };

@@ -1,4 +1,4 @@
-export const generateVideoThumbnail = (file: File): Promise<string> => {
+export const VideoThumbnail = (file: File): Promise<string> => {
   return new Promise((resolve) => {
     const video = document.createElement("video");
     video.preload = "metadata";

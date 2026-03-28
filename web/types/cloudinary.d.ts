@@ -7,7 +7,7 @@ type Cloudinary = {
   url: string;
   secure_url: string;
   etag: string;
-  folder: string;
+  folder: { path: string };
   format: string;
   bytes: number;
   width: number;
@@ -34,7 +34,7 @@ type CloudinarySave = Cloudinary & {
 type Media = {
   id: string;
   name: string;
-  folder: string;
+  folder: { path: string };
   publicId: string;
   url: string;
   extension: string;
@@ -67,4 +67,5 @@ type MediaFolder = {
   name: string;
   subfolderCount: number;
   fileCount: number;
+  createdAt: Date;
 };

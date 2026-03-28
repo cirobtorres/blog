@@ -9,17 +9,22 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../AlertDialog";
-import { Button } from "../../../Button";
-import { sonnerToastPromise, soonerPromise } from "../../../../utils/sooner";
-import Spinner from "../../../Spinner";
-import deleteFolder from "../../../../services/cloudinary/deleteFolder";
+} from "../../../../../AlertDialog";
+import { Button } from "../../../../../Button";
+import {
+  sonnerToastPromise,
+  soonerPromise,
+} from "../../../../../../utils/sooner";
+import Spinner from "../../../../../Spinner";
+import deleteFolder from "../../../../../../services/media/deleteFolder";
 
-export default function MediaFolderExcludeButton({
-  folder,
-}: {
-  folder: string;
-}) {
+export default function DeleteButton({
+  name,
+  path,
+  subfolderCount,
+  fileCount,
+  createdAt,
+}: MediaFolder) {
   return (
     <AlertDialog>
       <MediaFolderExcludeTrigger />
@@ -31,7 +36,7 @@ export default function MediaFolderExcludeButton({
               <p className="text-sm text-neutral-600 dark:text-neutral-500">
                 Excluir a pasta{" "}
                 <strong className="text-neutral-900 dark:text-neutral-100">
-                  {folder.split("/").splice(-1)}
+                  {path.split("/").splice(-1)}
                 </strong>
                 ?
               </p>
@@ -41,7 +46,7 @@ export default function MediaFolderExcludeButton({
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <DeleteFolderAction folder={folder} />
+            <DeleteFolderAction folder={path} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>

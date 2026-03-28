@@ -1,7 +1,7 @@
-import { Button } from "../../../Button";
-import { Checkbox } from "../../../Fieldset/Checkbox";
+import { Button } from "../../../../Button";
+import { Checkbox } from "../../../../Fieldset/Checkbox";
 
-export default function MediaFolderCheckbox({
+export default function FolderCheckbox({
   selectedFolders = 0,
 }: {
   selectedFolders?: number;

@@ -20,26 +20,30 @@ export default async function MediaFileCards({
   const queryFolder = encodeURIComponent(currentFolder);
 
   const mediaResponse = await fetch(
-    `${apiServerUrls.media.root}?page=${currentPage}&folder=${queryFolder}`,
+    apiServerUrls.media.root +
+      "?page=" +
+      currentPage +
+      "&folder=" +
+      queryFolder,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      cache: "no-store",
+      next: { tags: ["media-list"] },
     },
   );
 
   const countResponse = await fetch(
-    apiServerUrls.media.count + "?folder=Home",
+    apiServerUrls.media.count + "?folder=" + queryFolder,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      cache: "no-store",
+      next: { tags: ["media-count"] },
     },
   );
 
@@ -84,7 +88,9 @@ export default async function MediaFileCards({
   } else {
     const count = await countResponse.json();
     countComp = (
-      <h2 className="text-xl flex items-center">Arquivos &#40;{count}&#41;</h2>
+      <h2 className="text-xl flex items-center">
+        Arquivo{count > 1 && "s"}: {count}
+      </h2>
     );
   }
 
@@ -141,7 +147,7 @@ const NoCardsFoundPlaceholder = ({
 export const MediaFileCardsLoading = async () => (
   <section className="flex flex-col items-start justify-center gap-2">
     <h2 className="text-xl flex items-center">
-      Arquivos &#40;{<Skeleton className="size-6" />}&#41;
+      Arquivos: {<Skeleton className="size-6" />}
     </h2>
     <div className="w-full flex justify-between items-center gap-2">
       <div className="flex items-center gap-2">

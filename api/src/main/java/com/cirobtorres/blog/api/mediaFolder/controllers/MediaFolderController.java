@@ -27,10 +27,10 @@ public class MediaFolderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MediaFolderCountDTO>> listChildFolders(
+    public ResponseEntity<List<MediaFolderCountDTO>> listSubfoldersWithCounts(
             @RequestParam String folder
     ) {
-        return ResponseEntity.ok(mediaFolderService.listSubfolders(folder));
+        return ResponseEntity.ok(mediaFolderService.listSubfoldersWithCounts(folder));
     }
 
     @PostMapping
@@ -50,7 +50,7 @@ public class MediaFolderController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<MediaFoldersDTO>> listFolders() {
+    public ResponseEntity<List<MediaFoldersDTO>> listAllFolders() {
         return ResponseEntity.ok(
                 mediaFolderService.listAllFolders()
         );
@@ -64,7 +64,9 @@ public class MediaFolderController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> countAllFolders() {
-        return ResponseEntity.ok(mediaFolderService.countAllFolders());
+    public ResponseEntity<Long> countFolders(
+            @RequestParam(defaultValue = "/") String folder
+    ) {
+        return ResponseEntity.ok(mediaFolderService.countSubfoldersByPath(folder));
     }
 }

@@ -23,13 +23,8 @@ export default function MediaBreadcrumb() {
   const segments = pathname.split("/").filter(Boolean);
   const mediaIndex = segments.indexOf("media");
   const mediaPath = "/" + segments.slice(0, mediaIndex + 1).join("/");
-
-  // Pegamos todos os segmentos após /media
   const dynamicSegments = segments.slice(mediaIndex + 1);
-
-  // Itens para o Dropdown: todos menos o último (onde o usuário já está)
   const menuItems = dynamicSegments.slice(0, -1);
-  // O item atual (último segmento da URL)
   const currentFolder = dynamicSegments[dynamicSegments.length - 1];
 
   return (
@@ -38,10 +33,10 @@ export default function MediaBreadcrumb() {
         {/* Renderiza prefixos: users > authors */}
         {segments.slice(0, mediaIndex).map((segment) => (
           <div key={segment} className="flex items-center gap-1.5">
-            <BreadcrumbItem className="text-neutral-400 dark:text-neutral-500 capitalize">
+            <BreadcrumbItem className="text-neutral-400 dark:text-neutral-600 capitalize">
               {segment}
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
           </div>
         ))}
 
@@ -50,7 +45,10 @@ export default function MediaBreadcrumb() {
           <BreadcrumbLink asChild>
             <Link
               href={mediaPath}
-              className={cn("border border-transparent capitalize", focusRing)}
+              className={cn(
+                "text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-400 border border-transparent capitalize",
+                focusRing,
+              )}
             >
               media
             </Link>
@@ -60,7 +58,7 @@ export default function MediaBreadcrumb() {
         {/* Se houver subpastas, mostra o Dropdown com os níveis intermediários */}
         {menuItems.length > 0 && (
           <>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
             <BreadcrumbItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -105,12 +103,10 @@ export default function MediaBreadcrumb() {
             </BreadcrumbItem>
           </>
         )}
-
-        {/* Exibe a pasta atual como o último item (não clicável) */}
         {currentFolder && (
           <>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem className="font-medium text-foreground capitalize">
+            <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
+            <BreadcrumbItem className="text-neutral-400 dark:text-neutral-600 capitalize">
               {currentFolder.replace(/-/g, " ")}
             </BreadcrumbItem>
           </>
@@ -119,53 +115,3 @@ export default function MediaBreadcrumb() {
     </Breadcrumb>
   );
 }
-
-// "use client";
-
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbSeparator,
-// } from "../../Breadcrumb";
-// import { usePathname } from "next/navigation";
-// import { cn, focusRing } from "../../../utils/variants";
-// import { Link } from "../../Links";
-
-// export default function MediaBreadcrumb() {
-//   const pathname = usePathname();
-//   const pathnameArray = pathname.split(/(\/)/).splice(2);
-
-//   return (
-//     <Breadcrumb>
-//       <BreadcrumbList>
-//         {pathnameArray.map((path, index) => {
-//           if (index % 2 === 0) {
-//             const fullPath = "/" + pathnameArray.slice(0, index + 1).join("");
-//             return index > 3 ? (
-//               <BreadcrumbItem key={path}>
-//                 <BreadcrumbLink asChild>
-//                   <Link
-//                     href={fullPath}
-//                     className={cn("border border-transparent", focusRing)}
-//                   >
-//                     {path}
-//                   </Link>
-//                 </BreadcrumbLink>
-//               </BreadcrumbItem>
-//             ) : (
-//               <BreadcrumbItem
-//                 key={path}
-//                 className="text-neutral-400 dark:text-neutral-500"
-//               >
-//                 {path}
-//               </BreadcrumbItem>
-//             );
-//           }
-//           return <BreadcrumbSeparator key={index} />;
-//         })}
-//       </BreadcrumbList>
-//     </Breadcrumb>
-//   );
-// }

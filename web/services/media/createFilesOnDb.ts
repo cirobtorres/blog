@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
-export async function syncWithSpringBoot(cloudinaryResults: CloudinarySave[]) {
+export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
     name: res.custom_name,
     folder: { path: res.custom_folder },

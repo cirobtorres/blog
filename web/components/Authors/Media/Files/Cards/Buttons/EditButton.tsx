@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "../../../../../AlertDialog";
 import Spinner from "../../../../../Spinner";
-import editMedia from "../../../../../../services/cloudinary/edit";
+import editFile from "../../../../../../services/media/editFile";
 import { DashedBackground } from "../../../../../DashedBackground";
 import {
   sonnerToastPromise,
@@ -29,31 +29,19 @@ import { SelectFolder } from "../../../../SelectFolder";
 export default function EditButton({
   id,
   url,
-  name: fileName,
+  name,
   type,
   size,
   extension,
-  folder: currentFolder,
-  alt: currentAlt,
-  caption: currentCaption,
-}: {
-  id: string;
-  url: string;
-  name: string;
-  type: string;
-  size: number;
-  extension: string;
-  folder: string;
-  alt: string;
-  caption: string;
-}) {
-  const [name, setName] = React.useState(fileName);
-  const [alt, setAlt] = React.useState(currentAlt);
-  const [caption, setCaption] = React.useState(currentCaption);
-  const [folder, setFolder] = React.useState(currentFolder);
-
+  folder,
+  alt,
+  caption,
+  width,
+  height,
+  // publicId,
+}: Media) {
   const [, action, isPending] = React.useActionState(
-    async (prevState: ActionState) => {
+    async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
         return (
           <div className="flex flex-col">
@@ -66,14 +54,7 @@ export default function EditButton({
         return <p>{serverResponse.error}</p>;
       };
 
-      const formData = new FormData();
-      formData.set("id", id);
-      formData.set("name", name);
-      formData.set("alt", alt);
-      formData.set("caption", caption);
-      formData.set("folder", folder);
-
-      const result = editMedia(prevState, formData);
+      const result = editFile(prevState, formData);
       const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
@@ -115,21 +96,30 @@ export default function EditButton({
             Aqui você pode editar seu arquivo.
           </AlertDialogDescription>
           <div className="p-4">
-            <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
+            <div className="relative group flex items-center gap-3 p-3 rounded-2xl border not-dark:shadow-sm transition-all bg-white dark:bg-stone-900">
               <Card
                 url={url}
-                name={fileName}
+                name={name}
                 type={type}
                 size={size}
                 extension={extension}
+                width={width}
+                height={height}
               />
               <div className="w-full h-full flex flex-col gap-2 mb-auto">
+                <input
+                  hidden
+                  id="file-id"
+                  type="hidden"
+                  name="fileId"
+                  value={id}
+                />
                 <div className="flex flex-col gap-1">
                   <Fieldset>
                     <FieldsetInput
                       id="name-input"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      name="fileName"
+                      defaultValue={name}
                     />
                     <FieldsetLabel
                       id="name-label"
@@ -142,8 +132,8 @@ export default function EditButton({
                   <Fieldset>
                     <FieldsetInput
                       id="caption-input"
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value)}
+                      name="fileCaption"
+                      defaultValue={caption}
                     />
                     <FieldsetLabel
                       id="caption-label"
@@ -159,8 +149,8 @@ export default function EditButton({
                   <Fieldset>
                     <FieldsetInput
                       id="alt-input"
-                      value={alt}
-                      onChange={(e) => setAlt(e.target.value)}
+                      name="fileAlt"
+                      defaultValue={alt}
                     />
                     <FieldsetLabel
                       id="alt-label"
@@ -173,7 +163,7 @@ export default function EditButton({
                   </p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <SelectFolder />
+                  <SelectFolder defaultValue={folder.path} />
                   <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
                     A pasta onde o arquivo será salvo.
                   </p>
@@ -199,12 +189,16 @@ const Card = ({
   type,
   size,
   extension,
+  width,
+  height,
 }: {
   url: string;
   name: string;
   type: string;
   size: number;
   extension: string;
+  width: number;
+  height: number;
 }) => (
   <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">
     <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
@@ -231,6 +225,7 @@ const Card = ({
           <div className="flex justify-between items-center gap-1">
             <span className="text-xs font-bold text-neutral-500">
               {extension.toUpperCase()}
+              {type === "IMAGE" && " - " + width + "x" + height}
               {" - "}
               {(size / 1024 / 1024).toFixed(2) + " MB"}
             </span>

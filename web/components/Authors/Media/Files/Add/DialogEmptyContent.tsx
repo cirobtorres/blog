@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from "../../../../Tabs";
 import { cn, focusRing } from "../../../../../utils/variants";
 import AnimatedIcon from "./AnimatedIcon";
 
-export default function UploadContent({
+export default function DialogEmptyContent({
   openStep,
   addFiles,
 }: {

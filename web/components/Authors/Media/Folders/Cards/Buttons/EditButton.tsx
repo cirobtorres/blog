@@ -9,16 +9,30 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "../../../AlertDialog";
-import { Button } from "../../../Button";
-import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../Fieldset";
-import { SelectFolder } from "../../SelectFolder";
-import Spinner from "../../../Spinner";
-import { sonnerToastPromise, soonerPromise } from "../../../../utils/sooner";
-import editFolder from "../../../../services/cloudinary/editFolder";
+} from "../../../../../AlertDialog";
+import { Button } from "../../../../../Button";
+import {
+  Fieldset,
+  FieldsetInput,
+  FieldsetLabel,
+} from "../../../../../Fieldset";
+import Spinner from "../../../../../Spinner";
+import {
+  sonnerToastPromise,
+  soonerPromise,
+} from "../../../../../../utils/sooner";
+import editFolder from "../../../../../../services/media/editFolder";
+import { convertToLargeDate } from "../../../../../../utils/date";
+import { SelectFolder } from "../../../../SelectFolder";
 
-export default function MediaFolderEditButton({ folder }: { folder: string }) {
-  const [folderName, setFolderName] = React.useState(folder.slice(1));
+export default function EditButton({
+  name,
+  path,
+  subfolderCount,
+  fileCount,
+  createdAt,
+}: MediaFolder) {
+  const [folderName, setFolderName] = React.useState(name);
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
@@ -81,15 +95,17 @@ export default function MediaFolderEditButton({ folder }: { folder: string }) {
             <div className="flex flex-1 justify-between items-center gap-2 p-4 rounded border dark:border-stone-800 dark:bg-stone-900">
               <div className="flex flex-1 flex-col justify-start items-start gap-1">
                 <span className="text-xs text-neutral-400 dark:text-neutral-500">
-                  {folder}
+                  {path}
                 </span>
-                <span className="text-xs">0 pastas, 0 arquivos</span>
+                <span className="text-xs">
+                  {subfolderCount} pastas, {fileCount} arquivos
+                </span>
               </div>
               <div className="flex flex-1 flex-col justify-start items-start gap-1">
                 <span className="text-xs text-neutral-400 dark:text-neutral-500">
                   Criado em:
                 </span>
-                <span className="text-xs">26-03-2026</span>
+                <span className="text-xs">{convertToLargeDate(createdAt)}</span>
               </div>
             </div>
             <div className="grid grid-cols-1 justify-center items-center gap-2">

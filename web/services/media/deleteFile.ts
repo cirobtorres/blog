@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 
-export default async function deleteMedia({ id }: { id: string }) {
+export default async function deleteFile({ id }: { id: string }) {
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
 

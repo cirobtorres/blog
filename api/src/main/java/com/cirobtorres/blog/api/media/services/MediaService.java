@@ -1,6 +1,7 @@
 package com.cirobtorres.blog.api.media.services;
 
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
+import com.cirobtorres.blog.api.media.dtos.MediaPutDTO;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.enums.MediaType;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
@@ -12,6 +13,7 @@ import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -87,8 +91,7 @@ public class MediaService {
     }
 
     @Transactional
-    public void saveAll(List<MediaDTO> mediaList) {
-        System.out.println(mediaList.getFirst().folder().path());
+    public void saveAll(@NonNull List<MediaDTO> mediaList) {
         List<String> existingIds = mediaRepository.findAllPublicIds();
 
         List<Media> entitiesToSave = mediaList
@@ -102,21 +105,89 @@ public class MediaService {
         }
     }
 
-    public void putMedia(UUID id) {
-        // TODO
+    @Transactional
+    public void putMedia(@NonNull UUID id, @NonNull MediaPutDTO mediaPutDTO) throws IOException {
+        // Find entity
+        Media media = mediaRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Media not found or doesn't exist. id={" + id + "}"
+                        )
+                );
+
+        // MediaFolder
+        String oldPath = mediaPutDTO.folder().path();
+
+        MediaFolder targetFolder = mediaFolderRepository.findByPath(oldPath)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "MediaFolder not found or doesn't exist. id={" + id + "}"
+                        )
+                );
+
+        // Sanitize
+        String newPath = targetFolder.getPath().replaceAll("^/+|/+$", ""); // Trim all lateral slashes
+        String newPublicId = newPath.isEmpty()
+                ? mediaPutDTO.name() // Home folder
+                : newPath + "/" + mediaPutDTO.name(); // Child folders
+
+        // Update Cloudinary
+        Map<?, ?> response;
+
+        String oldPublicId = media.getPublicId();
+        boolean hasPathChanged = !oldPublicId.equals(newPublicId);
+
+        if (hasPathChanged) {
+            try {
+                response = cloudinary
+                        .uploader()
+                        .rename(
+                                oldPublicId,
+                                newPublicId,
+                                ObjectUtils.emptyMap()
+                );
+                if (response == null || !response.containsKey("public_id")) {
+                    throw new RuntimeException(
+                            "Cloudinary update fail: Response was empty or invalid."
+                    );
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Cloudinary update fail: make sure file with public_id={" + oldPublicId + "} exists."
+                );
+            }
+        } else {
+            response = Map.of("result", "ok", "public_id", oldPublicId);
+        }
+
+        // Update entity
+        media.setName(mediaPutDTO.name());
+        Object responsePublicId = response.get("public_id");
+        media.setPublicId(responsePublicId != null ? responsePublicId.toString() : newPublicId);
+        media.setFolder(targetFolder);
+        media.setAlt(mediaPutDTO.alt());
+        media.setCaption(mediaPutDTO.caption());
+        if (response.containsKey("secure_url")) {
+            media.setUrl((String) response.get("secure_url"));
+        }
+
+        // Update database
+        mediaRepository.save(media);
     }
 
     @Transactional
     public void deleteMedia(UUID id) throws Exception {
         Media media = mediaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Media id={" + id + "} does not exist."));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Media id={" + id + "} does not exist.")
+                );
 
         String resourceType = "image";
         if (media.getType() == MediaType.VIDEO) resourceType = "video";
         if (media.getType() == MediaType.RAW) resourceType = "raw";
 
-        Map destroyParams = ObjectUtils.asMap("resource_type", resourceType);
-        Map response = cloudinary.uploader().destroy(media.getPublicId(), destroyParams);
+        Map<?, ?> destroyParams = ObjectUtils.asMap("resource_type", resourceType);
+        Map<?, ?> response = cloudinary.uploader().destroy(media.getPublicId(), destroyParams);
 
         if (!"ok".equals(response.get("result")) && !"not_found".equals(response.get("result"))) {
             throw new RuntimeException("Cloudinary delete fail: " + response.get("result"));
@@ -125,7 +196,7 @@ public class MediaService {
         mediaRepository.delete(media);
     }
 
-    private Media convertToEntity(MediaDTO dto) {
+    private Media convertToEntity(@NonNull MediaDTO dto) {
         MediaFolder folder = mediaFolderRepository.findByPath(dto.folder().path())
                 .orElseGet(() -> {
                     MediaFolder newFolder = MediaFolder.builder()
@@ -151,7 +222,7 @@ public class MediaService {
                 .build();
     }
 
-    private MediaDTO convertToDTO(Media entity) {
+    private MediaDTO convertToDTO(@NonNull Media entity) {
         String folderPath =
                 (entity.getFolder() != null) ?
                         entity.getFolder().getPath() :

@@ -1,13 +1,13 @@
 "use server";
 
-import { apiServerUrls } from "../../../../routing/routes";
-import { Skeleton } from "../../../Skeleton";
-import MediaFolderSorting from "./MediaFolderSorting";
-import MediaFolderCheckbox from "./MediaFolderCheckbox";
-import MediaFolderCard from "./MediaFolderCard";
-import { DashedBackground } from "../../../DashedBackground";
+import { apiServerUrls } from "../../../../../routing/routes";
+import { DashedBackground } from "../../../../DashedBackground";
+import { Skeleton } from "../../../../Skeleton";
+import FolderCheckbox from "../Header/FolderCheckbox";
+import FolderSorting from "../Header/FolderSorting";
+import FolderCard from "./FolderCard";
 
-export default async function MediaFolderCards({
+export default async function FolderCards({
   accessToken,
   currentPath,
 }: {
@@ -15,10 +15,10 @@ export default async function MediaFolderCards({
   currentPath?: string[];
 }) {
   const currentFolder = currentPath ? "/" + currentPath.join("/") : "/";
-  const queryFolder = "?folder=" + encodeURIComponent(currentFolder);
+  const queryFolder = encodeURIComponent(currentFolder);
 
   const mediaFolders = await fetch(
-    apiServerUrls.mediaFolders.root + queryFolder,
+    apiServerUrls.mediaFolders.root + "?folder=" + queryFolder,
     {
       method: "GET",
       headers: {
@@ -29,34 +29,40 @@ export default async function MediaFolderCards({
     },
   );
 
-  const countFolders = await fetch(apiServerUrls.mediaFolders.count, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
+  const countFolders = await fetch(
+    apiServerUrls.mediaFolders.count + "?folder=" + queryFolder,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
     },
-    cache: "no-store",
-  });
+  );
 
   const folders: MediaFolder[] = (await mediaFolders.json()).map(
     (folder: MediaFolder) => ({
       ...folder,
     }),
   );
+
   const count: number = await countFolders.json();
 
   return (
     <section className="w-full flex flex-col items-start justify-center gap-2">
-      <h2 className="text-xl">Pastas &#40;{count}&#41;</h2>
+      <h2 className="text-xl">
+        Pasta{count > 1 && "s"}: {count}
+      </h2>
       <div className="w-full flex justify-between items-center gap-2">
-        <MediaFolderCheckbox />
-        <MediaFolderSorting />
+        <FolderCheckbox />
+        <FolderSorting />
       </div>
       <div className="w-full grid items-center grid-cols-4 gap-2">
         {folders.length === 0 &&
           Array.from({ length: 4 }).map((_, i) => <GhostCard key={i} />)}
         {folders.map((folder) => (
-          <MediaFolderCard key={folder.path} folder={folder} />
+          <FolderCard key={folder.path} folder={folder} />
         ))}
       </div>
     </section>
@@ -74,12 +80,10 @@ const GhostCard = () => (
   </DashedBackground>
 );
 
-export const MediaFolderCardsLoading = async () => (
+export const FolderCardsLoading = async () => (
   <div className="w-full flex flex-col gap-2">
     <h2 className="text-xl flex items-center">
-      Pastas &#40;
-      <Skeleton className="size-6" />
-      &#41;
+      Pastas: <Skeleton className="size-6" />
     </h2>
     <div className="w-full flex justify-between items-center gap-2">
       <div className="flex items-center gap-2">

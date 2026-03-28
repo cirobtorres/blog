@@ -69,4 +69,5 @@ api.log*
 keys-dev/
 keys/
 certs/
+run-proj.ps1
 /api-dev.ps1

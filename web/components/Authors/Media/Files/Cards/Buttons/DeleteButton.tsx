@@ -6,7 +6,7 @@ import {
   soonerPromise,
 } from "../../../../../../utils/sooner";
 import Spinner from "../../../../../Spinner";
-import deleteMedia from "../../../../../../services/cloudinary/delete";
+import deleteFile from "../../../../../../services/media/deleteFile";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -91,7 +91,7 @@ const DeleteMediaAction = ({ id }: { id: string }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteMedia({ id });
+    const result = deleteFile({ id });
     const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 

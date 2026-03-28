@@ -7,6 +7,7 @@ import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,20 @@ public class MediaFolderService {
         this.mediaFolderRepository = mediaFolderRepository;
     }
 
-    public List<MediaFolderCountDTO> listSubfolders(String parentPath) {
+    public List<MediaFolderCountDTO> listSubfoldersWithCounts(String parentPath) {
         return mediaFolderRepository.findSubfoldersWithCounts(parentPath);
     }
 
     @Transactional
-    public MediaFolder createFolder(MediaFolderDTO mediaFolderDTO) {
+    public Long countSubfoldersByPath(String folder) {
+        MediaFolder parent = mediaFolderRepository.findByPath(folder)
+                .orElseThrow(() -> new EntityNotFoundException("Folder: {" + folder + "} not found."));
+
+        return (long) parent.getSubfolders().size();
+    }
+
+    @Transactional
+    public MediaFolder createFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
         String fullPath = mediaFolderDTO.path();
         System.out.println(fullPath);
 
@@ -71,13 +80,13 @@ public class MediaFolderService {
 
     @Modifying
     @Transactional
-    public void deleteFolder(MediaFolderDTO mediaFolderDTO) {
+    public void deleteFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
         String path = mediaFolderDTO.path();
         mediaFolderRepository.deleteByPath(path);
     }
 
     @Transactional
-    public Boolean existsByPath(MediaFolderCountDTO mediaFolderCountDTO) {
+    public Boolean existsByPath(@NonNull MediaFolderCountDTO mediaFolderCountDTO) {
         String path = mediaFolderCountDTO.path();
         return mediaFolderRepository.existsByPath(path);
     }

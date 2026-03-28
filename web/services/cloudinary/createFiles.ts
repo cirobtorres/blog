@@ -1,13 +1,15 @@
-import { getCloudinarySignature } from "./signature";
-import { syncWithSpringBoot } from "./sync";
+"use server";
 
-export const fullUploadFlow = async ({
+import { getCloudinarySignature } from "./signature";
+import { createFilesOnDb } from "../media/createFilesOnDb";
+
+export default async function createFiles({
   files,
   formData,
 }: {
   files: File[];
   formData: FormData;
-}): Promise<ActionState> => {
+}): Promise<ActionState> {
   try {
     const cloudinaryResults: CloudinarySave[] = [];
 
@@ -19,6 +21,7 @@ export const fullUploadFlow = async ({
       const customFolder = formData.get(`file_${i}_folder`) as string;
       const sanitizedPublicId = customName.replace(/\.[^/.]+$/, "");
       const sanitizedCustomFolder = customFolder === "/" ? "" : customFolder;
+      console.log(sanitizedPublicId);
       // Cloudinary Home folder: empty string "" or no folder parameter
 
       const { signature, timestamp, apiKey } = await getCloudinarySignature({
@@ -61,7 +64,7 @@ export const fullUploadFlow = async ({
         custom_folder: customFolder,
       });
     }
-    return await syncWithSpringBoot(cloudinaryResults);
+    return await createFilesOnDb(cloudinaryResults);
   } catch (err) {
     return {
       ok: false,
@@ -70,4 +73,4 @@ export const fullUploadFlow = async ({
       data: null,
     };
   }
-};
+}

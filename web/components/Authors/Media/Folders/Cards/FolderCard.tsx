@@ -1,11 +1,11 @@
-import { protectedWebUrls } from "../../../../routing/routes";
-import { cn, focusRing } from "../../../../utils/variants";
-import { Checkbox } from "../../../Fieldset/Checkbox";
-import { FolderLink } from "./FolderLink";
-import MediaFolderEditButton from "./MediaFolderEditButton";
-import MediaFolderExcludeButton from "./MediaFolderExcludeButton";
+import { protectedWebUrls } from "../../../../../routing/routes";
+import { cn, focusRing } from "../../../../../utils/variants";
+import { Checkbox } from "../../../../Fieldset/Checkbox";
+import DeleteButton from "./Buttons/DeleteButton";
+import EditButton from "./Buttons/EditButton";
+import { FolderLink } from "./Buttons/FolderLink";
 
-export default function MediaFolderCard({ folder }: { folder: MediaFolder }) {
+export default function FolderCard({ folder }: { folder: MediaFolder }) {
   const folderName = folder.path.split("/").pop();
   const id = folder.path.replace("/", "-").toLowerCase();
   return (
@@ -34,8 +34,8 @@ export default function MediaFolderCard({ folder }: { folder: MediaFolder }) {
         </p>
       </div>
       <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
-        <MediaFolderEditButton folder={folder.path} />
-        <MediaFolderExcludeButton folder={folder.path} />
+        <EditButton {...folder} />
+        <DeleteButton {...folder} />
       </div>
     </label>
   );

@@ -3,10 +3,10 @@ import React from "react";
 import { DashedBackground } from "../../../../DashedBackground";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
-import { generateVideoThumbnail } from "./GenerateVideoThumbnail";
 import { SelectFolder } from "../../../SelectFolder";
+import { VideoThumbnail } from "../../../../../utils/VideoThumbnail";
 
-export default function FilePreviewCard({
+export default function CardPreview({
   file,
   index,
   onRemove,
@@ -29,7 +29,7 @@ export default function FilePreviewCard({
       url = URL.createObjectURL(file);
       setPreview(url);
     } else if (isVideo) {
-      generateVideoThumbnail(file).then(setPreview);
+      VideoThumbnail(file).then(setPreview);
     }
     return () => {
       if (url) URL.revokeObjectURL(url);

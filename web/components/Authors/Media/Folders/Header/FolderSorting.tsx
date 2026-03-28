@@ -1,7 +1,7 @@
-import { Button } from "../../../Button";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../Popover";
+import { Button } from "../../../../Button";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
 
-export default function MediaFolderSorting() {
+export default function FolderSorting() {
   return (
     <div className="w-full flex justify-end items-center gap-2">
       <Popover>

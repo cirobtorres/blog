@@ -4,23 +4,34 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 
-export default async function editMedia(
+export default async function editFile(
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const entries = Object.fromEntries(formData.entries());
-  const { id, caption, name, alt, folder } = entries;
+  const {
+    fileId,
+    fileCaption: caption,
+    fileName: name,
+    fileAlt: alt,
+    folderPath: path,
+  } = entries;
 
   try {
-    const response = await fetch(apiServerUrls.media.root + "/" + id, {
+    const response = await fetch(apiServerUrls.media.root + "/" + fileId, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      // body: JSON.stringify({ name, caption, alt, folder }), // TODO
+      body: JSON.stringify({
+        name,
+        caption,
+        alt,
+        folder: { path },
+      }),
     });
 
     if (!response.ok) {

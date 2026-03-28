@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
 import * as z from "zod";
 import { cookies } from "next/headers";
@@ -40,6 +40,8 @@ export default async function createFolder(
       };
     }
 
+    revalidateTag("media-list", "max");
+    revalidateTag("media-count", "max");
     revalidatePath("/");
 
     return {

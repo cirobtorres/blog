@@ -61,17 +61,24 @@ export default function MediaPagination({
   return (
     totalPages > 1 && (
       <Pagination>
-        <PaginationContent className="my-6">
+        <PaginationContent className="my-6 gap-1">
           <PaginationItem>
             <PaginationPrevious
               href={createPageURL(currentPage - 1)}
+              tabIndex={isFirst ? -1 : 0}
+              disabled={isFirst}
+              aria-disabled={isFirst}
+              onClick={(e) => {
+                if (isFirst) {
+                  e.preventDefault();
+                }
+              }}
               className={cn(
-                "w-24 border-none rounded-lg",
+                "w-24 rounded-lg",
                 isFirst && "pointer-events-none opacity-25",
               )}
             />
           </PaginationItem>
-
           {pageItems.map((item, index) => {
             if (typeof item === "string") {
               return (
@@ -92,12 +99,19 @@ export default function MediaPagination({
               </PaginationItem>
             );
           })}
-
           <PaginationItem>
             <PaginationNext
               href={createPageURL(currentPage + 1)}
+              tabIndex={isLast ? -1 : 0}
+              disabled={isLast}
+              aria-disabled={isLast}
+              onClick={(e) => {
+                if (isLast) {
+                  e.preventDefault();
+                }
+              }}
               className={cn(
-                "w-24 border-none rounded-lg",
+                "w-24 rounded-lg",
                 isLast && "pointer-events-none opacity-25",
               )}
             />

@@ -7,7 +7,7 @@ import {
   extractTokenFromHeader,
 } from "@/services/helpers/serve-actions";
 
-export async function listAllFolders() {
+export default async function listFolders() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh_token")?.value;
   let accessToken = cookieStore.get("access_token")?.value;
@@ -28,11 +28,6 @@ export async function listAllFolders() {
       headers: { Cookie: `refresh_token=${refreshToken}` },
     });
 
-    // if (refreshRes.ok) {
-    //   const setCookie = refreshRes.headers.get("set-cookie");
-    //   // Updates browser accessToken here...
-    // }
-
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
       if (setCookieHeader) {
@@ -41,21 +36,11 @@ export async function listAllFolders() {
           "access_token",
         );
         if (newAccessToken) accessToken = newAccessToken;
-
-        // Set cookies to the browser
-        // TODO: implement "cookieStore.set" to the helper func "applySpringCookies"
         const cookiesToSet = setCookieHeader.split(/,(?=[^;]+=[^;]+)/);
         cookiesToSet.forEach((cookieStr) => {
-          // When "cookieStore" is called from a server actions, Next.js handles "Set-Cookies" propagation to browser automatically
           const [nameValue] = cookieStr.split(";");
           const [name, value] = nameValue.split("=");
-          cookieStore.set(name.trim(), value.trim(), {
-            // Comes from Spring
-            // httpOnly: true,
-            // secure: true,
-            // path: "/",
-            // sameSite: "lax",
-          });
+          cookieStore.set(name.trim(), value.trim(), {});
         });
       }
     }

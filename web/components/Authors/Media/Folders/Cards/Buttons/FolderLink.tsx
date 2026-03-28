@@ -4,8 +4,8 @@ import type { Transition, Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
 import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-import { cn } from "../../../../utils/variants";
 import Link from "next/link";
+import { cn } from "../../../../../../utils/variants";
 
 export interface FolderLinkHandle {
   startAnimation: () => void;

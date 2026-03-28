@@ -1,14 +1,15 @@
 package com.cirobtorres.blog.api.media.controllers;
 
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
+import com.cirobtorres.blog.api.media.dtos.MediaPutDTO;
 import com.cirobtorres.blog.api.media.services.MediaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,11 +40,12 @@ public class MediaController {
         return ResponseEntity.ok(mediaService.countFilesByFolder(folder));
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> put(
-            @PathVariable UUID id
-    ) {
-        mediaService.putMedia(id);
+            @PathVariable UUID id,
+            @RequestBody MediaPutDTO mediaPutDTO
+            ) throws IOException {
+        mediaService.putMedia(id, mediaPutDTO);
         return ResponseEntity.noContent().build();
     }
 
