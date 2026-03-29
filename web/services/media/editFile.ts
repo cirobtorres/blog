@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 
@@ -16,7 +16,7 @@ export default async function editFile(
     fileCaption: caption,
     fileName: name,
     fileAlt: alt,
-    folderPath: path,
+    folderDestination: path,
   } = entries;
 
   try {
@@ -52,7 +52,8 @@ export default async function editFile(
     };
   }
 
-  revalidatePath("/");
+  revalidateTag("files", { expire: 0 });
+  revalidatePath("/users/authors/media");
 
   return { ok: true, success: "Arquivo editado!", error: null, data: null };
 }

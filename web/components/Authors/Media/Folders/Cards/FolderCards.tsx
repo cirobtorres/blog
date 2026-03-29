@@ -25,7 +25,7 @@ export default async function FolderCards({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      cache: "no-store",
+      next: { tags: ["folders"] },
     },
   );
 
@@ -37,12 +37,12 @@ export default async function FolderCards({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      cache: "no-store",
+      next: { tags: ["folders"] },
     },
   );
 
-  const folders: MediaFolder[] = (await mediaFolders.json()).map(
-    (folder: MediaFolder) => ({
+  const folders: Folder[] = (await mediaFolders.json()).map(
+    (folder: Folder) => ({
       ...folder,
     }),
   );

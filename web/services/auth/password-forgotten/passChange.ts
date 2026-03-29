@@ -4,7 +4,7 @@ import * as z from "zod";
 import { apiServerUrls } from "../../../routing/routes";
 import { cookies } from "next/headers";
 
-const signUpSchema = z.object({
+const passChangeSchema = z.object({
   password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
 });
 
@@ -15,7 +15,7 @@ const passChange = async (
   const isProd = process.env.NODE_ENV === "production";
   const { password } = Object.fromEntries(formData.entries());
 
-  const result = signUpSchema.safeParse({
+  const result = passChangeSchema.safeParse({
     password,
   });
 

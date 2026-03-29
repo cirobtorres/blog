@@ -14,7 +14,7 @@ import {
 } from "../../routing/routes";
 import * as z from "zod";
 
-const signUpSchema = z.object({
+const signInSchema = z.object({
   email: z.email("E-mail inválido").trim().toLowerCase(),
   password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
 });
@@ -26,7 +26,7 @@ const signIn = async (
   const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
-  const result = signUpSchema.safeParse({
+  const result = signInSchema.safeParse({
     ...rawData,
   });
 

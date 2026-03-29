@@ -5,7 +5,7 @@ import { apiServerUrls } from "../../routing/routes";
 import { extractTokenFromHeader } from "../helpers/serve-actions";
 import * as z from "zod";
 
-const signUpSchema = z.object({
+const validateOtpSchema = z.object({
   code: z
     .string()
     .length(6)
@@ -19,7 +19,7 @@ const validateOTP = async (
   const isProd = process.env.NODE_ENV === "production";
   const { code } = Object.fromEntries(formData.entries());
 
-  const result = signUpSchema.safeParse({
+  const result = validateOtpSchema.safeParse({
     code,
   });
 

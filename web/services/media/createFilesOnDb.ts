@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
@@ -54,6 +54,7 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     };
   }
 
+  revalidateTag("files", { expire: 0 });
   revalidatePath("/users/authors/media");
 
   return {

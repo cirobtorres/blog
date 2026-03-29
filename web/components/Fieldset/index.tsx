@@ -29,11 +29,9 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     className={cn(
       "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 bg-transparent placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
-      // To enable error, comment below
-      "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
-      // error
-      //   ? "text-neutral-100 border-destructive/50 focus:placeholder:text-destructive/50 bg-linear-to-r from-destructive/25 to-destructive/5"
-      //   : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
+      error
+        ? "text-neutral-100 border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
+        : "text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750",
       className,
     )}
   />

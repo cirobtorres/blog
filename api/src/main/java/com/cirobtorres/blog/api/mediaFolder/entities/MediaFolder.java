@@ -32,7 +32,7 @@ public class MediaFolder {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MediaFolder> subfolders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Media> files = new ArrayList<>();
 
     @CreatedDate

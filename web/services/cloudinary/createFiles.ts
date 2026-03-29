@@ -1,5 +1,3 @@
-"use server";
-
 import { getCloudinarySignature } from "./signature";
 import { createFilesOnDb } from "../media/createFilesOnDb";
 
@@ -15,26 +13,22 @@ export default async function createFiles({
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const customAlt = formData.get(`file_${i}_alt`) as string;
-      const customCaption = formData.get(`file_${i}_caption`) as string;
-      const customName = formData.get(`file_${i}_name`) as string;
-      const customFolder = formData.get(`file_${i}_folder`) as string;
-      const sanitizedPublicId = customName.replace(/\.[^/.]+$/, "");
-      const sanitizedCustomFolder = customFolder === "/" ? "" : customFolder;
-      console.log(sanitizedPublicId);
-      // Cloudinary Home folder: empty string "" or no folder parameter
+      const alt = formData.get(`file_${i}_alt`) as string;
+      const caption = formData.get(`file_${i}_caption`) as string;
+      const public_id = formData.get(`file_${i}_name`) as string;
+      const folder = formData.get(`file_${i}_folder`) as string;
 
       const { signature, timestamp, apiKey } = await getCloudinarySignature({
-        folder: sanitizedCustomFolder,
-        public_id: sanitizedPublicId,
+        folder,
+        public_id,
       });
 
       const cloudinaryFormData = new FormData();
       cloudinaryFormData.append("api_key", apiKey!);
       cloudinaryFormData.append("timestamp", timestamp.toString());
       cloudinaryFormData.append("signature", signature);
-      cloudinaryFormData.append("folder", sanitizedCustomFolder);
-      cloudinaryFormData.append("public_id", sanitizedPublicId);
+      cloudinaryFormData.append("folder", folder);
+      cloudinaryFormData.append("public_id", public_id);
       cloudinaryFormData.append("file", file);
 
       const endpoint = file.type.startsWith("video") ? "video" : "image";
@@ -58,10 +52,10 @@ export default async function createFiles({
 
       cloudinaryResults.push({
         ...data,
-        custom_name: customName,
-        custom_alt: customAlt,
-        custom_caption: customCaption,
-        custom_folder: customFolder,
+        custom_name: public_id,
+        custom_alt: alt,
+        custom_caption: caption,
+        custom_folder: "/" + folder,
       });
     }
     return await createFilesOnDb(cloudinaryResults);

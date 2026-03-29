@@ -24,7 +24,7 @@ export default function DeleteButton({
   subfolderCount,
   fileCount,
   createdAt,
-}: MediaFolder) {
+}: Folder) {
   return (
     <AlertDialog>
       <MediaFolderExcludeTrigger />

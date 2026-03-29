@@ -53,9 +53,8 @@ export default async function deleteFolder(path: string) {
     };
   }
 
-  revalidateTag("media-list", "max");
-  revalidateTag("media-count", "max");
-  revalidatePath("/");
+  revalidateTag("folders", { expire: 0 });
+  revalidatePath("/users/authors/media");
 
   return { ...returnStatement, ok: true, success: "Pasta excluída!" };
 }

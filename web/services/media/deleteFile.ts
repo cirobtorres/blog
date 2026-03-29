@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export default async function deleteFile({ id }: { id: string }) {
   const cookie = await cookies();
@@ -35,7 +35,8 @@ export default async function deleteFile({ id }: { id: string }) {
     };
   }
 
-  revalidatePath("/");
+  revalidateTag("files", { expire: 0 });
+  revalidatePath("/users/authors/media");
 
   return { ok: true, success: "Arquivo excluído!", error: null, data: null };
 }

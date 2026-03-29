@@ -85,7 +85,7 @@ const BlockSchema = z.discriminatedUnion("type", [
   // More schemas here...
 ]);
 
-const signUpSchema = z.object({
+const publishArticleSchema = z.object({
   title: z
     .string()
     .min(5, "O título deve ter pelo menos 5 caracteres")
@@ -115,7 +115,7 @@ const publishArticleValidation = async (
   // const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
-  const result = signUpSchema.safeParse({
+  const result = publishArticleSchema.safeParse({
     ...rawData,
   });
 

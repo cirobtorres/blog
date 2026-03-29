@@ -18,7 +18,7 @@ import {
   FieldsetLabel,
 } from "../../../../Fieldset";
 import Spinner from "../../../../Spinner";
-import { createFolderValidation } from "../../../../../services/media/createFolder";
+import folderValidation from "../../../../../services/media/folderValidation";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
 import { SelectFolder } from "../../../SelectFolder";
 import { useCreateFolder } from "../../../../../hooks/useFolders";
@@ -40,10 +40,8 @@ export function AddFolderButton() {
         return <p>{serverResponse.error}</p>;
       };
 
-      const validation = await createFolderValidation(prevState, formData);
-
+      const validation = await folderValidation(prevState, formData);
       if (!validation.ok || !validation.data) return validation;
-
       formData.set("path", validation?.data);
 
       const result = mutateAsync({ prevState, formData });

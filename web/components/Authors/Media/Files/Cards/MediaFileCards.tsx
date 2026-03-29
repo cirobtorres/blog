@@ -31,7 +31,7 @@ export default async function MediaFileCards({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      next: { tags: ["media-list"] },
+      next: { tags: ["files"] },
     },
   );
 
@@ -43,7 +43,7 @@ export default async function MediaFileCards({
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      next: { tags: ["media-count"] },
+      next: { tags: ["files"] },
     },
   );
 

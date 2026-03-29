@@ -4,7 +4,7 @@ import * as z from "zod";
 import { apiServerUrls } from "../../../routing/routes";
 import { cookies } from "next/headers";
 
-const signUpSchema = z.object({
+const passChangeSchema = z.object({
   code: z
     .string()
     .length(6)
@@ -18,7 +18,7 @@ const passChangePermission = async (
   const isProd = process.env.NODE_ENV === "production";
   const { code } = Object.fromEntries(formData.entries());
 
-  const result = signUpSchema.safeParse({
+  const result = passChangeSchema.safeParse({
     code,
   });
 

@@ -17,7 +17,7 @@ public interface MediaFolderRepository extends JpaRepository<MediaFolder, UUID> 
 
     @Query("""
         SELECT new com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO(
-            f.path, f.name, f.createdAt, COUNT(DISTINCT s), COUNT(DISTINCT m)
+            f.id, f.path, f.name, f.createdAt, COUNT(DISTINCT s), COUNT(DISTINCT m)
         )
         FROM MediaFolder f
         LEFT JOIN f.subfolders s

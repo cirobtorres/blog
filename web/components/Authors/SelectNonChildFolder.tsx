@@ -12,27 +12,41 @@ import {
 import { protectedWebUrls } from "../../routing/routes";
 import { Skeleton } from "../Skeleton";
 
-export function SelectFolder({
+export function SelectNonChildFolder({
   defaultValue,
   name,
+  excludePath,
 }: {
   defaultValue?: string;
   name?: string;
+  excludePath?: string;
 }) {
   const { data: folders, isLoading } = useFolders();
+
   const formatFolders = (
     allFolders: SelectFolder[],
     parentId: string | null | undefined = null,
     level = 0,
+    isInsideExcludedBranch = false,
   ) => {
     let result: SelectFolder[] = [];
+
     const children = allFolders.filter((f) => f.parentId === parentId);
+
     children.forEach((folder) => {
-      result.push({
-        ...folder,
-        padding: level + 1,
-      });
-      result = result.concat(formatFolders(allFolders, folder.id, level + 1));
+      const shouldExclude =
+        isInsideExcludedBranch || folder.path === excludePath;
+
+      if (!shouldExclude) {
+        result.push({
+          ...folder,
+          padding: level + 1,
+        });
+      }
+
+      result = result.concat(
+        formatFolders(allFolders, folder.id, level + 1, shouldExclude),
+      );
     });
     return result;
   };

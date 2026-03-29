@@ -1,28 +1,41 @@
 package com.cirobtorres.blog.api.mediaFolder.services;
 
+import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderPutDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class MediaFolderService {
+    private final Cloudinary cloudinary;
     private final MediaFolderRepository mediaFolderRepository;
+    private final MediaRepository mediaRepository;
 
     public MediaFolderService(
-            MediaFolderRepository mediaFolderRepository
+            Cloudinary cloudinary,
+            MediaFolderRepository mediaFolderRepository,
+            MediaRepository mediaRepository
     ) {
+        this.cloudinary = cloudinary;
         this.mediaFolderRepository = mediaFolderRepository;
+        this.mediaRepository = mediaRepository;
     }
 
     public List<MediaFolderCountDTO> listSubfoldersWithCounts(String parentPath) {
@@ -78,23 +91,67 @@ public class MediaFolderService {
         return mediaFolderRepository.save(folder);
     }
 
-    @Modifying
     @Transactional
     public void deleteFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
-        String path = mediaFolderDTO.path();
-        mediaFolderRepository.deleteByPath(path);
+        MediaFolder folderToDelete = mediaFolderRepository.findByPath(mediaFolderDTO.path())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Folder not found: " + mediaFolderDTO.path()
+                        )
+                );
+
+        List<String> publicIds = new ArrayList<>();
+        findAllPublicIdsRecursive(folderToDelete, publicIds);
+
+        if (!publicIds.isEmpty()) {
+            try {
+                for (int i = 0; i < publicIds.size(); i += 100) {
+                    List<String> batch = publicIds.subList(i, Math.min(i + 100, publicIds.size()));
+                    cloudinary.api().deleteResources(batch, ObjectUtils.emptyMap());
+                }
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error deleting files from Cloudinary");
+            }
+        }
+
+        mediaFolderRepository.delete(folderToDelete);
+    }
+
+    @Transactional
+    public void updateFolder(@Valid @NonNull MediaFolderPutDTO dto) {
+        MediaFolder currentFolder = mediaFolderRepository.findByPath(dto.currentPath())
+                .orElseThrow(() -> new EntityNotFoundException("Current folder not found: ."));
+
+        MediaFolder destinationFolder = mediaFolderRepository.findByPath(dto.newDestinationPath())
+                .orElseThrow(() -> new EntityNotFoundException("Destination folder not found."));
+
+        if (destinationFolder.getPath().startsWith(currentFolder.getPath() + "/")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't move a folder to inside any of its own children folders.");
+        }
+
+        boolean nameExistsInDestination = destinationFolder.getSubfolders().stream()
+                .anyMatch(f -> f.getName().equalsIgnoreCase(dto.newName()) && !f.getId().equals(currentFolder.getId()));
+
+        if (nameExistsInDestination) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "A folder with the same name already exists on the destination folder.");
+        }
+
+        String oldPath = currentFolder.getPath();
+        String newPath = destinationFolder.getPath().equals("/")
+                ? "/" + dto.newName()
+                : destinationFolder.getPath() + "/" + dto.newName();
+
+        currentFolder.setName(dto.newName());
+        currentFolder.setParent(destinationFolder);
+        currentFolder.setPath(newPath);
+
+        mediaFolderRepository.save(currentFolder);
+        updateDescendantsPath(currentFolder, oldPath);
     }
 
     @Transactional
     public Boolean existsByPath(@NonNull MediaFolderCountDTO mediaFolderCountDTO) {
         String path = mediaFolderCountDTO.path();
         return mediaFolderRepository.existsByPath(path);
-    }
-
-    @Transactional
-    public Long countAllFolders() {
-        String homeFolder = "Home";
-        return mediaFolderRepository.countByNameNot(homeFolder);
     }
 
     @Transactional
@@ -111,5 +168,21 @@ public class MediaFolderService {
                          )
                  )
                  .toList();
+    }
+
+    private void findAllPublicIdsRecursive(MediaFolder folder, List<String> publicIds) {
+        folder.getFiles().forEach(media -> publicIds.add(media.getPublicId()));
+        for (MediaFolder subfolder : folder.getSubfolders()) {
+            findAllPublicIdsRecursive(subfolder, publicIds);
+        }
+    }
+
+    private void updateDescendantsPath(@NonNull MediaFolder parent, String oldPathPrefix) {
+        for (MediaFolder child : parent.getSubfolders()) {
+            String newChildPath = child.getPath().replaceFirst("^" + Pattern.quote(oldPathPrefix), parent.getPath());
+            child.setPath(newChildPath);
+            mediaFolderRepository.save(child);
+            updateDescendantsPath(child, oldPathPrefix);
+        }
     }
 }

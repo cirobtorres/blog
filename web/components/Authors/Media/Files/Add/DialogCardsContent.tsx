@@ -10,6 +10,7 @@ export default function DialogCardsContent({
   setFiles,
   openStep,
   setOpenStep,
+  state,
   action,
   isPending,
 }: {
@@ -19,6 +20,7 @@ export default function DialogCardsContent({
   setOpenStep: React.Dispatch<
     React.SetStateAction<"upload" | "preview" | null>
   >;
+  state: ActionState;
   action: (payload: FormData) => void;
   isPending: boolean;
 }) {
@@ -38,6 +40,7 @@ export default function DialogCardsContent({
                 key={index}
                 index={index}
                 file={file}
+                state={state}
                 onRemove={() => {
                   const newFiles = files.filter((_, i) => i !== index);
                   setFiles(newFiles);

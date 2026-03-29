@@ -15,7 +15,7 @@ import { cn } from "../../../../../utils/variants";
 export default function MediaPagination({
   number,
   totalPages,
-}: MediaPagination) {
+}: FolderPagination) {
   const searchParams = useSearchParams();
   const currentPage = number;
   const displayPage = currentPage + 1;

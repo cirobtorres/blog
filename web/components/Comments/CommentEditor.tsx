@@ -54,13 +54,18 @@ export default function CommentEditor({
       />
       <div className="flex justify-end items-center gap-0.5">
         <Button
+          type="button"
           disabled={isPending}
           variant="outline"
           className="w-full max-w-30 h-6"
         >
-          Salvar
+          Cancelar
         </Button>
-        <Button disabled={isPending} className="w-full max-w-30 h-6">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="w-full max-w-30 h-6"
+        >
           Salvar
         </Button>
       </div>

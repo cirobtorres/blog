@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.mediaFolder.controllers;
 
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
+import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderPutDTO;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.services.MediaFolderService;
@@ -46,6 +47,14 @@ public class MediaFolderController {
             @RequestBody @Valid MediaFolderDTO mediaFolderDTO
     ) {
         mediaFolderService.deleteFolder(mediaFolderDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateFolder(
+            @RequestBody @Valid MediaFolderPutDTO mediaFolderPutDTO
+    ) {
+        mediaFolderService.updateFolder(mediaFolderPutDTO);
         return ResponseEntity.noContent().build();
     }
 

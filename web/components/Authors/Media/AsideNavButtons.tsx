@@ -91,7 +91,7 @@ export function MediaPathLink() {
         </Link>
       </HoverCardTrigger>
       <HoverCardContent side="right" className="text-sm">
-        Biblioteca de Media
+        Biblioteca de Mídia
       </HoverCardContent>
     </HoverCard>
   );

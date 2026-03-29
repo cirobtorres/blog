@@ -52,20 +52,5 @@ type Media = {
 // Comes from server (pagination)
 type MediaResponsePageable = {
   content: Media[];
-  page: MediaPagination;
-};
-
-type MediaPagination = {
-  size: number;
-  number: number;
-  totalElements: number;
-  totalPages: number;
-};
-
-type MediaFolder = {
-  path: string;
-  name: string;
-  subfolderCount: number;
-  fileCount: number;
-  createdAt: Date;
+  page: FolderPagination;
 };

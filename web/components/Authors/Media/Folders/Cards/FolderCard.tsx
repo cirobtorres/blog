@@ -5,9 +5,8 @@ import DeleteButton from "./Buttons/DeleteButton";
 import EditButton from "./Buttons/EditButton";
 import { FolderLink } from "./Buttons/FolderLink";
 
-export default function FolderCard({ folder }: { folder: MediaFolder }) {
-  const folderName = folder.path.split("/").pop();
-  const id = folder.path.replace("/", "-").toLowerCase();
+export default function FolderCard({ folder }: { folder: Folder }) {
+  const id = folder.id;
   return (
     <label
       htmlFor={"folder-" + id}
@@ -22,7 +21,7 @@ export default function FolderCard({ folder }: { folder: MediaFolder }) {
         )}
       />
       <div className="flex flex-col gap-1 overflow-hidden">
-        <p className="text-neutral-100 truncate">{folderName}</p>
+        <p className="text-neutral-100 truncate">{folder.name}</p>
         <p className="text-xs text-nowrap text-neutral-400">
           {folder.subfolderCount != 1
             ? folder.subfolderCount + " pastas"

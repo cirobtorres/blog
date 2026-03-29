@@ -5,16 +5,18 @@ import { AlertDialog } from "../../../../AlertDialog";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
 import { convertToLargeDate } from "../../../../../utils/date";
 import { Trigger } from "./Dialog";
-import createFiles from "../../../../../services/cloudinary/createFiles";
 import DialogEmptyContent from "./DialogEmptyContent";
 import DialogCardsContent from "./DialogCardsContent";
+import validateFiles from "../../../../../services/cloudinary/validateFiles";
+import createFile from "../../../../../services/cloudinary/createFile";
+import { createFilesOnDb } from "../../../../../services/media/createFilesOnDb";
 
 export function AddFilesButton() {
   const [files, setFiles] = React.useState<File[]>([]);
   const [openStep, setOpenStep] = React.useState<"upload" | "preview" | null>(
     null,
   );
-  // TODO: Fazer uso do state
+
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
@@ -39,7 +41,19 @@ export function AddFilesButton() {
         return <p>{serverResponse.error}</p>;
       };
 
-      const result = createFiles({ files, formData });
+      const validation = validateFiles(formData, files.length);
+
+      if (!validation.ok) return validation;
+
+      const uploadLogic = async () => {
+        const uploadPromises = files.map((file, index) =>
+          createFile(file, validation.data[index]),
+        );
+        const cloudinaryResults = await Promise.all(uploadPromises);
+        return await createFilesOnDb(cloudinaryResults);
+      };
+
+      const result = uploadLogic();
       const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando arquivos...");
 
@@ -78,6 +92,7 @@ export function AddFilesButton() {
         setOpenStep={setOpenStep}
         files={files}
         setFiles={setFiles}
+        state={state}
         action={action}
         isPending={isPending}
       />

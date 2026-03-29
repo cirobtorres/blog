@@ -13,6 +13,7 @@ import {
 import { Button } from "../../../../../Button";
 import {
   Fieldset,
+  FieldsetError,
   FieldsetInput,
   FieldsetLabel,
 } from "../../../../../Fieldset";
@@ -21,9 +22,10 @@ import {
   sonnerToastPromise,
   soonerPromise,
 } from "../../../../../../utils/sooner";
-import editFolder from "../../../../../../services/media/editFolder";
 import { convertToLargeDate } from "../../../../../../utils/date";
-import { SelectFolder } from "../../../../SelectFolder";
+import { SelectNonChildFolder } from "../../../../SelectNonChildFolder";
+import folderValidation from "../../../../../../services/media/folderValidation";
+import { useEditFolder } from "../../../../../../hooks/useFolders";
 
 export default function EditButton({
   name,
@@ -31,13 +33,12 @@ export default function EditButton({
   subfolderCount,
   fileCount,
   createdAt,
-}: MediaFolder) {
+}: Folder) {
+  const { mutateAsync } = useEditFolder();
   const [folderName, setFolderName] = React.useState(name);
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      console.log(...formData.entries());
-
       const success = (serverResponse: ActionState) => {
         return (
           <div className="flex flex-col">
@@ -50,7 +51,13 @@ export default function EditButton({
         return <p>{serverResponse.error}</p>;
       };
 
-      const result = editFolder(prevState, formData);
+      const validation = await folderValidation(prevState, formData);
+      if (!validation.ok || !validation.data) {
+        return validation;
+      }
+      formData.set("path", validation?.data);
+
+      const result = mutateAsync({ prevState, formData });
       const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
@@ -109,6 +116,7 @@ export default function EditButton({
               </div>
             </div>
             <div className="grid grid-cols-1 justify-center items-center gap-2">
+              <input hidden type="hidden" value={path} name="currentFolder" />
               <Fieldset>
                 <FieldsetInput
                   id="folderName"
@@ -118,7 +126,9 @@ export default function EditButton({
                 />
                 <FieldsetLabel label="Nome" htmlFor="folderName" />
               </Fieldset>
-              <SelectFolder />
+              <FieldsetError error={state?.error?.folderName?.errors} />
+              <SelectNonChildFolder excludePath={path} />
+              <FieldsetError error={state?.error?.folderDestination?.errors} />
             </div>
           </div>
           <AlertDialogFooter>

@@ -1,7 +1,12 @@
 import Image from "next/image";
 import React from "react";
 import { DashedBackground } from "../../../../DashedBackground";
-import { Fieldset, FieldsetInput, FieldsetLabel } from "../../../../Fieldset";
+import {
+  Fieldset,
+  FieldsetError,
+  FieldsetInput,
+  FieldsetLabel,
+} from "../../../../Fieldset";
 import { Button } from "../../../../Button";
 import { SelectFolder } from "../../../SelectFolder";
 import { VideoThumbnail } from "../../../../../utils/VideoThumbnail";
@@ -9,10 +14,12 @@ import { VideoThumbnail } from "../../../../../utils/VideoThumbnail";
 export default function CardPreview({
   file,
   index,
+  state,
   onRemove,
 }: {
   file: File;
   index: number;
+  state: ActionState;
   onRemove: () => void;
 }) {
   const [preview, setPreview] = React.useState<string | null>(null);
@@ -77,15 +84,22 @@ export default function CardPreview({
             name={`file_${index}_name`}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            error={state?.error?.[index]?.properties?.customName?.errors}
           />
           <FieldsetLabel id="name-label" label="Nome" htmlFor="name-input" />
         </Fieldset>
+        {state?.error?.[index] && (
+          <FieldsetError
+            error={state?.error?.[index]?.properties?.customName?.errors}
+          />
+        )}
         <Fieldset>
           <FieldsetInput
             id={`caption-input-${index}`}
             name={`file_${index}_caption`}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
+            error={state?.error?.[index]?.properties?.customCaption?.errors}
           />
           <FieldsetLabel
             id="caption-label"
@@ -93,6 +107,11 @@ export default function CardPreview({
             htmlFor="caption-input"
           />
         </Fieldset>
+        {state?.error?.[index] && (
+          <FieldsetError
+            error={state?.error?.[index]?.properties?.customCaption?.errors}
+          />
+        )}
         <div className="flex flex-col gap-1">
           <Fieldset>
             <FieldsetInput
@@ -100,6 +119,7 @@ export default function CardPreview({
               name={`file_${index}_alt`}
               value={alt}
               onChange={(e) => setAlt(e.target.value)}
+              error={state?.error?.[index]?.properties?.customAlt?.errors}
             />
             <FieldsetLabel
               id="alt-label"
@@ -107,14 +127,24 @@ export default function CardPreview({
               htmlFor="alt-input"
             />
           </Fieldset>
+          {state?.error?.[index] && (
+            <FieldsetError
+              error={state?.error?.[index]?.properties?.customAlt?.errors}
+            />
+          )}
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
             O texto que será exibido caso o link da imagem não funcione.
           </p>
         </div>
         <div className="flex flex-col gap-1">
           <SelectFolder name={`file_${index}_folder`} />
+          {state?.error?.[index] && (
+            <FieldsetError
+              error={state?.error?.[index]?.properties?.customFolder?.errors}
+            />
+          )}
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
-            A pasta onde o arquivo será salvo.
+            A pasta de destino do arquivo.
           </p>
         </div>
       </div>

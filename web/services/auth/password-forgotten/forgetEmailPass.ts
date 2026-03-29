@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { apiServerUrls } from "../../../routing/routes";
 
-const signUpSchema = z.object({
+const forgetEmailSchema = z.object({
   email: z.email("E-mail inválido").trim().toLowerCase(),
 });
 
@@ -19,7 +19,7 @@ const forgetEmailPass = async (
     form: { errors: [] },
   };
 
-  const result = signUpSchema.safeParse({
+  const result = forgetEmailSchema.safeParse({
     ...rawData,
     strength: Number(rawData.strength),
   });
