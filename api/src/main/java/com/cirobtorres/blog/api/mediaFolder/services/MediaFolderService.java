@@ -128,6 +128,10 @@ public class MediaFolderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't move a folder to inside any of its own children folders.");
         }
 
+        if (destinationFolder.getPath().equals(currentFolder.getPath())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A folder cannot be descendant of itself.");
+        }
+
         boolean nameExistsInDestination = destinationFolder.getSubfolders().stream()
                 .anyMatch(f -> f.getName().equalsIgnoreCase(dto.newName()) && !f.getId().equals(currentFolder.getId()));
 
@@ -139,13 +143,13 @@ public class MediaFolderService {
         String newPath = destinationFolder.getPath().equals("/")
                 ? "/" + dto.newName()
                 : destinationFolder.getPath() + "/" + dto.newName();
+        newPath = newPath.replaceAll("//+", "/");
 
         currentFolder.setName(dto.newName());
         currentFolder.setParent(destinationFolder);
         currentFolder.setPath(newPath);
 
-        mediaFolderRepository.save(currentFolder);
-        updateDescendantsPath(currentFolder, oldPath);
+        mediaFolderRepository.updateDescendantsPaths(oldPath, newPath);
     }
 
     @Transactional
@@ -174,15 +178,6 @@ public class MediaFolderService {
         folder.getFiles().forEach(media -> publicIds.add(media.getPublicId()));
         for (MediaFolder subfolder : folder.getSubfolders()) {
             findAllPublicIdsRecursive(subfolder, publicIds);
-        }
-    }
-
-    private void updateDescendantsPath(@NonNull MediaFolder parent, String oldPathPrefix) {
-        for (MediaFolder child : parent.getSubfolders()) {
-            String newChildPath = child.getPath().replaceFirst("^" + Pattern.quote(oldPathPrefix), parent.getPath());
-            child.setPath(newChildPath);
-            mediaFolderRepository.save(child);
-            updateDescendantsPath(child, oldPathPrefix);
         }
     }
 }

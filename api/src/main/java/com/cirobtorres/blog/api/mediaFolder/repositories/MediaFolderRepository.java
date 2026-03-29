@@ -3,7 +3,9 @@ package com.cirobtorres.blog.api.mediaFolder.repositories;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +28,11 @@ public interface MediaFolderRepository extends JpaRepository<MediaFolder, UUID> 
         GROUP BY f.createdAt, f.path, f.name, f.id
     """)
     List<MediaFolderCountDTO> findSubfoldersWithCounts(String parentPath);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+        UPDATE MediaFolder f SET f.path = REPLACE(f.path, :oldPath, :newPath)
+        WHERE f.path LIKE CONCAT(:oldPath, '/%')
+    """)
+    void updateDescendantsPaths(@Param("oldPath") String oldPath, @Param("newPath") String newPath);
 }

@@ -13,7 +13,6 @@ import {
   CommandItem,
   CommandList,
 } from "../../Command";
-import { ChevronDown, Lock } from "lucide-react";
 import React from "react";
 import { protectedWebUrls } from "../../../routing/routes";
 import { cn } from "../../../utils/variants";
@@ -36,14 +35,10 @@ export default function FolderPopover({
   const [open, setOpen] = React.useState(false);
   const { data: folders, isPending } = useFolders();
   const pathname = usePathname();
-  const onlyFolder =
+  const currentFolder =
     "/" + pathname.slice(protectedWebUrls.media.length).replace(/^\/*/, "");
-  const [value, setValue] = React.useState(defaultValue || onlyFolder);
+  const [value, setValue] = React.useState(defaultValue || currentFolder);
   const selectedFolderName = folders?.find((f) => f.path === value)?.name;
-
-  React.useEffect(() => {
-    console.log(value);
-  }, [value]);
 
   return (
     <div className="flex flex-col gap-1">
@@ -59,9 +54,22 @@ export default function FolderPopover({
             >
               <div className="flex items-center gap-2">
                 {selectedFolderName}
-                {value === onlyFolder && <Current />}
+                {value === currentFolder && <Current />}
               </div>
-              <ChevronDown className="shrink-0 size-4 dark:text-stone-500 transition-transform duration-100 group-data-[state=open]:rotate-180" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0 size-4 dark:text-stone-500 transition-transform duration-100 group-data-[state=open]:rotate-180"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
             </Button>
           </PopoverTrigger>
         )}
@@ -73,13 +81,18 @@ export default function FolderPopover({
               <CommandGroup>
                 {folders?.map((folder) => {
                   if (typeof currentEditingPath === "undefined") {
-                    currentEditingPath = onlyFolder;
+                    currentEditingPath = currentFolder;
                   }
-                  const isSelf = folder.path === currentEditingPath;
+                  const depth = folder.path.split("/").filter(Boolean).length;
+                  const isSelf =
+                    folder.path === currentEditingPath &&
+                    currentEditingPath !== "/";
                   const isDescendant =
                     currentEditingPath &&
                     folder.path.startsWith(currentEditingPath + "/");
                   const isDisabled = isSelf || isDescendant;
+                  const isCurrent =
+                    value === folder.path || currentFolder === folder.path;
                   return (
                     !isDisabled && (
                       <CommandItem
@@ -91,17 +104,31 @@ export default function FolderPopover({
                           setOpen(false);
                         }}
                         className={cn(
-                          "cursor-pointer text-neutral-600 dark:text-neutral-500 hover:bg-stone-200 dark:hover:bg-stone-800",
-                          value === folder.path &&
-                            "text-neutral-900 dark:text-neutral-100 bg-stone-200 dark:bg-stone-800",
-                          isDisabled &&
-                            "opacity-40 cursor-not-allowed select-none",
+                          "cursor-pointer",
+                          isCurrent
+                            ? "text-neutral-900 dark:text-neutral-100 bg-stone-200 dark:bg-stone-800 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100"
+                            : "text-neutral-600 dark:text-neutral-500 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100",
                         )}
+                        style={{ paddingLeft: `${depth + 8}px` }}
                       >
                         <div className="flex items-center gap-2">
-                          {isDisabled && <Lock className="size-3" />}
+                          {depth > 2 && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="size-4! stroke-neutral-400 dark:stroke-stone-750"
+                            >
+                              <path d="m15 10 5 5-5 5" />
+                              <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+                            </svg>
+                          )}
                           {folder.name}
-                          {onlyFolder === folder.path && <Current />}
+                          {currentFolder === folder.path && <Current />}
                         </div>
                       </CommandItem>
                     )

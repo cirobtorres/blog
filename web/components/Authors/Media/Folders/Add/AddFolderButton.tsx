@@ -100,7 +100,7 @@ export default function AddFolderButton() {
                 <FieldsetLabel
                   htmlFor="folderName"
                   label="Diretório"
-                  error={state.error?.folderName?.errors}
+                  // error={state.error?.folderName?.errors}
                 />
               </Fieldset>
               <FieldsetError
