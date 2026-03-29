@@ -19,10 +19,17 @@ const signInSchema = z.object({
   password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
 });
 
+const returnState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 const signIn = async (
-  prevState: SignInActionState,
+  prevState: ActionState,
   formData: FormData,
-): Promise<SignInActionState> => {
+): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
@@ -34,8 +41,7 @@ const signIn = async (
     const error = z.treeifyError(result.error).properties;
 
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error,
     };
   }
@@ -130,8 +136,7 @@ const signIn = async (
     response.status === 409 // Ex: Wrong email/password
   ) {
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error: {
         email: {
           errors: ["Email ou senha não existem"],
@@ -143,8 +148,7 @@ const signIn = async (
     };
   } else
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error: {
         form: {
           errors: ["Ocorreu um erro inesperado. Tente mais tarde"],

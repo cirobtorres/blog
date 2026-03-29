@@ -21,9 +21,15 @@ const signUpSchema = z.object({
 });
 
 const signUp = async (
-  prevState: SignUpActionState,
+  prevState: ActionState,
   formData: FormData,
-): Promise<SignUpActionState> => {
+): Promise<ActionState> => {
+  const returnState = {
+    ok: false,
+    success: null,
+    error: null,
+    data: null,
+  };
   const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
@@ -36,8 +42,7 @@ const signUp = async (
     const error = z.treeifyError(result.error).properties;
 
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error,
     };
   }
@@ -63,8 +68,7 @@ const signUp = async (
         // User exist
         const data = await response.json();
         return {
-          ok: false,
-          success: null,
+          ...returnState,
           error: {
             email: {
               errors: [data.message || "Este e-mail já está em uso"],
@@ -76,8 +80,7 @@ const signUp = async (
       if (response.status === 400) {
         // (MethodArgumentNotValidException)
         return {
-          ok: false,
-          success: null,
+          ...returnState,
           error: {
             form: { errors: ["Dados inválidos. Verifique os campos."] },
           },
@@ -86,8 +89,7 @@ const signUp = async (
 
       // 401, 500, etc
       return {
-        ok: false,
-        success: null,
+        ...returnState,
         error: {
           form: { errors: ["Ocorreu um erro inesperado no servidor."] },
         },
@@ -131,8 +133,7 @@ const signUp = async (
       console.error("signUp (server):", e);
     }
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error: { form: { errors: ["Falha na conexão com o servidor"] } },
     };
   }

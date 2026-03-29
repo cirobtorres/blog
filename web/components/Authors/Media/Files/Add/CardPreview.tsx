@@ -8,8 +8,8 @@ import {
   FieldsetLabel,
 } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
-import { SelectFolder } from "../../../SelectFolder";
 import { VideoThumbnail } from "../../../../../utils/VideoThumbnail";
+import FolderPopover from "../../FolderPopover";
 
 export default function CardPreview({
   file,
@@ -46,7 +46,7 @@ export default function CardPreview({
   return (
     <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
       {(isImage || isVideo) && preview ? (
-        <PreviewCard preview={preview} file={file} onRemove={onRemove} />
+        <Preview preview={preview} file={file} onRemove={onRemove} />
       ) : isVideo ? (
         <div className="animate-pulse bg-stone-300 w-full h-full" />
       ) : isAudio ? (
@@ -137,7 +137,7 @@ export default function CardPreview({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <SelectFolder name={`file_${index}_folder`} />
+          <FolderPopover name={`file_${index}_folder`} currentEditingPath="/" />
           {state?.error?.[index] && (
             <FieldsetError
               error={state?.error?.[index]?.properties?.customFolder?.errors}
@@ -152,7 +152,7 @@ export default function CardPreview({
   );
 }
 
-const PreviewCard = ({
+const Preview = ({
   file,
   preview,
   onRemove,
@@ -161,7 +161,7 @@ const PreviewCard = ({
   preview: string;
   onRemove: () => void;
 }) => (
-  <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">
+  <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 mt-0 mb-auto rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">
     <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
       <div className="relative">
         <div className="relative w-full h-full overflow-hidden">

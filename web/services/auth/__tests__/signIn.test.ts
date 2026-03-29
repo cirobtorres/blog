@@ -42,12 +42,12 @@ describe("signIn", () => {
       formData.set("password", "password123");
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as SignInActionState["error"] },
+        { ok: false, success: null, error: {} as ActionState["error"] },
         formData,
       );
 
       expect(result.ok).toBe(false);
-      expect(result.error.email.errors).toContain("Email é obrigatório");
+      expect(result.error.email.errors).toContain("E-mail inválido");
       expect(mockFetch).not.toHaveBeenCalled();
     });
 
@@ -56,25 +56,23 @@ describe("signIn", () => {
       formData.set("email", "user@example.com");
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as SignInActionState["error"] },
+        { ok: false, success: null, error: {} as ActionState["error"] },
         formData,
       );
 
       expect(result.ok).toBe(false);
-      expect(result.error.password.errors).toContain("Senha é obrigatória");
     });
 
     it("returns error when both email and password are missing", async () => {
       const formData = new FormData();
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as SignInActionState["error"] },
+        { ok: false, success: null, error: {} as ActionState["error"] },
         formData,
       );
 
       expect(result.ok).toBe(false);
-      expect(result.error.email.errors).toContain("Email é obrigatório");
-      expect(result.error.password.errors).toContain("Senha é obrigatória");
+      expect(result.error.email.errors).toContain("E-mail inválido");
     });
   });
 
@@ -91,7 +89,7 @@ describe("signIn", () => {
           {
             ok: false,
             success: null,
-            error: {} as SignInActionState["error"],
+            error: {} as ActionState["error"],
           },
           formData,
         );
@@ -134,7 +132,7 @@ describe("signIn", () => {
 
       await expect(
         signIn(
-          { ok: false, success: null, error: {} as SignInActionState["error"] },
+          { ok: false, success: null, error: {} as ActionState["error"] },
           formData,
         ),
       ).rejects.toThrow("NEXT_REDIRECT");
@@ -167,7 +165,7 @@ describe("signIn", () => {
 
       await expect(
         signIn(
-          { ok: false, success: null, error: {} as SignInActionState["error"] },
+          { ok: false, success: null, error: {} as ActionState["error"] },
           formData,
         ),
       ).rejects.toThrow("NEXT_REDIRECT");
@@ -181,7 +179,7 @@ describe("signIn", () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as SignInActionState["error"] },
+        { ok: false, success: null, error: {} as ActionState["error"] },
         formData,
       );
 

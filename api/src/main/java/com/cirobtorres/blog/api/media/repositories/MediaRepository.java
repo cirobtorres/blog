@@ -22,6 +22,4 @@ public interface MediaRepository extends JpaRepository<Media, UUID> {
 
     @Query("SELECT m.publicId FROM Media m")
     List<String> findAllPublicIds();
-
-    List<Media> findByFolderPathOrderByCreatedAtDesc(String path);
 }

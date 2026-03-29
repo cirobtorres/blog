@@ -23,9 +23,9 @@ import {
   soonerPromise,
 } from "../../../../../../utils/sooner";
 import { convertToLargeDate } from "../../../../../../utils/date";
-import { SelectNonChildFolder } from "../../../../SelectNonChildFolder";
 import folderValidation from "../../../../../../services/media/folderValidation";
 import { useEditFolder } from "../../../../../../hooks/useFolders";
+import FolderPopover from "../../../FolderPopover";
 
 export default function EditButton({
   name,
@@ -127,7 +127,7 @@ export default function EditButton({
                 <FieldsetLabel label="Nome" htmlFor="folderName" />
               </Fieldset>
               <FieldsetError error={state?.error?.folderName?.errors} />
-              <SelectNonChildFolder excludePath={path} />
+              <FolderPopover currentEditingPath={path} />
               <FieldsetError error={state?.error?.folderDestination?.errors} />
             </div>
           </div>

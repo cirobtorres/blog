@@ -4,22 +4,29 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 
+const returnState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default async function editFile(
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const cookie = await cookies();
-  const accessToken = cookie.get("access_token")?.value;
   const entries = Object.fromEntries(formData.entries());
   const {
-    fileId,
-    fileCaption: caption,
-    fileName: name,
-    fileAlt: alt,
-    folderDestination: path,
+    file_0_id: fileId,
+    file_0_name: name,
+    file_0_caption: caption,
+    file_0_alt: alt,
+    file_0_folder: path,
   } = entries;
 
   try {
+    const cookie = await cookies();
+    const accessToken = cookie.get("access_token")?.value;
     const response = await fetch(apiServerUrls.media.root + "/" + fileId, {
       method: "PUT",
       headers: {
@@ -36,24 +43,24 @@ export default async function editFile(
 
     if (!response.ok) {
       return {
-        ok: false,
-        success: null,
+        ...returnState,
         error: "Falha ao editar arquivo.",
-        data: null,
       };
     }
   } catch (e) {
     console.error(e);
     return {
-      ok: false,
-      success: null,
+      ...returnState,
       error: "Falha ao editar arquivo.",
-      data: null,
     };
   }
 
   revalidateTag("files", { expire: 0 });
   revalidatePath("/users/authors/media");
 
-  return { ok: true, success: "Arquivo editado!", error: null, data: null };
+  return {
+    ...returnState,
+    ok: true,
+    success: "Arquivo editado!",
+  };
 }

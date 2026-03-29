@@ -6,9 +6,8 @@ import editFolder from "../services/media/editFolder";
 export function useFolders() {
   return useQuery({
     queryKey: ["folders"],
-    queryFn: async () => {
-      const data = await listFolders();
-      return data;
+    queryFn: async (): Promise<SelectFolder[]> => {
+      return await listFolders();
     },
   });
 }

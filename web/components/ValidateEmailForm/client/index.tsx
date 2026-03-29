@@ -29,7 +29,7 @@ export default function ValidateEmailFormClient({
 
   const [validateCodeState, validateCodeAction, isPendingValidateCode] =
     React.useActionState(
-      async (prevState: ValidateEmailActionState, formData: FormData) => {
+      async (prevState: ActionState, formData: FormData) => {
         const res = await validateOTP(prevState, formData);
 
         if (res.ok) {
@@ -48,6 +48,7 @@ export default function ValidateEmailFormClient({
             errors: null,
           },
         },
+        data: null,
       },
     );
 

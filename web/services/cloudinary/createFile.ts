@@ -26,7 +26,7 @@ export default async function createFile(
     { method: "POST", body: cloudinaryFormData },
   );
 
-  if (!response.ok) throw new Error("Falha no upload do Cloudinary");
+  if (!response.ok) throw new Error("Cloudinary upload fail");
 
   const data = await response.json();
   return {

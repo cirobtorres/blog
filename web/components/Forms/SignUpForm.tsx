@@ -42,7 +42,7 @@ export default function SignUpForm() {
   const strength = zxcvbn(password);
 
   const [state, action, isPending] = React.useActionState(
-    async (prevState: SignUpActionState) => {
+    async (prevState: ActionState) => {
       const formData = new FormData();
 
       formData.set("name", name);
@@ -73,6 +73,7 @@ export default function SignUpForm() {
           errors: null,
         },
       },
+      data: null,
     },
   );
 

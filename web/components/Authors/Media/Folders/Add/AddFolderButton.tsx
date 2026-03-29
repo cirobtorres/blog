@@ -20,10 +20,10 @@ import {
 import Spinner from "../../../../Spinner";
 import folderValidation from "../../../../../services/media/folderValidation";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
-import { SelectFolder } from "../../../SelectFolder";
 import { useCreateFolder } from "../../../../../hooks/useFolders";
+import FolderPopover from "../../FolderPopover";
 
-export function AddFolderButton() {
+export default function AddFolderButton() {
   const { mutateAsync } = useCreateFolder();
   const [folderName, setFolderName] = React.useState("");
   const [state, action, isPending] = React.useActionState(
@@ -108,7 +108,7 @@ export function AddFolderButton() {
                 className="px-1"
               />
             </div>
-            <SelectFolder />
+            <FolderPopover currentEditingPath="/" />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

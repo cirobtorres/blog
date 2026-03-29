@@ -13,9 +13,9 @@ const validateOtpSchema = z.object({
 });
 
 const validateOTP = async (
-  prevState: ValidateEmailActionState,
+  prevState: ActionState,
   formData: FormData,
-): Promise<ValidateEmailActionState> => {
+): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
   const { code } = Object.fromEntries(formData.entries());
 
@@ -32,6 +32,7 @@ const validateOTP = async (
           errors: ["Código inválido"],
         },
       },
+      data: null,
     };
   }
 
@@ -79,7 +80,7 @@ const validateOTP = async (
 
   // SUCCESS--------------------------------------------------
   if (response.ok) {
-    return { ok: true, success: null, error: null };
+    return { ok: true, success: null, error: null, data: null };
   }
 
   // ERRORS--------------------------------------------------
@@ -117,6 +118,7 @@ const validateOTP = async (
         : {
             form: { errors: ["Ocorreu um erro inesperado no servidor"] },
           },
+    data: null,
   };
 };
 

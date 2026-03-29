@@ -4,3 +4,5 @@ type ActionState = {
   error: ZodError<ActionStateError> | null;
   data: Record<string, string> | Record<Blocks[]> | Cloudinary[] | null;
 };
+
+type ActionStateError = Record<string, { errors: string[] }>;

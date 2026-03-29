@@ -18,7 +18,7 @@ export default function SignInForm() {
   const passRef = useRef(null);
 
   const [state, action, isPending] = useActionState(
-    async (prevState: SignInActionState) => {
+    async (prevState: ActionState) => {
       const formData = new FormData();
 
       formData.set("email", email);
@@ -37,6 +37,7 @@ export default function SignInForm() {
           errors: null,
         },
       },
+      data: null,
     },
   );
 

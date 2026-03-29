@@ -7,11 +7,11 @@ import { convertToLargeDate } from "../../../../../utils/date";
 import { Trigger } from "./Dialog";
 import DialogEmptyContent from "./DialogEmptyContent";
 import DialogCardsContent from "./DialogCardsContent";
-import validateFiles from "../../../../../services/cloudinary/validateFiles";
 import createFile from "../../../../../services/cloudinary/createFile";
 import { createFilesOnDb } from "../../../../../services/media/createFilesOnDb";
+import validateFiles from "../../../../../utils/zod-shared-schemas";
 
-export function AddFilesButton() {
+export default function AddFilesButton() {
   const [files, setFiles] = React.useState<File[]>([]);
   const [openStep, setOpenStep] = React.useState<"upload" | "preview" | null>(
     null,

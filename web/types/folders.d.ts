@@ -1,8 +1,7 @@
 type SelectFolder = {
   id: string;
-  padding: number;
-  name: string;
   parentId: string | null | undefined;
+  name: string;
   path: string;
 };
 

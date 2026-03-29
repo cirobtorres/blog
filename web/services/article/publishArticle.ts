@@ -121,7 +121,6 @@ const publishArticleValidation = async (
 
   if (!result.success) {
     const error = z.treeifyError(result.error).properties;
-
     return {
       ok: false,
       success: null,

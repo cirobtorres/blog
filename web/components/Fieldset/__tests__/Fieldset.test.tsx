@@ -2,7 +2,6 @@
 
 import React, { act, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import type { Score } from "@zxcvbn-ts/core";
 
 import generator from "generate-password-ts";
 import {
@@ -11,7 +10,6 @@ import {
   FieldsetLabel,
   FieldsetPassTypeBtn,
   FieldsetGeneratePassword,
-  PasswordStrength,
   FieldsetError,
 } from "..";
 

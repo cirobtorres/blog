@@ -105,7 +105,7 @@ public class MediaService {
     }
 
     @Transactional
-    public void putMedia(@NonNull UUID id, @NonNull MediaPutDTO mediaPutDTO) throws IOException {
+    public void putMedia(@NonNull UUID id, @NonNull MediaPutDTO mediaPutDTO) {
         // Find entity
         Media media = mediaRepository.findById(id)
                 .orElseThrow(
