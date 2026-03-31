@@ -54,7 +54,7 @@ export default function SignInForm() {
         <FieldsetLabel
           htmlFor="email"
           label="E-mail"
-          error={!!state.error.email?.errors}
+          // error={!!state.error.email?.errors}
         />
       </Fieldset>
       <FieldsetError error={state.error.email?.errors} />

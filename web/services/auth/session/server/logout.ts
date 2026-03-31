@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { apiClientUrls } from "../../../../routing/routes";
 import { revalidatePath } from "next/cache";
-import { getAuthorClient } from "../../getAuthorClient";
+import { hasAutorities } from "../../../../routing/protected/hasAutorities";
 
 export async function logout() {
   const headersList = await headers();
@@ -14,13 +14,17 @@ export async function logout() {
   const accessToken = cookieStore.get("access_token")?.value;
 
   try {
-    await fetch(apiClientUrls.logout, {
+    const response = await fetch(apiClientUrls.logout, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
     });
+    if (!response.ok) {
+      const error = await response.json();
+      console.log(error);
+    }
   } catch (e) {
     console.error("Logout error:", e);
     return { ok: false, success: null, error: null, data: null };
@@ -28,13 +32,11 @@ export async function logout() {
   cookieStore.delete("access_token");
   cookieStore.delete("refresh_token");
 
-  const requiredRoles = getAuthorClient({ pathname });
-  const isProtectedRoute = requiredRoles.includes("AUTHOR");
+  const required = hasAutorities(pathname);
 
-  if (isProtectedRoute) {
+  if (required) {
     redirect(
-      "/users/sign-in?login=required&redirect_url=" +
-        encodeURIComponent(pathname),
+      `/users/sign-in?login=required&callbackUrl=${encodeURIComponent(pathname)}`,
     );
   }
 

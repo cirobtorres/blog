@@ -1,7 +1,5 @@
 "use server";
 
-import { notFound } from "next/navigation";
-import { getSessionUser } from "../../../services/auth/session/server/getSessionUser";
 import {
   AboutPathLink,
   ArticlesPathLink,
@@ -19,10 +17,6 @@ export default async function AuthorLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { authorized, user } = await getSessionUser();
-
-  if (!authorized) notFound();
-
   return (
     <main className="w-full min-h-screen grid grid-cols-[60px_1fr_60px] mx-auto">
       <aside className="relative w-full h-full border-r bg-stone-200 dark:bg-stone-900">
@@ -45,7 +39,7 @@ export default async function AuthorLayout({
           <div className="w-full flex flex-col gap-2 mt-auto">
             <AboutPathLink />
             <div className="w-full h-px bg-stone-700" />
-            <UserButton user={user as User} />
+            <UserButton />
           </div>
         </nav>
       </aside>

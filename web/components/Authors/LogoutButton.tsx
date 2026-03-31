@@ -5,9 +5,16 @@ import { logout } from "../../services/auth/session/server/logout";
 import Spinner from "../Spinner";
 import { Button } from "../Button";
 
-export function LogoutButton() {
+export function LogoutButton({
+  setUser,
+}: {
+  setUser: React.Dispatch<
+    React.SetStateAction<UserSignedIn | UserSignedOut | null>
+  >;
+}) {
   const [, action, isPending] = React.useActionState(async () => {
     await logout();
+    setUser({ ok: false, data: null });
   }, null);
 
   return (
@@ -16,7 +23,7 @@ export function LogoutButton() {
         type="submit"
         variant="link"
         disabled={isPending}
-        className="h-auto text-start w-full font-normal p-1 border-none not-dark:shadow-none justify-start bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 disabled:bg-stone-300 dark:disabled:bg-stone-800"
+        className="w-full h-auto text-start text-destructive font-normal p-1 border-none not-dark:shadow-none justify-start bg-inherit dark:bg-inherit hover:not-disabled:border-none hover:not-disabled:bg-stone-300 dark:hover:not-disabled:bg-stone-800 dark:hover:not-disabled:border-none"
       >
         {isPending && <Spinner />} Sair
       </Button>

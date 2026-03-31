@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { cn, focusRing } from "../../../utils/variants";
 import { protectedWebUrls } from "../../../routing/routes";
@@ -15,14 +15,16 @@ const elStyleItem =
 
 export default function UserSignedIn({
   user,
-  setUserState,
+  setUser,
 }: {
   user: AuthSessionConfirmed;
-  setUserState: Dispatch<SetStateAction<AuthSession | null>>;
+  setUser: React.Dispatch<
+    React.SetStateAction<UserSignedIn | UserSignedOut | null>
+  >;
 }) {
   const [, action, isPending] = React.useActionState(async () => {
-    const result = await logout();
-    if (result.ok) setUserState({ ok: false, data: null });
+    await logout();
+    setUser({ ok: false, data: null });
   }, null);
 
   return (
@@ -98,23 +100,6 @@ export default function UserSignedIn({
               Media
             </Link>
           </div>
-          {/* <div className={cn(elStyleWrapper, "border-b")}>
-            <p className="text-xs font-medium text-nowrap p-1 text-neutral-500">
-              Tema
-            </p>
-            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
-              <LightThemeIcon />
-              Claro
-            </p>
-            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
-              <DarkThemeIcon />
-              Escuro
-            </p>
-            <p className={cn(elStyleItem, "flex items-center gap-2 pl-4")}>
-              <CustomSystemThemeIcon />
-              Sistema
-            </p>
-          </div> */}
           <form action={action} className={elStyleWrapper}>
             <button type="submit" disabled={isPending} className={elStyleItem}>
               {isPending && <Spinner />} Sair
@@ -203,75 +188,5 @@ const MediaIcon = () => (
     <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
     <circle cx="9" cy="9" r="2" />
     <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-  </svg>
-);
-
-const LightThemeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="size-3"
-  >
-    <circle cx="12" cy="12" r="4" />
-    <path d="M12 2v2" />
-    <path d="M12 20v2" />
-    <path d="m4.93 4.93 1.41 1.41" />
-    <path d="m17.66 17.66 1.41 1.41" />
-    <path d="M2 12h2" />
-    <path d="M20 12h2" />
-    <path d="m6.34 17.66-1.41 1.41" />
-    <path d="m19.07 4.93-1.41 1.41" />
-  </svg>
-);
-
-const DarkThemeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="size-3"
-  >
-    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
-  </svg>
-);
-
-const CustomSystemThemeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="size-3"
-  >
-    <path d="M12 17v4" />
-    <path d="m14.305 7.53.923-.382" />
-    <path d="m15.228 4.852-.923-.383" />
-    <path d="m16.852 3.228-.383-.924" />
-    <path d="m16.852 8.772-.383.923" />
-    <path d="m19.148 3.228.383-.924" />
-    <path d="m19.53 9.696-.382-.924" />
-    <path d="m20.772 4.852.924-.383" />
-    <path d="m20.772 7.148.924.383" />
-    <path d="M22 13v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7" />
-    <path d="M8 21h8" />
-    <circle cx="18" cy="6" r="3" />
   </svg>
 );

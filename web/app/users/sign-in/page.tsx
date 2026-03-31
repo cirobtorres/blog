@@ -4,7 +4,11 @@ import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
 import SignInForm from "../../../components/Forms/SignInForm";
 
-export default async function SignInPage({ searchParams }: PageProps) {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { login } = await searchParams;
   return (
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">

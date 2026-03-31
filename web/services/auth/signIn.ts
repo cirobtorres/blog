@@ -13,6 +13,7 @@ import {
   publicWebUrls,
 } from "../../routing/routes";
 import * as z from "zod";
+import { revalidatePath } from "next/cache";
 
 const signInSchema = z.object({
   email: z.email("E-mail inválido").trim().toLowerCase(),
@@ -99,6 +100,7 @@ const signIn = async (
 
     if (userResponse.ok) {
       const userData: User = await userResponse.json();
+      revalidatePath("/", "layout");
       if (!userData.isProviderEmailVerified) {
         return redirect(publicWebUrls.validateEmail);
       }
@@ -123,10 +125,6 @@ const signIn = async (
       }
       return redirect(redirectUrl);
     }
-  }
-
-  if (!isProd) {
-    console.error("signIn", response);
   }
 
   if (

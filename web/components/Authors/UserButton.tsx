@@ -1,11 +1,50 @@
+"use client";
+
 import Image from "next/image";
 import { cn, focusRing } from "../../utils/variants";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { Link } from "../Links";
 import { LogoutButton } from "./LogoutButton";
 import { protectedWebUrls } from "../../routing/routes";
+import { Skeleton } from "../Skeleton";
+import Spinner from "../Spinner";
+import { useAuth } from "../../providers/AuthProvider";
+import React from "react";
 
-export function UserButton({ user }: { user: User }) {
+export function UserButton() {
+  const [isMounted, setIsMounted] = React.useState(false);
+  const { user: userData, setUser } = useAuth();
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <Skeleton
+        className={cn(
+          "size-9 my-1 mx-auto shrink-0 flex justify-center items-center rounded-full",
+        )}
+      >
+        <Spinner />
+      </Skeleton>
+    );
+  }
+
+  if (!userData?.ok) {
+    return (
+      <Skeleton
+        className={cn(
+          "size-9 my-1 mx-auto shrink-0 flex justify-center items-center rounded-full",
+        )}
+      >
+        <Spinner />
+      </Skeleton>
+    );
+  }
+
+  const { data: user } = userData;
+
   return (
     <Popover>
       <PopoverTrigger
@@ -64,7 +103,7 @@ export function UserButton({ user }: { user: User }) {
           >
             Profile settings
           </Link>
-          <LogoutButton />
+          <LogoutButton setUser={setUser} />
         </div>
       </PopoverContent>
     </Popover>

@@ -45,6 +45,7 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     console.error(
       "syncWithSpringBoot: Failed to sync data between Cloudinary and Server.",
       response.status,
+      response.statusText,
     );
     return {
       ok: false,

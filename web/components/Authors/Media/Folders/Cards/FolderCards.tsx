@@ -1,10 +1,9 @@
 "use server";
 
+import { FolderProvider } from "../../../../../providers/FolderProvider";
 import { apiServerUrls } from "../../../../../routing/routes";
-import FolderCheckbox from "../Header/FolderCheckbox";
-import FolderSorting from "../Header/FolderSorting";
-import FolderCard from "./FolderCard";
 import FolderCardGhost from "./FolderCardGhost";
+import FolderListClient from "./FolderListClient";
 
 export default async function FolderCards({
   accessToken,
@@ -16,54 +15,30 @@ export default async function FolderCards({
   const currentFolder = currentPath ? "/" + currentPath.join("/") : "/";
   const queryFolder = encodeURIComponent(currentFolder);
 
-  const mediaFolders = await fetch(
-    apiServerUrls.mediaFolders.root + "?folder=" + queryFolder,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      next: { tags: ["folders"] },
+  const getUrl = `${apiServerUrls.mediaFolders.root}?folder=${queryFolder}`;
+  const countUrl = `${apiServerUrls.mediaFolders.count}?folder=${queryFolder}`;
+
+  const options = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
     },
-  );
+    next: { tags: ["folders"] },
+  };
 
-  const countFolders = await fetch(
-    apiServerUrls.mediaFolders.count + "?folder=" + queryFolder,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      next: { tags: ["folders"] },
-    },
-  );
-
-  const folders: Folder[] = (await mediaFolders.json()).map(
-    (folder: Folder) => ({
-      ...folder,
-    }),
-  );
-
-  const count: number = await countFolders.json();
+  const [folders, count] = await Promise.all([
+    fetch(getUrl, options).then((res) => res.json() as Promise<Folder[]>),
+    fetch(countUrl, options).then((res) => res.json() as Promise<number>),
+  ]);
 
   return (
-    <section className="w-full flex flex-col items-start justify-center gap-2">
-      <h2 className="text-xl">
-        Pasta{count > 1 && "s"}: {count}
-      </h2>
-      <div className="w-full flex justify-between items-center gap-2">
-        <FolderCheckbox />
-        <FolderSorting />
-      </div>
-      <div className="w-full grid items-center grid-cols-4 gap-2">
-        {folders.length === 0 &&
-          Array.from({ length: 4 }).map((_, i) => <FolderCardGhost key={i} />)}
-        {folders.map((folder) => (
-          <FolderCard key={folder.path} folder={folder} />
-        ))}
-      </div>
-    </section>
+    <FolderProvider>
+      <section className="w-full flex flex-col items-start justify-center gap-2">
+        <h2 className="text-xl">
+          Pasta{count > 1 && "s"}: {count}
+        </h2>
+        <FolderListClient folders={folders} />
+      </section>
+    </FolderProvider>
   );
 }

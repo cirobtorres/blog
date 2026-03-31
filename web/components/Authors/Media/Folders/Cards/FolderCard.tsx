@@ -1,3 +1,6 @@
+"use client";
+
+import { useFolder } from "../../../../../providers/FolderProvider";
 import { protectedWebUrls } from "../../../../../routing/routes";
 import { cn, focusRing } from "../../../../../utils/variants";
 import { Checkbox } from "../../../../Fieldset/Checkbox";
@@ -6,13 +9,19 @@ import EditButton from "./Buttons/EditButton";
 import { FolderLink } from "./Buttons/FolderLink";
 
 export default function FolderCard({ folder }: { folder: Folder }) {
-  const id = folder.id;
+  const { selectedItems, toggleItem } = useFolder();
+  const isChecked = selectedItems.some((i) => i.id === folder.id);
+
   return (
     <label
-      htmlFor={"folder-" + id}
+      htmlFor={"folder-" + folder.id}
       className="relative w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary focus-within:bg-stone-300 dark:focus-within:bg-stone-800 group"
     >
-      <Checkbox id={"folder-" + id} />
+      <Checkbox
+        id={"folder-" + folder.id}
+        checked={isChecked}
+        onCheckedChange={() => toggleItem(folder)}
+      />
       <FolderLink
         href={protectedWebUrls.media + "/" + folder.path}
         className={cn(

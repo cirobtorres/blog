@@ -44,7 +44,6 @@ export default async function createFolder(
       data: path,
     };
   } catch (e) {
-    console.error(e);
     return {
       ok: false,
       success: null,

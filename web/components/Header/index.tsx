@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import { ProgressBar } from "./ProgressBar";
 import { Link } from "../Links";
+import { ProgressBar } from "./ProgressBar";
 import { cn, linkVariants } from "../../utils/variants";
-import { externalUrls, publicWebUrls } from "../../routing/routes";
+import { externalUrls } from "../../routing/routes";
 import { Skeleton } from "../Skeleton";
-import getUser from "../../services/auth/session/client/getUser";
 import UserSignedIn from "./UserSignedIn";
 import Spinner from "../Spinner";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import UserSignedOff from "./UserSignedOff";
+import { useAuth } from "../../providers/AuthProvider";
 
 interface ContentProps {
   path: string;
@@ -44,7 +44,12 @@ export function Header({
   sticky?: boolean;
   progress?: boolean;
 }) {
-  const [user, setUser] = React.useState<AuthSession | null>(null);
+  // ----------------------------------------------------------------------
+  // Forcing it to render as Client Component
+  // Suppress Hydration error due dynamic IDs mismatch between RadixUI & Next.js
+  // Because one was rendered on server and the other on client
+  const [isMounted, setIsMounted] = React.useState(false);
+  const { user, setUser } = useAuth();
   const headerRef = React.useRef<HTMLElement>(null);
   const scrollingDownRef = React.useRef(0);
 
@@ -62,10 +67,8 @@ export function Header({
         currScrollPos < prevScrollPos || // Bring header back when scrolling up
         (currScrollPos > prevScrollPos && scrollingDownRef.current < threshold) // Hide header after scrolling down "threshold"pxs
       ) {
-        // headerRef.current.style.transform = "translateY(0)";
         headerRef.current.classList.remove("header-hidden");
       } else {
-        // headerRef.current.style.transform = "translateY(-50px)";
         headerRef.current.classList.add("header-hidden");
       }
       if (currScrollPos > prevScrollPos) {
@@ -91,14 +94,16 @@ export function Header({
   }, [sticky]);
 
   React.useEffect(() => {
-    getUser().then(setUser);
+    setIsMounted(true);
   }, []);
+
+  if (!isMounted) return <Unmounted />; // While it has not mounted
 
   function renderAuthArea() {
     if (user === null) return <UserSkeleton />;
 
     if (user.ok) {
-      return <UserSignedIn user={user} setUserState={setUser} />;
+      return <UserSignedIn user={user} setUser={setUser} />;
     }
 
     return <UserSignedOff />;
@@ -148,31 +153,22 @@ const UserSkeleton = () => (
   </div>
 );
 
-const UserSignedOff = () => (
-  <Popover>
-    <PopoverTrigger className="cursor-pointer flex justify-center items-center ml-auto mr-0">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
-      >
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    </PopoverTrigger>
-    <PopoverContent
-      align="end"
-      className="w-30 flex flex-col gap-0 p-1 bg-stone-200 dark:bg-stone-900 [&_a]:text-sm [&_a]:font-normal [&_a]:text-neutral-900 [&_a]:dark:text-neutral-100 [&_a]:transition-background [&_a]:duration-300 [&_a]:hover:bg-stone-300 dark:[&_a]:hover:bg-stone-800 [&_a]:w-full [&_a]:py-1 [&_a]:px-2"
+const Unmounted = () => (
+  <div className="flex justify-center items-center ml-auto mr-0">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
     >
-      <Link href={publicWebUrls.signIn}>Entrar</Link>
-      <Link href={publicWebUrls.signUp}>Cadastrar</Link>
-    </PopoverContent>
-  </Popover>
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  </div>
 );

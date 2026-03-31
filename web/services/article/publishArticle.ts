@@ -153,7 +153,7 @@ const publishArticle = async (
   let accessToken = cookieStore.get("access_token")?.value;
   const refreshToken = cookieStore.get("refresh_token")?.value;
 
-  // 1. Authentication
+  // AUTHENTICATION
   let payload: AuthTokensPayload | null = null;
   let isExpired = true;
 
@@ -166,7 +166,7 @@ const publishArticle = async (
     }
   }
 
-  // 1.1 Refresh, if expired
+  // REFRESH
   if ((isExpired || !accessToken) && refreshToken) {
     const refreshRes = await fetch(apiServerUrls.refresh, {
       method: "POST",
@@ -176,12 +176,11 @@ const publishArticle = async (
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
       if (setCookieHeader) {
-        // 1.2 New access_token
+        // ACCESS_TOKEN
         accessToken =
           extractTokenFromHeader(setCookieHeader, "access_token") ||
           accessToken;
 
-        // 1.3 Synchronizes new cookies with browser
         const tempRes = NextResponse.next();
         applySpringCookies(tempRes, setCookieHeader);
         const newCookies = tempRes.cookies.getAll();
@@ -189,22 +188,14 @@ const publishArticle = async (
           (await cookies()).set(cookie.name, cookie.value, cookie);
         }
 
-        // 1.4 Gets new Payload (valid one this time)
         if (accessToken) payload = extractPayload(accessToken);
       }
     }
   }
 
-  // 2. Authority
+  // AUTHORITY
   const isAuthor = payload?.authorities?.includes("AUTHOR");
   if (!accessToken || !isAuthor) {
-    // if (!isProd) {
-    //   console.error(
-    //     "publishArticle: !accessToken || !isAuthor",
-    //     !accessToken,
-    //     !isAuthor,
-    //   );
-    // }
     return {
       ok: false,
       success: null,
@@ -213,7 +204,7 @@ const publishArticle = async (
     };
   }
 
-  // 3. Fetch
+  // FETCH
   const validatedData = Object.fromEntries(formData.entries());
 
   try {
@@ -237,10 +228,6 @@ const publishArticle = async (
     }
 
     const errorData = await response.json();
-
-    // if (!isProd) {
-    //   console.error("publishArticle: errorData", errorData);
-    // }
 
     return {
       ok: false,

@@ -12,10 +12,7 @@ import {
 } from "../../../../Pagination";
 import { cn } from "../../../../../utils/variants";
 
-export default function MediaPagination({
-  number,
-  totalPages,
-}: FolderPagination) {
+export default function MediaPagination({ number, totalPages }: Pagination) {
   const searchParams = useSearchParams();
   const currentPage = number;
   const displayPage = currentPage + 1;

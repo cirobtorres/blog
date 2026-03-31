@@ -175,7 +175,7 @@ export function HtmlEditor({
           .run();
       }
     } catch (e) {
-      console.error("Error updating link:", e);
+      console.error("Link:", e);
     }
   }, [editor, linkInput, textLinkInput]);
 

@@ -91,7 +91,7 @@ export default function SignUpForm() {
         <FieldsetLabel
           htmlFor="name"
           label="Nome"
-          error={!!state.error.name?.errors}
+          // error={!!state.error.name?.errors}
         />
       </Fieldset>
       <FieldsetError error={state.error.name?.errors} />
@@ -108,7 +108,7 @@ export default function SignUpForm() {
         <FieldsetLabel
           htmlFor="email"
           label="E-mail"
-          error={!!state.error.email?.errors}
+          // error={!!state.error.email?.errors}
         />
       </Fieldset>
       <FieldsetError error={state.error.email?.errors} />

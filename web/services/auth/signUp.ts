@@ -60,10 +60,6 @@ const signUp = async (
 
     // Backend errors
     if (!response.ok) {
-      if (!isProd) {
-        console.error(response.statusText);
-      }
-
       if (response.status === 409) {
         // User exist
         const data = await response.json();
@@ -129,9 +125,6 @@ const signUp = async (
       });
     }
   } catch (e) {
-    if (process.env.NODE_ENV !== "production") {
-      console.error("signUp (server):", e);
-    }
     return {
       ...returnState,
       error: { form: { errors: ["Falha na conexão com o servidor"] } },

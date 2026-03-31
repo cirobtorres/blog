@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
 
-export const getUser = async (): Promise<SessionUser> => {
+export default async function getUser(): Promise<SessionUser> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
 
@@ -20,10 +20,6 @@ export const getUser = async (): Promise<SessionUser> => {
     });
 
     if (!response.ok) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error(response);
-      }
-
       if (response.status === 204 || response.status === 401) {
         // No content || Unauthorized
         return { ok: false, data: null };
@@ -31,9 +27,6 @@ export const getUser = async (): Promise<SessionUser> => {
 
       if (response.status === 404) {
         // Not found
-        if (process.env.NODE_ENV !== "production") {
-          console.error(response);
-        }
         return { ok: false, data: null };
       }
 
@@ -43,8 +36,8 @@ export const getUser = async (): Promise<SessionUser> => {
     }
 
     return { ok: true, data: await response.json() };
-  } catch (error) {
-    console.error("getUser (server):", error);
+  } catch (e) {
+    console.error("getUser:", e);
     return { ok: false, data: null };
   }
-};
+}

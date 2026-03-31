@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { Button } from "../../../components/Button";
 import {
   Fieldset,
@@ -8,15 +7,15 @@ import {
 } from "../../../components/Fieldset";
 import { Footer } from "../../../components/Footer";
 import { Header } from "../../../components/Header";
-import { getSessionUser } from "../../../services/auth/session/server/getSessionUser";
 import UserSettingsPassForm from "../../../components/Users/Settings/UserSettingsPassForm";
 import { Alert } from "../../../components/Alert";
 import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";
+import getUser from "../../../services/auth/session/server/getUser";
 
 export default async function UserSettingsPage() {
-  const { authorized, user } = await getSessionUser();
+  const userData = await getUser();
 
-  if (!authorized) notFound();
+  const { data: user } = userData;
 
   const isEmailUnverified = !user?.isProviderEmailVerified;
 

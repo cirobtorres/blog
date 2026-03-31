@@ -42,7 +42,7 @@ export function FieldsetPassword({
           maxLength={32}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          // error={!!passErrors}
+          error={!!passErrors}
         />
         {copyToClipboard && (
           <CopyToClipBoard

@@ -1,31 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import { hasAutorities } from "./routing/protected/hasAutorities";
 import {
+  extractPayload,
   applySpringCookies,
   extractTokenFromHeader,
-  extractPayload,
 } from "./services/helpers/serve-actions";
 import { apiServerUrls, publicWebUrls } from "./routing/routes";
-import { PROTECTED_ROUTES, ROUTES_PERMISSIONS } from "./routing/protected";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   let accessToken = request.cookies.get("access_token")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
 
+  // EXPIRATION
   let isExpired = true;
-  let payload = null;
-
-  if (accessToken) {
-    try {
-      payload = extractPayload(accessToken);
+  try {
+    if (accessToken) {
+      const payload = extractPayload(accessToken);
       isExpired = payload.exp < Math.floor(Date.now() / 1000);
-    } catch (e) {
-      isExpired = true;
     }
+  } catch {
+    isExpired = true;
   }
 
-  // Bloco de Refresh
-  if (isExpired && !!refreshToken && !pathname.includes(".")) {
+  // REFRESH
+  if (isExpired && refreshToken && !pathname.includes(".")) {
     const refreshRes = await fetch(apiServerUrls.refresh, {
       method: "POST",
       headers: { Cookie: `refresh_token=${refreshToken}` },
@@ -34,57 +33,51 @@ export async function proxy(request: NextRequest) {
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
       if (setCookieHeader) {
-        // ATUALIZA A VARIÁVEL LOCAL para as checagens abaixo
-        const newAccessToken = extractTokenFromHeader(
-          setCookieHeader,
-          "access_token",
-        );
+        accessToken =
+          extractTokenFromHeader(setCookieHeader, "access_token") ?? undefined;
+        const response = NextResponse.next();
+        applySpringCookies(response, setCookieHeader);
 
-        const finalResponse = NextResponse.next();
-        applySpringCookies(finalResponse, setCookieHeader);
-
-        if (newAccessToken) {
-          accessToken = newAccessToken; // <--- CRUCIAL: Agora as checagens abaixo verão o token novo
-          finalResponse.headers.set("cookie", `access_token=${newAccessToken}`);
+        if (!hasAccessFromToken(pathname, accessToken)) {
+          return redirectToLogin(request, pathname);
         }
-
-        // Se a rota for protegida, precisamos validar o novo accessToken aqui
-        if (!validateRouteAccess(pathname, accessToken)) {
-          return NextResponse.redirect(
-            new URL(publicWebUrls.signIn, request.url),
-          );
-        }
-
-        return finalResponse;
+        return response;
       }
     }
   }
 
-  // Validação de Rota Protegida
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-    pathname.startsWith(route),
-  );
-
-  if (isProtectedRoute && !accessToken) {
-    const loginUrl = new URL(
-      publicWebUrls.signIn + "?login=required",
-      request.url,
-    );
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+  // ROUTING PROTECTION
+  if (!hasAccessFromToken(pathname, accessToken)) {
+    return redirectToLogin(request, pathname);
   }
 
   return NextResponse.next();
 }
 
-function validateRouteAccess(pathname: string, token?: string) {
-  if (!token) return false;
-  const payload = extractPayload(token);
-  const requiredRoles =
-    ROUTES_PERMISSIONS[pathname as keyof typeof ROUTES_PERMISSIONS];
+function hasAccessFromToken(pathname: string, token?: string): boolean {
+  const required = hasAutorities(pathname);
 
-  if (!requiredRoles) return true; // Rota protegida mas sem roles específicas
-  return requiredRoles.every((role) => payload.authorities.includes(role));
+  // PUBLIC
+  if (!required) return true;
+
+  // PROTECTED + NO TOKEN
+  if (!token) return false;
+
+  // PROTECTED
+  try {
+    const payload = extractPayload(token);
+    // HAS ALL AUTHORITIES?
+    return required.every((role) => payload.authorities?.includes(role));
+  } catch {
+    return false;
+  }
+}
+
+function redirectToLogin(request: NextRequest, callbackUrl: string) {
+  const loginUrl = new URL(publicWebUrls.signIn, request.url);
+  loginUrl.searchParams.set("login", "required");
+  loginUrl.searchParams.set("callbackUrl", callbackUrl);
+  return NextResponse.redirect(loginUrl);
 }
 
 // Helper: extract cookie value based on URL match
@@ -96,22 +89,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
-
-// Development
-// export const config = {
-//   matcher: [
-//     "/((?!_next/static|_next/image|favicon.ico).*)",
-//     "/authors",
-//     "/authors/:path*",
-//     "/auth/:path*",
-//   ],
-// };
-
-// Production
-// export const config = {
-//   matcher: [
-//     "/authors",
-//     "/authors/:path*",
-//     "/api/:path*",
-//   ],
-// };

@@ -52,5 +52,12 @@ type Media = {
 // Comes from server (pagination)
 type MediaResponsePageable = {
   content: Media[];
-  page: FolderPagination;
+  page: Pagination;
+};
+
+type FileContextType = {
+  selectedItems: Media[];
+  toggleItem: (item: Media) => void;
+  selectAll: (items: Media[]) => void;
+  clearSelection: () => void;
 };

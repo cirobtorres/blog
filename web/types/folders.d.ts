@@ -5,7 +5,7 @@ type SelectFolder = {
   path: string;
 };
 
-type FolderPagination = {
+type Pagination = {
   size: number;
   number: number;
   totalElements: number;
@@ -19,4 +19,11 @@ type Folder = {
   subfolderCount: number;
   fileCount: number;
   createdAt: Date;
+};
+
+type SelectionContextType = {
+  selectedItems: Folder[];
+  toggleItem: (item: Folder) => void;
+  selectAll: (items: Folder[]) => void;
+  clearSelection: () => void;
 };

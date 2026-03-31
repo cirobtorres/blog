@@ -1,7 +1,7 @@
 "use server";
 
 import { notFound } from "next/navigation";
-import { getUser } from "../../../services/auth/session/server/getUser";
+import getUser from "../../../services/auth/session/server/getUser";
 import ValidateEmailFormClient from "../client";
 
 export default async function ValidateEmailFormServer({
