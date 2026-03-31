@@ -11,11 +11,20 @@ export default async function FolderCards({
   accessToken?: string;
   currentPath?: string[];
 }) {
-  const currentFolder = currentPath ? "/" + currentPath.join("/") : "/";
-  const queryFolder = encodeURIComponent(currentFolder);
+  const decodedPath = currentPath
+    ? currentPath.map((segment) => decodeURIComponent(segment)).join("/")
+    : "";
 
-  const getUrl = `${apiServerUrls.mediaFolders.root}?folder=${queryFolder}`;
-  const countUrl = `${apiServerUrls.mediaFolders.count}?folder=${queryFolder}`;
+  const folderPath = decodedPath.startsWith("/")
+    ? decodedPath
+    : "/" + decodedPath;
+
+  const query = new URLSearchParams({
+    folder: folderPath,
+  });
+
+  const getUrl = `${apiServerUrls.mediaFolders.root}?${query.toString()}`;
+  const countUrl = `${apiServerUrls.mediaFolders.count}?${query.toString()}`;
 
   const options = {
     headers: {
@@ -26,9 +35,21 @@ export default async function FolderCards({
   };
 
   const [folders, count] = await Promise.all([
-    fetch(getUrl, options).then((res) => res.json() as Promise<Folder[]>),
-    fetch(countUrl, options).then((res) => res.json() as Promise<number>),
+    fetch(getUrl, options)
+      .then((res) => res.json() as Promise<Folder[]>)
+      .catch((e) => {
+        console.error(e);
+        return [];
+      }),
+    fetch(countUrl, options)
+      .then((res) => res.json() as Promise<number>)
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      }),
   ]);
+
+  console.log(folders);
 
   return (
     <FolderProvider>

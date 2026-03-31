@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -28,7 +30,12 @@ public class MediaFolderController {
     public ResponseEntity<List<MediaFolderCountDTO>> listSubfoldersWithCounts(
             @RequestParam String folder
     ) {
-        return ResponseEntity.ok(mediaFolderService.listSubfoldersWithCounts(folder));
+        // Manual decode
+        // Exp: C%2B%2B -> C++
+        // String decodedFolder = URLDecoder.decode(folder, StandardCharsets.UTF_8);
+        List<MediaFolderCountDTO> mediaFolderCountDTOS =
+                mediaFolderService.listSubfoldersWithCounts(folder);
+        return ResponseEntity.ok(mediaFolderCountDTOS);
     }
 
     @PostMapping
