@@ -2,14 +2,13 @@ import { Skeleton } from "../../../../Skeleton";
 
 export default function MediaFileCardsLoading() {
   return (
-    <section className="flex flex-col items-start justify-center gap-2">
+    <div className="flex flex-col items-start justify-center gap-2">
       <h2 className="text-xl flex items-center">
-        Arquivos: {<Skeleton className="size-6" />}
+        Arquivos: {<Skeleton className="size-7" />}
       </h2>
       <div className="w-full flex justify-between items-center gap-2">
         <div className="flex items-center gap-2">
-          <Skeleton className="size-7" />
-          <Skeleton className="w-14 h-6" />
+          <Skeleton className="w-32 h-8 flex items-center rounded-lg" />
           <Skeleton className="w-30 h-8" />
           <Skeleton className="w-30 h-8" />
         </div>
@@ -17,13 +16,6 @@ export default function MediaFileCardsLoading() {
           <Skeleton className="w-40 h-8" />
           <Skeleton className="w-22 h-8" />
         </div>
-      </div>
-      <div className="w-full flex justify-center items-center gap-1">
-        <Skeleton className="w-20 h-8" />
-        <Skeleton className="size-8" />
-        <Skeleton className="size-8" />
-        <Skeleton className="size-8" />
-        <Skeleton className="w-20 h-8" />
       </div>
       <div className="w-full grid grid-cols-3 items-center gap-2">
         {Array.from({ length: 3 }).map((_, index) => (
@@ -33,6 +25,13 @@ export default function MediaFileCardsLoading() {
           />
         ))}
       </div>
-    </section>
+      <div className="w-full flex justify-center items-center gap-1">
+        <Skeleton className="w-20 h-8" />
+        <Skeleton className="size-8" />
+        <Skeleton className="size-8" />
+        <Skeleton className="size-8" />
+        <Skeleton className="w-20 h-8" />
+      </div>
+    </div>
   );
 }

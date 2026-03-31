@@ -38,7 +38,10 @@ export default function FolderPopover({
   const currentFolder =
     "/" + pathname.slice(protectedWebUrls.media.length).replace(/^\/*/, "");
   const [value, setValue] = React.useState(defaultValue || currentFolder);
-  const selectedFolderName = folders?.find((f) => f.path === value)?.name;
+  const selectedFolderName = folders?.find(
+    (folder) => folder.path === value,
+  )?.name;
+  const sortFolders = folders?.sort((a, b) => a.path.localeCompare(b.path));
 
   return (
     <div className="flex flex-col gap-1">
@@ -79,7 +82,7 @@ export default function FolderPopover({
             <CommandEmpty>Nenhuma pasta encontrada.</CommandEmpty>
             <CommandList className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar">
               <CommandGroup>
-                {folders?.map((folder) => {
+                {sortFolders?.map((folder) => {
                   if (typeof currentEditingPath === "undefined") {
                     currentEditingPath = currentFolder;
                   }
@@ -109,7 +112,7 @@ export default function FolderPopover({
                             ? "text-neutral-900 dark:text-neutral-100 bg-stone-200 dark:bg-stone-800 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100"
                             : "text-neutral-600 dark:text-neutral-500 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100",
                         )}
-                        style={{ paddingLeft: `${depth + 8}px` }}
+                        style={{ paddingLeft: `${depth * 12 + 8}px` }}
                       >
                         <div className="flex items-center gap-2">
                           {depth > 2 && (

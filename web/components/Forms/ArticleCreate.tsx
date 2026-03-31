@@ -103,7 +103,7 @@ export function ArticleCreate() {
   );
 
   return (
-    <form className="w-full max-w-4xl mx-auto flex-1 flex flex-col gap-2 p-2">
+    <form className="w-full max-w-6xl mx-auto flex-1 flex flex-col gap-2 p-2">
       <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
       {publishState.error ? (
         <Alert title="Erros" variant="default">

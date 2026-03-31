@@ -35,4 +35,13 @@ public interface MediaFolderRepository extends JpaRepository<MediaFolder, UUID> 
         WHERE f.path LIKE CONCAT(:oldPath, '/%')
     """)
     void updateDescendantsPaths(@Param("oldPath") String oldPath, @Param("newPath") String newPath);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+        UPDATE MediaFolder
+        SET path = REPLACE(path, :oldPath, :newPath)
+        WHERE path = :oldPath
+        OR path LIKE CONCAT(:oldPath, '/%')
+    """)
+    void updatePathAndDescendants(@Param("oldPath") String oldPath, @Param("newPath") String newPath);
 }

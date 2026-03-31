@@ -4,12 +4,11 @@ export default function FolderCardsLoading() {
   return (
     <div className="w-full flex flex-col gap-2">
       <h2 className="text-xl flex items-center">
-        Pastas: <Skeleton className="size-6" />
+        Pastas: <Skeleton className="size-7" />
       </h2>
       <div className="w-full flex justify-between items-center gap-2">
         <div className="flex items-center gap-2">
-          <Skeleton className="size-6" />
-          <Skeleton className="w-14 h-4" />
+          <Skeleton className="w-32 h-8 flex items-center rounded-lg" />
           <Skeleton className="w-30 h-8" />
           <Skeleton className="w-30 h-8" />
         </div>

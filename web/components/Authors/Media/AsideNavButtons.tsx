@@ -26,8 +26,8 @@ export function HomePathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >
@@ -54,8 +54,8 @@ export function ArticlesPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >
@@ -82,8 +82,8 @@ export function MediaPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >
@@ -110,8 +110,8 @@ export function TagPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >
@@ -138,8 +138,8 @@ export function UsersPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >
@@ -166,8 +166,8 @@ export function AboutPathLink() {
         <Link
           href={protectedWebUrls.authors + path}
           className={cn(
-            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-800",
-            currentLink && "bg-stone-200 dark:bg-stone-800",
+            "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+            currentLink && "bg-stone-200 dark:bg-stone-750",
             focusRing,
           )}
         >

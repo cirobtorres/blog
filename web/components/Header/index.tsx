@@ -10,10 +10,10 @@ import UserSignedIn from "./UserSignedIn";
 import Spinner from "../Spinner";
 import UserSignedOff from "./UserSignedOff";
 import { useAuth } from "../../providers/AuthProvider";
+import { VariantProps } from "class-variance-authority";
 
-interface ContentProps {
+interface ContentProps extends VariantProps<typeof linkVariants> {
   path: string;
-  variant: "internal" | "external" | "button" | "title" | null | undefined;
   text: string;
 }
 
@@ -30,7 +30,6 @@ const content: ContentProps[] = [
   },
   {
     path: externalUrls.myGitHub,
-    variant: "external",
     text: "Github",
   },
 ];
@@ -128,10 +127,7 @@ export function Header({
               key={index}
               href={path}
               variant={variant}
-              className={cn(
-                linkVariants({ variant: "internal" }),
-                "text-sm font-normal text-neutral-900 dark:text-neutral-100",
-              )}
+              className="text-sm font-normal text-neutral-900 dark:text-neutral-100 border border-transparent"
             >
               {text}
             </Link>

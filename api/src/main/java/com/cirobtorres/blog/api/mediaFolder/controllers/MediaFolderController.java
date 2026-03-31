@@ -1,9 +1,6 @@
 package com.cirobtorres.blog.api.mediaFolder.controllers;
 
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderPutDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
+import com.cirobtorres.blog.api.mediaFolder.dtos.*;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.services.MediaFolderService;
 import jakarta.validation.Valid;
@@ -58,21 +55,29 @@ public class MediaFolderController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all")
+    @PutMapping("move/all")
+    public ResponseEntity<String> updateFolders(
+            @RequestBody @Valid MediaFoldersMoveToDTO moveFoldersToDTO
+    ) {
+        mediaFolderService.moveFolders(moveFoldersToDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("all")
     public ResponseEntity<List<MediaFoldersDTO>> listAllFolders() {
         return ResponseEntity.ok(
                 mediaFolderService.listAllFolders()
         );
     }
 
-    @PostMapping("/exists")
+    @PostMapping("exists")
     public ResponseEntity<Boolean> existsByPath(
             @RequestBody @Valid MediaFolderCountDTO mediaFolderCountDTO
     ) {
         return ResponseEntity.ok(mediaFolderService.existsByPath(mediaFolderCountDTO));
     }
 
-    @GetMapping("/count")
+    @GetMapping("count")
     public ResponseEntity<Long> countFolders(
             @RequestParam(defaultValue = "/") String folder
     ) {

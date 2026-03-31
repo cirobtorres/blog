@@ -1,10 +1,7 @@
 package com.cirobtorres.blog.api.mediaFolder.services;
 
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderCountDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderPutDTO;
-import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFoldersDTO;
+import com.cirobtorres.blog.api.mediaFolder.dtos.*;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
 import com.cirobtorres.blog.api.mediaFolder.repositories.MediaFolderRepository;
 import com.cloudinary.Cloudinary;
@@ -13,29 +10,26 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class MediaFolderService {
     private final Cloudinary cloudinary;
     private final MediaFolderRepository mediaFolderRepository;
-    private final MediaRepository mediaRepository;
 
     public MediaFolderService(
             Cloudinary cloudinary,
-            MediaFolderRepository mediaFolderRepository,
-            MediaRepository mediaRepository
+            MediaFolderRepository mediaFolderRepository
     ) {
         this.cloudinary = cloudinary;
         this.mediaFolderRepository = mediaFolderRepository;
-        this.mediaRepository = mediaRepository;
     }
 
     public List<MediaFolderCountDTO> listSubfoldersWithCounts(String parentPath) {
@@ -53,7 +47,6 @@ public class MediaFolderService {
     @Transactional
     public MediaFolder createFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
         String fullPath = mediaFolderDTO.path();
-        System.out.println(fullPath);
 
         // Validation
         if (mediaFolderRepository.existsByPath(fullPath)) {
@@ -156,6 +149,47 @@ public class MediaFolderService {
     public Boolean existsByPath(@NonNull MediaFolderCountDTO mediaFolderCountDTO) {
         String path = mediaFolderCountDTO.path();
         return mediaFolderRepository.existsByPath(path);
+    }
+
+    @Transactional
+    public void moveFolders(@Valid MediaFoldersMoveToDTO dto) {
+        MediaFolder destination = mediaFolderRepository.findByPath(dto.folderDestination())
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Destination folder not found: " + dto.folderDestination())
+                );
+
+        // QUERY ALL
+        List<MediaFolder> sources = mediaFolderRepository.findAllById(dto.foldersId().values());
+
+        // UPDATE EACH
+        for (MediaFolder source : sources) {
+            // VALIDATIONS
+            if (source.getId().equals(destination.getId())) {
+                throw new IllegalArgumentException(
+                        "A folder cannot be descendant of itself: " + source.getName()
+                );
+            }
+
+            if (destination.getPath().startsWith(source.getPath() + "/")) {
+                throw new IllegalArgumentException(
+                        "You can't move a folder to inside any of its own children folders: " + source.getName()
+                );
+            }
+
+            // UPDATE
+            String oldPath = source.getPath();
+            String newPath = destination.getPath().equals("/")
+                    ? "/" + source.getName()
+                    : destination.getPath() + "/" + source.getName();
+            newPath = newPath.replaceAll("//+", "/");
+
+            source.setParent(destination);
+            source.setPath(newPath);
+
+            mediaFolderRepository.updatePathAndDescendants(oldPath, newPath);
+        }
+
+        mediaFolderRepository.saveAll(sources);
     }
 
     @Transactional

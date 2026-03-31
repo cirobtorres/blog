@@ -2,7 +2,6 @@
 
 import { FolderProvider } from "../../../../../providers/FolderProvider";
 import { apiServerUrls } from "../../../../../routing/routes";
-import FolderCardGhost from "./FolderCardGhost";
 import FolderListClient from "./FolderListClient";
 
 export default async function FolderCards({

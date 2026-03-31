@@ -21,6 +21,11 @@ export default function AuthProvider({
   initialUser: SessionUser | null;
 }) {
   const [user, setUser] = React.useState(initialUser);
+
+  React.useEffect(() => {
+    setUser(initialUser);
+  }, [initialUser]);
+
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       {children}

@@ -69,7 +69,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider initialUser={user}>
+        <AuthProvider key={user.data?.id ?? "guest"} initialUser={user}>
           {children}
           <Toaster position="top-center" />
         </AuthProvider>

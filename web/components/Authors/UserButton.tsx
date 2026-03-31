@@ -85,12 +85,12 @@ export function UserButton() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {user.authorities.map((a, i) => (
+            {user.authorities.map((authority) => (
               <span
-                key={i}
+                key={authority}
                 className="text-xs text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800"
               >
-                {a}
+                {authority}
               </span>
             ))}
           </div>
@@ -99,7 +99,7 @@ export function UserButton() {
         <div className="flex flex-col p-2">
           <Link
             href={protectedWebUrls.users}
-            className="w-full font-normal p-1 text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800"
+            className="w-full h-auto text-start text-neutral-900 dark:text-neutral-100 font-normal p-1 border border-transparent not-dark:shadow-none justify-start bg-inherit dark:bg-inherit hover:bg-stone-300 dark:hover:bg-stone-800 hover:border-transparent dark:hover:border-transparent focus-within:bg-stone-300 dark:focus-within:bg-stone-800"
           >
             Profile settings
           </Link>

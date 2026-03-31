@@ -1,11 +1,17 @@
 import { Link } from "../../Links";
 import { publicWebUrls } from "../../../routing/routes";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
+import { cn, focusRing } from "../../../utils/variants";
 
 export default function UserSignedOff() {
   return (
     <Popover>
-      <PopoverTrigger className="cursor-pointer flex justify-center items-center ml-auto mr-0">
+      <PopoverTrigger
+        className={cn(
+          "cursor-pointer flex justify-center items-center ml-auto mr-0 rounded-full border border-transparent transition-all duration-300",
+          focusRing,
+        )}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -26,8 +32,24 @@ export default function UserSignedOff() {
         align="end"
         className="w-30 flex flex-col gap-0 p-1 bg-stone-200 dark:bg-stone-900 [&_a]:text-sm [&_a]:font-normal [&_a]:text-neutral-900 [&_a]:dark:text-neutral-100 [&_a]:transition-background [&_a]:duration-300 [&_a]:hover:bg-stone-300 dark:[&_a]:hover:bg-stone-800 [&_a]:w-full [&_a]:py-1 [&_a]:px-2"
       >
-        <Link href={publicWebUrls.signIn}>Entrar</Link>
-        <Link href={publicWebUrls.signUp}>Cadastrar</Link>
+        <Link
+          href={publicWebUrls.signIn}
+          className={cn(
+            "border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
+            focusRing,
+          )}
+        >
+          Entrar
+        </Link>
+        <Link
+          href={publicWebUrls.signUp}
+          className={cn(
+            "border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
+            focusRing,
+          )}
+        >
+          Cadastrar
+        </Link>
       </PopoverContent>
     </Popover>
   );

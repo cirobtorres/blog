@@ -47,6 +47,9 @@ const apiServerUrls = {
     root: API_SERVER + "/media/folders",
     count: API_SERVER + "/media/folders/count",
     exists: API_SERVER + "/media/folders/exists",
+    move: {
+      all: API_SERVER + "/media/folders/move/all",
+    },
   },
 };
 

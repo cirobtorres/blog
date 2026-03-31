@@ -34,7 +34,7 @@ export default function UserSignedIn({
           asChild
           tabIndex={0}
           className={cn(
-            "flex items-center justify-start gap-2 cursor-pointer transition-[background-color,box-shadow] duration-300 group",
+            "flex items-center justify-start gap-2 cursor-pointer border border-transparent transition-all duration-300 group",
             focusRing,
           )}
         >
