@@ -1,15 +1,22 @@
 "use client";
 
 import React from "react";
-import { AlertDialog } from "../../../../AlertDialog";
+import { AlertDialog, AlertDialogTrigger } from "../../../../AlertDialog";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
 import { convertToLargeDate } from "../../../../../utils/date";
-import { Trigger } from "./Dialog";
+import { createFilesOnDb } from "../../../../../services/media/createFilesOnDb";
+import { Button } from "../../../../Button";
 import DialogEmptyContent from "./DialogEmptyContent";
 import DialogCardsContent from "./DialogCardsContent";
 import createFile from "../../../../../services/cloudinary/createFile";
-import { createFilesOnDb } from "../../../../../services/media/createFilesOnDb";
 import validateFiles from "../../../../../utils/zod-shared-schemas";
+
+const initialState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
 
 export default function AddFilesButton() {
   const [files, setFiles] = React.useState<File[]>([]);
@@ -19,6 +26,10 @@ export default function AddFilesButton() {
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
+      if (formData.get("_action") === "reset") {
+        return initialState;
+      }
+
       const success = (serverResponse: ActionState) => {
         const dateSource = Array.isArray(serverResponse.data)
           ? serverResponse.data[0]?.created_at
@@ -59,20 +70,36 @@ export default function AddFilesButton() {
 
       return result;
     },
-    {
-      ok: false,
-      success: null,
-      error: null,
-      data: null,
-    } as ActionState,
+    initialState,
   );
 
-  const addFiles = (newFiles: FileList | null) => {
+  const handleReset = () => {
+    const formData = new FormData();
+    formData.append("_action", "reset");
+    React.startTransition(() => {
+      action(formData);
+    }); // Triggers action only to reset to its initialState
+    setOpenStep(null);
+    setFiles([]);
+  };
+
+  const addFiles = (newFiles: FileList | File[] | null) => {
     if (newFiles) {
       const fileArray = Array.from(newFiles);
       setFiles((prev) => [...prev, ...fileArray]);
       setOpenStep("preview");
     }
+  };
+
+  const contentProps = {
+    files,
+    setFiles,
+    state,
+    action,
+    isPending,
+    openStep,
+    setOpenStep,
+    handleReset,
   };
 
   return (
@@ -87,15 +114,39 @@ export default function AddFilesButton() {
     >
       <Trigger setOpenStep={setOpenStep} />
       <DialogEmptyContent openStep={openStep} addFiles={addFiles} />
-      <DialogCardsContent
-        openStep={openStep}
-        setOpenStep={setOpenStep}
-        files={files}
-        setFiles={setFiles}
-        state={state}
-        action={action}
-        isPending={isPending}
-      />
+      <DialogCardsContent {...contentProps} />
     </AlertDialog>
+  );
+}
+
+function Trigger({
+  setOpenStep,
+}: {
+  setOpenStep: (value: "upload" | "preview" | null) => void;
+}) {
+  return (
+    <AlertDialogTrigger asChild>
+      <Button
+        className="w-full max-w-44 h-8"
+        onClick={() => setOpenStep("upload")}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className=""
+        >
+          <path d="M5 12h14" />
+          <path d="M12 5v14" />
+        </svg>
+        Adicionar arquivos
+      </Button>
+    </AlertDialogTrigger>
   );
 }

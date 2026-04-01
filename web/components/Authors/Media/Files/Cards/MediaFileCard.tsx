@@ -45,7 +45,7 @@ export default function MediaFileCard({
           </label>
           <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
             {file.url && <ExpandButton url={file.url} />}
-            <DownloadButton />
+            <DownloadButton {...file} />
             <EditButton {...file} />
             <DeleteButton {...file} />
           </div>

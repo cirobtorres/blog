@@ -127,7 +127,7 @@ export default function EditButton({
                 <FieldsetLabel label="Nome" htmlFor="folderName" />
               </Fieldset>
               <FieldsetError error={state?.error?.folderName?.errors} />
-              <FolderPopover currentEditingPath={path} />
+              <FolderPopover movingFolderPaths={[path]} />
               <FieldsetError error={state?.error?.folderDestination?.errors} />
             </div>
           </div>

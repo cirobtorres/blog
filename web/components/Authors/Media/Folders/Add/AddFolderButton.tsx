@@ -108,7 +108,7 @@ export default function AddFolderButton() {
                 className="px-1"
               />
             </div>
-            <FolderPopover currentEditingPath="/" />
+            <FolderPopover movingFolderPaths={["/"]} />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

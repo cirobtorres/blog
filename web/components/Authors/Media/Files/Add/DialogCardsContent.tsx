@@ -1,9 +1,14 @@
 import {
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogExitConfirmation,
+  AlertDialogFooter,
+  AlertDialogHeaderPrimitive,
+  AlertDialogTitle,
 } from "../../../../AlertDialog";
+import { Button } from "../../../../Button";
+import Spinner from "../../../../Spinner";
 import CardPreview from "./CardPreview";
-import { Footer, Header } from "./Dialog";
 
 export default function DialogCardsContent({
   files,
@@ -13,6 +18,7 @@ export default function DialogCardsContent({
   state,
   action,
   isPending,
+  handleReset,
 }: {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
@@ -23,16 +29,22 @@ export default function DialogCardsContent({
   state: ActionState;
   action: (payload: FormData) => void;
   isPending: boolean;
+  handleReset: () => void;
 }) {
   return (
     openStep === "preview" && (
       <AlertDialogContent>
-        <Header setOpenStep={setOpenStep} setFiles={setFiles} />
+        <AlertDialogHeaderPrimitive>
+          <AlertDialogTitle>Adicione arquivos</AlertDialogTitle>
+          <AlertDialogExitConfirmation onConfirm={handleReset}>
+            Os arquivos serão descartados. Deseja realmente sair?
+          </AlertDialogExitConfirmation>
+        </AlertDialogHeaderPrimitive>
         <form action={action}>
           <AlertDialogDescription className="sr-only">
             Lista de cards de arquivos selecionados para upload. Você pode
-            revisar os nomes, tamanhos e tipos de {files.length} arquivo(s)
-            antes de confirmar o salvamento.
+            revisar os nomes, tamanhos e tipos de arquivo &#40;s&#41; antes de
+            confirmar o salvamento.
           </AlertDialogDescription>
           <div className="p-5 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4 m-1 scrollbar">
             {files.map((file, index) => (
@@ -49,11 +61,21 @@ export default function DialogCardsContent({
               />
             ))}
           </div>
-          <Footer
-            isPending={isPending}
-            setOpenStep={setOpenStep}
-            setFiles={setFiles}
-          />
+          <AlertDialogFooter>
+            <AlertDialogExitConfirmation
+              location="footer"
+              onConfirm={handleReset}
+            >
+              Os arquivos serão descartados. Deseja realmente sair?
+            </AlertDialogExitConfirmation>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full max-w-30 h-8"
+            >
+              {isPending && <Spinner />} Salvar
+            </Button>
+          </AlertDialogFooter>
         </form>
       </AlertDialogContent>
     )

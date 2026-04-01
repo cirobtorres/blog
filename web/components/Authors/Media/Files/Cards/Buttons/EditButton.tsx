@@ -170,7 +170,7 @@ export default function EditButton({
                   <FolderPopover
                     name={`file_0_folder`}
                     defaultValue={folder.path}
-                    currentEditingPath={folder.path}
+                    movingFolderPaths={[folder.path]}
                   />
                   {state?.error?.customFolder && (
                     <FieldsetError error={state?.error?.customFolder?.errors} />

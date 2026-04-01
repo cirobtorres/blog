@@ -14,17 +14,13 @@ export async function logout() {
   const accessToken = cookieStore.get("access_token")?.value;
 
   try {
-    const response = await fetch(apiClientUrls.logout, {
+    await fetch(apiClientUrls.logout, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
     });
-    if (!response.ok) {
-      const error = await response.json();
-      console.log(error);
-    }
   } catch (e) {
     console.error("Logout error:", e);
     return { ok: false, success: null, error: null, data: null };

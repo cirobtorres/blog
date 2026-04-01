@@ -49,8 +49,6 @@ export default async function FolderCards({
       }),
   ]);
 
-  console.log(folders);
-
   return (
     <FolderProvider>
       <section className="w-full flex flex-col items-start justify-center gap-2">

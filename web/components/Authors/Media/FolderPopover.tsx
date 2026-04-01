@@ -26,11 +26,11 @@ const Current = () => (
 export default function FolderPopover({
   name,
   defaultValue,
-  currentEditingPath,
+  movingFolderPaths = [],
 }: {
   name?: string;
   defaultValue?: string;
-  currentEditingPath?: string;
+  movingFolderPaths?: string[];
 }) {
   const [open, setOpen] = React.useState(false);
   const { data: folders, isPending } = useFolders();
@@ -83,16 +83,15 @@ export default function FolderPopover({
             <CommandList className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar">
               <CommandGroup>
                 {sortFolders?.map((folder) => {
-                  if (typeof currentEditingPath === "undefined") {
-                    currentEditingPath = currentFolder;
-                  }
                   const depth = folder.path.split("/").filter(Boolean).length;
-                  const isSelf =
-                    folder.path === currentEditingPath &&
-                    currentEditingPath !== "/";
-                  const isDescendant =
-                    currentEditingPath &&
-                    folder.path.startsWith(currentEditingPath + "/");
+
+                  // Lógica de Bloqueio:
+                  const isSelf = movingFolderPaths.includes(folder.path);
+
+                  const isDescendant = movingFolderPaths.some((movingPath) =>
+                    folder.path.startsWith(movingPath + "/"),
+                  );
+
                   const isDisabled = isSelf || isDescendant;
                   const isCurrent =
                     value === folder.path || currentFolder === folder.path;

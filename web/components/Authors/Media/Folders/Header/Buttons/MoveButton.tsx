@@ -25,8 +25,9 @@ export default function MoveButton({
   folders: Folder[];
   disabled?: boolean;
 }) {
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <FoldersMoveTrigger disabled={disabled} />
       <AlertDialogContent asChild>
         <form className="max-w-sm">
@@ -58,14 +59,19 @@ export default function MoveButton({
                   ))}
                 </ul>
               </div>
-              <FolderPopover />
+              <FolderPopover
+                movingFolderPaths={folders.map((folder) => folder.path)}
+              />
             </div>
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <MoveFoldersAction folders={folders} />
+            <MoveFoldersAction
+              folders={folders}
+              onSuccess={() => setIsOpen(false)}
+            />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -73,10 +79,17 @@ export default function MoveButton({
   );
 }
 
-const MoveFoldersAction = ({ folders }: { folders: Folder[] }) => {
+const MoveFoldersAction = ({
+  folders,
+  onSuccess,
+}: {
+  folders: Folder[];
+  onSuccess: () => void;
+}) => {
   const [, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
+        onSuccess();
         return (
           <div className="flex flex-col">
             <p>{serverResponse.success}</p>

@@ -1,4 +1,4 @@
-export const VideoThumbnail = (file: File): Promise<string> => {
+export function VideoThumbnail(file: File): Promise<string> {
   return new Promise((resolve) => {
     const video = document.createElement("video");
     video.preload = "metadata";
@@ -21,4 +21,15 @@ export const VideoThumbnail = (file: File): Promise<string> => {
       resolve(imageUrl);
     };
   });
-};
+}
+
+export async function fetchFileFromUrl(url: string): Promise<File> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Falha ao baixar a imagem da URL");
+
+  const blob = await response.blob();
+  const fileName = url.split("/").pop()?.split("?")[0] || "downloaded-file";
+  const contentType = blob.type || "image/jpeg";
+
+  return new File([blob], fileName, { type: contentType });
+}

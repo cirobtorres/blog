@@ -1,12 +1,19 @@
 import { Button } from "../../../../Button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../Popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../Select";
 
 export default function FolderSorting() {
   return (
-    <div className="w-full flex justify-end items-center gap-2">
+    <div className="flex items-center gap-2">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full max-w-40 h-8">
+          <Button variant="outline" className="w-40 h-8">
             Mais recentes{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +37,7 @@ export default function FolderSorting() {
       </Popover>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full max-w-22 h-8">
+          <Button variant="outline" className="w-22 h-8">
             Filtros{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +58,36 @@ export default function FolderSorting() {
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="rounded">
-          <p>TODO</p>
+          <Select>
+            <SelectTrigger className="w-full flex-1">
+              <SelectValue placeholder="createdAt" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="createdAt">createdAt</SelectItem>
+              <SelectItem value="updatedAt">updatedAt</SelectItem>
+              <SelectItem value="type">type</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select>
+            <SelectTrigger className="w-full flex-1">
+              <SelectValue placeholder="is" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="is">is</SelectItem>
+              <SelectItem value="isNot">is not</SelectItem>
+              <SelectItem value="isGreaterThan">is greater than</SelectItem>
+              <SelectItem value="isGreaterThanOrEqualTo">
+                is greater than or equal to
+              </SelectItem>
+              <SelectItem value="isLowerThan">is lower than</SelectItem>
+              <SelectItem value="isLowerThanOrEqualTo">
+                is lower than or equal to
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="link" className="h-9.5">
+            Adicionar filtros
+          </Button>
         </PopoverContent>
       </Popover>
     </div>

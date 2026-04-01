@@ -6,7 +6,6 @@ import FolderCardGhost from "./FolderCardGhost";
 import FolderSorting from "../Header/FolderSorting";
 
 export default function FolderListClient({ folders }: { folders: Folder[] }) {
-  console.log(folders.length);
   return (
     <>
       <div className="w-full flex justify-between items-center gap-2">

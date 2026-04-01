@@ -31,16 +31,12 @@ export default function DeleteButton({
       <AlertDialogContent className="max-w-xs">
         <form>
           <AlertDialogHeader>Excluir pasta</AlertDialogHeader>
-          <AlertDialogDescription asChild className="p-4">
-            <div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-500">
-                Excluir a pasta{" "}
-                <strong className="text-neutral-900 dark:text-neutral-100">
-                  {path.split("/").splice(-1)}
-                </strong>
-                ?
-              </p>
-            </div>
+          <AlertDialogDescription className="text-wrap break-all text-sm p-4 text-neutral-600 dark:text-neutral-500">
+            Excluir a pasta{" "}
+            <strong className="text-wrap break-all text-neutral-900 dark:text-neutral-100">
+              {path.split("/").splice(-1)}
+            </strong>
+            ?
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel className="w-full max-w-30 h-8">

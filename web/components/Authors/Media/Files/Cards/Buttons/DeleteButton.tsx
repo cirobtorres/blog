@@ -41,7 +41,6 @@ export default function DeleteButton({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className=""
           >
             <path d="M10 11v6" />
             <path d="M14 11v6" />
@@ -54,16 +53,12 @@ export default function DeleteButton({
       <AlertDialogContent asChild className="max-w-xs">
         <form>
           <AlertDialogHeader>Excluir arquivo</AlertDialogHeader>
-          <AlertDialogDescription asChild>
-            <div className="p-4">
-              <p className="text-sm text-neutral-600 dark:text-neutral-500">
-                Excluir{" "}
-                <span className="text-neutral-100 font-bold">
-                  {name}.{extension}
-                </span>
-                ?
-              </p>
-            </div>
+          <AlertDialogDescription className="text-wrap break-all text-sm p-4 text-neutral-600 dark:text-neutral-500">
+            Excluir{" "}
+            <span className="text-wrap break-all text-neutral-100 font-bold">
+              {name}.{extension}
+            </span>
+            ?
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel className="w-full max-w-30 h-8">

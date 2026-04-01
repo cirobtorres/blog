@@ -184,7 +184,9 @@ const Dialog = ({
     </AlertDialogTrigger>
     <AlertDialogContent>
       <AlertDialogHeader>{children}</AlertDialogHeader>
-      <AlertDialogDescription className="sr-only">TODO</AlertDialogDescription>
+      <AlertDialogDescription className="sr-only">
+        Termos de proteção e uso de dados
+      </AlertDialogDescription>
       <div className="max-h-100 m-2 p-4 overflow-y-auto scrollbar">
         <Terms />
       </div>

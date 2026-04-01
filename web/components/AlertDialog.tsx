@@ -261,9 +261,9 @@ const AlertDialogExitConfirmation = ({
         <AlertDialogCancel className="w-full max-w-20 h-8">
           Voltar
         </AlertDialogCancel>
-        <AlertDialogAction onClick={onConfirm} className="w-full max-w-20 h-8">
+        <Button onClick={onConfirm} className="w-full max-w-20 h-8">
           Sair
-        </AlertDialogAction>
+        </Button>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

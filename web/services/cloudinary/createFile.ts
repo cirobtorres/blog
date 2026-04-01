@@ -34,6 +34,6 @@ export default async function createFile(
     custom_name: metadata.customName,
     custom_alt: metadata.customAlt,
     custom_caption: metadata.customCaption,
-    custom_folder: "/" + metadata.customFolder,
+    custom_folder: metadata.customFolder,
   };
 }

@@ -3,18 +3,39 @@ import * as z from "zod";
 const mediaExtensionRegex =
   /\.(jpg|jpeg|png|webp|avif|gif|mp4|mov|wmv|mp3|wav)$/i;
 
-export const singleFileSchema = z.object({
-  customName: z
-    .string()
-    .min(1, "Nome é obrigatório")
-    .transform((val) => val.trim().replace(mediaExtensionRegex, "")),
-  customCaption: z.string().default(""),
-  customAlt: z.string().min(1, "Alt text é obrigatório"),
-  customFolder: z
-    .string()
-    .min(1, "Pasta é obrigatória")
-    .transform((val) => (val === "/" ? "" : val)),
-});
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+export const singleFileSchema = z
+  .object({
+    customName: z
+      .string()
+      .min(1, "Nome é obrigatório")
+      .transform((val) => val.trim().replace(mediaExtensionRegex, "")),
+    customCaption: z.string().default(""),
+    customAlt: z.string().min(1, "Alt text é obrigatório"),
+    customFolder: z
+      .string()
+      .min(1, "Pasta é obrigatória")
+      .transform((val) => (val === "/" ? "" : val)),
+    fileSize: z.coerce.number(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.fileSize > MAX_FILE_SIZE) {
+      ctx.addIssue({
+        code: "custom",
+        message: "O arquivo excede o limite de 10MB",
+        path: ["form"],
+      });
+    }
+
+    if (data.fileSize <= 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Arquivo inválido ou vazio",
+        path: ["form"],
+      });
+    }
+  });
 
 const returnState = {
   ok: false,
@@ -69,6 +90,7 @@ export default function validateFiles(
       customCaption: formData.get(`file_${i}_caption`),
       customAlt: formData.get(`file_${i}_alt`),
       customFolder: formData.get(`file_${i}_folder`),
+      fileSize: formData.get(`file_${i}_size`),
     });
   }
 

@@ -8,8 +8,9 @@ import {
   FieldsetLabel,
 } from "../../../../Fieldset";
 import { Button } from "../../../../Button";
-import { VideoThumbnail } from "../../../../../utils/VideoThumbnail";
+import { VideoThumbnail } from "../../../../../utils/media-file-utils";
 import FolderPopover from "../../FolderPopover";
+import { cn } from "../../../../../utils/variants";
 
 export default function CardPreview({
   file,
@@ -44,7 +45,13 @@ export default function CardPreview({
   }, [file, isImage, isVideo]);
 
   return (
-    <div className="relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md">
+    <div
+      className={cn(
+        "relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md",
+        !!state?.error?.[index]?.properties?.form &&
+          "border-destructive/50 dark:border-destructive/50 bg-destructive/10 dark:bg-destructive/10",
+      )}
+    >
       {(isImage || isVideo) && preview ? (
         <Preview preview={preview} file={file} onRemove={onRemove} />
       ) : isVideo ? (
@@ -78,6 +85,13 @@ export default function CardPreview({
         </svg>
       )}
       <div className="w-full h-full flex flex-col gap-2 mb-auto">
+        <input
+          type="hidden"
+          hidden
+          value={file.size}
+          name={`file_${index}_size`}
+          className="appearance-none invisible"
+        />
         <Fieldset>
           <FieldsetInput
             id={`name-input-${index}`}
@@ -137,7 +151,10 @@ export default function CardPreview({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <FolderPopover name={`file_${index}_folder`} currentEditingPath="/" />
+          <FolderPopover
+            name={`file_${index}_folder`}
+            movingFolderPaths={["/"]}
+          />
           {state?.error?.[index] && (
             <FieldsetError
               error={state?.error?.[index]?.properties?.customFolder?.errors}
@@ -147,6 +164,11 @@ export default function CardPreview({
             A pasta de destino do arquivo.
           </p>
         </div>
+        {state?.error?.[index] && (
+          <FieldsetError
+            error={state?.error?.[index]?.properties?.form?.errors}
+          />
+        )}
       </div>
     </div>
   );
