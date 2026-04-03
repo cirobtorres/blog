@@ -46,7 +46,6 @@ public class UserIdentityService {
             String pictureUrl,
             String password
     ) {
-        if (!isProd) log.info("UserIdentityService.createLocalUser(): pictureUrl={}", pictureUrl);
         User user = userRepository.findByEmail(email).orElseGet(User::new);
 
         UserIdentity userIdentity = UserIdentity
@@ -80,7 +79,6 @@ public class UserIdentityService {
             String pictureUrl,
             boolean emailVerified
     ) {
-        if (!isProd) log.info("UserIdentityService.createOAuthUser()");
         UserIdentity userIdentity = userIdentityRepository
                 .findByProviderAndProviderUserId(provider, providerUserId)
                 .orElseGet(
@@ -122,7 +120,6 @@ public class UserIdentityService {
             String pictureUrl,
             boolean emailVerified
     ) {
-        if (!isProd) log.info("UserIdentityService.resolveUser()");
         User user = findOrMergeUser(
                 email,
                 emailVerified

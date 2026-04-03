@@ -9,7 +9,7 @@ import { apiServerUrls, publicWebUrls } from "./routing/routes";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  let accessToken = request.cookies.get("access_token")?.value;
+  const accessToken = request.cookies.get("access_token")?.value;
   const refreshToken = request.cookies.get("refresh_token")?.value;
 
   // EXPIRATION
@@ -30,18 +30,33 @@ export async function proxy(request: NextRequest) {
       headers: { Cookie: `refresh_token=${refreshToken}` },
     });
 
+    // DENTRO DO REFRESH NO MIDDLEWARE
     if (refreshRes.ok) {
       const setCookieHeader = refreshRes.headers.get("set-cookie");
       if (setCookieHeader) {
-        accessToken =
-          extractTokenFromHeader(setCookieHeader, "access_token") ?? undefined;
-        const response = NextResponse.next();
+        const response = NextResponse.next(); // Cria a resposta base
+
+        // 1. Aplica os novos cookies para o Navegador
         applySpringCookies(response, setCookieHeader);
 
-        if (!hasAccessFromToken(pathname, accessToken)) {
+        // 2. Extrai o novo token para lógica interna do middleware
+        const newAccessToken = extractTokenFromHeader(
+          setCookieHeader,
+          "access_token",
+        );
+
+        // 3. Importante: Injeta o novo token no header da REQUISIÇÃO
+        // para que o código que vem DEPOIS (Server Components) o veja
+        if (newAccessToken) {
+          response.headers.set("Authorization", `Bearer ${newAccessToken}`);
+        }
+
+        // 4. Se a rota exige autoridade, valide com o NOVO token
+        if (!hasAccessFromToken(pathname, newAccessToken ?? undefined)) {
           return redirectToLogin(request, pathname);
         }
-        return response;
+
+        return response; // RETORNE AQUI, não deixe passar para o final da função
       }
     }
   }

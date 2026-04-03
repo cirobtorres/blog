@@ -76,7 +76,8 @@
   --animate-pulse-notification: pulse-notification 1.5s infinite;
 
   /* FONT-FAMILY */
-  --font-inter: "Inter", font-sans;
+  --font-inter: "Inter";
+  /* --font-inter: "Inter", font-sans; */
 
   @keyframes skeleton {
     to {
@@ -224,6 +225,14 @@
   textarea::selection {
     background-color: color-mix(in oklab, var(--primary) 75%, black);
     color: white;
+  }
+
+  /* Clear search input */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
   }
 
   /* Autofill */

@@ -60,6 +60,7 @@ export default function EditButton({
       };
 
       const validation = validateFile(formData);
+      console.log(validation);
       if (!validation.ok) return validation;
 
       const result = editFile(prevState, formData);
@@ -99,23 +100,31 @@ export default function EditButton({
               <div className="w-full h-full flex flex-col gap-2 mb-auto">
                 <input
                   hidden
-                  id={`file_0_id`}
+                  id="file_0_size"
                   type="hidden"
-                  name={`file_0_id`}
+                  value={size}
+                  name="file_0_size"
+                  className="appearance-none invisible"
+                />
+                <input
+                  hidden
+                  id="file_0_id"
+                  type="hidden"
+                  name="file_0_id"
                   value={id}
                 />
                 <div className="flex flex-col gap-1">
                   <Fieldset>
                     <FieldsetInput
-                      id={`file_0_name`}
-                      name={`file_0_name`}
+                      id="file_0_name"
+                      name="file_0_name"
                       defaultValue={name}
                       error={state?.error?.customName?.errors}
                     />
                     <FieldsetLabel
                       id="name-label"
                       label="name"
-                      htmlFor={`file_0_name`}
+                      htmlFor="file_0_name"
                     />
                   </Fieldset>
                   {state?.error?.customName && (
@@ -125,15 +134,15 @@ export default function EditButton({
                 <div className="flex flex-col gap-1">
                   <Fieldset>
                     <FieldsetInput
-                      id={`file_0_caption`}
-                      name={`file_0_caption`}
+                      id="file_0_caption"
+                      name="file_0_caption"
                       defaultValue={caption}
                       error={state?.error?.customCaption?.errors}
                     />
                     <FieldsetLabel
                       id="caption-label"
                       label="Caption"
-                      htmlFor={`file_0_caption`}
+                      htmlFor="file_0_caption"
                     />
                   </Fieldset>
                   {state?.error?.customCaption && (
@@ -148,15 +157,15 @@ export default function EditButton({
                 <div className="flex flex-col gap-1">
                   <Fieldset>
                     <FieldsetInput
-                      id={`file_0_alt`}
-                      name={`file_0_alt`}
+                      id="file_0_alt"
+                      name="file_0_alt"
                       defaultValue={alt}
                       error={state?.error?.customAlt?.errors}
                     />
                     <FieldsetLabel
                       id="alt-label"
                       label="Alt"
-                      htmlFor={`file_0_alt`}
+                      htmlFor="file_0_alt"
                     />
                   </Fieldset>
                   {state?.error?.customAlt && (
@@ -168,7 +177,7 @@ export default function EditButton({
                 </div>
                 <div className="flex flex-col gap-1">
                   <FolderPopover
-                    name={`file_0_folder`}
+                    name="file_0_folder"
                     defaultValue={folder.path}
                     movingFolderPaths={[folder.path]}
                   />

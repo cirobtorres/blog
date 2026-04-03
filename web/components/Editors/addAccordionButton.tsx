@@ -10,8 +10,8 @@ export function AddAccordionButton({
   addBlock: (type: Blocks["type"]) => void;
 }) {
   return (
-    <div className="w-fit mx-auto border rounded-xl p-2 not-dark:shadow dark:bg-stone-900">
-      <div className="w-fit mx-auto flex gap-1">
+    <div className="h-full flex items-center">
+      <div className="mx-auto flex gap-1">
         {buttons.map((prop, index) => (
           <div
             key={index}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useFolder } from "../../../../../providers/FolderProvider";
-import { Button } from "../../../../Button";
 import { Checkbox } from "../../../../Fieldset/Checkbox";
 import DeleteButton from "./Buttons/DeteleButton";
 import MoveButton from "./Buttons/MoveButton";

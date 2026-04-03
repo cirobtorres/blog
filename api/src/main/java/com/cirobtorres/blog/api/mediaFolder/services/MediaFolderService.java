@@ -39,7 +39,9 @@ public class MediaFolderService {
     @Transactional
     public Long countSubfoldersByPath(String folder) {
         MediaFolder parent = mediaFolderRepository.findByPath(folder)
-                .orElseThrow(() -> new EntityNotFoundException("Folder: {" + folder + "} not found."));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Folder: {" + folder + "} not found.")
+                );
 
         return (long) parent.getSubfolders().size();
     }
@@ -112,10 +114,14 @@ public class MediaFolderService {
     @Transactional
     public void updateFolder(@Valid @NonNull MediaFolderPutDTO dto) {
         MediaFolder currentFolder = mediaFolderRepository.findByPath(dto.currentPath())
-                .orElseThrow(() -> new EntityNotFoundException("Current folder not found: ."));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Current folder not found: .")
+                );
 
         MediaFolder destinationFolder = mediaFolderRepository.findByPath(dto.newDestinationPath())
-                .orElseThrow(() -> new EntityNotFoundException("Destination folder not found."));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Destination folder not found.")
+                );
 
         if (destinationFolder.getPath().startsWith(currentFolder.getPath() + "/")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't move a folder to inside any of its own children folders.");

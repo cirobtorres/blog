@@ -11,8 +11,23 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MediaRepository extends JpaRepository<Media, UUID> {
-    @Query(value = "SELECT m FROM Media m WHERE m.folder.path = :path", countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path")
+    @Query(
+            value = "SELECT m FROM Media m WHERE m.folder.path = :path",
+            countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path"
+    )
     Page<Media> findByFolderPath(@Param("path") String path, Pageable pageable);
+
+    @Query(
+            value = "SELECT m FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :q, '%')))",
+            countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :q, '%')))"
+    )
+    Page<Media> findByFolderPathAndName(@Param("path") String path, @Param("q") String q, Pageable pageable);
+
+    // Search ignores folder
+    @Query(
+            "SELECT m FROM Media m WHERE (:searchTerm IS NULL AND m.folder.path = :path) OR (:searchTerm IS NOT NULL AND LOWER(m.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')))"
+    )
+    Page<Media> searchGlobalOrFolder(@Param("path") String path, @Param("searchTerm") String searchTerm, Pageable pageable);
 
     @Query("SELECT m.publicId FROM Media m WHERE m.folder.path = :path")
     List<String> findAllPublicIdsByFolderPath(@Param("path") String path);
@@ -22,4 +37,6 @@ public interface MediaRepository extends JpaRepository<Media, UUID> {
 
     @Query("SELECT m.publicId FROM Media m")
     List<String> findAllPublicIds();
+
+    Page<Media> findByNameContainingIgnoreCase(String trim, Pageable pageable);
 }

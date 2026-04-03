@@ -19,7 +19,7 @@ type HtmlEditor = { body: string };
 type CodeEditor = { filename: string; code: string; language: BundledLanguage };
 type AccordionEditor = null;
 type AlertEditor = null;
-type ImageEditor = null;
+type ImageEditor = { url: string };
 type ImagesEditor = null;
 
 type Blocks =

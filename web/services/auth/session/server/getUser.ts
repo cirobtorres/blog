@@ -1,11 +1,17 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
+import { cache } from "react";
 
-export default async function getUser(): Promise<SessionUser> {
+const getUser = cache(async (): Promise<SessionUser> => {
+  console.log("getUser");
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
+  const headerList = await headers();
+  const authHeader = headerList.get("authorization");
+  const accessToken = authHeader
+    ? authHeader.split(" ")[1]
+    : cookieStore.get("access_token")?.value;
 
   if (!accessToken) return { ok: false, data: null };
 
@@ -19,25 +25,25 @@ export default async function getUser(): Promise<SessionUser> {
       cache: "no-store",
     });
 
-    if (!response.ok) {
-      if (response.status === 204 || response.status === 401) {
-        // No content || Unauthorized
-        return { ok: false, data: null };
-      }
-
-      if (response.status === 404) {
-        // Not found
-        return { ok: false, data: null };
-      }
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
+    if (response.status === 204 || response.status === 401) {
+      // No content || Unauthorized
+      return { ok: false, data: null };
     }
 
-    return { ok: true, data: await response.json() };
+    if (!response.ok) {
+      throw new Error(
+        `getUser error: status -> ${response.status}, message -> ${response.statusText}`,
+      );
+    }
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+
+    return { ok: true, data };
   } catch (e) {
     console.error("getUser:", e);
     return { ok: false, data: null };
   }
-}
+});
+
+export default getUser;

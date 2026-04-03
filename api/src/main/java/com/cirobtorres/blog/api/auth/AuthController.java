@@ -77,6 +77,7 @@ public class AuthController {
 
     @GetMapping("me")
     public ResponseEntity<UserDTO> me(Authentication auth) {
+        System.out.println("AuthController.me(): auth=" + auth);
         UserDTO user = authService.getUser(auth);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
     }
@@ -86,6 +87,7 @@ public class AuthController {
             @CookieValue("refresh_token") String refreshToken,
             HttpServletResponse response
     ) throws NoSuchAlgorithmException {
+        System.out.println("AuthController.refresh(): refreshToken=" + refreshToken);
         TokensDTO tokens = authService.refresh(refreshToken);
         jwtService.addTokensToCookies(response, tokens);
         return ResponseEntity.ok().build();

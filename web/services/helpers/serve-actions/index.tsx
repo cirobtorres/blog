@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 function parseSetCookie(header: string) {
-  // Magic RegEx: divides by commas, skipping the ones that comes within dates (ex: Sun, 15-Jun...)
   return header.split(/,(?=[^;]+?=)/);
 }
 
@@ -15,14 +14,13 @@ function extractTokenFromHeader(header: string, name: string) {
   return target ? target.split(";")[0].split("=")[1] : null;
 }
 
-function applySpringCookies(response: NextResponse, header: string) {
+function applySpringCookies(response: NextResponse, setCookieHeader: string) {
   const isProd = process.env.NODE_ENV === "production";
-  const rawCookies = header.split(/,(?=[^;]+?=)/);
+  const rawCookies = setCookieHeader.split(/,(?=[^;]+?=)/);
 
   rawCookies.forEach((cookieStr) => {
-    const [nameValue, ...attributes] = cookieStr
-      .split(";")
-      .map((s) => s.trim());
+    const parts = cookieStr.split(";").map((s) => s.trim());
+    const [nameValue] = parts;
     const [name, value] = nameValue.split("=");
 
     response.cookies.set(name, value, {

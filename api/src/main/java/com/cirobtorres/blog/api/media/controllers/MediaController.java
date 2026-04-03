@@ -27,10 +27,11 @@ public class MediaController {
 
     @GetMapping
     public ResponseEntity<Page<MediaDTO>> listPaged(
-            @RequestParam(defaultValue = "Home") String folder,
+            @RequestParam(name = "folder", defaultValue = "Home") String folder,
+            @RequestParam(name = "q", defaultValue = "") String q,
             Pageable pageable
     ) {
-        return ResponseEntity.ok(mediaService.listAllPaged(folder, pageable));
+        return ResponseEntity.ok(mediaService.listAllPaged(q, folder, pageable));
     }
 
     @GetMapping("/count")

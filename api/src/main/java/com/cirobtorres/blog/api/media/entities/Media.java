@@ -18,24 +18,24 @@ public class Media {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id")
     private MediaFolder folder;
 
-    @Column(name = "public_id", nullable = false, unique = true)
+    @Column(name = "public_id", nullable = false, unique = true, columnDefinition = "TEXT")
     private String publicId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String extension; // jpg, mp4, wav
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private MediaType type; // Enum: IMAGE, VIDEO
 
     private Long size; // Bytes
@@ -46,10 +46,10 @@ public class Media {
 
     private Double duration; // videos
 
-    @Column(name = "alt_text")
+    @Column(name = "alt_text", columnDefinition = "TEXT")
     private String alt;
 
-    @Column(name = "caption")
+    @Column(name = "caption", columnDefinition = "TEXT")
     private String caption;
 
     @Column(name = "created_at")

@@ -52,10 +52,23 @@ public class MediaService {
     }
 
     @Transactional
-    public Page<MediaDTO> listAllPaged(String folderPath, Pageable pageable) {
+    public Page<MediaDTO> listAllPaged(String q, String folderPath, Pageable pageable) {
+        // String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
+        // Page<Media> entityPage = mediaRepository.findByFolderPath(targetPath, pageable);
+        // return entityPage.map(this::convertToDTO);
+
+        // String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
+        // String searchTerm = (q != null && !q.trim().isEmpty()) ? q.trim() : null;
+        // Page<Media> entityPage = mediaRepository.findByFolderPathAndName(targetPath, searchTerm, pageable);
+        // Page<Media> entityPage = mediaRepository.searchGlobalOrFolder(targetPath, searchTerm, pageable);
+        // return entityPage.map(this::convertToDTO);
+
+        if (q != null && !q.trim().isEmpty()) {
+            return mediaRepository.findByNameContainingIgnoreCase(q.trim(), pageable).map(this::convertToDTO);
+        }
+
         String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
-        Page<Media> entityPage = mediaRepository.findByFolderPath(targetPath, pageable);
-        return entityPage.map(this::convertToDTO);
+        return mediaRepository.findByFolderPath(targetPath, pageable).map(this::convertToDTO);
     }
 
     @Transactional

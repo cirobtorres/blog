@@ -52,6 +52,7 @@ export const validateFile = (formData: FormData) => {
     file_0_caption: customCaption,
     file_0_alt: customAlt,
     file_0_folder: customFolder,
+    file_0_size: fileSize,
   } = entries;
 
   const result = singleFileSchema.safeParse({
@@ -60,10 +61,13 @@ export const validateFile = (formData: FormData) => {
     customCaption,
     customAlt,
     customFolder,
+    fileSize,
   });
 
   if (!result.success) {
     const error = z.treeifyError(result.error).properties;
+
+    console.log(error);
     return {
       ...returnState,
       error,

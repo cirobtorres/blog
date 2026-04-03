@@ -3,7 +3,6 @@
 import React from "react";
 import { ArticleEditorTitle } from "../Editors/editors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../Editors/editors/ArticleEditorSubtitle";
-import { ArticleEditorBanner } from "../Editors/editors/ArticleEditorBanner";
 import { AddBlockButton, BlockList } from "../Editors/blocks";
 import { convertToLargeDate } from "../../utils/date";
 import { useRouter } from "next/navigation";
@@ -103,7 +102,7 @@ export function ArticleCreate() {
   );
 
   return (
-    <form className="w-full max-w-6xl mx-auto flex-1 flex flex-col gap-2 p-2">
+    <form className="w-full max-w-4xl mx-auto flex-1 flex flex-col gap-2 p-2">
       <h1 className="text-3xl font-extrabold my-6">Escrever novo artigo</h1>
       {publishState.error ? (
         <Alert title="Erros" variant="default">
@@ -165,7 +164,7 @@ export function ArticleCreate() {
         error={publishState.error?.subtitle?.errors}
       />
       <FieldsetError error={publishState.error?.subtitle?.errors} />
-      <ArticleEditorBanner />
+      {/* <ArticleEditorBanner /> */}
       <BlockList
         blocks={blocks}
         setBlocks={setBlocks}
