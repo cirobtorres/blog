@@ -1,8 +1,10 @@
 package com.cirobtorres.blog.api.media.services;
 
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
+import com.cirobtorres.blog.api.media.dtos.MediaFilesMoveToDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaPutDTO;
 import com.cirobtorres.blog.api.media.entities.Media;
+import com.cirobtorres.blog.api.media.enums.FilterQueryParams;
 import com.cirobtorres.blog.api.media.enums.MediaType;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import com.cirobtorres.blog.api.mediaFolder.dtos.MediaFolderDTO;
@@ -13,16 +15,19 @@ import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -52,23 +57,52 @@ public class MediaService {
     }
 
     @Transactional
-    public Page<MediaDTO> listAllPaged(String q, String folderPath, Pageable pageable) {
-        // String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
-        // Page<Media> entityPage = mediaRepository.findByFolderPath(targetPath, pageable);
-        // return entityPage.map(this::convertToDTO);
-
-        // String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
-        // String searchTerm = (q != null && !q.trim().isEmpty()) ? q.trim() : null;
-        // Page<Media> entityPage = mediaRepository.findByFolderPathAndName(targetPath, searchTerm, pageable);
-        // Page<Media> entityPage = mediaRepository.searchGlobalOrFolder(targetPath, searchTerm, pageable);
-        // return entityPage.map(this::convertToDTO);
+    public Page<MediaDTO> listAllPaged(String q, String folderPath, Map<String, String> allParams, Pageable pageable) {
+        Specification<Media> spec = (root, query, cb) -> cb.conjunction();
 
         if (q != null && !q.trim().isEmpty()) {
-            return mediaRepository.findByNameContainingIgnoreCase(q.trim(), pageable).map(this::convertToDTO);
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("name")), "%" + q.toLowerCase() + "%"));
+        } else {
+            String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.join("folder").get("path"), targetPath));
         }
 
-        String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
-        return mediaRepository.findByFolderPath(targetPath, pageable).map(this::convertToDTO);
+        List<String> filterableFields = List.of("createdAt", "updatedAt", "type");
+        for (String field : filterableFields) {
+            String paramValue = allParams.get(field);
+            if (paramValue != null && !paramValue.isBlank()) {
+                spec = spec.and(MediaSpecification.filterBy(field, paramValue));
+            }
+        }
+
+        return mediaRepository.findAll(spec, pageable).map(this::convertToDTO);
+    }
+
+    @Transactional
+    public void moveFiles(@Valid @NonNull MediaFilesMoveToDTO mediaFilesMoveToDTO) {
+        MediaFolder destination = mediaFolderRepository.findByPath(mediaFilesMoveToDTO.folderDestination())
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFilesMoveToDTO.folderDestination())
+                );
+
+        // QUERY ALL
+        List<Media> sources = mediaRepository.findAllById(mediaFilesMoveToDTO.filesId().values());
+
+        // UPDATE EACH
+        for (Media source : sources) {
+            // UPDATE
+            String newPath = destination.getPath().equals("/")
+                    ? "/" + source.getName()
+                    : destination.getPath() + "/" + source.getName();
+            newPath = newPath.replaceAll("//+", "/");
+
+            source.setFolder(destination);
+            source.setPublicId(newPath);
+        }
+
+        mediaRepository.saveAll(sources);
     }
 
     @Transactional
@@ -261,5 +295,37 @@ public class MediaService {
         if (path == null || path.equals("Home")) return "Home";
         String[] parts = path.split("/");
         return parts[parts.length - 1];
+    }
+
+    public static class MediaSpecification {
+        public static Specification<Media> filterBy(String field, String rawValue) {
+            return (root, query, cb) -> {
+                String[] parts = rawValue.split("=");
+                if (parts.length < 2) return null;
+
+                FilterQueryParams condition = FilterQueryParams.fromString(parts[0]);
+                String valueStr = parts[1];
+
+                if (field.equals("createdAt") || field.equals("updatedAt")) {
+                    Instant startOfDay = Instant.parse(valueStr);
+                    Instant endOfDay = startOfDay.plus(Duration.ofDays(1)).minus(Duration.ofMillis(1));
+
+                    return switch (condition) {
+                        case isGreaterThan -> cb.greaterThan(root.get(field), startOfDay);
+                        case isGreaterThanOrEqualTo -> cb.greaterThanOrEqualTo(root.get(field), startOfDay);
+                        case isLowerThan -> cb.lessThan(root.get(field), startOfDay);
+                        case isLowerThanOrEqualTo -> cb.lessThanOrEqualTo(root.get(field), endOfDay);
+                        case isNot -> cb.or(
+                                cb.lessThan(root.get(field), startOfDay),
+                                cb.greaterThan(root.get(field), endOfDay)
+                        );
+                        default -> cb.between(root.get(field), startOfDay, endOfDay);
+                    };
+                }
+                return condition == FilterQueryParams.isNot
+                        ? cb.notEqual(root.get(field), valueStr)
+                        : cb.equal(root.get(field), valueStr);
+            };
+        }
     }
 }

@@ -49,7 +49,7 @@ export function UserButton() {
     <Popover>
       <PopoverTrigger
         className={cn(
-          "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-200 dark:hover:bg-stone-800 group",
+          "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-200 dark:hover:bg-stone-750 group",
           focusRing,
         )}
       >

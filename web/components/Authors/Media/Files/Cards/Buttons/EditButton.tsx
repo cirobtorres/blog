@@ -178,7 +178,6 @@ export default function EditButton({
                 <div className="flex flex-col gap-1">
                   <FolderPopover
                     name="file_0_folder"
-                    defaultValue={folder.path}
                     movingFolderPaths={[folder.path]}
                   />
                   {state?.error?.customFolder && (

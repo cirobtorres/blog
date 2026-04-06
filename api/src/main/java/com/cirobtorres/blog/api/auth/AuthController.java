@@ -53,13 +53,10 @@ public class AuthController {
             @CookieValue(name = "refresh_token", required = false) String refreshToken,
             HttpServletResponse response
     ) {
-        if (!isProd) log.info("AuthController.logout(): refresh_token={}", refreshToken);
         if (refreshToken != null) {
             try {
                 authService.logout(refreshToken);
-            } catch (Exception e) {
-                if (!isProd) log.error("AuthController.authService.logout(): {}", e.getMessage());
-            }
+            } catch (Exception e) {}
         }
         jwtService.clearTokensFromCookies(response);
         return ResponseEntity.noContent().build();
@@ -77,7 +74,6 @@ public class AuthController {
 
     @GetMapping("me")
     public ResponseEntity<UserDTO> me(Authentication auth) {
-        System.out.println("AuthController.me(): auth=" + auth);
         UserDTO user = authService.getUser(auth);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
     }
@@ -87,7 +83,6 @@ public class AuthController {
             @CookieValue("refresh_token") String refreshToken,
             HttpServletResponse response
     ) throws NoSuchAlgorithmException {
-        System.out.println("AuthController.refresh(): refreshToken=" + refreshToken);
         TokensDTO tokens = authService.refresh(refreshToken);
         jwtService.addTokensToCookies(response, tokens);
         return ResponseEntity.ok().build();
@@ -128,7 +123,6 @@ public class AuthController {
             @RequestBody @Valid AuditTokenDTO codeDTO,
             HttpServletResponse response
     ) throws NoSuchAlgorithmException {
-        if (!isProd) log.info("AuthController.passwordResetCode(): codeDTO={}, codeDTO.token()={}", codeDTO, codeDTO.token());
         PassResTokenDTO token = authService.passwordResetCodeConfirmation(codeDTO);
         long fifteenMin = 1000 * 60 * 15;
         jwtService.addToCookies(
@@ -146,7 +140,6 @@ public class AuthController {
             @RequestBody @Valid UserPasswordDTO passwordDTO,
             HttpServletResponse response
     ) {
-        if (!isProd) log.info("AuthController.passwordReset(): passwordDTO={}, passwordDTO.password()={}", passwordDTO,  passwordDTO.password());
         authService.passwordReset(passwordDTO);
         jwtService.addToCookies(
                 response,

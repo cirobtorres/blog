@@ -42,14 +42,13 @@ const apiServerUrls = {
     root: API_SERVER + "/media",
     count: API_SERVER + "/media/count",
     syncImport: API_SERVER + "/media/sync/import",
+    move: API_SERVER + "/media/move/all",
   },
   mediaFolders: {
     root: API_SERVER + "/media/folders",
     count: API_SERVER + "/media/folders/count",
     exists: API_SERVER + "/media/folders/exists",
-    move: {
-      all: API_SERVER + "/media/folders/move/all",
-    },
+    move: API_SERVER + "/media/folders/move/all",
   },
 };
 

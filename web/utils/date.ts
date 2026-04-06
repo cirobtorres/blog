@@ -24,3 +24,28 @@ export const convertToLargeDate = (ISOdate: Date) => {
 
   return `${day} de ${month} de ${year}, às ${hours}:${minutes}`;
 };
+
+export const convertToSmallDate = (ISOdate: Date) => {
+  const date = new Date(ISOdate);
+
+  const months = [
+    "janeiro",
+    "fevereiro",
+    "março",
+    "abril",
+    "maio",
+    "junho",
+    "julho",
+    "agosto",
+    "setembro",
+    "outubro",
+    "novembro",
+    "dezembro",
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day} de ${month} de ${year}`;
+};

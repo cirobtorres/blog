@@ -15,7 +15,7 @@ export default async function moveFolders(
   const { folderDestination, ...foldersId } = rawData;
 
   try {
-    const response = await fetch(apiServerUrls.mediaFolders.move.all, {
+    const response = await fetch(apiServerUrls.mediaFolders.move, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -36,12 +36,13 @@ export default async function moveFolders(
       };
     }
 
+    revalidateTag("files", { expire: 0 });
     revalidateTag("folders", { expire: 0 });
     revalidatePath("/users/authors/media");
 
     return {
       ok: true,
-      success: "Pasta atualizada com sucesso!",
+      success: "Pasta(s) atualizada(s) com sucesso!",
       error: null,
       data: null,
     };
@@ -50,7 +51,7 @@ export default async function moveFolders(
     return {
       ok: false,
       success: null,
-      error: "Ocorreu um erro ao tentar atualizar a pasta.",
+      error: "Ocorreu um erro ao tentar atualizar a(s) pasta(s).",
       data: null,
     };
   }

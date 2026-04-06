@@ -52,30 +52,28 @@ export default function ArticleEditorBanner({
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-250">
-        <form>
-          <AlertDialogHeader>Adicionar imagem</AlertDialogHeader>
-          <AlertDialogDescription className="sr-only">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-            omnis autem debitis dolorem exercitationem.
-          </AlertDialogDescription>
-          <div className="p-1">
-            <div className="max-h-100 p-4 overflow-y-auto scrollbar">
-              <MediaSelectWrapper>{children}</MediaSelectWrapper>
-            </div>
+        <AlertDialogHeader>Adicionar imagem</AlertDialogHeader>
+        <AlertDialogDescription className="sr-only">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+          omnis autem debitis dolorem exercitationem.
+        </AlertDialogDescription>
+        <div className="p-1">
+          <div className="max-h-100 p-4 overflow-y-auto scrollbar">
+            <MediaSelectWrapper>{children}</MediaSelectWrapper>
           </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
-              Cancelar
-            </AlertDialogCancel>
-            <Button
-              type="submit"
-              variant="default"
-              className="w-full max-w-30 h-8"
-            >
-              Salvar
-            </Button>
-          </AlertDialogFooter>
-        </form>
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="w-full max-w-30 h-8">
+            Cancelar
+          </AlertDialogCancel>
+          <Button
+            type="submit"
+            variant="default"
+            className="w-full max-w-30 h-8"
+          >
+            Salvar
+          </Button>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );

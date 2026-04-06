@@ -28,8 +28,6 @@ public class MediaFolderController {
     public ResponseEntity<List<MediaFolderCountDTO>> listSubfoldersWithCounts(
             @RequestParam String folder
     ) {
-        // Manual decode, exp: C%2B%2B -> C++
-        // String decodedFolder = URLDecoder.decode(folder, StandardCharsets.UTF_8);
         List<MediaFolderCountDTO> mediaFolderCountDTOS =
                 mediaFolderService.listSubfoldersWithCounts(folder);
         return ResponseEntity.ok(mediaFolderCountDTOS);

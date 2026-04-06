@@ -158,14 +158,14 @@ public class MediaFolderService {
     }
 
     @Transactional
-    public void moveFolders(@Valid MediaFoldersMoveToDTO dto) {
-        MediaFolder destination = mediaFolderRepository.findByPath(dto.folderDestination())
+    public void moveFolders(@Valid MediaFoldersMoveToDTO mediaFoldersMoveToDTO) {
+        MediaFolder destination = mediaFolderRepository.findByPath(mediaFoldersMoveToDTO.folderDestination())
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Destination folder not found: " + dto.folderDestination())
+                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFoldersMoveToDTO.folderDestination())
                 );
 
         // QUERY ALL
-        List<MediaFolder> sources = mediaFolderRepository.findAllById(dto.foldersId().values());
+        List<MediaFolder> sources = mediaFolderRepository.findAllById(mediaFoldersMoveToDTO.foldersId().values());
 
         // UPDATE EACH
         for (MediaFolder source : sources) {

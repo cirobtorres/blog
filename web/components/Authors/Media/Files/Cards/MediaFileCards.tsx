@@ -14,7 +14,7 @@ export default async function MediaFileCards({
 }: {
   accessToken?: string;
   currentPath?: string[];
-  searchParams?: { page?: string; size?: string; folder?: string; q?: string };
+  searchParams?: { [key: string]: string | undefined };
 }) {
   const decodedPath = currentPath
     ? currentPath.map((segment) => decodeURIComponent(segment)).join("/")
@@ -29,6 +29,16 @@ export default async function MediaFileCards({
     q: searchParams?.q || "",
     page: searchParams?.page || "0",
     size: searchParams?.size || "20",
+  });
+
+  const filterKeys = ["createdAt", "updatedAt", "type"];
+
+  filterKeys.forEach((key) => {
+    const paramValue = searchParams?.[key];
+
+    if (paramValue) {
+      query.append(key, paramValue);
+    }
   });
 
   const getUrl = `${apiServerUrls.media.root}?${query.toString()}`;
@@ -55,7 +65,7 @@ export default async function MediaFileCards({
           Arquivo{count > 1 && "s"}: {count}
         </h2>
         <div className="w-full flex justify-between items-center gap-2">
-          <MediaFileCheckbox allFiles={media} />
+          <MediaFileCheckbox allFiles={media ?? []} />
           <div className="w-full flex justify-end items-center mr-0 ml-auto gap-2">
             <MediaFileSearch />
             <MediaFilesSorting />
