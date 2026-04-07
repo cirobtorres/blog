@@ -4,6 +4,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public record MediaFilesMoveToDTO(
-        String folderDestination,
+        UUID targetFolderId,
         Map<String, UUID> filesId
 ) {}

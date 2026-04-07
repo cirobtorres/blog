@@ -1,13 +1,17 @@
-import { SignApiOptions } from "cloudinary";
 import { getCloudinarySignature } from "./signature";
 
-// services/cloudinary/createFile.ts
+interface UpToCloudMetadata {
+  customName: string;
+  customAlt: string;
+  customCaption: string;
+  customFolderId: string;
+}
+
 export default async function createFile(
   file: File,
-  metadata: SignApiOptions,
+  metadata: UpToCloudMetadata,
 ): Promise<CloudinarySave> {
   const { signature, timestamp, apiKey } = await getCloudinarySignature({
-    folder: metadata.customFolder,
     public_id: metadata.customName,
   });
 
@@ -15,7 +19,6 @@ export default async function createFile(
   cloudinaryFormData.append("api_key", apiKey!);
   cloudinaryFormData.append("timestamp", timestamp.toString());
   cloudinaryFormData.append("signature", signature);
-  cloudinaryFormData.append("folder", metadata.customFolder);
   cloudinaryFormData.append("public_id", metadata.customName);
   cloudinaryFormData.append("file", file);
 
@@ -34,6 +37,6 @@ export default async function createFile(
     custom_name: metadata.customName,
     custom_alt: metadata.customAlt,
     custom_caption: metadata.customCaption,
-    custom_folder: metadata.customFolder,
+    custom_folder_id: (metadata.customFolderId as string) ?? null,
   };
 }

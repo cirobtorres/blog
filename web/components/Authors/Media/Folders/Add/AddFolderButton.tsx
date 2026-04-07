@@ -42,7 +42,8 @@ export default function AddFolderButton() {
 
       const validation = await folderValidation(prevState, formData);
       if (!validation.ok || !validation.data) return validation;
-      formData.set("path", validation?.data);
+      formData.set("folderName", validation.data.folderName);
+      formData.set("parentFolderId", validation.data.parentFolderId ?? "");
 
       const result = mutateAsync({ prevState, formData });
       const promise = soonerPromise(result);
@@ -108,7 +109,7 @@ export default function AddFolderButton() {
                 className="px-1"
               />
             </div>
-            <FolderPopover movingFolderPaths={["/"]} />
+            <FolderPopover />
           </div>
           <FieldsetError />
           <AlertDialogFooter>

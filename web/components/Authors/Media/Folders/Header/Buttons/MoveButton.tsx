@@ -60,7 +60,7 @@ export default function MoveButton({
                 </ul>
               </div>
               <FolderPopover
-                movingFolderPaths={folders.map((folder) => folder.path)}
+                movingFolderIds={folders.map((folder) => folder.id)}
               />
             </div>
           </AlertDialogDescription>

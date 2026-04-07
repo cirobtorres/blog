@@ -18,9 +18,6 @@ public class Media {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String name;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id")
     private MediaFolder folder;
@@ -65,7 +62,6 @@ public class Media {
 
     // BUILDER----------------------------------------------------------------------------------------------------
     private Media(Builder builder) {
-        this.name = builder.name;
         this.folder = builder.folder;
         this.publicId = builder.publicId;
         this.url = builder.url;
@@ -82,7 +78,6 @@ public class Media {
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
-        private String name;
         private MediaFolder folder;
         private String publicId;
         private String url;
@@ -94,11 +89,6 @@ public class Media {
         private Double duration;
         private String alt;
         private String caption;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
 
         public Builder folder(MediaFolder folder) {
             this.folder = folder;
@@ -161,9 +151,6 @@ public class Media {
     // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 
     public String getPublicId() { return publicId; }
     public void setPublicId(String publicId) { this.publicId = publicId; }

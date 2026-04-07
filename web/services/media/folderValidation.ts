@@ -6,7 +6,10 @@ import { apiServerUrls } from "../../routing/routes";
 
 const folderValidationSchema = z.object({
   folderName: z.string().min(1, "O diretório requer um nome"),
-  folderDestination: z.string().min(1, "O diretório requer uma pasta raiz"),
+  folderDestinationId: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z.string().uuid().nullable().optional(),
+  ),
 });
 
 export default async function folderValidation(
@@ -29,12 +32,7 @@ export default async function folderValidation(
     };
   }
 
-  const { folderName, folderDestination } = result.data;
-  const cloudinaryRoot = "/";
-  const fullDestinationPath =
-    folderDestination === cloudinaryRoot
-      ? `${folderDestination}${folderName}`
-      : `${folderDestination}/${folderName}`;
+  const { folderName, folderDestinationId } = result.data;
 
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
@@ -46,19 +44,22 @@ export default async function folderValidation(
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ path: fullDestinationPath }),
+      body: JSON.stringify({
+        folderName,
+        parentFolderId: folderDestinationId || null,
+      }),
     });
 
-    if (!validation.ok) {
-      if (validation.status === 404) {
+    if (validation.ok) {
+      const exists = (await validation.json()) as boolean;
+      if (!exists) {
         return {
           ok: true,
           success: null,
           error: null,
-          data: fullDestinationPath,
+          data: { folderName, parentFolderId: folderDestinationId || null },
         };
       }
-    } else {
       return {
         ok: false,
         success: null,

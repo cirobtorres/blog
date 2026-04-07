@@ -26,26 +26,36 @@ const Current = () => (
 export default function FolderPopover({
   name,
   defaultValue,
-  movingFolderPaths = [],
+  movingFolderIds = [],
 }: {
   name?: string;
-  defaultValue?: string;
-  movingFolderPaths?: string[];
+  defaultValue?: string | null;
+  movingFolderIds?: string[];
 }) {
   const [open, setOpen] = React.useState(false);
   const { data: folders, isPending } = useFolders();
   const pathname = usePathname();
-  const currentFolder =
-    "/" + pathname.slice(protectedWebUrls.media.length).replace(/^\/*/, "");
-  const [value, setValue] = React.useState(defaultValue || currentFolder);
+  const currentFolder = decodeURIComponent(
+    "/" + pathname.slice(protectedWebUrls.media.length).replace(/^\/*/, ""),
+  );
+  const currentFolderId =
+    folders?.find((folder) => folder.path === currentFolder)?.id ?? null;
+  const [value, setValue] = React.useState<string | null>(defaultValue ?? null);
+  React.useEffect(() => {
+    if (value === null && currentFolderId) setValue(currentFolderId);
+  }, [currentFolderId, value]);
   const selectedFolderName = folders?.find(
-    (folder) => folder.path === value,
+    (folder) => folder.id === value,
   )?.name;
   const sortFolders = folders?.sort((a, b) => a.path.localeCompare(b.path));
 
   return (
     <div className="flex flex-col gap-1">
-      <input type="hidden" name={name ?? "folderDestination"} value={value} />
+      <input
+        type="hidden"
+        name={name ?? "folderDestinationId"}
+        value={value ?? ""}
+      />
       <Popover open={open} onOpenChange={setOpen}>
         {isPending || !value ? (
           <Skeleton className="h-9.5" />
@@ -57,7 +67,7 @@ export default function FolderPopover({
             >
               <div className="flex items-center gap-2">
                 {selectedFolderName}
-                {value === currentFolder && <Current />}
+                {value === currentFolderId && <Current />}
               </div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,16 +95,18 @@ export default function FolderPopover({
                 {sortFolders?.map((folder) => {
                   const depth = folder.path.split("/").filter(Boolean).length;
 
-                  // Lógica de Bloqueio:
-                  const isSelf = movingFolderPaths.includes(folder.path);
+                  const isSelf = movingFolderIds.includes(folder.id);
 
-                  const isDescendant = movingFolderPaths.some((movingPath) =>
-                    folder.path.startsWith(movingPath + "/"),
+                  const isDescendant = movingFolderIds.some((movingId) =>
+                    folder.path.startsWith(
+                      (folders?.find((f) => f.id === movingId)?.path ?? "") +
+                        "/",
+                    ),
                   );
 
                   const isDisabled = isSelf || isDescendant;
                   const isCurrent =
-                    value === folder.path || currentFolder === folder.path;
+                    value === folder.id || currentFolder === folder.path;
                   return (
                     !isDisabled && (
                       <CommandItem
@@ -102,7 +114,7 @@ export default function FolderPopover({
                         disabled={!!isDisabled}
                         onSelect={() => {
                           if (isDisabled) return;
-                          setValue(folder.path);
+                          setValue(folder.id);
                           setOpen(false);
                         }}
                         className={cn(
@@ -130,7 +142,7 @@ export default function FolderPopover({
                             </svg>
                           )}
                           {folder.name}
-                          {currentFolder === folder.path && <Current />}
+                          {currentFolderId === folder.id && <Current />}
                         </div>
                       </CommandItem>
                     )

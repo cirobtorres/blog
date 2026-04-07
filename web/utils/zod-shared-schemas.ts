@@ -13,10 +13,10 @@ export const singleFileSchema = z
       .transform((val) => val.trim().replace(mediaExtensionRegex, "")),
     customCaption: z.string().default(""),
     customAlt: z.string().min(1, "Alt text é obrigatório"),
-    customFolder: z
+    customFolderId: z
       .string()
       .min(1, "Pasta é obrigatória")
-      .transform((val) => (val === "/" ? "" : val)),
+      .uuid("Pasta inválida"),
     fileSize: z.coerce.number(),
   })
   .superRefine((data, ctx) => {
@@ -51,7 +51,7 @@ export const validateFile = (formData: FormData) => {
     file_0_name: customName,
     file_0_caption: customCaption,
     file_0_alt: customAlt,
-    file_0_folder: customFolder,
+    file_0_folder_id: customFolderId,
     file_0_size: fileSize,
   } = entries;
 
@@ -60,14 +60,13 @@ export const validateFile = (formData: FormData) => {
     customName,
     customCaption,
     customAlt,
-    customFolder,
+    customFolderId,
     fileSize,
   });
 
   if (!result.success) {
     const error = z.treeifyError(result.error).properties;
 
-    console.log(error);
     return {
       ...returnState,
       error,
@@ -93,7 +92,7 @@ export default function validateFiles(
       customName: formData.get(`file_${i}_name`),
       customCaption: formData.get(`file_${i}_caption`),
       customAlt: formData.get(`file_${i}_alt`),
-      customFolder: formData.get(`file_${i}_folder`),
+      customFolderId: formData.get(`file_${i}_folder_id`),
       fileSize: formData.get(`file_${i}_size`),
     });
   }

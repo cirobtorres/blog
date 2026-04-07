@@ -1,7 +1,9 @@
 package com.cirobtorres.blog.api.mediaFolder.dtos;
 
+import java.util.UUID;
+
 public record MediaFolderPutDTO(
         String newName,
-        String newDestinationPath,
-        String currentPath
+        UUID parentFolderId,
+        UUID currentFolderId
 ) {}

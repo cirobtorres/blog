@@ -21,7 +21,7 @@ export default async function editFile(
     file_0_name: name,
     file_0_caption: caption,
     file_0_alt: alt,
-    file_0_folder: path,
+    file_0_folder_id: folderId,
   } = entries;
 
   try {
@@ -37,7 +37,7 @@ export default async function editFile(
         name,
         caption,
         alt,
-        folder: { path },
+        folder: { id: folderId || null },
       }),
     });
 

@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.media.services;
 
+import com.cirobtorres.blog.api.media.dtos.MediaDeleteAllDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaFilesMoveToDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaPutDTO;
@@ -17,8 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,7 +37,6 @@ public class MediaService {
     private final MediaRepository mediaRepository;
     private final MediaFolderRepository mediaFolderRepository;
     private final ObjectMapper objectMapper;
-    private static final Logger log = LoggerFactory.getLogger(MediaService.class);
 
     public MediaService(
             Cloudinary cloudinary,
@@ -62,7 +60,7 @@ public class MediaService {
 
         if (q != null && !q.trim().isEmpty()) {
             spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("name")), "%" + q.toLowerCase() + "%"));
+                    cb.like(cb.lower(root.get("publicId")), "%" + q.toLowerCase() + "%"));
         } else {
             String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
             spec = spec.and((root, query, cb) ->
@@ -82,9 +80,12 @@ public class MediaService {
 
     @Transactional
     public void moveFiles(@Valid @NonNull MediaFilesMoveToDTO mediaFilesMoveToDTO) {
-        MediaFolder destination = mediaFolderRepository.findByPath(mediaFilesMoveToDTO.folderDestination())
+        MediaFolder destination = mediaFilesMoveToDTO.targetFolderId() == null
+                ? mediaFolderRepository.findByPath("/")
+                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(mediaFilesMoveToDTO.targetFolderId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFilesMoveToDTO.folderDestination())
+                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFilesMoveToDTO.targetFolderId())
                 );
 
         // QUERY ALL
@@ -92,14 +93,7 @@ public class MediaService {
 
         // UPDATE EACH
         for (Media source : sources) {
-            // UPDATE
-            String newPath = destination.getPath().equals("/")
-                    ? "/" + source.getName()
-                    : destination.getPath() + "/" + source.getName();
-            newPath = newPath.replaceAll("//+", "/");
-
             source.setFolder(destination);
-            source.setPublicId(newPath);
         }
 
         mediaRepository.saveAll(sources);
@@ -162,9 +156,10 @@ public class MediaService {
                 );
 
         // MediaFolder
-        String oldPath = mediaPutDTO.folder().path();
-
-        MediaFolder targetFolder = mediaFolderRepository.findByPath(oldPath)
+        MediaFolder targetFolder = mediaPutDTO.folder().id() == null
+                ? mediaFolderRepository.findByPath("/")
+                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(mediaPutDTO.folder().id())
                 .orElseThrow(
                         () -> new EntityNotFoundException(
                                 "MediaFolder not found or doesn't exist. id={" + id + "}"
@@ -172,10 +167,7 @@ public class MediaService {
                 );
 
         // Sanitize
-        String newPath = targetFolder.getPath().replaceAll("^/+|/+$", ""); // Trim all lateral slashes
-        String newPublicId = newPath.isEmpty()
-                ? mediaPutDTO.name() // Home folder
-                : newPath + "/" + mediaPutDTO.name(); // Child folders
+        String newPublicId = mediaPutDTO.name();
 
         // Update Cloudinary
         Map<?, ?> response;
@@ -207,7 +199,6 @@ public class MediaService {
         }
 
         // Update entity
-        media.setName(mediaPutDTO.name());
         Object responsePublicId = response.get("public_id");
         media.setPublicId(responsePublicId != null ? responsePublicId.toString() : newPublicId);
         media.setFolder(targetFolder);
@@ -242,18 +233,42 @@ public class MediaService {
         mediaRepository.delete(media);
     }
 
+    @Transactional
+    public void deleteMediaAll(MediaDeleteAllDTO fileIdsDTO) {
+        List<UUID> ids = fileIdsDTO.fileIds();
+
+        List<Media> mediaList = mediaRepository.findAllById(ids);
+
+        if (mediaList.isEmpty()) {
+            return;
+        }
+
+        for (Media media : mediaList) {
+            try {
+                Map<?, ?> result = cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
+
+                if (!"ok".equals(result.get("result")) && !"not found".equals(result.get("result"))) {
+                    throw new RuntimeException("Cloudinary delete fail while deleting media of public_id=" + media.getPublicId());
+                }
+            } catch (Exception e) {
+                // Because we are inside a @Transactional, the RuntimeException must be thrown here in order to trigger a rollback
+                throw new RuntimeException("Cloudinary fail: ", e);
+            }
+        }
+
+        List<UUID> mediaIds = mediaList.stream().map(Media::getId).toList();
+
+        mediaRepository.deleteAllById(mediaIds);
+    }
+
     private Media convertToEntity(@NonNull MediaDTO dto) {
-        MediaFolder folder = mediaFolderRepository.findByPath(dto.folder().path())
-                .orElseGet(() -> {
-                    MediaFolder newFolder = MediaFolder.builder()
-                            .name(extractNameFromPath(dto.folder().path()))
-                            .path(dto.folder().path())
-                            .build();
-                    return mediaFolderRepository.save(newFolder);
-                });
+        MediaFolder folder = dto.folder().id() == null
+                ? mediaFolderRepository.findByPath("/")
+                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(dto.folder().id())
+                    .orElseThrow(() -> new EntityNotFoundException("MediaFolder not found"));
 
         return Media.builder()
-                .name(dto.name())
                 .folder(folder)
                 .publicId(dto.publicId())
                 .url(dto.url())
@@ -276,8 +291,8 @@ public class MediaService {
 
         return new MediaDTO(
                 entity.getId(),
-                entity.getName(),
-                new MediaFolderDTO(folderPath),
+                extractNameFromPublicId(entity.getPublicId()),
+                new MediaFolderDTO(entity.getFolder() != null ? entity.getFolder().getId() : null, folderPath),
                 entity.getPublicId(),
                 entity.getUrl(),
                 entity.getExtension(),
@@ -291,8 +306,8 @@ public class MediaService {
         );
     }
 
-    private String extractNameFromPath(String path) {
-        if (path == null || path.equals("Home")) return "Home";
+    private String extractNameFromPublicId(String path) {
+        if (path == null || path.isBlank()) return "file";
         String[] parts = path.split("/");
         return parts[parts.length - 1];
     }

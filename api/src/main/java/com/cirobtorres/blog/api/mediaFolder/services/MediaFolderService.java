@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.mediaFolder.services;
 
+import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import com.cirobtorres.blog.api.mediaFolder.dtos.*;
 import com.cirobtorres.blog.api.mediaFolder.entities.MediaFolder;
@@ -22,13 +23,16 @@ import java.util.UUID;
 @Service
 public class MediaFolderService {
     private final Cloudinary cloudinary;
+    private final MediaRepository mediaRepository;
     private final MediaFolderRepository mediaFolderRepository;
 
     public MediaFolderService(
             Cloudinary cloudinary,
+            MediaRepository mediaRepository,
             MediaFolderRepository mediaFolderRepository
     ) {
         this.cloudinary = cloudinary;
+        this.mediaRepository = mediaRepository;
         this.mediaFolderRepository = mediaFolderRepository;
     }
 
@@ -47,38 +51,23 @@ public class MediaFolderService {
     }
 
     @Transactional
-    public MediaFolder createFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
-        String fullPath = mediaFolderDTO.path();
+    public MediaFolder createFolder(@NonNull MediaFolderCreateDTO mediaFolderDTO) {
+        MediaFolder parent = mediaFolderDTO.parentFolderId() == null
+                ? mediaFolderRepository.findByPath("/").orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(mediaFolderDTO.parentFolderId()).orElseThrow(() -> new EntityNotFoundException("Parent folder not found"));
+        String fullPath = parent.getPath().equals("/")
+                ? "/" + mediaFolderDTO.folderName()
+                : parent.getPath() + "/" + mediaFolderDTO.folderName();
 
         // Validation
         if (mediaFolderRepository.existsByPath(fullPath)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Folder already exists.");
         }
 
-        // Name
-        String name = fullPath.contains("/") ?
-                fullPath.substring(fullPath.lastIndexOf("/") + 1) :
-                fullPath;
-
-        // Parent
-        MediaFolder parent = null;
-        String parentPath;
-        int lastSlashIndex = fullPath.lastIndexOf("/");
-        if (lastSlashIndex <= 0) {
-            parentPath = "/";
-        } else {
-            parentPath = fullPath.substring(0, lastSlashIndex);
-        }
-
-        parent = mediaFolderRepository.findByPath(parentPath)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("Parent folder not found: " + parentPath)
-                );
-
         // Building
         MediaFolder folder = MediaFolder
                 .builder()
-                .name(name)
+                .name(mediaFolderDTO.folderName())
                 .path(fullPath)
                 .parent(parent)
                 .build();
@@ -87,10 +76,10 @@ public class MediaFolderService {
     }
 
     @Transactional
-    public void deleteFolder(@NonNull MediaFolderDTO mediaFolderDTO) {
-        MediaFolder folderToDelete = mediaFolderRepository.findByPath(mediaFolderDTO.path())
+    public void deleteFolder(@NonNull UUID id) {
+        MediaFolder folderToDelete = mediaFolderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Folder not found: " + mediaFolderDTO.path()
+                        "Folder not found: " + id
                         )
                 );
 
@@ -112,13 +101,50 @@ public class MediaFolderService {
     }
 
     @Transactional
+    public void deleteAllFolders(@Valid MediaFoldersDeleteDTO foldersIdDTO) {
+        List<UUID> ids = foldersIdDTO.foldersId();
+
+        List<MediaFolder> folderList = mediaFolderRepository.findAllById(ids);
+
+        if (folderList.isEmpty()) {
+            return;
+        }
+
+        List<Media> allMediaEntities = new ArrayList<>();
+        for (MediaFolder folder : folderList) {
+            findAllMediaRecursive(folder, allMediaEntities);
+        }
+
+        for (Media media : allMediaEntities) {
+            try {
+                Map<?, ?> result = cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
+
+                String status = (String) result.get("result");
+                if (!"ok".equals(status) && !"not found".equals(status)) {
+                    throw new RuntimeException("Cloudinary delete fail while deleting media of public_id=" + media.getPublicId());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Transaction aborted. Cloudinary fail: ", e);
+            }
+        }
+
+        if (!allMediaEntities.isEmpty()) {
+            mediaRepository.deleteAllInBatch(allMediaEntities);
+        }
+
+        mediaFolderRepository.deleteAllInBatch(folderList);
+    }
+
+    @Transactional
     public void updateFolder(@Valid @NonNull MediaFolderPutDTO dto) {
-        MediaFolder currentFolder = mediaFolderRepository.findByPath(dto.currentPath())
+        MediaFolder currentFolder = mediaFolderRepository.findById(dto.currentFolderId())
                 .orElseThrow(
                         () -> new EntityNotFoundException("Current folder not found: .")
                 );
 
-        MediaFolder destinationFolder = mediaFolderRepository.findByPath(dto.newDestinationPath())
+        MediaFolder destinationFolder = dto.parentFolderId() == null
+                ? mediaFolderRepository.findByPath("/").orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(dto.parentFolderId())
                 .orElseThrow(
                         () -> new EntityNotFoundException("Destination folder not found.")
                 );
@@ -152,16 +178,23 @@ public class MediaFolderService {
     }
 
     @Transactional
-    public Boolean existsByPath(@NonNull MediaFolderCountDTO mediaFolderCountDTO) {
-        String path = mediaFolderCountDTO.path();
+    public Boolean existsByPath(@NonNull MediaFolderExistsDTO mediaFolderExistsDTO) {
+        MediaFolder parent = mediaFolderExistsDTO.parentFolderId() == null
+                ? mediaFolderRepository.findByPath("/").orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(mediaFolderExistsDTO.parentFolderId()).orElseThrow(() -> new EntityNotFoundException("Parent folder not found"));
+        String path = parent.getPath().equals("/")
+                ? "/" + mediaFolderExistsDTO.folderName()
+                : parent.getPath() + "/" + mediaFolderExistsDTO.folderName();
         return mediaFolderRepository.existsByPath(path);
     }
 
     @Transactional
     public void moveFolders(@Valid MediaFoldersMoveToDTO mediaFoldersMoveToDTO) {
-        MediaFolder destination = mediaFolderRepository.findByPath(mediaFoldersMoveToDTO.folderDestination())
+        MediaFolder destination = mediaFoldersMoveToDTO.parentFolderId() == null
+                ? mediaFolderRepository.findByPath("/").orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                : mediaFolderRepository.findById(mediaFoldersMoveToDTO.parentFolderId())
                 .orElseThrow(
-                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFoldersMoveToDTO.folderDestination())
+                        () -> new EntityNotFoundException("Destination folder not found: " + mediaFoldersMoveToDTO.parentFolderId())
                 );
 
         // QUERY ALL
@@ -218,6 +251,15 @@ public class MediaFolderService {
         folder.getFiles().forEach(media -> publicIds.add(media.getPublicId()));
         for (MediaFolder subfolder : folder.getSubfolders()) {
             findAllPublicIdsRecursive(subfolder, publicIds);
+        }
+    }
+
+    private void findAllMediaRecursive(MediaFolder folder, List<Media> mediaCollector) {
+        if (folder.getFiles() != null) {
+            mediaCollector.addAll(folder.getFiles());
+        }
+        for (MediaFolder subfolder : folder.getSubfolders()) {
+            findAllMediaRecursive(subfolder, mediaCollector);
         }
     }
 }

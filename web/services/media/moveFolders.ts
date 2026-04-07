@@ -12,7 +12,7 @@ export default async function moveFolders(
   const accessToken = cookie.get("access_token")?.value;
   const rawData = Object.fromEntries(formData.entries());
 
-  const { folderDestination, ...foldersId } = rawData;
+  const { folderDestinationId, ...foldersId } = rawData;
 
   try {
     const response = await fetch(apiServerUrls.mediaFolders.move, {
@@ -22,7 +22,7 @@ export default async function moveFolders(
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        folderDestination,
+        parentFolderId: folderDestinationId || null,
         foldersId,
       }),
     });

@@ -7,7 +7,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
     name: res.custom_name,
-    folder: { path: res.custom_folder },
+    folder: { id: res.custom_folder_id },
     publicId: res.public_id,
     url: res.secure_url,
     extension: res.format,

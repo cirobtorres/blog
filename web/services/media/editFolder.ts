@@ -11,7 +11,7 @@ export default async function editFolder(
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const rawData = Object.fromEntries(formData.entries());
-  const { folderName, currentFolder, folderDestination } = rawData;
+  const { folderName, currentFolderId, folderDestinationId } = rawData;
 
   try {
     const response = await fetch(apiServerUrls.mediaFolders.root, {
@@ -22,8 +22,8 @@ export default async function editFolder(
       },
       body: JSON.stringify({
         newName: folderName,
-        newDestinationPath: folderDestination,
-        currentPath: currentFolder,
+        parentFolderId: folderDestinationId || null,
+        currentFolderId,
       }),
     });
 
@@ -43,7 +43,7 @@ export default async function editFolder(
       ok: true,
       success: "Pasta atualizada com sucesso!",
       error: null,
-      data: currentFolder,
+      data: currentFolderId,
     };
   } catch (e) {
     console.error(e);

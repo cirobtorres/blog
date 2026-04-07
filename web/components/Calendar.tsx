@@ -30,6 +30,7 @@ function Calendar({
 
   return (
     <DayPicker
+      mode="single"
       showOutsideDays={showOutsideDays}
       className={cn(
         "w-full aspect-square mx-auto group/calendar",

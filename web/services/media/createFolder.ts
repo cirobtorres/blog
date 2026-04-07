@@ -11,7 +11,7 @@ export default async function createFolder(
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const rawData = Object.fromEntries(formData.entries());
-  const { path } = rawData;
+  const { folderName, parentFolderId } = rawData;
 
   try {
     const response = await fetch(apiServerUrls.mediaFolders.root, {
@@ -20,7 +20,10 @@ export default async function createFolder(
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ path }),
+      body: JSON.stringify({
+        folderName,
+        parentFolderId: parentFolderId || null,
+      }),
       cache: "no-store",
       next: { tags: ["folders"] },
     });
@@ -41,9 +44,10 @@ export default async function createFolder(
       ok: true,
       success: "Pasta criada com sucesso!",
       error: null,
-      data: path,
+      data: folderName,
     };
   } catch (e) {
+    console.error(e);
     return {
       ok: false,
       success: null,

@@ -152,12 +152,11 @@ export default function CardPreview({
         </div>
         <div className="flex flex-col gap-1">
           <FolderPopover
-            name={`file_${index}_folder`}
-            movingFolderPaths={["/"]}
+            name={`file_${index}_folder_id`}
           />
           {state?.error?.[index] && (
             <FieldsetError
-              error={state?.error?.[index]?.properties?.customFolder?.errors}
+              error={state?.error?.[index]?.properties?.customFolderId?.errors}
             />
           )}
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">

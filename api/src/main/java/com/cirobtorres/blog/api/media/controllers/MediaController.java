@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.media.controllers;
 
+import com.cirobtorres.blog.api.media.dtos.MediaDeleteAllDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaFilesMoveToDTO;
 import com.cirobtorres.blog.api.media.dtos.MediaPutDTO;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,7 +48,7 @@ public class MediaController {
     public ResponseEntity<Void> put(
             @PathVariable UUID id,
             @RequestBody MediaPutDTO mediaPutDTO
-            ) throws IOException {
+            ) {
         mediaService.putMedia(id, mediaPutDTO);
         return ResponseEntity.noContent().build();
     }
@@ -58,6 +58,14 @@ public class MediaController {
             @PathVariable UUID id
     ) throws Exception {
         mediaService.deleteMedia(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll(
+            @RequestBody MediaDeleteAllDTO fileIdsDTO
+            ) {
+        mediaService.deleteMediaAll(fileIdsDTO);
         return ResponseEntity.noContent().build();
     }
 

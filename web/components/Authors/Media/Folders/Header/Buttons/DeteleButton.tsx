@@ -77,7 +77,9 @@ const DeleteFoldersAction = ({ folders }: { folders: Folder[] }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFolders(folders);
+    const foldersId = folders.map((folder) => folder.id);
+
+    const result = deleteFolders(foldersId);
     const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 

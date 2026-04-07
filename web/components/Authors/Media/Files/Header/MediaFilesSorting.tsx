@@ -130,9 +130,10 @@ export default function MediaFilesSorting() {
               </PopoverTrigger>
               <PopoverContent className="w-fit">
                 <Calendar
-                  mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={(newDate: Date) => {
+                    if (newDate) setDate(newDate);
+                  }}
                   onDayClick={() => setIsCalendarOpen(false)}
                 />
               </PopoverContent>

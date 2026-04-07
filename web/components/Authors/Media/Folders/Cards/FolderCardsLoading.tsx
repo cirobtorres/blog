@@ -8,9 +8,9 @@ export default function FolderCardsLoading() {
       </h2>
       <div className="w-full flex justify-between items-center gap-2">
         <div className="flex items-center gap-2">
-          <Skeleton className="w-32 h-8 flex items-center rounded-lg" />
-          <Skeleton className="w-30 h-8" />
-          <Skeleton className="w-30 h-8" />
+          <Skeleton className="w-32 h-8.5 flex items-center rounded-lg" />
+          <Skeleton className="w-30 h-8.5" />
+          <Skeleton className="w-30 h-8.5" />
         </div>
         <div className="flex items-center gap-2">
           <Skeleton className="w-40 h-8" />

@@ -177,11 +177,12 @@ export default function EditButton({
                 </div>
                 <div className="flex flex-col gap-1">
                   <FolderPopover
-                    name="file_0_folder"
-                    movingFolderPaths={[folder.path]}
+                    name="file_0_folder_id"
+                    defaultValue={folder.id}
+                    movingFolderIds={[folder.id]}
                   />
-                  {state?.error?.customFolder && (
-                    <FieldsetError error={state?.error?.customFolder?.errors} />
+                  {state?.error?.customFolderId && (
+                    <FieldsetError error={state?.error?.customFolderId?.errors} />
                   )}
                   <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
                     A pasta onde o arquivo será salvo.

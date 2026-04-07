@@ -51,7 +51,9 @@ export default async function AuthorsArticlesPage({
             </Suspense>
           </ArticleEditorBanner>
         </div>
-        <ArticleBlockButtons />
+        <div className="mt-2">
+          <ArticleBlockButtons />
+        </div>
       </ArticleEditorsWrapper>
     </form>
   );

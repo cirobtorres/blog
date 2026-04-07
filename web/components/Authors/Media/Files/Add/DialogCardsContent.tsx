@@ -47,19 +47,22 @@ export default function DialogCardsContent({
             confirmar o salvamento.
           </AlertDialogDescription>
           <div className="p-5 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4 m-1 scrollbar">
-            {files.map((file, index) => (
-              <CardPreview
-                key={index}
-                index={index}
-                file={file}
-                state={state}
-                onRemove={() => {
-                  const newFiles = files.filter((_, i) => i !== index);
-                  setFiles(newFiles);
-                  if (newFiles.length === 0) setOpenStep("upload");
-                }}
-              />
-            ))}
+            {files.map((file, index) => {
+              const fileKey = `${file.name}-${file.size}-${file.lastModified}`;
+              return (
+                <CardPreview
+                  key={fileKey}
+                  index={index}
+                  file={file}
+                  state={state}
+                  onRemove={() => {
+                    const newFiles = files.filter((_, i) => i !== index);
+                    setFiles(newFiles);
+                    if (newFiles.length === 0) setOpenStep("upload");
+                  }}
+                />
+              );
+            })}
           </div>
           <AlertDialogFooter>
             <AlertDialogExitConfirmation

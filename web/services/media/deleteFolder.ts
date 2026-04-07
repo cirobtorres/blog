@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
 
-export default async function deleteFolder(path: string) {
+export default async function deleteFolder(folderId: string) {
   const cookie = await cookies();
   const accessToken = cookie.get("access_token")?.value;
   const returnStatement = {
@@ -14,17 +14,17 @@ export default async function deleteFolder(path: string) {
     data: null,
   };
 
-  // TODO: delete files cascade
-
   try {
-    const response = await fetch(apiServerUrls.mediaFolders.root, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await fetch(
+      apiServerUrls.mediaFolders.root + "/" + folderId,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-      body: JSON.stringify({ path }),
-    });
+    );
 
     if (!response.ok) {
       switch (response.status) {

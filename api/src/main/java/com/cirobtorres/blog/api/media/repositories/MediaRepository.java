@@ -19,8 +19,8 @@ public interface MediaRepository extends JpaRepository<Media, UUID>, JpaSpecific
     Page<Media> findByFolderPath(@Param("path") String path, Pageable pageable);
 
     @Query(
-            value = "SELECT m FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :q, '%')))",
-            countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :q, '%')))"
+            value = "SELECT m FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.publicId) LIKE LOWER(CONCAT('%', :q, '%')))",
+            countQuery = "SELECT COUNT(m) FROM Media m WHERE m.folder.path = :path AND (:q IS NULL OR LOWER(m.publicId) LIKE LOWER(CONCAT('%', :q, '%')))"
     )
     Page<Media> findByFolderPathAndName(@Param("path") String path, @Param("q") String q, Pageable pageable);
 
@@ -33,5 +33,5 @@ public interface MediaRepository extends JpaRepository<Media, UUID>, JpaSpecific
     @Query("SELECT m.publicId FROM Media m")
     List<String> findAllPublicIds();
 
-    Page<Media> findByNameContainingIgnoreCase(String trim, Pageable pageable);
+    Page<Media> findByPublicIdContainingIgnoreCase(String trim, Pageable pageable);
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/media/folders")
@@ -35,17 +36,25 @@ public class MediaFolderController {
 
     @PostMapping
     public ResponseEntity<String> createFolder(
-            @RequestBody @Valid MediaFolderDTO mediaFolderDTO
+            @RequestBody @Valid MediaFolderCreateDTO mediaFolderDTO
     ) {
         MediaFolder newFolder = mediaFolderService.createFolder(mediaFolderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newFolder.getPath());
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteFolder(
-            @RequestBody @Valid MediaFolderDTO mediaFolderDTO
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable UUID id
     ) {
-        mediaFolderService.deleteFolder(mediaFolderDTO);
+        mediaFolderService.deleteFolder(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll(
+            @RequestBody @Valid MediaFoldersDeleteDTO foldersIdDTO
+    ) {
+        mediaFolderService.deleteAllFolders(foldersIdDTO);
         return ResponseEntity.noContent().build();
     }
 
@@ -74,7 +83,7 @@ public class MediaFolderController {
 
     @PostMapping("exists")
     public ResponseEntity<Boolean> existsByPath(
-            @RequestBody @Valid MediaFolderCountDTO mediaFolderCountDTO
+            @RequestBody @Valid MediaFolderExistsDTO mediaFolderCountDTO
     ) {
         return ResponseEntity.ok(mediaFolderService.existsByPath(mediaFolderCountDTO));
     }

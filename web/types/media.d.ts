@@ -26,7 +26,7 @@ type Cloudinary = {
 type CloudinarySave = Cloudinary & {
   custom_alt: string;
   custom_caption: string;
-  custom_folder: string;
+  custom_folder_id: string | null;
   custom_name: string;
 };
 
@@ -34,7 +34,7 @@ type CloudinarySave = Cloudinary & {
 type Media = {
   id: string;
   name: string;
-  folder: { path: string };
+  folder: { id: string; path: string };
   publicId: string;
   url: string;
   extension: string;

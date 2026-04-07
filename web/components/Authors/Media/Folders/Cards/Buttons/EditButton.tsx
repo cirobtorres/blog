@@ -28,6 +28,7 @@ import { useEditFolder } from "../../../../../../hooks/useFolders";
 import FolderPopover from "../../../FolderPopover";
 
 export default function EditButton({
+  id,
   name,
   path,
   subfolderCount,
@@ -55,7 +56,8 @@ export default function EditButton({
       if (!validation.ok || !validation.data) {
         return validation;
       }
-      formData.set("path", validation?.data);
+      formData.set("folderName", validation.data.folderName);
+      formData.set("folderDestinationId", validation.data.parentFolderId ?? "");
 
       const result = mutateAsync({ prevState, formData });
       const promise = soonerPromise(result);
@@ -116,7 +118,7 @@ export default function EditButton({
               </div>
             </div>
             <div className="grid grid-cols-1 justify-center items-center gap-2">
-              <input hidden type="hidden" value={path} name="currentFolder" />
+              <input hidden type="hidden" value={id} name="currentFolderId" />
               <Fieldset>
                 <FieldsetInput
                   id="folderName"
@@ -127,8 +129,8 @@ export default function EditButton({
                 <FieldsetLabel label="Nome" htmlFor="folderName" />
               </Fieldset>
               <FieldsetError error={state?.error?.folderName?.errors} />
-              <FolderPopover movingFolderPaths={[path]} />
-              <FieldsetError error={state?.error?.folderDestination?.errors} />
+              <FolderPopover movingFolderIds={[id]} />
+              <FieldsetError error={state?.error?.folderDestinationId?.errors} />
             </div>
           </div>
           <AlertDialogFooter>

@@ -18,13 +18,7 @@ import {
 import Spinner from "../../../../../Spinner";
 import deleteFolder from "../../../../../../services/media/deleteFolder";
 
-export default function DeleteButton({
-  name,
-  path,
-  subfolderCount,
-  fileCount,
-  createdAt,
-}: Folder) {
+export default function DeleteButton({ id, path }: Folder) {
   return (
     <AlertDialog>
       <MediaFolderExcludeTrigger />
@@ -42,7 +36,7 @@ export default function DeleteButton({
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <DeleteFolderAction folder={path} />
+            <DeleteFolderAction folderId={id} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -50,7 +44,7 @@ export default function DeleteButton({
   );
 }
 
-const DeleteFolderAction = ({ folder }: { folder: string }) => {
+const DeleteFolderAction = ({ folderId }: { folderId: string }) => {
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
       return (
@@ -64,7 +58,7 @@ const DeleteFolderAction = ({ folder }: { folder: string }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFolder(folder);
+    const result = deleteFolder(folderId);
     const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 

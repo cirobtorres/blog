@@ -29,8 +29,7 @@ export default function MediaBreadcrumb() {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList>
-        {/* Renderiza prefixos: users > authors */}
+      <BreadcrumbList className="h-6">
         {segments.slice(0, mediaIndex).map((segment) => (
           <div key={segment} className="flex items-center gap-1.5">
             <BreadcrumbItem className="text-neutral-400 dark:text-neutral-600 capitalize">
@@ -39,8 +38,6 @@ export default function MediaBreadcrumb() {
             <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
           </div>
         ))}
-
-        {/* Link principal: Media */}
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link
@@ -54,8 +51,6 @@ export default function MediaBreadcrumb() {
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-
-        {/* Se houver subpastas, mostra o Dropdown com os níveis intermediários */}
         {menuItems.length > 0 && (
           <>
             <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
@@ -93,7 +88,7 @@ export default function MediaBreadcrumb() {
                           href={fullPath}
                           className="w-full cursor-pointer capitalize"
                         >
-                          {segment.replace(/-/g, " ")}
+                          {decodeURI(segment).replace(/-/g, " ")}
                         </Link>
                       </DropdownMenuItem>
                     );
@@ -107,7 +102,7 @@ export default function MediaBreadcrumb() {
           <>
             <BreadcrumbSeparator className="text-neutral-400 dark:text-neutral-600" />
             <BreadcrumbItem className="text-neutral-400 dark:text-neutral-600 capitalize">
-              {currentFolder.replace(/-/g, " ")}
+              {decodeURI(currentFolder).replace(/-/g, " ")}
             </BreadcrumbItem>
           </>
         )}

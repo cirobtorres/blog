@@ -77,7 +77,9 @@ const DeleteFilesAction = ({ files }: { files: Media[] }) => {
       return <p>{serverResponse.error}</p>;
     };
 
-    const result = deleteFiles(files);
+    const filesId = files.map((file) => file.id);
+
+    const result = deleteFiles(filesId);
     const promise = soonerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
