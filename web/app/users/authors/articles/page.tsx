@@ -1,10 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { Suspense } from "react";
 import FolderCardButtons from "../../../../components/Authors/Media/Folders/Cards/FolderCardButtons";
-import MediaFileCardsLoading from "../../../../components/Authors/Media/Files/Cards/MediaFileCardsLoading";
-import MediaFileCards from "../../../../components/Authors/Media/Files/Cards/MediaFileCards";
 import ArticleEditorSlug from "../../../../components/Editors/editors/ArticleEditorSlug";
 import ArticleEditorCategory from "../../../../components/Editors/editors/ArticleEditorCategory";
 import { ArticleEditorTitle } from "../../../../components/Editors/editors/ArticleEditorTitle";
@@ -14,16 +10,9 @@ import { Hr } from "../../../../components/utils";
 import ArticleBlockButtons from "../../../../components/Editors/ArticleBlockButtons";
 import ArticleEditorBanner from "../../../../components/Editors/editors/ArticleEditorBanner";
 import FolderModalBreadcrumb from "../../../../components/Authors/Media/FolderModalBreadcrumb";
+import FileCardButtons from "../../../../components/Authors/Media/Files/Cards/FileCardButtons";
 
-export default async function AuthorsArticlesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; size?: string; folder?: string }>;
-}) {
-  const cookie = cookies();
-  const accessToken = (await cookie).get("access_token");
-  const resolvedParams = await searchParams;
-
+export default async function AuthorsArticlesPage() {
   return (
     <form>
       <ArticleEditorsWrapper>
@@ -42,12 +31,7 @@ export default async function AuthorsArticlesPage({
             <FolderModalBreadcrumb />
             <FolderCardButtons />
             <Hr className="my-6" />
-            <Suspense fallback={<MediaFileCardsLoading />}>
-              <MediaFileCards
-                accessToken={accessToken?.value}
-                searchParams={resolvedParams}
-              />
-            </Suspense>
+            <FileCardButtons />
           </ArticleEditorBanner>
         </div>
         <div className="mt-2">

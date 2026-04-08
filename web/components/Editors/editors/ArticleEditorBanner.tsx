@@ -11,7 +11,6 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "../../AlertDialog";
-import { Button } from "../../Button";
 
 export default function ArticleEditorBanner({
   children,
@@ -65,13 +64,6 @@ export default function ArticleEditorBanner({
           <AlertDialogCancel className="w-full max-w-30 h-8">
             Cancelar
           </AlertDialogCancel>
-          <Button
-            type="submit"
-            variant="default"
-            className="w-full max-w-30 h-8"
-          >
-            Salvar
-          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

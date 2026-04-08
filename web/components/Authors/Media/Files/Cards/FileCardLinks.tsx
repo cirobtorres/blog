@@ -1,12 +1,12 @@
-import { FileProvider } from "../../../../../providers/FileProvider";
 import { apiServerUrls } from "../../../../../routing/routes";
 import MediaFileCheckbox from "../Header/MediaFileCheckbox";
 import MediaFileSearch from "../Header/MediaFileSearch";
 import MediaFilesSorting from "../Header/MediaFilesSorting";
-import MediaPagination from "../Pagination/MediaPagination";
-import MediaFileCard from "./MediaFileCard";
+import FilePaginationURL from "../Pagination/FilePaginationURL";
+import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
+import FileCardLink from "./FileCardLink";
 
-export default async function MediaFileCards({
+export default async function FileCardLinks({
   accessToken,
   currentPath,
   searchParams,
@@ -58,26 +58,22 @@ export default async function MediaFileCards({
   const { content: media, page } = mediaPromise;
 
   return (
-    <FileProvider>
-      <section className="flex flex-col items-start justify-center gap-2">
-        <h2 className="text-xl flex items-center">
-          Arquivo{count > 1 && "s"}: {count}
-        </h2>
-        <div className="w-full flex justify-between items-center gap-2">
-          <MediaFileCheckbox allFiles={media ?? []} />
-          <div className="w-full flex justify-end items-center mr-0 ml-auto gap-2">
-            <MediaFileSearch />
-            <MediaFilesSorting />
-          </div>
+    <FileCardSectionWrapper>
+      <FileCardTitle count={count} />
+      <div className="w-full flex justify-between items-center gap-2">
+        <MediaFileCheckbox allFiles={media ?? []} />
+        <div className="w-full flex justify-end items-center mr-0 ml-auto gap-2">
+          <MediaFileSearch />
+          <MediaFilesSorting />
         </div>
-        <MediaPagination {...page} />
-        <div className="w-full grid grid-cols-3 items-center gap-2">
-          {media?.map(({ ...file }) => (
-            <MediaFileCard key={file.publicId} file={file} />
-          ))}
-        </div>
-        <MediaPagination {...page} />
-      </section>
-    </FileProvider>
+      </div>
+      <FilePaginationURL {...page} />
+      <div className="w-full grid grid-cols-3 items-center gap-2">
+        {media?.map(({ ...file }) => (
+          <FileCardLink key={file.publicId} file={file} />
+        ))}
+      </div>
+      <FilePaginationURL {...page} />
+    </FileCardSectionWrapper>
   );
 }

@@ -7,15 +7,17 @@ interface ArticleState {
   blocks: Blocks[];
   activeMediaTarget: "banner" | string | null;
   currentModalFolder: string; // Folder navigation
+  currentModalPage: number;
 
   // Actions
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
-  // setBanner: (url: string) => void;
+  setBanner: (bannerUrl: string) => void;
   // updateBlockData: (id: string, data: UpdateBlocks) => void;
   openMediaLibrary: (target: "banner" | null) => void;
   selectImage: (url: string) => void;
   setCurrentModalFolder: (path: string) => void; // Folder navigation
+  setModalPage: (page: number) => void;
 }
 
 export const useArticleStore = create<ArticleState>((set) => ({
@@ -25,9 +27,11 @@ export const useArticleStore = create<ArticleState>((set) => ({
   blocks: [],
   activeMediaTarget: null,
   currentModalFolder: "/",
+  currentModalPage: 0,
 
   setTitle: (title) => set({ title }),
   setSubtitle: (subtitle) => set({ subtitle }),
+  setBanner: (bannerUrl) => set({ bannerUrl }),
   openMediaLibrary: (target) => set({ activeMediaTarget: target }),
   setCurrentModalFolder: (path) => set({ currentModalFolder: path }),
   selectImage: (url) =>
@@ -42,4 +46,5 @@ export const useArticleStore = create<ArticleState>((set) => ({
       );
       return { blocks: newBlocks, activeMediaTarget: null };
     }),
+  setModalPage: (page) => set({ currentModalPage: page }),
 }));

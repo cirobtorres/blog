@@ -12,7 +12,7 @@ import {
 } from "../../../../Pagination";
 import { cn } from "../../../../../utils/variants";
 
-export default function MediaPagination({ number, totalPages }: Pagination) {
+export default function FilePaginationURL({ number, totalPages }: Pagination) {
   const searchParams = useSearchParams();
   const currentPage = number;
   const displayPage = currentPage + 1;

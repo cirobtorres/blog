@@ -24,7 +24,7 @@ import {
 } from "../../../../../../utils/sooner";
 import { convertToLargeDate } from "../../../../../../utils/date";
 import folderValidation from "../../../../../../services/media/folderValidation";
-import { useEditFolder } from "../../../../../../hooks/useFolders";
+import { useEditFolder } from "../../../../../../hooks/hook-folders";
 import FolderPopover from "../../../FolderPopover";
 
 export default function FolderCardEditButton({

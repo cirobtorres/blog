@@ -20,7 +20,7 @@ import {
 import Spinner from "../../../../Spinner";
 import folderValidation from "../../../../../services/media/folderValidation";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
-import { useCreateFolder } from "../../../../../hooks/useFolders";
+import { useCreateFolder } from "../../../../../hooks/hook-folders";
 import FolderPopover from "../../FolderPopover";
 
 export default function AddFolderButton() {

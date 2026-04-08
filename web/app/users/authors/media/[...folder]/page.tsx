@@ -3,10 +3,10 @@
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { Hr } from "../../../../../components/utils";
-import MediaFileCards from "../../../../../components/Authors/Media/Files/Cards/MediaFileCards";
+import MediaFileCards from "../../../../../components/Authors/Media/Files/Cards/FileCardLinks";
 import FolderCardsLoading from "../../../../../components/Authors/Media/Folders/Cards/FolderCardsLoading";
 import FolderCardLinks from "../../../../../components/Authors/Media/Folders/Cards/FolderCardLinks";
-import MediaFileCardsLoading from "../../../../../components/Authors/Media/Files/Cards/MediaFileCardsLoading";
+import FileCardsLoading from "../../../../../components/Authors/Media/Files/Cards/FileCardsLoading";
 
 export default async function AuthorsMediaFolderPage({
   params,
@@ -29,7 +29,7 @@ export default async function AuthorsMediaFolderPage({
         />
       </Suspense>
       <Hr className="my-6" />
-      <Suspense fallback={<MediaFileCardsLoading />}>
+      <Suspense fallback={<FileCardsLoading />}>
         <MediaFileCards
           accessToken={accessToken?.value}
           currentPath={currentPath}

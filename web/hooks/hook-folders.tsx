@@ -41,7 +41,7 @@ export function useFoldersWithCount(currentModalFolder: string = "") {
 
       return { folders, count };
     },
-    staleTime: 1000 * 60 * 5, // Mantém os dados "frescos" por 5 minutos
+    staleTime: 1000 * 60 * 5, // 5 min
   });
 }
 

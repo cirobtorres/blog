@@ -8,7 +8,7 @@ import {
   FolderCardTitle,
 } from "./FolderCardsUtils";
 import { FolderCardsLoadingSimplified } from "./FolderCardsLoading";
-import { useFoldersWithCount } from "../../../../../hooks/useFolders";
+import { useFoldersWithCount } from "../../../../../hooks/hook-folders";
 
 export default function FolderCardButtons() {
   const { currentModalFolder, setCurrentModalFolder } = useArticleStore();
