@@ -12,7 +12,6 @@ import {
   AlertDialogTrigger,
 } from "../../AlertDialog";
 import { Button } from "../../Button";
-import { MediaSelectWrapper } from "../../../zustand-store/media-select-wrapper";
 
 export default function ArticleEditorBanner({
   children,
@@ -58,8 +57,8 @@ export default function ArticleEditorBanner({
           omnis autem debitis dolorem exercitationem.
         </AlertDialogDescription>
         <div className="p-1">
-          <div className="max-h-100 p-4 overflow-y-auto scrollbar">
-            <MediaSelectWrapper>{children}</MediaSelectWrapper>
+          <div className="max-h-120 p-4 overflow-y-auto scrollbar">
+            {children}
           </div>
         </div>
         <AlertDialogFooter>

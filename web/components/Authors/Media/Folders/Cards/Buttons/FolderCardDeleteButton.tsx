@@ -18,10 +18,10 @@ import {
 import Spinner from "../../../../../Spinner";
 import deleteFolder from "../../../../../../services/media/deleteFolder";
 
-export default function DeleteButton({ id, path }: Folder) {
+export default function FolderCardDeleteButton({ id, path }: Folder) {
   return (
     <AlertDialog>
-      <MediaFolderExcludeTrigger />
+      <FolderCardDeleteTrigger />
       <AlertDialogContent className="max-w-xs">
         <form>
           <AlertDialogHeader>Excluir pasta</AlertDialogHeader>
@@ -36,7 +36,7 @@ export default function DeleteButton({ id, path }: Folder) {
             <AlertDialogCancel className="w-full max-w-30 h-8">
               Cancelar
             </AlertDialogCancel>
-            <DeleteFolderAction folderId={id} />
+            <FolderCardDeleteAction folderId={id} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -44,7 +44,7 @@ export default function DeleteButton({ id, path }: Folder) {
   );
 }
 
-const DeleteFolderAction = ({ folderId }: { folderId: string }) => {
+const FolderCardDeleteAction = ({ folderId }: { folderId: string }) => {
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
       return (
@@ -77,7 +77,7 @@ const DeleteFolderAction = ({ folderId }: { folderId: string }) => {
   );
 };
 
-const MediaFolderExcludeTrigger = () => {
+const FolderCardDeleteTrigger = () => {
   return (
     <AlertDialogTrigger asChild>
       <Button variant="outline" className="size-8 not-dark:shadow-none">

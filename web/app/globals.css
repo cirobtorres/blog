@@ -169,9 +169,6 @@
 }
 
 @layer base {
-  html {
-    scrollbar-gutter: stable;
-  }
   * {
     @apply border-stone-300 dark:border-stone-700;
   }

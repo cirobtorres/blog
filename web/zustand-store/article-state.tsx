@@ -6,6 +6,7 @@ interface ArticleState {
   bannerUrl: string | null;
   blocks: Blocks[];
   activeMediaTarget: "banner" | string | null;
+  currentModalFolder: string; // Folder navigation
 
   // Actions
   setTitle: (title: string) => void;
@@ -14,6 +15,7 @@ interface ArticleState {
   // updateBlockData: (id: string, data: UpdateBlocks) => void;
   openMediaLibrary: (target: "banner" | null) => void;
   selectImage: (url: string) => void;
+  setCurrentModalFolder: (path: string) => void; // Folder navigation
 }
 
 export const useArticleStore = create<ArticleState>((set) => ({
@@ -22,16 +24,17 @@ export const useArticleStore = create<ArticleState>((set) => ({
   bannerUrl: null,
   blocks: [],
   activeMediaTarget: null,
+  currentModalFolder: "/",
 
   setTitle: (title) => set({ title }),
   setSubtitle: (subtitle) => set({ subtitle }),
   openMediaLibrary: (target) => set({ activeMediaTarget: target }),
+  setCurrentModalFolder: (path) => set({ currentModalFolder: path }),
   selectImage: (url) =>
     set((state) => {
       if (state.activeMediaTarget === "banner") {
         return { bannerUrl: url, activeMediaTarget: null };
       }
-      // Se o alvo for um bloco (ex: image-1)
       const newBlocks = state.blocks.map((b) =>
         b.id === state.activeMediaTarget
           ? { ...b, data: { ...b.data, url } }
@@ -39,6 +42,4 @@ export const useArticleStore = create<ArticleState>((set) => ({
       );
       return { blocks: newBlocks, activeMediaTarget: null };
     }),
-  // updateBlockData: (val) => set({body: val})
-  // setBanner: (val) => set()
 }));

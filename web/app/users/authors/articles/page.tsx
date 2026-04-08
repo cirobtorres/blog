@@ -2,8 +2,7 @@
 
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import FolderCardsLoading from "../../../../components/Authors/Media/Folders/Cards/FolderCardsLoading";
-import FolderCards from "../../../../components/Authors/Media/Folders/Cards/FolderCards";
+import FolderCardButtons from "../../../../components/Authors/Media/Folders/Cards/FolderCardButtons";
 import MediaFileCardsLoading from "../../../../components/Authors/Media/Files/Cards/MediaFileCardsLoading";
 import MediaFileCards from "../../../../components/Authors/Media/Files/Cards/MediaFileCards";
 import ArticleEditorSlug from "../../../../components/Editors/editors/ArticleEditorSlug";
@@ -14,6 +13,7 @@ import { Button } from "../../../../components/Button";
 import { Hr } from "../../../../components/utils";
 import ArticleBlockButtons from "../../../../components/Editors/ArticleBlockButtons";
 import ArticleEditorBanner from "../../../../components/Editors/editors/ArticleEditorBanner";
+import FolderModalBreadcrumb from "../../../../components/Authors/Media/FolderModalBreadcrumb";
 
 export default async function AuthorsArticlesPage({
   searchParams,
@@ -39,9 +39,8 @@ export default async function AuthorsArticlesPage({
             <ArticleEditorCategory />
           </div>
           <ArticleEditorBanner>
-            <Suspense fallback={<FolderCardsLoading />}>
-              <FolderCards accessToken={accessToken?.value} />
-            </Suspense>
+            <FolderModalBreadcrumb />
+            <FolderCardButtons />
             <Hr className="my-6" />
             <Suspense fallback={<MediaFileCardsLoading />}>
               <MediaFileCards

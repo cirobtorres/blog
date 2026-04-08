@@ -25,10 +25,12 @@ import FolderPopover from "../../FolderPopover";
 
 export default function AddFolderButton() {
   const { mutateAsync } = useCreateFolder();
+  const [isOpen, setIsOpen] = React.useState(false);
   const [folderName, setFolderName] = React.useState("");
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
+        setIsOpen(false);
         return (
           <div className="flex flex-col">
             <p>{serverResponse.success}</p>
@@ -60,7 +62,7 @@ export default function AddFolderButton() {
   );
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="link" className="w-full max-w-44 h-8">
           <svg

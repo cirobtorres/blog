@@ -27,7 +27,7 @@ import folderValidation from "../../../../../../services/media/folderValidation"
 import { useEditFolder } from "../../../../../../hooks/useFolders";
 import FolderPopover from "../../../FolderPopover";
 
-export default function EditButton({
+export default function FolderCardEditButton({
   id,
   name,
   path,
@@ -130,7 +130,9 @@ export default function EditButton({
               </Fieldset>
               <FieldsetError error={state?.error?.folderName?.errors} />
               <FolderPopover movingFolderIds={[id]} />
-              <FieldsetError error={state?.error?.folderDestinationId?.errors} />
+              <FieldsetError
+                error={state?.error?.folderDestinationId?.errors}
+              />
             </div>
           </div>
           <AlertDialogFooter>
