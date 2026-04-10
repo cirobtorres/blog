@@ -11,43 +11,65 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "../../AlertDialog";
+import { cn, focusRing } from "../../../utils/variants";
+import Spinner from "../../Spinner";
+import React from "react";
 
 export default function ArticleEditorBanner({
   children,
+  error,
 }: {
   children: React.ReactNode;
+  error: boolean;
 }) {
-  const bannerUrl = useArticleStore((state) => state.bannerUrl);
-  const openMedia = useArticleStore((state) => state.openMediaLibrary);
-  const activeTarget = useArticleStore((state) => state.activeMediaTarget);
-  const setTarget = useArticleStore((state) => state.openMediaLibrary);
-  const isOpen = activeTarget === "banner"; // banner = open modal
+  const {
+    loading,
+    bannerMediaId,
+    bannerUrl,
+    bannerAlt,
+    activeMediaTarget,
+    setLoading,
+    openMediaLibrary,
+  } = useArticleStore();
+  const isOpen = activeMediaTarget === "banner";
 
   return (
     <AlertDialog
       open={isOpen}
-      onOpenChange={(open) => !open && setTarget(null)}
+      onOpenChange={(open) => !open && openMediaLibrary(null)}
     >
       <AlertDialogTrigger asChild>
-        <div
-          onClick={() => openMedia("banner")}
-          className="cursor-pointer relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden not-dark:shadow bg-stone-200 dark:bg-stone-900"
+        <button
+          onClick={() => openMediaLibrary("banner")}
+          className={cn(
+            "cursor-pointer relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
+            focusRing,
+            error
+              ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5"
+              : "bg-stone-200 dark:bg-stone-900",
+          )}
         >
-          <div className="size-1/2 flex justify-center items-center rounded-xl border border-dashed text-sm text-neutral-400 dark:text-neutral-500">
-            {bannerUrl ? (
+          {bannerMediaId && bannerUrl && bannerAlt ? (
+            <>
+              <input
+                hidden
+                type="hidden"
+                className="appearance-none"
+                name="banner"
+                value={bannerMediaId}
+              />
               <Image
                 src={bannerUrl}
-                alt="TODO"
+                alt={bannerAlt}
                 fill
                 className="absolute object-cover"
+                onLoadingComplete={() => setLoading(false)}
               />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                Selecionar Banner
-              </div>
-            )}
-          </div>
-        </div>
+            </>
+          ) : (
+            <DropZonePlaceholder loading={loading} />
+          )}
+        </button>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-250">
         <AlertDialogHeader>Adicionar imagem</AlertDialogHeader>
@@ -69,3 +91,11 @@ export default function ArticleEditorBanner({
     </AlertDialog>
   );
 }
+
+const DropZonePlaceholder = ({ loading }: { loading?: boolean }) => (
+  <div className="size-1/2 flex justify-center items-center rounded-xl border border-dashed text-sm text-neutral-400 dark:text-neutral-500">
+    <div className="flex items-center justify-center h-full">
+      {loading && <Spinner />} Selecionar Banner
+    </div>
+  </div>
+);

@@ -12,21 +12,22 @@ export default function FileCardButton({
   file: Media;
   isPriority?: boolean;
 }) {
-  const { setBanner, openMediaLibrary } = useArticleStore();
+  const { setLoading, selectBanner, openMediaLibrary } = useArticleStore();
 
   return (
     <button
       type="button"
       className="cursor-pointer"
       onClick={() => {
-        setBanner(file.url);
+        setLoading(true);
+        selectBanner({ id: file.id, url: file.url, alt: file.alt });
         openMediaLibrary(null);
       }}
     >
       <FileCardWrapper>
         <DashedBackground />
         <Image
-          src={file.url} // ?? "https://placehold.co/1920x1080/000/fff/jpeg"
+          src={file.url}
           alt={file.name || "Media file"}
           fill
           priority={isPriority}

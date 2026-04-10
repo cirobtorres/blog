@@ -248,7 +248,7 @@ public class MediaService {
                 Map<?, ?> result = cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
 
                 if (!"ok".equals(result.get("result")) && !"not found".equals(result.get("result"))) {
-                    throw new RuntimeException("Cloudinary delete fail while deleting media of public_id=" + media.getPublicId());
+                    throw new RuntimeException("Cloudinary delete fail while deleting banner of public_id=" + media.getPublicId());
                 }
             } catch (Exception e) {
                 // Because we are inside a @Transactional, the RuntimeException must be thrown here in order to trigger a rollback

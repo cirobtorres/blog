@@ -158,16 +158,6 @@ public class AuthService {
 
     @Transactional
     public UserDTO getUser(Authentication auth) {
-        // List<String> authorities = auth.getAuthorities().stream()
-        //         .map(GrantedAuthority::getAuthority)
-        //         .filter(a -> {
-        //             if(a != null) {
-        //                 return !a.equalsIgnoreCase("ACCESS");
-        //             }
-        //             return false;
-        //         })
-        //         .distinct()
-        //         .toList();
         return userService.getAuthenticatedUserDTO(auth);
     }
 

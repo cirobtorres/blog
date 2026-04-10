@@ -1,45 +1,41 @@
+"use client";
+
 import React from "react";
 import { EditorsAccordion } from "./accordion";
 import { HtmlEditor } from "./editors/ArticleEditorHtml";
 import { AddAccordionButton } from "./addAccordionButton";
 import { FieldsetError } from "../Fieldset";
+import { useArticleStore } from "../../zustand-store/article-state";
 
 const BlockItem = React.memo(function BlockItem({
-  blocks,
-  locked,
+  block,
   error,
-  updateBlocks,
-  onDelete,
-  onDisable,
-  moveDownward,
 }: {
-  blocks: Blocks;
-  locked: boolean;
+  block: Blocks;
   error?: BlockPropertyErrors;
-  updateBlocks: (id: string, data: UpdateBlocks) => void;
-  onDelete: (id: string) => void;
-  onDisable: (id: string) => void;
-  moveDownward: (id: string) => void;
 }) {
+  const { updateBlock, deleteBlock, toggleBlockLock, moveBlockDownward } =
+    useArticleStore();
   const dataErrors = error?.data?.properties as BlockDataErrors | undefined;
-  switch (blocks.type) {
+
+  switch (block.type) {
     case "html":
-      const textEditorId = "input-body-" + blocks.id;
+      const textEditorId = "input-body-" + block.id;
       return (
         <>
           <EditorsAccordion
-            id={blocks.id}
-            label={blocks.id.charAt(0).toUpperCase() + blocks.id.slice(1)}
-            locked={locked}
-            onDelete={onDelete}
-            onDisable={onDisable}
-            moveDownward={moveDownward}
+            id={block.id}
+            label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+            locked={block.locked}
+            onDelete={deleteBlock}
+            onDisable={toggleBlockLock}
+            moveDownward={moveBlockDownward}
             hasError={!!error}
           >
             <HtmlEditor
               id={textEditorId}
-              setVal={(val) => updateBlocks(blocks.id, { body: val })}
-              defaultValue={(blocks.data as HtmlEditor)?.body ?? ""}
+              setVal={(val) => updateBlock(block.id, { body: val })}
+              defaultValue={(block.data as HtmlEditor)?.body ?? ""}
             />
           </EditorsAccordion>
           <FieldsetError error={dataErrors?.body?.errors} />
@@ -60,208 +56,78 @@ const BlockItem = React.memo(function BlockItem({
   }
 });
 
-const BlockList = ({
-  blocks,
-  setBlocks,
-  blocksErrors,
-}: {
-  blocks: Blocks[];
-  setBlocks: React.Dispatch<React.SetStateAction<Blocks[]>>;
-  blocksErrors?: BodyItemError[];
-}) => {
-  const [internalErrorMap, setInternalErrorMap] = React.useState<
-    Record<string, BlockPropertyErrors>
-  >({});
+const BlockList = ({ blocksErrors }: { blocksErrors?: BodyItemError[] }) => {
+  const blocks = useArticleStore((state) => state.blocks);
 
-  React.useEffect(() => {
-    if (blocksErrors && blocksErrors.length > 0) {
-      const newMap: Record<string, BlockPropertyErrors> = {};
-
+  const errorMap = React.useMemo(() => {
+    const map: Record<string, BlockPropertyErrors> = {};
+    if (blocksErrors) {
       blocksErrors.forEach((item, index) => {
         const blockId = blocks[index]?.id;
-
         if (blockId && item.properties) {
-          newMap[blockId] = item.properties;
+          map[blockId] = item.properties;
         }
       });
-
-      setInternalErrorMap(newMap);
-    } else {
-      setInternalErrorMap({});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blocksErrors]); // BLOCKS CANNOT BE A DEPENDENCY!!
+    return map;
+  }, [blocksErrors, blocks]);
 
-  const moveDownward = React.useCallback(
-    (id: string) => {
-      setBlocks((prev) => {
-        const index = prev.findIndex((b) => b.id === id);
-
-        if (index === -1 || index === prev.length - 1) {
-          return prev;
-        }
-
-        const newBlocks = [...prev];
-        [newBlocks[index], newBlocks[index + 1]] = [
-          newBlocks[index + 1],
-          newBlocks[index],
-        ];
-
-        return newBlocks;
-      });
-    },
-    [setBlocks],
+  return (
+    <div className="space-y-2">
+      {blocks.map((block) => (
+        <BlockItem key={block.id} block={block} error={errorMap[block.id]} />
+      ))}
+    </div>
   );
-
-  const updateBlocks = React.useCallback(
-    (id: string, data: UpdateBlocks) => {
-      setBlocks((prev) =>
-        prev.map((b) =>
-          b.id === id
-            ? ({
-                ...b,
-                data: {
-                  ...(b.data as Record<string, unknown>),
-                  ...(data as Record<string, unknown>),
-                },
-              } as Blocks)
-            : b,
-        ),
-      );
-    },
-    [setBlocks],
-  );
-
-  const onDelete = React.useCallback(
-    (id: string) => {
-      setBlocks((prevBlocks) => prevBlocks.filter((b) => b.id !== id));
-    },
-    [setBlocks],
-  );
-
-  const onDisable = React.useCallback(
-    (id: string) => {
-      setBlocks((prev) =>
-        prev.map((b) =>
-          b.id === id
-            ? ({
-                ...b,
-                locked: !b.locked,
-              } as Blocks)
-            : b,
-        ),
-      );
-    },
-    [setBlocks],
-  );
-
-  const renderedBlocks = React.useMemo(() => {
-    return blocks.map((block) => {
-      const errorData = internalErrorMap[block.id];
-      return (
-        <BlockItem
-          key={block.id}
-          blocks={block}
-          locked={block.locked}
-          onDelete={onDelete}
-          onDisable={onDisable}
-          moveDownward={moveDownward}
-          updateBlocks={updateBlocks}
-          error={errorData}
-        />
-      );
-    });
-  }, [
-    blocks,
-    updateBlocks,
-    onDisable,
-    onDelete,
-    moveDownward,
-    internalErrorMap,
-  ]);
-
-  return <>{renderedBlocks}</>;
 };
 
 const createNewBlock = (
   id: string,
   locked: boolean,
-  type: Blocks["type"],
+  type: BlockType,
 ): Blocks => {
+  const base = { id, locked, type };
+
   switch (type) {
     case "html":
-      return { id, locked, type, data: { body: "" } };
-
+      return { ...base, type: "html", data: { body: "" } };
     case "code":
       return {
-        id,
-        locked,
-        type,
+        ...base,
+        type: "code",
         data: { filename: "", code: "", language: "typescript" },
       };
-
-    case "accordion":
-      return {
-        id,
-        locked,
-        type,
-        data: null,
-      };
-
-    case "alert":
-      return {
-        id,
-        locked,
-        type,
-        data: null,
-      };
-
     case "image":
-      return {
-        id,
-        locked,
-        type,
-        data: null,
-      };
-
+      return { ...base, type: "image", data: { url: "" } };
+    case "alert":
+      return { ...base, type: "alert", data: null };
+    case "accordion":
+      return { ...base, type: "accordion", data: null };
     case "images":
-      return {
-        id,
-        locked,
-        type,
-        data: null,
-      };
-
+      return { ...base, type: "images", data: null };
     default:
-      throw new Error(`Tipo de bloco não suportado: ${type}`);
+      throw new Error("Tipo inválido");
   }
 };
 
-const AddBlockButton = ({
-  blocks,
-  setBlocks,
-}: {
-  blocks: Blocks[];
-  setBlocks: React.Dispatch<React.SetStateAction<Blocks[]>>;
-}) => {
-  const [nextId, setNextId] = React.useState(1);
+const AddBlockButton = () => {
+  const { blocks, setBlocks } = useArticleStore();
 
-  React.useEffect(() => {
+  const addBlock = (type: Blocks["type"]) => {
     const usedIds = blocks
       .map((b) => parseInt(b.id.split("-").pop() || "0", 10))
       .filter((n) => !isNaN(n));
+    const nextId = (usedIds.length > 0 ? Math.max(...usedIds) : 0) + 1;
 
-    const maxUsedId = usedIds.length > 0 ? Math.max(...usedIds) : 0;
-    setNextId(maxUsedId + 1);
-  }, [blocks]);
-
-  const addBlock = (type: Blocks["type"]) => {
     const newBlock = createNewBlock(`${type}-${nextId}`, false, type);
-    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
-    setNextId((prev) => prev + 1);
+    setBlocks([...blocks, newBlock]);
   };
 
   return <AddAccordionButton addBlock={addBlock} />;
 };
+
+export function ArticleBlockButtons() {
+  return <AddBlockButton />;
+}
 
 export { BlockList, AddBlockButton };

@@ -10,7 +10,7 @@ export function AddAccordionButton({
   addBlock: (type: Blocks["type"]) => void;
 }) {
   return (
-    <div className="h-full flex items-center">
+    <div className="flex items-center">
       <div className="mx-auto flex gap-1">
         {buttons.map((prop, index) => (
           <div

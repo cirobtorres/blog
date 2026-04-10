@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.author;
+package com.cirobtorres.blog.api.author.entities;
 
 import com.cirobtorres.blog.api.article.entities.Articles;
 import com.cirobtorres.blog.api.user.entities.User;
@@ -34,6 +34,9 @@ public class Author {
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @Column
+    private String name;
 
     @Column(name = "picture_url")
     private String pictureUrl;
@@ -84,6 +87,9 @@ public class Author {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getPictureUrl() { return pictureUrl; }
     public void setPictureUrl(String pictureUrl) { this.pictureUrl = pictureUrl; }

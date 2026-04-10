@@ -5,7 +5,6 @@ import { apiServerUrls } from "../../../../routing/routes";
 import { cache } from "react";
 
 const getUser = cache(async (): Promise<SessionUser> => {
-  console.log("getUser");
   const cookieStore = await cookies();
   const headerList = await headers();
   const authHeader = headerList.get("authorization");

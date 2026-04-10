@@ -6,8 +6,11 @@ import MediaFileSearch from "../Header/MediaFileSearch";
 import MediaFilesSorting from "../Header/MediaFilesSorting";
 import FilePaginationState from "../Pagination/FilePaginationState";
 import FileCardButton from "./FileCardButton";
-import { FileCardsLoadingSimplified } from "./FileCardsLoading";
-import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
+import {
+  FileCardSectionWrapper,
+  FileCardsLoadingSimplified,
+  FileCardTitle,
+} from "./FileCardUtils";
 
 const pageFallback = {
   size: 20,

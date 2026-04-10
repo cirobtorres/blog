@@ -121,7 +121,7 @@ public class MediaFolderService {
 
                 String status = (String) result.get("result");
                 if (!"ok".equals(status) && !"not found".equals(status)) {
-                    throw new RuntimeException("Cloudinary delete fail while deleting media of public_id=" + media.getPublicId());
+                    throw new RuntimeException("Cloudinary delete fail while deleting banner of public_id=" + media.getPublicId());
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Transaction aborted. Cloudinary fail: ", e);

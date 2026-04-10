@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import * as z from "zod";
 import {
   applySpringCookies,
   extractPayload,
@@ -9,110 +8,13 @@ import {
 } from "../helpers/serve-actions";
 import { apiServerUrls } from "../../routing/routes";
 import { NextResponse } from "next/server";
-
-const HtmlBlockSchema = z
-  .object({
-    type: z.literal("html"),
-    id: z.string(),
-    locked: z.boolean(),
-    data: z.object({
-      body: z.string(),
-    }),
-  })
-  .superRefine((val, ctx) => {
-    if (val.data.body.length < 1) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["data", "body"],
-        message: `O bloco de texto ${val.id} não pode ser vazio`,
-      });
-    }
-  });
-
-const CodeBlockSchema = z
-  .object({
-    type: z.literal("code"),
-    id: z.string(),
-    locked: z.boolean(),
-    data: z.object({
-      filename: z.string().optional(),
-      code: z.string(),
-      language: z.string(),
-    }),
-  })
-  .superRefine((val, ctx) => {
-    if (val.data.code.length < 1) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["data", "code"],
-        message: `O bloco de código ${val.id} não pode ser vazio`,
-      });
-    }
-  });
-
-const ImageBlockSchema = z
-  .object({
-    type: z.literal("image"),
-    id: z.string(),
-    locked: z.boolean(),
-    data: z.object({
-      url: z.url("URL da imagem inválida"),
-      alt: z.string().min(1, "Texto alternativo é obrigatório"),
-    }),
-  })
-  .superRefine((val, ctx) => {
-    if (!val.data.url.startsWith("https://")) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["data", "url"],
-        message: `O bloco de imagem ${val.id} não pode ter URL vazia`,
-      });
-    }
-    if (val.data.alt.length < 1) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["data", "alt"],
-        message: `O bloco de imagem ${val.id} não pode ter ALT vazia`,
-      });
-    }
-  });
-
-// Object "Union" decides which schema to use based on attribute "type"
-const BlockSchema = z.discriminatedUnion("type", [
-  HtmlBlockSchema,
-  CodeBlockSchema,
-  ImageBlockSchema,
-  // More schemas here...
-]);
-
-const publishArticleSchema = z.object({
-  title: z
-    .string()
-    .min(5, "O título deve ter pelo menos 5 caracteres")
-    .max(128, "Título muito longo"),
-  subtitle: z.string().min(1, "O subtítulo é obrigatório"),
-  body: z.preprocess(
-    (val) => {
-      // Tries to transform a string JSON into an object before validates it
-      try {
-        return typeof val === "string" ? JSON.parse(val) : val;
-      } catch {
-        return [];
-      }
-    },
-    z
-      .array(BlockSchema)
-      .min(1, "Adicione pelo menos um bloco ao artigo")
-      // FILTER: Removes blocks with locked === true
-      .transform((blocks) => blocks.filter((block) => !block.locked)),
-  ),
-});
+import * as z from "zod";
+import { publishArticleSchema } from "./zod-validations";
 
 const publishArticleValidation = async (
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> => {
-  // const isProd = process.env.NODE_ENV === "production";
   const rawData = Object.fromEntries(formData.entries());
 
   const result = publishArticleSchema.safeParse({
@@ -129,7 +31,7 @@ const publishArticleValidation = async (
     };
   }
 
-  const { title, subtitle, body } = result.data;
+  const { title, subtitle, slug, banner, body } = result.data;
 
   return {
     ok: true,
@@ -138,6 +40,8 @@ const publishArticleValidation = async (
     data: {
       title,
       subtitle,
+      slug,
+      banner,
       body,
     },
   };
@@ -147,11 +51,9 @@ const publishArticle = async (
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> => {
-  const isProd = process.env.NODE_ENV === "production";
-
   const cookieStore = await cookies();
-  let accessToken = cookieStore.get("access_token")?.value;
   const refreshToken = cookieStore.get("refresh_token")?.value;
+  let accessToken = cookieStore.get("access_token")?.value;
 
   // AUTHENTICATION
   let payload: AuthTokensPayload | null = null;
@@ -232,13 +134,11 @@ const publishArticle = async (
     return {
       ok: false,
       success: null,
-      error: errorData.message || "Erro no servidor",
+      error: errorData.message ?? "Erro no servidor",
       data: null,
     };
   } catch (err) {
-    if (!isProd) {
-      console.error("publishArticle:", err);
-    }
+    console.error("publishArticle:", err);
     return {
       ok: false,
       success: null,

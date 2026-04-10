@@ -6,7 +6,7 @@ import { Hr } from "../../../../components/utils";
 import MediaFileCards from "../../../../components/Authors/Media/Files/Cards/FileCardLinks";
 import FolderCardsLoading from "../../../../components/Authors/Media/Folders/Cards/FolderCardsLoading";
 import FolderCardLinks from "../../../../components/Authors/Media/Folders/Cards/FolderCardLinks";
-import FileCardsLoading from "../../../../components/Authors/Media/Files/Cards/FileCardsLoading";
+import { FileCardsLoading } from "../../../../components/Authors/Media/Files/Cards/FileCardUtils";
 
 export default async function AuthorsMediaPage({
   searchParams,

@@ -1,7 +1,7 @@
 package com.cirobtorres.blog.api.article.entities;
 
 import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
-import com.cirobtorres.blog.api.author.Author;
+import com.cirobtorres.blog.api.author.entities.Author;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.enums.MediaType;
 import jakarta.persistence.*;
@@ -23,7 +23,7 @@ public class Articles {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id") // NULLABLE
+    @JoinColumn(name = "author_id", nullable = false, unique = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
 
@@ -37,8 +37,8 @@ public class Articles {
     private String body;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "banner_media_id")
-    private Media banner;
+    @JoinColumn(name = "media_id")
+    private Media media;
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -73,7 +73,7 @@ public class Articles {
         this.title = builder.title;
         this.subtitle = builder.subtitle;
         this.body = builder.body;
-        this.banner = builder.banner;
+        this.media = builder.media;
         this.slug = builder.slug;
         this.status = builder.status;
         this.publishedAt = builder.publishedAt;
@@ -84,7 +84,7 @@ public class Articles {
         private String title;
         private String subtitle;
         private String body;
-        private Media banner;
+        private Media media;
         private String slug;
         private ArticlesStatus status;
         private LocalDateTime publishedAt;
@@ -109,8 +109,8 @@ public class Articles {
             return this;
         }
 
-        public Builder banner(Media media) {
-            this.banner = media;
+        public Builder media(Media media) {
+            this.media = media;
             return this;
         }
 
@@ -170,12 +170,12 @@ public class Articles {
         this.body = body;
     }
 
-    public Media getBanner() { return banner; }
-    public void setBanner(Media banner) {
-        if (banner != null && banner.getType() != MediaType.IMAGE) {
-            throw new IllegalArgumentException("Banner type must be IMAGE.");
+    public Media getMedia() { return media; }
+    public void setMedia(Media media) {
+        if (media != null && media.getType() != MediaType.IMAGE) {
+            throw new IllegalArgumentException("Media type must be IMAGE.");
         }
-        this.banner = banner;
+        this.media = media;
     }
 
     public String getSlug() {

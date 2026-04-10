@@ -18,7 +18,7 @@ import {
 } from "../../DropDownMenu";
 import { Button } from "../../Button";
 
-export default function MediaBreadcrumb() {
+export default function FolderBreadcrumbURL() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
   const mediaIndex = segments.indexOf("media");

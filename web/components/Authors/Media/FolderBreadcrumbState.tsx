@@ -14,8 +14,9 @@ import {
 } from "../../DropDownMenu";
 import { Button } from "../../Button";
 import { useArticleStore } from "../../../zustand-store/article-state";
+import { cn, focusRing } from "../../../utils/variants";
 
-export default function FolderModalBreadcrumb() {
+export default function FolderBreadcrumbState() {
   const { currentModalFolder, setCurrentModalFolder } = useArticleStore();
   const segments = decodeURIComponent(currentModalFolder)
     .split("/")
@@ -39,7 +40,10 @@ export default function FolderModalBreadcrumb() {
           ) : (
             <button
               onClick={() => handleNavigate("/")}
-              className="cursor-pointer text-sm font-medium transition-colors capitalize text-neutral-400 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-100"
+              className={cn(
+                "cursor-pointer text-sm font-medium capitalize transition-all duration-300 rounded border border-transparent text-neutral-400 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-100",
+                focusRing,
+              )}
             >
               media
             </button>

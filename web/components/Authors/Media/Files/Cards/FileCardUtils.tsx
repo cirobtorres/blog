@@ -1,5 +1,6 @@
 import { FileProvider } from "../../../../../providers/FileProvider";
 import { cn } from "../../../../../utils/variants";
+import { Skeleton } from "../../../../Skeleton";
 
 export function FileCardSectionWrapper({
   children,
@@ -41,9 +42,9 @@ export function FileCardTitle({
 
 export function FileCardInfos({ file }: { file: Media }) {
   return (
-    <div className="w-full flex justify-between items-center gap-2 p-2 border-t">
-      <div className="w-full h-full flex flex-col justify-start gap-1">
-        <span className="h-7 flex-1 text-xs leading-3.5 line-clamp-2 mb-auto mt-0 text-neutral-900 dark:text-neutral-100">
+    <div className="w-full flex justify-between items-start gap-2 p-2 border-t">
+      <div className="w-full flex flex-col justify-start gap-1">
+        <span className="w-full text-start h-7 text-xs leading-3.5 line-clamp-2 mb-auto mt-0 text-neutral-900 dark:text-neutral-100">
           {file.name}
         </span>
         <div className="flex justify-between items-center gap-1">
@@ -86,5 +87,52 @@ export function FileCardWrapper({ children }: { children: React.ReactNode }) {
         <div className="relative">{children}</div>
       </div>
     </article>
+  );
+}
+
+export function FileCardsLoading() {
+  return (
+    <div className="flex flex-col items-start justify-center gap-2">
+      <h2 className="text-xl flex items-center">
+        Arquivos: {<Skeleton className="size-7" />}
+      </h2>
+      <div className="w-full flex justify-between items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Skeleton className="w-32 h-8.5 flex items-center rounded-lg" />
+          <Skeleton className="w-30 h-8.5" />
+          <Skeleton className="w-30 h-8.5" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-8.5" />
+          <Skeleton className="w-22 h-8.5" />
+        </div>
+      </div>
+      <div className="w-full grid grid-cols-3 items-center gap-2">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Skeleton
+            key={index}
+            className="w-full max-w-100 h-65 shrink-0 overflow-hidden rounded-lg not-dark:shadow"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function FileCardsLoadingSimplified() {
+  return (
+    <div className="flex flex-col items-start justify-center gap-2">
+      <h2 className="text-xl flex items-center">
+        Arquivos: {<Skeleton className="size-7" />}
+      </h2>
+      <div className="w-full grid grid-cols-3 items-center gap-2">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Skeleton
+            key={index}
+            className="w-full max-w-100 h-65 shrink-0 overflow-hidden rounded-lg not-dark:shadow"
+          />
+        ))}
+      </div>
+    </div>
   );
 }

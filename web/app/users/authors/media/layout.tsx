@@ -2,7 +2,7 @@
 
 import AddFilesButton from "../../../../components/Authors/Media/Files/Add/AddFilesButton";
 import AddFolderButton from "../../../../components/Authors/Media/Folders/Add/AddFolderButton";
-import MediaBreadcrumb from "../../../../components/Authors/Media/MediaBreadcrumb";
+import FolderBreadcrumbURL from "../../../../components/Authors/Media/FolderBreadcrumbURL";
 
 export default async function MediaLayout({
   children,
@@ -18,7 +18,7 @@ export default async function MediaLayout({
           <AddFilesButton />
         </div>
       </div>
-      <MediaBreadcrumb />
+      <FolderBreadcrumbURL />
       {children}
     </div>
   );
