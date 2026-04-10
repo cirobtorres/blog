@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiServerUrls } from "../routing/routes";
+import { apiServerUrls } from "../../routing/routes";
+import { clientFetch } from "../auth-fetch-client";
 
 export function useFilesWithCount(
   currentModalFolder: string = "",
@@ -26,7 +27,7 @@ export function useFilesWithCount(
       const countUrl = `${apiServerUrls.media.count}?folder=${currentModalFolder}`;
 
       const [data, count] = await Promise.all([
-        fetch(getUrl, options)
+        clientFetch(getUrl, options)
           .then((res) =>
             res.ok
               ? (res.json() as Promise<MediaResponsePageable>)
@@ -36,7 +37,7 @@ export function useFilesWithCount(
             console.error(e);
             return defaultData;
           }),
-        fetch(countUrl, options)
+        clientFetch(countUrl, options)
           .then((res) => (res.ok ? (res.json() as Promise<number>) : 0))
           .catch((e) => {
             console.error(e);

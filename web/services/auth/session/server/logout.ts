@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { apiClientUrls } from "../../../../routing/routes";
 import { revalidatePath } from "next/cache";
 import { hasAutorities } from "../../../../routing/protected/hasAutorities";
+import { serverFetch } from "../../../auth-fetch-actions";
 
 export async function logout() {
   const headersList = await headers();
@@ -14,7 +15,7 @@ export async function logout() {
   const accessToken = cookieStore.get("access_token")?.value;
 
   try {
-    await fetch(apiClientUrls.logout, {
+    await serverFetch(apiClientUrls.logout, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -23,8 +23,8 @@ import {
   soonerPromise,
 } from "../../../../../../utils/sooner";
 import { convertToLargeDate } from "../../../../../../utils/date";
-import folderValidation from "../../../../../../services/media/folderValidation";
-import { useEditFolder } from "../../../../../../hooks/hook-folders";
+import folderValidation from "../../../../../../utils/zod-folder-validations";
+import { useEditFolder } from "../../../../../../services/hooks/hook-folders";
 import FolderPopover from "../../../FolderPopover";
 
 export default function FolderCardEditButton({

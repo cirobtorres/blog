@@ -23,8 +23,8 @@ export default function DialogEmptyContent({
 }) {
   const [tab, setTab] = React.useState("pc");
   const [url, setUrl] = React.useState("");
-  const [urlState, urlAction, urlIsPending] = React.useActionState(
-    async (prevData: ActionState, formData: FormData) => {
+  const [, urlAction, urlIsPending] = React.useActionState(
+    async () => {
       const success = (serverResponse: ActionState) => {
         const file = serverResponse.data as File;
         addFiles([file]);

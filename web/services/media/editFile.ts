@@ -2,7 +2,8 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
+import { serverFetch } from "../auth-fetch-actions";
 
 const returnState = {
   ok: false,
@@ -27,19 +28,22 @@ export default async function editFile(
   try {
     const cookie = await cookies();
     const accessToken = cookie.get("access_token")?.value;
-    const response = await fetch(apiServerUrls.media.root + "/" + fileId, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await serverFetch(
+      apiServerUrls.media.root + "/" + fileId,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name,
+          caption,
+          alt,
+          folder: { id: folderId || null },
+        }),
       },
-      body: JSON.stringify({
-        name,
-        caption,
-        alt,
-        folder: { id: folderId || null },
-      }),
-    });
+    );
 
     if (!response.ok) {
       return {
@@ -56,7 +60,7 @@ export default async function editFile(
   }
 
   revalidateTag("files", { expire: 0 });
-  revalidatePath("/users/authors/media");
+  revalidatePath(protectedWebUrls.media);
 
   return {
     ...returnState,

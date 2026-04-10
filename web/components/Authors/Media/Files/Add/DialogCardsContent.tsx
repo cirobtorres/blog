@@ -20,8 +20,8 @@ export default function DialogCardsContent({
   isPending,
   handleReset,
 }: {
-  files: File[];
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  files: { id: string; file: File }[];
+  setFiles: React.Dispatch<React.SetStateAction<{ id: string; file: File }[]>>;
   openStep: "upload" | "preview" | null;
   setOpenStep: React.Dispatch<
     React.SetStateAction<"upload" | "preview" | null>
@@ -48,7 +48,7 @@ export default function DialogCardsContent({
           </AlertDialogDescription>
           <div className="p-5 max-h-[60vh] overflow-y-auto grid grid-cols-1 gap-4 m-1 scrollbar">
             {files.map((file, index) => {
-              const fileKey = `${file.name}-${file.size}-${file.lastModified}`;
+              const fileKey = `${file.file.name}-${file.file.size}-${file.file.lastModified}`;
               return (
                 <CardPreview
                   key={fileKey}

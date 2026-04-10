@@ -18,26 +18,36 @@ export default function CardPreview({
   state,
   onRemove,
 }: {
-  file: File;
+  file: { id: string; file: File };
   index: number;
   state: ActionState;
   onRemove: () => void;
 }) {
   const [preview, setPreview] = React.useState<string | null>(null);
-  const [name, setName] = React.useState<string>(file.name);
+  const [name, setName] = React.useState<string>(file.file.name);
   const [alt, setAlt] = React.useState<string>("");
   const [caption, setCaption] = React.useState<string>("");
-  const isImage = file.type.startsWith("image/");
-  const isVideo = file.type.startsWith("video/");
-  const isAudio = file.type.startsWith("audio/");
+  const isImage = file.file.type.startsWith("image/");
+  const isVideo = file.file.type.startsWith("video/");
+  const isAudio = file.file.type.startsWith("audio/");
+  const errors: Record<string, { code: string; message: string }> = {};
+  state?.error?.[file.id]?.forEach(
+    (newError: { path: string; code: string; message: string }) => {
+      // Some ZOD errors come with more than just code & message attributes
+      const { path, ...details } = newError;
+      const flatPath = path[0] as string;
+      const type = flatPath.toString();
+      Object.assign(errors, { [type]: details });
+    },
+  );
 
   React.useEffect(() => {
     let url = "";
     if (isImage) {
-      url = URL.createObjectURL(file);
+      url = URL.createObjectURL(file.file);
       setPreview(url);
     } else if (isVideo) {
-      VideoThumbnail(file).then(setPreview);
+      VideoThumbnail(file.file).then(setPreview);
     }
     return () => {
       if (url) URL.revokeObjectURL(url);
@@ -48,12 +58,12 @@ export default function CardPreview({
     <div
       className={cn(
         "relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md",
-        !!state?.error?.[index]?.properties?.form &&
+        !!errors?.form &&
           "border-destructive/50 dark:border-destructive/50 bg-destructive/10 dark:bg-destructive/10",
       )}
     >
       {(isImage || isVideo) && preview ? (
-        <Preview preview={preview} file={file} onRemove={onRemove} />
+        <Preview preview={preview} file={file.file} onRemove={onRemove} />
       ) : isVideo ? (
         <div className="animate-pulse bg-stone-300 w-full h-full" />
       ) : isAudio ? (
@@ -88,23 +98,26 @@ export default function CardPreview({
         <input
           type="hidden"
           hidden
-          value={file.size}
+          value={file.file.size}
           name={`file_${index}_size`}
           className="appearance-none invisible"
         />
+        <input type="hidden" name={`file_${index}_id`} value={file.id} />
         <Fieldset>
           <FieldsetInput
             id={`name-input-${index}`}
             name={`file_${index}_name`}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            error={state?.error?.[index]?.properties?.customName?.errors}
+            error={!!errors?.customName}
+            // error={state?.error?.[index]?.properties?.customName?.errors}
           />
           <FieldsetLabel id="name-label" label="Nome" htmlFor="name-input" />
         </Fieldset>
         {state?.error?.[index] && (
           <FieldsetError
-            error={state?.error?.[index]?.properties?.customName?.errors}
+            error={errors?.customName?.message}
+            // error={state?.error?.[index]?.properties?.customName?.errors}
           />
         )}
         <Fieldset>
@@ -113,7 +126,8 @@ export default function CardPreview({
             name={`file_${index}_caption`}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
-            error={state?.error?.[index]?.properties?.customCaption?.errors}
+            error={!!errors?.customCaption}
+            // error={state?.error?.[index]?.properties?.customCaption?.errors}
           />
           <FieldsetLabel
             id="caption-label"
@@ -123,7 +137,8 @@ export default function CardPreview({
         </Fieldset>
         {state?.error?.[index] && (
           <FieldsetError
-            error={state?.error?.[index]?.properties?.customCaption?.errors}
+            error={errors?.customCaption?.message}
+            // error={state?.error?.[index]?.properties?.customCaption?.errors}
           />
         )}
         <div className="flex flex-col gap-1">
@@ -133,7 +148,8 @@ export default function CardPreview({
               name={`file_${index}_alt`}
               value={alt}
               onChange={(e) => setAlt(e.target.value)}
-              error={state?.error?.[index]?.properties?.customAlt?.errors}
+              error={!!errors?.customAlt}
+              // error={state?.error?.[index]?.properties?.customAlt?.errors}
             />
             <FieldsetLabel
               id="alt-label"
@@ -141,9 +157,10 @@ export default function CardPreview({
               htmlFor="alt-input"
             />
           </Fieldset>
-          {state?.error?.[index] && (
+          {errors?.customAlt && (
             <FieldsetError
-              error={state?.error?.[index]?.properties?.customAlt?.errors}
+              error={errors?.customAlt?.message}
+              // error={state?.error?.[index]?.properties?.customAlt?.errors}
             />
           )}
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
@@ -151,21 +168,21 @@ export default function CardPreview({
           </p>
         </div>
         <div className="flex flex-col gap-1">
-          <FolderPopover
-            name={`file_${index}_folder_id`}
-          />
-          {state?.error?.[index] && (
+          <FolderPopover name={`file_${index}_folder_id`} />
+          {errors?.customFolderId && (
             <FieldsetError
-              error={state?.error?.[index]?.properties?.customFolderId?.errors}
+              error={errors?.customFolderId?.message}
+              // error={state?.error?.[index]?.properties?.customFolderId?.errors}
             />
           )}
           <p className="pl-1 text-xs text-neutral-400 dark:text-neutral-500">
             A pasta de destino do arquivo.
           </p>
         </div>
-        {state?.error?.[index] && (
+        {errors?.form && (
           <FieldsetError
-            error={state?.error?.[index]?.properties?.form?.errors}
+            // error={state?.error?.[index]?.properties?.form?.errors}
+            error={errors?.form?.message}
           />
         )}
       </div>

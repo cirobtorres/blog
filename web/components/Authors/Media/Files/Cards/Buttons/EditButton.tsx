@@ -23,7 +23,7 @@ import {
   FieldsetLabel,
 } from "../../../../../Fieldset";
 import { Button } from "../../../../../Button";
-import { validateFile } from "../../../../../../utils/zod-shared-schemas";
+import { validateFile } from "../../../../../../utils/zod-file-validations";
 import FolderPopover from "../../../FolderPopover";
 import { DashedBackground } from "../../../../../DashedBackground";
 import Image from "next/image";

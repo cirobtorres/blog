@@ -1,24 +1,21 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
-import { apiServerUrls } from "../../routing/routes";
-import { cookies } from "next/headers";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
+import { serverFetch } from "../auth-fetch-actions";
 
 export default async function createFolder(
   prevState: ActionState,
   formData: FormData,
 ) {
-  const cookie = await cookies();
-  const accessToken = cookie.get("access_token")?.value;
   const rawData = Object.fromEntries(formData.entries());
   const { folderName, parentFolderId } = rawData;
 
   try {
-    const response = await fetch(apiServerUrls.mediaFolders.root, {
+    const response = await serverFetch(apiServerUrls.mediaFolders.root, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         folderName,
@@ -38,7 +35,7 @@ export default async function createFolder(
     }
 
     revalidateTag("folders", { expire: 0 });
-    revalidatePath("/users/authors/media");
+    revalidatePath(protectedWebUrls.media);
 
     return {
       ok: true,

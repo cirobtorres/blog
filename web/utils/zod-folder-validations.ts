@@ -2,13 +2,14 @@
 
 import { cookies } from "next/headers";
 import * as z from "zod";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls } from "../routing/routes";
+import { serverFetch } from "../services/auth-fetch-actions";
 
 const folderValidationSchema = z.object({
   folderName: z.string().min(1, "O diretório requer um nome"),
   folderDestinationId: z.preprocess(
     (value) => (value === "" ? null : value),
-    z.string().uuid().nullable().optional(),
+    z.uuid().nullable().optional(),
   ),
 });
 
@@ -38,7 +39,7 @@ export default async function folderValidation(
   const accessToken = cookie.get("access_token")?.value;
 
   try {
-    const validation = await fetch(apiServerUrls.mediaFolders.exists, {
+    const validation = await serverFetch(apiServerUrls.mediaFolders.exists, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

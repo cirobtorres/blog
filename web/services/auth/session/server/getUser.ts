@@ -3,6 +3,7 @@
 import { cookies, headers } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
 import { cache } from "react";
+import { serverFetch } from "../../../auth-fetch-actions";
 
 const getUser = cache(async (): Promise<SessionUser> => {
   const cookieStore = await cookies();
@@ -15,7 +16,7 @@ const getUser = cache(async (): Promise<SessionUser> => {
   if (!accessToken) return { ok: false, data: null };
 
   try {
-    const response = await fetch(apiServerUrls.me, {
+    const response = await serverFetch(apiServerUrls.me, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,

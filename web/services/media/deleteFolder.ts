@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { serverFetch } from "../auth-fetch-actions";
 
 export default async function deleteFolder(folderId: string) {
   const cookie = await cookies();
@@ -15,7 +16,7 @@ export default async function deleteFolder(folderId: string) {
   };
 
   try {
-    const response = await fetch(
+    const response = await serverFetch(
       apiServerUrls.mediaFolders.root + "/" + folderId,
       {
         method: "DELETE",
@@ -54,7 +55,7 @@ export default async function deleteFolder(folderId: string) {
   }
 
   revalidateTag("folders", { expire: 0 });
-  revalidatePath("/users/authors/media");
+  revalidatePath(protectedWebUrls.media);
 
   return { ...returnStatement, ok: true, success: "Pasta excluída!" };
 }

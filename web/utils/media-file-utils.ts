@@ -1,3 +1,5 @@
+import { serverFetch } from "../services/auth-fetch-actions";
+
 export function VideoThumbnail(file: File): Promise<string> {
   return new Promise((resolve) => {
     const video = document.createElement("video");
@@ -7,7 +9,7 @@ export function VideoThumbnail(file: File): Promise<string> {
     video.playsInline = true;
 
     video.onloadeddata = () => {
-      video.currentTime = 1; // Frame of second === 1
+      video.currentTime = 1; // Frame 1
     };
 
     video.onseeked = () => {
@@ -24,7 +26,7 @@ export function VideoThumbnail(file: File): Promise<string> {
 }
 
 export async function fetchFileFromUrl(url: string): Promise<File> {
-  const response = await fetch(url);
+  const response = await serverFetch(url);
   if (!response.ok) throw new Error("Falha ao baixar a imagem da URL");
 
   const blob = await response.blob();

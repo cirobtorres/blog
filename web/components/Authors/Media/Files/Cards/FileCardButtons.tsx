@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilesWithCount } from "../../../../../hooks/hook-files";
+import { useFilesWithCount } from "../../../../../services/hooks/hook-files";
 import { useArticleStore } from "../../../../../zustand-store/article-state";
 import MediaFileSearch from "../Header/MediaFileSearch";
 import MediaFilesSorting from "../Header/MediaFilesSorting";

@@ -13,10 +13,7 @@ export const singleFileSchema = z
       .transform((val) => val.trim().replace(mediaExtensionRegex, "")),
     customCaption: z.string().default(""),
     customAlt: z.string().min(1, "Alt text é obrigatório"),
-    customFolderId: z
-      .string()
-      .min(1, "Pasta é obrigatória")
-      .uuid("Pasta inválida"),
+    customFolderId: z.uuid("Pasta inválida").min(1, "Pasta é obrigatória"),
     fileSize: z.coerce.number(),
   })
   .superRefine((data, ctx) => {
@@ -85,22 +82,32 @@ export default function validateFiles(
   formData: FormData,
   fileCount: number,
 ): ActionState {
-  const filesData = [];
+  const error: Record<
+    string,
+    z.core.$ZodIssue[] // Any
+  > = {};
+  const validData = [];
 
   for (let i = 0; i < fileCount; i++) {
-    filesData.push({
+    const fileId = formData.get(`file_${i}_id`) as string;
+    const data = {
       customName: formData.get(`file_${i}_name`),
       customCaption: formData.get(`file_${i}_caption`),
       customAlt: formData.get(`file_${i}_alt`),
       customFolderId: formData.get(`file_${i}_folder_id`),
       fileSize: formData.get(`file_${i}_size`),
-    });
+    };
+
+    const result = singleFileSchema.safeParse(data);
+
+    if (!result.success) {
+      error[fileId] = result.error.issues;
+    } else {
+      validData.push({ ...result.data, fileId });
+    }
   }
 
-  const result = z.array(singleFileSchema).safeParse(filesData);
-
-  if (!result.success) {
-    const error = z.treeifyError(result.error).items;
+  if (Object.keys(error).length > 0) {
     return {
       ...returnState,
       error,
@@ -111,6 +118,6 @@ export default function validateFiles(
     ...returnState,
     ok: true,
     success: "Validado com sucesso",
-    data: result.data,
+    data: validData,
   };
 }

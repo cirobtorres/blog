@@ -1,6 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "../../../../../routing/routes";
+import { serverFetch } from "../../../../../services/auth-fetch-actions";
 import { cn } from "../../../../../utils/variants";
 import FolderCheckbox from "../Header/FolderCheckbox";
 import FolderCardLink from "./FolderCardLink";
@@ -42,13 +43,13 @@ export default async function FolderCardLinks({
   };
 
   const [folders, count] = await Promise.all([
-    fetch(getUrl, options)
+    serverFetch(getUrl, options)
       .then((res) => res.json() as Promise<Folder[]>)
       .catch((e) => {
         console.error(e);
         return [];
       }),
-    fetch(countUrl, options)
+    serverFetch(countUrl, options)
       .then((res) => res.json() as Promise<number>)
       .catch((e) => {
         console.error(e);

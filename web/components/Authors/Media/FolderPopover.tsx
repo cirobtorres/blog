@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useFolders } from "../../../hooks/hook-folders";
+import { useFolders } from "../../../services/hooks/hook-folders";
 import { Skeleton } from "../../Skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { Button } from "../../Button";

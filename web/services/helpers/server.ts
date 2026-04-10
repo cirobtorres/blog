@@ -14,6 +14,7 @@ function extractTokenFromHeader(header: string, name: string) {
   return target ? target.split(";")[0].split("=")[1] : null;
 }
 
+// Route handlers and proxy (doesn't work for Actions)
 function applySpringCookies(response: NextResponse, setCookieHeader: string) {
   const isProd = process.env.NODE_ENV === "production";
   const rawCookies = setCookieHeader.split(/,(?=[^;]+?=)/);

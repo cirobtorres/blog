@@ -9,7 +9,7 @@ import { Button } from "../../../../Button";
 import DialogEmptyContent from "./DialogEmptyContent";
 import DialogCardsContent from "./DialogCardsContent";
 import createFile from "../../../../../services/cloudinary/createFile";
-import validateFiles from "../../../../../utils/zod-shared-schemas";
+import validateFiles from "../../../../../utils/zod-file-validations";
 
 const initialState: ActionState = {
   ok: false,
@@ -19,7 +19,7 @@ const initialState: ActionState = {
 };
 
 export default function AddFilesButton() {
-  const [files, setFiles] = React.useState<File[]>([]);
+  const [files, setFiles] = React.useState<{ id: string; file: File }[]>([]);
   const [openStep, setOpenStep] = React.useState<"upload" | "preview" | null>(
     null,
   );
@@ -58,7 +58,7 @@ export default function AddFilesButton() {
 
       const uploadLogic = async () => {
         const uploadPromises = files.map((file, index) =>
-          createFile(file, validation.data[index]),
+          createFile(file.file, validation.data[index]),
         );
         const cloudinaryResults = await Promise.all(uploadPromises);
         return await createFilesOnDb(cloudinaryResults);
@@ -85,7 +85,10 @@ export default function AddFilesButton() {
 
   const addFiles = (newFiles: FileList | File[] | null) => {
     if (newFiles) {
-      const fileArray = Array.from(newFiles);
+      const fileArray = Array.from(newFiles).map((file) => ({
+        id: crypto.randomUUID(),
+        file,
+      }));
       setFiles((prev) => [...prev, ...fileArray]);
       setOpenStep("preview");
     }

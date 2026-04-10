@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
-import { extractTokenFromHeader } from "../helpers/serve-actions";
+import { extractTokenFromHeader } from "../helpers/server";
 import * as z from "zod";
 
 const validateOtpSchema = z.object({

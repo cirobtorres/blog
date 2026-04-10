@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import listFolders from "../services/media/listFolders";
-import createFolder from "../services/media/createFolder";
-import editFolder from "../services/media/editFolder";
-import { apiServerUrls } from "../routing/routes";
+import listFolders from "../media/listFolders";
+import createFolder from "../media/createFolder";
+import editFolder from "../media/editFolder";
+import { apiServerUrls } from "../../routing/routes";
+import { clientFetch } from "../auth-fetch-client";
 
 export function useFolders() {
   return useQuery({
@@ -25,13 +26,13 @@ export function useFoldersWithCount(currentModalFolder: string = "") {
       const countUrl = `${apiServerUrls.mediaFolders.count}?folder=${currentModalFolder}`;
 
       const [folders, count] = await Promise.all([
-        fetch(getUrl, options)
+        clientFetch(getUrl, options)
           .then((res) => (res.ok ? (res.json() as Promise<Folder[]>) : []))
           .catch((e) => {
             console.error(e);
             return [];
           }),
-        fetch(countUrl, options)
+        clientFetch(countUrl, options)
           .then((res) => (res.ok ? (res.json() as Promise<number>) : 0))
           .catch((e) => {
             console.error(e);

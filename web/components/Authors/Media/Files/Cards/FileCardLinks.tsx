@@ -5,6 +5,7 @@ import MediaFilesSorting from "../Header/MediaFilesSorting";
 import FilePaginationURL from "../Pagination/FilePaginationURL";
 import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
 import FileCardLink from "./FileCardLink";
+import { serverFetch } from "../../../../../services/auth-fetch-actions";
 
 export default async function FileCardLinks({
   accessToken,
@@ -49,10 +50,10 @@ export default async function FileCardLinks({
   };
 
   const [mediaPromise, count] = await Promise.all([
-    fetch(getUrl, options).then(
+    serverFetch(getUrl, options).then(
       (res) => res.json() as Promise<MediaResponsePageable>,
     ),
-    fetch(countUrl, options).then((res) => res.json() as Promise<number>),
+    serverFetch(countUrl, options).then((res) => res.json() as Promise<number>),
   ]);
 
   const { content: media, page } = mediaPromise;

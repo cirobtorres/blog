@@ -178,17 +178,25 @@ const FieldsetError = ({
   error,
   className,
 }: {
-  error?: string[];
+  error?: string | string[];
   className?: string;
-}) =>
-  error &&
-  error.length > 0 && (
+}) => {
+  if (Array.isArray(error)) {
+    return (
+      <ul className={cn("text-sm text-destructive", className)}>
+        {error.map((error, index) => (
+          <li key={index}>{error}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  return (
     <ul className={cn("text-sm text-destructive", className)}>
-      {error.map((error, index) => (
-        <li key={index}>{error}</li>
-      ))}
+      <li>{error}</li>
     </ul>
   );
+};
 
 const PasswordStrength = ({ strength }: { strength: Score }) => {
   const percentage = (strength / 4) * 100;

@@ -5,7 +5,7 @@ import {
   extractTokenFromHeader,
   applySpringCookies,
   extractPayload,
-} from "../index";
+} from "../server";
 
 describe("serve-actions", () => {
   describe("parseSetCookie", () => {

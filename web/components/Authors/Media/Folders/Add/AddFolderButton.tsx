@@ -18,9 +18,9 @@ import {
   FieldsetLabel,
 } from "../../../../Fieldset";
 import Spinner from "../../../../Spinner";
-import folderValidation from "../../../../../services/media/folderValidation";
+import folderValidation from "../../../../../utils/zod-folder-validations";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
-import { useCreateFolder } from "../../../../../hooks/hook-folders";
+import { useCreateFolder } from "../../../../../services/hooks/hook-folders";
 import FolderPopover from "../../FolderPopover";
 
 export default function AddFolderButton() {

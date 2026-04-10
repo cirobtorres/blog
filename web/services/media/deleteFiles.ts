@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { serverFetch } from "../auth-fetch-actions";
 
 const returnState = {
   ok: false,
@@ -18,7 +19,7 @@ export default async function deleteFiles(
   const accessToken = cookie.get("access_token")?.value;
 
   try {
-    const response = await fetch(apiServerUrls.media.root, {
+    const response = await serverFetch(apiServerUrls.media.root, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +38,7 @@ export default async function deleteFiles(
   }
 
   revalidateTag("files", { expire: 0 });
-  revalidatePath("/users/authors/media");
+  revalidatePath(protectedWebUrls.media);
 
   return { ...returnState, ok: true, success: "Arquivos excluídos" };
 }

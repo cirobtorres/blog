@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { serverFetch } from "../auth-fetch-actions";
 
 export default async function moveFiles(
   prevState: ActionState,
@@ -15,7 +16,7 @@ export default async function moveFiles(
   const { folderDestinationId, ...filesId } = rawData;
 
   try {
-    const response = await fetch(apiServerUrls.media.move, {
+    const response = await serverFetch(apiServerUrls.media.move, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +39,7 @@ export default async function moveFiles(
 
     revalidateTag("files", { expire: 0 });
     revalidateTag("folders", { expire: 0 });
-    revalidatePath("/users/authors/media");
+    revalidatePath(protectedWebUrls.media);
 
     return {
       ok: true,

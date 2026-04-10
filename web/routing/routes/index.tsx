@@ -23,6 +23,10 @@ const protectedWebUrls = {
   media: "/users/authors/media",
 };
 
+const routeHandlers = {
+  refresh: "/local/auth/refresh",
+};
+
 const apiServerUrls = {
   // Authentication
   login: API_SERVER + "/auth/login",
@@ -70,6 +74,7 @@ export {
   publicWebUrls,
   pubWebUrlsAbsPath,
   protectedWebUrls,
+  routeHandlers,
   apiServerUrls,
   apiClientUrls,
   externalUrls,

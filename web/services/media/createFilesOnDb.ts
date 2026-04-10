@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { serverFetch } from "../auth-fetch-actions";
 
 export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
@@ -31,7 +32,7 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
       data: null,
     };
 
-  const response = await fetch(apiServerUrls.media.syncImport, {
+  const response = await serverFetch(apiServerUrls.media.syncImport, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -56,7 +57,7 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   }
 
   revalidateTag("files", { expire: 0 });
-  revalidatePath("/users/authors/media");
+  revalidatePath(protectedWebUrls.media);
 
   return {
     ok: true,
