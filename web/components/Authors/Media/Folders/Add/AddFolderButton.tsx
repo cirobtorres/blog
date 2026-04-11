@@ -20,8 +20,8 @@ import {
 import Spinner from "../../../../Spinner";
 import folderValidation from "../../../../../utils/zod-folder-validations";
 import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
-import { useCreateFolder } from "../../../../../services/hooks/hook-folders";
 import FolderPopover from "../../FolderPopover";
+import { useCreateFolder } from "../../../../../services/hooks/folders/hook-folders";
 
 export default function AddFolderButton() {
   const { mutateAsync } = useCreateFolder();

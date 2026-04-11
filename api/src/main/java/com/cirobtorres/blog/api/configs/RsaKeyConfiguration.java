@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api;
+package com.cirobtorres.blog.api.configs;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -7,6 +7,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

@@ -37,10 +37,21 @@ function extractPayload(accessToken: string): AuthTokensPayload {
   return JSON.parse(atob(accessToken.split(".")[1]));
 }
 
+/** Multiple Set-Cookie lines as one string for applySpringCookies / applyCookiesInAction. */
+function joinSetCookieHeaders(headers: Headers): string | null {
+  const h = headers as Headers & { getSetCookie?: () => string[] };
+  if (typeof h.getSetCookie === "function") {
+    const parts = h.getSetCookie();
+    if (parts.length > 0) return parts.join(", ");
+  }
+  return headers.get("set-cookie");
+}
+
 export {
   parseSetCookie,
   decodeJwt,
   extractTokenFromHeader,
   applySpringCookies,
   extractPayload,
+  joinSetCookieHeaders,
 };

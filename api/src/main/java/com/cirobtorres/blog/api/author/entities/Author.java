@@ -53,6 +53,7 @@ public class Author {
     private LocalDateTime updatedAt;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public Author() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------

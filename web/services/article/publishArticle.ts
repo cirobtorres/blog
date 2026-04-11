@@ -1,13 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
-import {
-  applySpringCookies,
-  extractPayload,
-  extractTokenFromHeader,
-} from "../helpers/server";
 import { apiServerUrls } from "../../routing/routes";
-import { NextResponse } from "next/server";
 import * as z from "zod";
 import { publishArticleSchema } from "./zod-validations";
 import { serverFetch } from "../auth-fetch-actions";
@@ -32,19 +25,13 @@ const publishArticleValidation = async (
     };
   }
 
-  const { title, subtitle, slug, banner, body } = result.data;
+  // const { title, subtitle, slug, banner } = result.data;
 
   return {
     ok: true,
     success: null,
     error: null,
-    data: {
-      title,
-      subtitle,
-      slug,
-      banner,
-      body,
-    },
+    data: null,
   };
 };
 
@@ -52,66 +39,11 @@ const publishArticle = async (
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> => {
-  // const cookieStore = await cookies();
-  // const refreshToken = cookieStore.get("refresh_token")?.value;
-  // let accessToken = cookieStore.get("access_token")?.value;
-
-  // // AUTHENTICATION
-  // let payload: AuthTokensPayload | null = null;
-  // let isExpired = true;
-
-  // if (accessToken) {
-  //   try {
-  //     payload = extractPayload(accessToken);
-  //     isExpired = payload.exp < Math.floor(Date.now() / 1000);
-  //   } catch {
-  //     isExpired = true;
-  //   }
-  // }
-
-  // // REFRESH
-  // if ((isExpired || !accessToken) && refreshToken) {
-  //   const refreshRes = await fetch(apiServerUrls.refresh, {
-  //     method: "POST",
-  //     headers: { Cookie: `refresh_token=${refreshToken}` },
-  //   });
-
-  //   if (refreshRes.ok) {
-  //     const setCookieHeader = refreshRes.headers.get("set-cookie");
-  //     if (setCookieHeader) {
-  //       // ACCESS_TOKEN
-  //       accessToken =
-  //         extractTokenFromHeader(setCookieHeader, "access_token") ||
-  //         accessToken;
-
-  //       const tempRes = NextResponse.next();
-  //       applySpringCookies(tempRes, setCookieHeader);
-  //       const newCookies = tempRes.cookies.getAll();
-  //       for (const cookie of newCookies) {
-  //         (await cookies()).set(cookie.name, cookie.value, cookie);
-  //       }
-
-  //       if (accessToken) payload = extractPayload(accessToken);
-  //     }
-  //   }
-  // }
-
-  // // AUTHORITY
-  // const isAuthor = payload?.authorities?.includes("AUTHOR");
-  // if (!accessToken || !isAuthor) {
-  //   return {
-  //     ok: false,
-  //     success: null,
-  //     error: "Acesso negado ou sessão expirada.",
-  //     data: null,
-  //   };
-  // }
-
   // FETCH
   const validatedData = Object.fromEntries(formData.entries());
 
   try {
-    const response = await serverFetch(apiServerUrls.article.create, {
+    const response = await serverFetch(apiServerUrls.article.root, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,11 +53,12 @@ const publishArticle = async (
     });
 
     if (response.ok) {
+      const data: ArticleCreate = await response.json();
       return {
         ok: true,
         success: "Artigo criado com sucesso!",
         error: null,
-        data: {},
+        data,
       };
     }
 

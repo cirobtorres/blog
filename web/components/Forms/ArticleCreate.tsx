@@ -26,6 +26,7 @@ import { useArticleStore } from "../../zustand-store/article-state";
 import { FieldsetError } from "../Fieldset";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { useAuth } from "../../providers/AuthProvider";
+import { slugify } from "../../utils/strings-transforms";
 
 const defaultState = {
   ok: false,
@@ -73,33 +74,28 @@ export function ArticleCreate() {
 
   const [publishState, publishAction, isPublishPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      formData.set("body", JSON.stringify(blocks));
-
       const success = (serverResponse: ActionState) => {
-        const now = convertToLargeDate(
-          new Date(serverResponse.data?.updated_at ?? new Date()),
-        );
-
-        const articleLink = serverResponse.data?.link;
-
+        const now = convertToLargeDate(new Date());
+        const date = new Date(serverResponse.data.createdAt);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDay();
+        const slug = slugify(serverResponse.data.title);
+        const articleLink = `/articles/${year}/${month}/${day}/${slug}`;
         return (
           <>
             <div className="flex flex-col">
               <p>{serverResponse.success}</p>
               <p className="text-xs text-neutral-500">{now}</p>
             </div>
-            {articleLink && (
-              <button
-                type="button"
-                onClick={() => router.push(articleLink)}
-                className={cn(
-                  "cursor-pointer text-xs font-semibold px-3 py-2 rounded text-neutral-100 border border-primary bg-secondary",
-                  focusRing,
-                )}
-              >
-                Artigo
-              </button>
-            )}
+            <Button
+              type="button"
+              onClick={() => router.push(articleLink)}
+              variant="default"
+              className={cn("h-6 text-xs", focusRing)}
+            >
+              Artigo
+            </Button>
           </>
         );
       };
@@ -113,23 +109,23 @@ export function ArticleCreate() {
 
       if (!validation.ok) return validation;
 
-      const validatedFormData = new FormData();
-      const {
-        title: validatedTitle,
-        subtitle: validatedSubtitle,
-        slug: validatedSlug,
-        banner: validatedBannerMediaId,
-        body: validatedBody,
-      } = validation.data;
+      // const {
+      //   title: validatedTitle,
+      //   subtitle: validatedSubtitle,
+      //   slug: validatedSlug,
+      //   banner: validatedBannerMediaId,
+      //   body: validatedBody,
+      // } = validation.data;
 
-      validatedFormData.set("userId", user?.data?.id ?? "anonymous");
-      validatedFormData.set("title", validatedTitle);
-      validatedFormData.set("subtitle", validatedSubtitle);
-      validatedFormData.set("slug", validatedSlug);
-      validatedFormData.set("banner", validatedBannerMediaId);
-      validatedFormData.set("body", JSON.stringify(validatedBody));
+      formData.set("body", JSON.stringify(blocks));
+      formData.set("userId", user?.data?.id ?? "anonymous");
+      // validatedFormData.set("title", validatedTitle);
+      // validatedFormData.set("subtitle", validatedSubtitle);
+      // validatedFormData.set("slug", validatedSlug);
+      // validatedFormData.set("banner", validatedBannerMediaId);
+      // validatedFormData.set("body", JSON.stringify(validatedBody));
 
-      const result = publishArticle(prevState, validatedFormData);
+      const result = publishArticle(prevState, formData);
       const promise = soonerPromise(result);
       sonnerToastPromise(promise, success, error, "Publicando artigo...");
 
@@ -188,63 +184,54 @@ const AlertActionErrorList = ({
 }: {
   publishState: ActionState;
 }) => {
-  return publishState.error ? (
+  return publishState?.error ? (
     <Alert title="Erros" variant="default" className="mb-2">
-      {publishState.error && (
-        <p className="text-destructive!">{publishState.error}</p>
-      )}
-      {publishState.error.title &&
-        publishState.error.title.errors.map((err: string[], index: number) => (
-          <p key={"title-" + index} className="text-destructive!">
-            {err}
-          </p>
-        ))}
-      {publishState.error.subtitle &&
-        publishState.error.subtitle.errors.map(
+      {publishState?.error?.title &&
+        publishState?.error?.title.errors.map(
+          (err: string[], index: number) => (
+            <p key={"title-" + index} className="text-destructive!">
+              {err}
+            </p>
+          ),
+        )}
+      {publishState?.error?.subtitle &&
+        publishState?.error?.subtitle.errors.map(
           (err: string[], index: number) => (
             <p key={"subtitle-" + index} className="text-destructive!">
               {err}
             </p>
           ),
         )}
-      {publishState.error.slug &&
-        publishState.error.slug.errors.map((err: string[], index: number) => (
+      {publishState?.error?.slug &&
+        publishState?.error?.slug.errors.map((err: string[], index: number) => (
           <p key={"slug-" + index} className="text-destructive!">
             {err}
           </p>
         ))}
-      {publishState.error.banner &&
-        publishState.error.banner.errors.map((err: string[], index: number) => (
-          <p key={"banner-" + index} className="text-destructive!">
-            {err}
-          </p>
-        ))}
-      {publishState.error.body &&
-        publishState.error.body.errors.map((err: string[], index: number) => (
+      {publishState?.error?.banner &&
+        publishState?.error?.banner.errors.map(
+          (err: string[], index: number) => (
+            <p key={"banner-" + index} className="text-destructive!">
+              {err}
+            </p>
+          ),
+        )}
+      {/* No editor added */}
+      {/* {publishState?.error?.body &&
+        publishState?.error?.body.errors.map((err: string[], index: number) => (
           <p key={"body-" + index} className="text-destructive!">
             {err}
           </p>
-        ))}
-      {publishState.error.body?.items &&
-        publishState.error.body.items.map(
-          ({
-            properties: {
-              data: {
-                properties: { body: obj },
-              },
-            },
-          }: {
-            properties: {
-              data: { properties: { body: { errors: string[] } } };
-            };
-          }) => {
-            return obj.errors.map((err: string, idx: number) => (
-              <p key={"body-err-" + idx} className="text-destructive!">
-                {err}
-              </p>
-            ));
-          },
-        )}
+        ))} */}
+      {/* Editor invalid */}
+      {/* {publishState?.error?.body?.items &&
+        publishState?.error?.body.items.map(
+          ({ error }: { error: string }, index: number) => (
+            <p key={"body-err-" + index} className="text-destructive!">
+              {error}
+            </p>
+          ),
+        )} */}
     </Alert>
   ) : null;
 };

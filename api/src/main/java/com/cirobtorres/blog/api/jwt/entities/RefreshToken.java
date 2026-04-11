@@ -12,7 +12,8 @@ import java.util.UUID;
         name = "refresh_tokens",
         indexes = {
                 @Index(name = "idx_refresh_user", columnList = "user_id"),
-                @Index(name = "idx_refresh_hash", columnList = "tokenHash")
+                @Index(name = "idx_refresh_hash", columnList = "tokenHash"),
+                @Index(name = "idx_refresh_replaced_by", columnList = "replaced_by_token_hash")
         }
 )
 @EntityListeners(AuditingEntityListener.class)
@@ -40,10 +41,11 @@ public class RefreshToken {
     @Column(name = "revoked_at")
     private Instant revokedAt;
 
-     @Column(name = "replaced_by_token_hash")
-     private String replacedByTokenHash;
+    @Column(name = "replaced_by_token_hash", length = 64)
+    private String replacedByTokenHash;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public RefreshToken() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------
@@ -53,6 +55,7 @@ public class RefreshToken {
         this.expiresAt = builder.expiresAt;
         this.revoked = builder.revoked;
         this.revokedAt = builder.revokedAt;
+        this.replacedByTokenHash = builder.replacedByTokenHash;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -63,6 +66,7 @@ public class RefreshToken {
         private Instant expiresAt;
         private boolean revoked;
         private Instant revokedAt;
+        private String replacedByTokenHash;
 
         public Builder userId(UUID userId) {
             this.userId = userId;
@@ -86,6 +90,11 @@ public class RefreshToken {
 
         public Builder revokedAt(Instant revokedAt) {
             this.revokedAt = revokedAt;
+            return this;
+        }
+
+        public Builder replacedByTokenHash(String replacedByTokenHash) {
+            this.replacedByTokenHash = replacedByTokenHash;
             return this;
         }
 

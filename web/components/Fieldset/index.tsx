@@ -27,7 +27,7 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     placeholder={props.placeholder ?? ""}
     aria-invalid={!!error}
     className={cn(
-      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 placeholder:text-transparent placeholder:select-none border peer",
+      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-shadow duration-300 placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
       error
         ? "text-neutral-100 border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
@@ -158,7 +158,6 @@ const FieldsetGeneratePassword = ({
       requestAnimationFrame(() => {
         const el = inputRef?.current;
         if (!el) return;
-
         el.focus();
         const len = el.value.length;
         el.setSelectionRange(len, len);
@@ -191,11 +190,13 @@ const FieldsetError = ({
     );
   }
 
-  return (
-    <ul className={cn("text-sm text-destructive", className)}>
-      <li>{error}</li>
-    </ul>
-  );
+  if (typeof error === "string") {
+    return (
+      <ul className={cn("text-sm text-destructive", className)}>
+        <li>{error}</li>
+      </ul>
+    );
+  }
 };
 
 const PasswordStrength = ({ strength }: { strength: Score }) => {

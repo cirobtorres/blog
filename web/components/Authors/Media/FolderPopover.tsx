@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useFolders } from "../../../services/hooks/hook-folders";
 import { Skeleton } from "../../Skeleton";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { Button } from "../../Button";
@@ -16,6 +15,7 @@ import {
 import React from "react";
 import { protectedWebUrls } from "../../../routing/routes";
 import { cn } from "../../../utils/variants";
+import { useFolders } from "../../../services/hooks/folders/hook-folders";
 
 const Current = () => (
   <span className="text-[10px] font-bold leading-[10px] text-emerald-500">
@@ -126,7 +126,7 @@ export default function FolderPopover({
                         style={{ paddingLeft: `${depth * 12 + 8}px` }}
                       >
                         <div className="flex items-center gap-2">
-                          {depth > 2 && (
+                          {depth > 1 && (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"

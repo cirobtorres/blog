@@ -24,15 +24,17 @@ import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
 import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
 import com.cirobtorres.blog.api.userIdentity.repositories.UserIdentityRepository;
 import com.cirobtorres.blog.api.userIdentity.services.UserIdentityService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import org.jboss.logging.MDC;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -48,6 +50,7 @@ import java.util.UUID;
 
 @Service
 public class AuthService {
+    private final MeterRegistry meterRegistry;
     private final UserRepository userRepository;
     private final UserIdentityRepository userIdentityRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,10 +62,12 @@ public class AuthService {
     private final UserIdentityService userIdentityService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthorityExtractorRepository authorityExtractor;
+    private final String testerUUID;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public AuthService(
+            MeterRegistry meterRegistry,
             ApiApplicationProperties apiApplicationProperties,
             UserRepository userRepository,
             UserIdentityRepository userIdentityRepository,
@@ -76,6 +81,7 @@ public class AuthService {
             RefreshTokenRepository refreshTokenRepository,
             AuthorityExtractorRepository authorityExtractor
     ) {
+        this.meterRegistry = meterRegistry;
         this.userRepository = userRepository;
         this.userIdentityRepository = userIdentityRepository;
         this.passwordEncoder = passwordEncoder;
@@ -88,6 +94,7 @@ public class AuthService {
         this.refreshTokenRepository = refreshTokenRepository;
         this.authorityExtractor = authorityExtractor;
         this.isProd = apiApplicationProperties.getApplication().isProduction();
+        this.testerUUID = apiApplicationProperties.getDebug().getTrackUserId();
     }
 
     @Transactional
@@ -196,50 +203,96 @@ public class AuthService {
 
     @Transactional
     public TokensDTO refresh(String oldRefreshToken) throws NoSuchAlgorithmException {
-        // Validation
-
         Jwt jwt = jwtService.decodeToken(oldRefreshToken);
+        MDC.put("user_id", jwt.getSubject());
+        trackRefresh(jwt.getSubject());
+
         String type = jwtService.getTokenClaim(jwt, RefreshTokenClaims.TYPE);
 
         if (!TokenType.REFRESH.getType().toUpperCase().equals(type)) {
             throw new RuntimeException("Invalid token.");
         }
 
-        String renewRefreshTokenHash = jwtService.hashToken(oldRefreshToken);
-        Optional<RefreshToken> storedRefreshToken = refreshTokenRepository.findByTokenHash(renewRefreshTokenHash);
+        String oldHash = jwtService.hashToken(oldRefreshToken);
+        Instant now = Instant.now();
 
-        if (storedRefreshToken.isEmpty()) {
+        Optional<RefreshToken> storedOpt = refreshTokenRepository.findByTokenHashForRefresh(oldHash);
+        if (storedOpt.isEmpty()) {
             throw new RuntimeException("Token NOT FOUND.");
         }
 
-        UUID userId = storedRefreshToken.get().getUserId();
+        RefreshToken stored = storedOpt.get();
+        UUID userId = stored.getUserId();
 
-        if (storedRefreshToken.get().isRevoked()) {
-            refreshTokenRepository.revokeAllByUserId(storedRefreshToken.get().getUserId(), Instant.now());
-            throw new RuntimeException("Token is REVOKED.");
+        if (stored.isRevoked()) {
+            return consumeViaRotationChainOrReject(stored, now, 0);
         }
 
-        if (storedRefreshToken.get().getExpiresAt().isBefore(Instant.now())) {
+        if (stored.getExpiresAt().isBefore(now)) {
             throw new RuntimeException("Token is EXPIRED.");
         }
 
-        // Make sure token is new by TRYING to revoke true UPDATE match.
-        int updated = refreshTokenRepository.revokeIfNotRevoked(
-                renewRefreshTokenHash,
-                Instant.now()
-        );
-
+        int updated = refreshTokenRepository.revokeIfNotRevoked(oldHash, now);
         if (updated == 0) {
+            Optional<RefreshToken> rowAgain = refreshTokenRepository.findByTokenHash(oldHash);
+            if (rowAgain.isPresent() && rowAgain.get().isRevoked()) {
+                return consumeViaRotationChainOrReject(rowAgain.get(), now, 0);
+            }
             throw new RuntimeException("Invalid token.");
         }
 
-        // Locate user
+        return issueRotatedTokens(userId, oldHash);
+    }
+
+    // Issues new tokens after {@code consumedRefreshHash} was revoked, and links that row to the new refresh hash ({@code replacedByTokenHash}).
+    private TokensDTO issueRotatedTokens(UUID userId, String consumedRefreshHash) throws NoSuchAlgorithmException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("User not found.")
         );
+        TokensDTO tokens = loginTokens(user);
+        int linked = refreshTokenRepository.setReplacedByTokenHash(
+                consumedRefreshHash,
+                jwtService.hashToken(tokens.refreshToken())
+        );
+        if (linked == 0) {
+            log.warn("issueRotatedTokens: setReplacedByTokenHash matched no row (consumedHash may be stale)");
+        }
+        return tokens;
+    }
 
-        // Login
-        return loginTokens(user);
+    // Revoked row: follow {@code replacedByTokenHash} to the current valid child, consume it, and rotate; or detect reuse.
+    private TokensDTO consumeViaRotationChainOrReject(RefreshToken stored, Instant now, int depth) throws NoSuchAlgorithmException {
+        if (depth > 10) {
+            throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
+        }
+
+        String replacedBy = stored.getReplacedByTokenHash();
+        if (replacedBy != null) {
+            Optional<RefreshToken> childOpt = refreshTokenRepository.findByTokenHashForRefresh(replacedBy);
+            if (childOpt.isPresent()) {
+                RefreshToken child = childOpt.get();
+                if (!child.isRevoked() && !child.getExpiresAt().isBefore(now)) {
+                    int u = refreshTokenRepository.revokeIfNotRevoked(replacedBy, now);
+                    if (u == 0) {
+                        Optional<RefreshToken> peer = refreshTokenRepository.findByTokenHash(replacedBy);
+                        if (peer.isPresent() && peer.get().isRevoked()) {
+                            return consumeViaRotationChainOrReject(peer.get(), now, depth + 1);
+                        }
+                        throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
+                    }
+                    return issueRotatedTokens(child.getUserId(), replacedBy);
+                }
+            }
+        }
+
+        Instant revokedAt = stored.getRevokedAt();
+        boolean recentRace = revokedAt != null && ChronoUnit.SECONDS.between(revokedAt, now) < 30;
+        if (recentRace) {
+            throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
+        }
+
+        refreshTokenRepository.revokeAllByUserId(stored.getUserId(), now);
+        throw new UserUnauthorizedException("Token is REVOKED.");
     }
 
     @Transactional
@@ -423,9 +476,7 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshTokenEntity);
 
-        TokensDTO tokensDTO = new TokensDTO(accessToken, refreshToken);
-
-        return tokensDTO;
+        return new TokensDTO(accessToken, refreshToken);
     }
 
     private PassResTokenDTO passResetToken(User user) {
@@ -471,5 +522,20 @@ public class AuthService {
             case APPLE -> "à Apple";
             case LOCAL -> "diretamente com nosso sistema";
         };
+    }
+
+    // Actuator----------------------------------------------------------------------------------------------------
+    private void trackRefresh(String userId) {
+        String userTag = "ignore";
+
+        if (userId.equals(testerUUID)) {
+            userTag = userId;
+        }
+
+        Counter.builder("auth.refresh.requests")
+                .tag("user", userTag)
+                .description("Refresh requests tracked by specific user or group")
+                .register(meterRegistry)
+                .increment();
     }
 }

@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api;
+package com.cirobtorres.blog.api.configs;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

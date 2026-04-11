@@ -8,9 +8,14 @@ const mockCookies = jest.fn();
 const mockRedirect = jest.fn();
 const mockFetch = jest.fn();
 
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+
 jest.mock("next/headers", () => ({
   cookies: () => mockCookies(),
 }));
+
 jest.mock("next/navigation", () => ({
   redirect: (url: string) => {
     mockRedirect(url);
@@ -19,6 +24,13 @@ jest.mock("next/navigation", () => ({
     throw err;
   },
 }));
+
+const initialState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
 
 (global as unknown as { fetch: typeof mockFetch }).fetch = mockFetch;
 
@@ -42,7 +54,10 @@ describe("signIn", () => {
       formData.set("password", "password123");
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as ActionState["error"] },
+        {
+          ...initialState,
+          error: {} as ActionState["error"],
+        },
         formData,
       );
 
@@ -56,7 +71,10 @@ describe("signIn", () => {
       formData.set("email", "user@example.com");
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as ActionState["error"] },
+        {
+          ...initialState,
+          error: {} as ActionState["error"],
+        },
         formData,
       );
 
@@ -67,7 +85,10 @@ describe("signIn", () => {
       const formData = new FormData();
 
       const result = await signIn(
-        { ok: false, success: null, error: {} as ActionState["error"] },
+        {
+          ...initialState,
+          error: {} as ActionState["error"],
+        },
         formData,
       );
 
@@ -87,17 +108,16 @@ describe("signIn", () => {
 
         const result = await signIn(
           {
-            ok: false,
-            success: null,
+            ...initialState,
             error: {} as ActionState["error"],
           },
           formData,
         );
 
         expect(result.ok).toBe(false);
-        expect(result.error.email.errors).toContain(
+        expect(result.error.email.errors).toContain([
           "Email ou senha não existem",
-        );
+        ]);
         expect(result.error.password.errors).toContain(
           "Email ou senha não existem",
         );
@@ -132,7 +152,7 @@ describe("signIn", () => {
 
       await expect(
         signIn(
-          { ok: false, success: null, error: {} as ActionState["error"] },
+          { ...initialState, error: {} as ActionState["error"] },
           formData,
         ),
       ).rejects.toThrow("NEXT_REDIRECT");
@@ -143,6 +163,7 @@ describe("signIn", () => {
       const formData = new FormData();
       formData.set("email", "user@example.com");
       formData.set("password", "password");
+
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
@@ -161,14 +182,13 @@ describe("signIn", () => {
               authorities: ["USER"],
             }),
         });
+
       mockCookies.mockResolvedValue({ set: jest.fn() });
 
-      await expect(
-        signIn(
-          { ok: false, success: null, error: {} as ActionState["error"] },
-          formData,
-        ),
-      ).rejects.toThrow("NEXT_REDIRECT");
+      await expect(signIn(initialState, formData)).rejects.toThrow(
+        "NEXT_REDIRECT",
+      );
+
       expect(mockRedirect).toHaveBeenCalledWith("/");
     });
 
@@ -178,13 +198,12 @@ describe("signIn", () => {
       formData.set("password", "pass");
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
-      const result = await signIn(
-        { ok: false, success: null, error: {} as ActionState["error"] },
-        formData,
-      );
+      const result = await signIn({ ...initialState }, formData);
 
       expect(result.ok).toBe(false);
-      expect(result.error.form.errors).toContain("Erro de autenticação");
+      expect(result.error.form.errors).toContain([
+        "Ocorreu um erro inesperado. Tente mais tarde",
+      ]);
     });
   });
 });

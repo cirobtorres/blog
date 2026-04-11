@@ -8,7 +8,7 @@ import com.cirobtorres.blog.api.media.dtos.MediaArticleDTO;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ArticlesDTO(
+public record ArticleDTO(
         UUID id,
         String title,
         String subtitle,
@@ -22,7 +22,7 @@ public record ArticlesDTO(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public ArticlesDTO(Articles entity) {
+    public ArticleDTO(Articles entity) {
         this(
                 entity.getId(),
                 entity.getTitle(),

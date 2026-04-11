@@ -65,6 +65,7 @@ public class Articles {
     private LocalDateTime updatedAt;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public Articles() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------

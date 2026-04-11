@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { apiClientUrls } from "../../../../routing/routes";
+import { apiClientUrls, publicWebUrls } from "../../../../routing/routes";
 import { revalidatePath } from "next/cache";
 import { hasAutorities } from "../../../../routing/protected/hasAutorities";
 import { serverFetch } from "../../../auth-fetch-actions";
@@ -12,19 +12,24 @@ export async function logout() {
   const cookieStore = await cookies();
   const referer = headersList.get("referer");
   const pathname = referer ? new URL(referer).pathname : "/";
-  const accessToken = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
   try {
     await serverFetch(apiClientUrls.logout, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
+        Cookie: `refresh_token=${refreshToken}`,
       },
     });
   } catch (e) {
     console.error("Logout error:", e);
-    return { ok: false, success: null, error: null, data: null };
+    return {
+      ok: false,
+      success: null,
+      error: "Erro ao efetuar o logout",
+      data: null,
+    };
   }
   cookieStore.delete("access_token");
   cookieStore.delete("refresh_token");
@@ -33,11 +38,16 @@ export async function logout() {
 
   if (required) {
     redirect(
-      `/users/sign-in?login=required&callbackUrl=${encodeURIComponent(pathname)}`,
+      `${publicWebUrls.signIn}?login=required&callbackUrl=${encodeURIComponent(pathname)}`,
     );
   }
 
   revalidatePath("/", "layout");
 
-  return { ok: true, success: null, error: null, data: null };
+  return {
+    ok: true,
+    success: "Logout realizado com sucesso",
+    error: null,
+    data: null,
+  };
 }

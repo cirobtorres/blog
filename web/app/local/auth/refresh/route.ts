@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { apiServerUrls } from "@/routing/routes";
 import { applySpringCookies } from "@/services/helpers/server";
+import { coordinatedRefresh } from "../../../../services/helpers/refresh";
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh_token")?.value;
 
@@ -15,22 +15,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const refreshRes = await fetch(apiServerUrls.refresh, {
-      method: "POST",
-      headers: {
-        Cookie: `refresh_token=${refreshToken}`,
-      },
-    });
+    const { ok, setCookieHeader } = await coordinatedRefresh(refreshToken);
 
-    if (refreshRes.ok) {
+    if (ok) {
       const response = NextResponse.json({ ok: true });
-
-      const setCookieHeader = refreshRes.headers.get("set-cookie");
-
       if (setCookieHeader) {
         applySpringCookies(response, setCookieHeader);
       }
-
       return response;
     }
 

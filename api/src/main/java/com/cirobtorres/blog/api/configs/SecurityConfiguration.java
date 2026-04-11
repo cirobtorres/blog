@@ -1,5 +1,6 @@
-package com.cirobtorres.blog.api;
+package com.cirobtorres.blog.api.configs;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.oauth2.BlogOAuth2UserService;
 import com.cirobtorres.blog.api.oauth2.BlogOidcUserService;
 import com.cirobtorres.blog.api.oauth2.OAuth2SuccessHandler;
@@ -49,13 +50,26 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    @Order(0)
+    public SecurityFilterChain actuatorSecurityFilterChain(
+            HttpSecurity http
+    ) {
+        return http
+                .securityMatcher("/actuator/**", "/favicon.ico")
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();
+    }
+
+    @Bean
     @Order(1)
     public SecurityFilterChain oauth2SecurityFilterChain(
             HttpSecurity http,
             BlogOidcUserService blogOidcUserService,
             BlogOAuth2UserService blogOAuth2UserService,
             OAuth2SuccessHandler oAuth2SuccessHandler
-    ) throws Exception {
+    ) {
         return http
                 .securityMatcher("/oauth2/**", "/login/oauth2/**")
                 .csrf(AbstractHttpConfigurer::disable)
@@ -78,7 +92,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain apiSecurityFilterChain(
             HttpSecurity http,
             JwtAuthenticationFilter jwtAuthenticationFilter
-    ) throws Exception {
+    ) {
         return http
                 .securityMatcher("/**")
                 .cors(cors -> {})
@@ -94,7 +108,8 @@ public class SecurityConfiguration {
                                 "/auth/renew-code",
                                 "/auth/password-reset-email-request",
                                 "/auth/password-reset-code",
-                                "/banner/**"
+                                "/articles/**",
+                                "/media/**"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -109,10 +124,10 @@ public class SecurityConfiguration {
                                 "/auth/password-reset-code"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/password-reset").hasAuthority("PASSWORD_RESET")
-                        .requestMatchers(HttpMethod.POST, "/articles").hasAuthority("AUTHOR")
-                        .requestMatchers(HttpMethod.GET, "/banner/**").hasAuthority("AUTHOR")
-                        .requestMatchers(HttpMethod.POST, "/banner/**").hasAuthority("AUTHOR")
-                        .requestMatchers(HttpMethod.DELETE, "/banner/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.GET, "/media/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.POST, "/media/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.DELETE, "/media/**").hasAuthority("AUTHOR")
+                        //.requestMatchers(HttpMethod.POST, "/articles").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.GET, "/auth/validation", "/auth/me", "/articles/**").permitAll()

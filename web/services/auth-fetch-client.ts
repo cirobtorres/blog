@@ -1,7 +1,8 @@
-import { routeHandlers } from "../routing/routes";
+import { runCoordinatedClientRefresh } from "./helpers/refresh";
 
-let refreshPromise: Promise<boolean> | null = null; // Singleton Pattern
-
+/**
+ * @deprecated Use `serverFetch()` instead.
+ */
 export async function clientFetch(
   url: string,
   options: RequestInit = {},
@@ -11,21 +12,7 @@ export async function clientFetch(
   const response = await fetch(url, options);
 
   if (response.status === 401) {
-    // If a refreshPromise exists, await
-    if (!refreshPromise) {
-      refreshPromise = (async () => {
-        try {
-          const res = await fetch(routeHandlers.refresh, { method: "POST" });
-          return res.ok;
-        } catch {
-          return false;
-        } finally {
-          refreshPromise = null;
-        }
-      })();
-    }
-
-    const isRefreshed = await refreshPromise;
+    const isRefreshed = await runCoordinatedClientRefresh();
 
     if (isRefreshed) {
       return fetch(url, options);

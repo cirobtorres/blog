@@ -9,12 +9,14 @@ public class ApiApplicationProperties {
     private final Application application = new Application();
     private final Frontend frontend = new Frontend();
     private final Jwt jwt = new Jwt();
+    private final Debug debug = new Debug();
 
     public Frontend getFrontend() { return frontend; }
     public Application getApplication() {
         return application;
     }
     public Jwt getJwt() { return jwt; }
+    public Debug getDebug() { return debug; }
 
     public static class Application {
         private String privateKey;
@@ -123,5 +125,12 @@ public class ApiApplicationProperties {
         public void setRefTokenPath(String refTokenPath) {
             this.refTokenPath = refTokenPath;
         }
+    }
+
+    public static class Debug {
+        private String trackUserId;
+
+        public String getTrackUserId() { return trackUserId; }
+        public void setTrackUserId(String trackUserId) { this.trackUserId = trackUserId; }
     }
 }

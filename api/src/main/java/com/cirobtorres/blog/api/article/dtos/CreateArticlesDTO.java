@@ -11,5 +11,5 @@ public record CreateArticlesDTO(
         @NotBlank(message = "Subtitle required") String subtitle,
         @NotBlank(message = "Slug required") String slug,
         @NotNull(message = "Banner media id required") UUID banner,
-        @NotBlank(message = "Body required") String body
+        String body
 ) {}

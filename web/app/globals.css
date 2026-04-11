@@ -169,6 +169,9 @@
 }
 
 @layer base {
+  /* html {
+    scrollbar-color: #555 #1e1e1e;
+  } */
   * {
     @apply border-stone-300 dark:border-stone-700;
   }

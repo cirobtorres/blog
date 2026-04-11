@@ -1,5 +1,6 @@
-package com.cirobtorres.blog.api;
+package com.cirobtorres.blog.api.configs;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.context.annotation.Bean;

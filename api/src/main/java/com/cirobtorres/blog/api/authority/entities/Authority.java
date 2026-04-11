@@ -17,6 +17,7 @@ public class Authority {
     private AuthorityType name; // USER, AUTHOR
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public Authority() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api;
+package com.cirobtorres.blog.api.configs;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

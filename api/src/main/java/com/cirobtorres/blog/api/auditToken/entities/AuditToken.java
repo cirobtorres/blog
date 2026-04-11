@@ -39,6 +39,7 @@ public class AuditToken {
     private LocalDateTime createdAt;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public AuditToken() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------

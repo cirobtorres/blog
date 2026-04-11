@@ -3,7 +3,9 @@
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../routing/routes";
 import { extractTokenFromHeader } from "../helpers/server";
+import { applyCookiesInAction } from "../helpers/actions";
 import * as z from "zod";
+import { coordinatedRefresh } from "../helpers/refresh";
 
 const validateOtpSchema = z.object({
   code: z
@@ -56,23 +58,17 @@ const validateOTP = async (
     const refreshToken = cookieStore.get("refresh_token")?.value;
 
     if (refreshToken) {
-      const refreshRes = await fetch(apiServerUrls.refresh, {
-        method: "POST",
-        headers: { Cookie: `refresh_token=${refreshToken}` },
-      });
+      const refreshResult = await coordinatedRefresh(refreshToken);
 
-      if (refreshRes.ok) {
-        const setCookie = refreshRes.headers.get("set-cookie");
+      if (refreshResult.ok && refreshResult.setCookieHeader) {
+        await applyCookiesInAction(refreshResult.setCookieHeader);
+        const newAccessToken = extractTokenFromHeader(
+          refreshResult.setCookieHeader,
+          "access_token",
+        );
 
-        if (setCookie) {
-          const newAccessToken = extractTokenFromHeader(
-            setCookie,
-            "access_token",
-          );
-
-          if (newAccessToken) {
-            response = await callSpringValidation(newAccessToken);
-          }
+        if (newAccessToken) {
+          response = await callSpringValidation(newAccessToken);
         }
       }
     }

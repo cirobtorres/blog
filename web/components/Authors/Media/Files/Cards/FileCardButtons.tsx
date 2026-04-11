@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilesWithCount } from "../../../../../services/hooks/hook-files";
+import { useFilesWithCount } from "../../../../../services/hooks/files/hook-files";
 import { useArticleStore } from "../../../../../zustand-store/article-state";
 import MediaFileSearch from "../Header/MediaFileSearch";
 import MediaFilesSorting from "../Header/MediaFilesSorting";
@@ -25,8 +25,8 @@ export default function FileCardButtons() {
     currentModalFolder,
     currentModalPage,
   );
-  const files = data?.files.content ?? [];
-  const page = data?.files.page ?? pageFallback;
+  const files = data?.content ?? [];
+  const page = data?.page ?? pageFallback;
   const count = data?.count ?? 0;
 
   if (isPending) return <FileCardsLoadingSimplified />;

@@ -61,3 +61,9 @@ type FileContextType = {
   selectAll: (items: Media[]) => void;
   clearSelection: () => void;
 };
+
+type ArticleBanner = {
+  bannerUrl: string;
+  alt: string;
+  caption: string;
+};

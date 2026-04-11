@@ -56,7 +56,9 @@ public class AuthController {
         if (refreshToken != null) {
             try {
                 authService.logout(refreshToken);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                log.error("AuthController.logout(): error={ {} }", e.getMessage());
+            }
         }
         jwtService.clearTokensFromCookies(response);
         return ResponseEntity.noContent().build();

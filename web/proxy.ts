@@ -5,10 +5,12 @@ import {
   extractPayload,
   extractTokenFromHeader,
 } from "./services/helpers/server";
-import { apiServerUrls, publicWebUrls } from "./routing/routes";
+import { publicWebUrls } from "./routing/routes";
+import { coordinatedRefresh } from "./services/helpers/refresh";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
   const accessToken = request.cookies.get("access_token")?.value;
 
   const refreshToken = request.cookies.get("refresh_token")?.value;
@@ -24,36 +26,29 @@ export async function proxy(request: NextRequest) {
     isExpired = true;
   }
 
-  // REFRESH
+  // REFRESH — same Node authority as POST /local/auth/refresh and server actions
   if (isExpired && refreshToken && !pathname.includes(".")) {
-    const refreshRes = await fetch(apiServerUrls.refresh, {
-      method: "POST",
-      headers: { Cookie: `refresh_token=${refreshToken}` },
-    });
+    const { ok, setCookieHeader } = await coordinatedRefresh(refreshToken);
 
-    // DENTRO DO REFRESH NO MIDDLEWARE
-    if (refreshRes.ok) {
-      const setCookieHeader = refreshRes.headers.get("set-cookie");
-      if (setCookieHeader) {
-        const response = NextResponse.next();
+    if (ok && setCookieHeader) {
+      const response = NextResponse.next();
 
-        applySpringCookies(response, setCookieHeader);
+      applySpringCookies(response, setCookieHeader);
 
-        const newAccessToken = extractTokenFromHeader(
-          setCookieHeader,
-          "access_token",
-        );
+      const newAccessToken = extractTokenFromHeader(
+        setCookieHeader,
+        "access_token",
+      );
 
-        if (newAccessToken) {
-          response.headers.set("Authorization", `Bearer ${newAccessToken}`);
-        }
-
-        if (!hasAccessFromToken(pathname, newAccessToken ?? undefined)) {
-          return redirectToLogin(request, pathname);
-        }
-
-        return response;
+      if (newAccessToken) {
+        response.headers.set("Authorization", `Bearer ${newAccessToken}`);
       }
+
+      if (!hasAccessFromToken(pathname, newAccessToken ?? undefined)) {
+        return redirectToLogin(request, pathname);
+      }
+
+      return response;
     }
   }
 

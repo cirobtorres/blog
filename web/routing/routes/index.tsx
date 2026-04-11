@@ -1,6 +1,9 @@
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
 const API_SERVER = process.env.API_URL_SERVER || "http://localhost:8080";
 const API_CLIENT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
+/** Base URL for browser `fetch` — must use NEXT_PUBLIC_* (API_URL_SERVER is undefined on the client). */
+const API_BROWSER = API_CLIENT;
 const MY_GIT = "https://github.com/cirobtorres";
 const BLOG_GIT = "https://github.com/cirobtorres/blog";
 
@@ -40,7 +43,7 @@ const apiServerUrls = {
   me: API_SERVER + "/auth/me",
   // Articles
   article: {
-    create: API_SERVER + "/articles",
+    root: API_SERVER + "/articles",
   },
   media: {
     root: API_SERVER + "/media",
@@ -65,6 +68,22 @@ const apiClientUrls = {
   logout: API_CLIENT + "/auth/logout",
 };
 
+/** Media/folder URLs for `fetch` in Client Components (uses NEXT_PUBLIC_API_URL). */
+const apiBrowserUrls = {
+  media: {
+    root: `${API_BROWSER}/media`,
+    count: `${API_BROWSER}/media/count`,
+    syncImport: `${API_BROWSER}/media/sync/import`,
+    move: `${API_BROWSER}/media/move/all`,
+  },
+  mediaFolders: {
+    root: `${API_BROWSER}/media/folders`,
+    count: `${API_BROWSER}/media/folders/count`,
+    exists: `${API_BROWSER}/media/folders/exists`,
+    move: `${API_BROWSER}/media/folders/move/all`,
+  },
+};
+
 const externalUrls = {
   myGitHub: MY_GIT,
   blogGitHub: BLOG_GIT,
@@ -77,5 +96,6 @@ export {
   routeHandlers,
   apiServerUrls,
   apiClientUrls,
+  apiBrowserUrls,
   externalUrls,
 };

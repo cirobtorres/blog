@@ -43,6 +43,7 @@ public class MediaFolder {
     private LocalDateTime updatedAt;
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
+    @Deprecated
     public MediaFolder() {}
 
     // BUILDER----------------------------------------------------------------------------------------------------

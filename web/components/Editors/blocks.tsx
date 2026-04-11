@@ -73,11 +73,13 @@ const BlockList = ({ blocksErrors }: { blocksErrors?: BodyItemError[] }) => {
   }, [blocksErrors, blocks]);
 
   return (
-    <div className="space-y-2">
-      {blocks.map((block) => (
-        <BlockItem key={block.id} block={block} error={errorMap[block.id]} />
-      ))}
-    </div>
+    blocks.length > 0 && (
+      <div className="space-y-2">
+        {blocks.map((block) => (
+          <BlockItem key={block.id} block={block} error={errorMap[block.id]} />
+        ))}
+      </div>
+    )
   );
 };
 

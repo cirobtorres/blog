@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.jwt;
+package com.cirobtorres.blog.api.scheduledTasks;
 
 import com.cirobtorres.blog.api.jwt.interfaces.RefreshTokenRepository;
 import org.slf4j.Logger;
@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Service
 public class RefreshTokenCleanUpService {
@@ -23,7 +23,7 @@ public class RefreshTokenCleanUpService {
     @Scheduled(cron = "0 0 3 * * *")
     @Transactional
     public void deleteExpiredTokens() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         long deletedCount = refreshTokenRepository.deleteInvalidTokens(now);
         if (deletedCount > 0) {
             log.info("RefreshTokens deleted: {}", deletedCount);

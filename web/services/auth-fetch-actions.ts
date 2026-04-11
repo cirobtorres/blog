@@ -1,16 +1,14 @@
 "use server";
 
 import { cookies } from "next/headers";
-// import { apiServerUrls } from "../routing/routes";
-// import { extractTokenFromHeader } from "./helpers/server";
-// import { applyCookiesInAction } from "./helpers/actions";
-
-// let refreshPromise: Promise<string | null> | null = null;
+import { applyCookiesInAction } from "./helpers/actions";
+import { extractTokenFromHeader } from "./helpers/server";
+import { coordinatedRefresh } from "./helpers/refresh";
 
 export async function serverFetch(url: string, options: RequestInit = {}) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
-  // const refreshToken = cookieStore.get("refresh_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
   const getHeaders = (token?: string) => {
     const h = new Headers(options.headers);
@@ -23,48 +21,28 @@ export async function serverFetch(url: string, options: RequestInit = {}) {
     headers: getHeaders(accessToken),
   });
 
-  // if (response.status === 401 && refreshToken) {
-  //   if (!refreshPromise) {
-  //     refreshPromise = (async () => {
-  //       try {
-  //         const refreshRes = await fetch(apiServerUrls.refresh, {
-  //           method: "POST",
-  //           headers: {
-  //             Cookie: `refresh_token=${refreshToken}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //         });
+  if (response.status === 401 && refreshToken) {
+    const refreshResult = await coordinatedRefresh(refreshToken);
 
-  //         if (refreshRes.ok) {
-  //           const setCookieHeader = refreshRes.headers.get("set-cookie");
-  //           if (setCookieHeader) {
-  //             await applyCookiesInAction(setCookieHeader);
-  //             return extractTokenFromHeader(setCookieHeader, "access_token");
-  //           }
-  //         }
-  //         return null;
-  //       } catch (error) {
-  //         console.error("Server Refresh Error:", error);
-  //         return null;
-  //       } finally {
-  //         refreshPromise = null;
-  //       }
-  //     })();
-  //   }
+    if (refreshResult.ok && refreshResult.setCookieHeader) {
+      await applyCookiesInAction(refreshResult.setCookieHeader);
+      const newAccessToken = extractTokenFromHeader(
+        refreshResult.setCookieHeader,
+        "access_token",
+      );
 
-  //   const newAccessToken = await refreshPromise;
+      if (newAccessToken) {
+        return fetch(url, {
+          ...options,
+          headers: getHeaders(newAccessToken),
+        });
+      }
+    }
 
-  //   if (newAccessToken) {
-  //     return await fetch(url, {
-  //       ...options,
-  //       headers: getHeaders(newAccessToken),
-  //     });
-  //   } else {
-  //     console.error(
-  //       "authenticatedServerFetch: Refresh failed or token not found",
-  //     );
-  //   }
-  // }
+    console.error(
+      "serverFetch: refresh failed or access_token missing in Set-Cookie",
+    );
+  }
 
   return response;
 }

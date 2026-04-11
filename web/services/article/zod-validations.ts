@@ -86,21 +86,19 @@ const publishArticleSchema = z.object({
     .min(5, "A slug deve ter pelo menos 5 caracteres")
     .max(128, "Slug muito longa"),
   banner: z.uuid("Você precisa selecionar uma imagem"),
-  body: z.preprocess(
-    (val) => {
-      // Tries to transform a string JSON into an object before validates it
-      try {
-        return typeof val === "string" ? JSON.parse(val) : val;
-      } catch {
-        return [];
-      }
-    },
-    z
-      .array(BlockSchema)
-      .min(1, "Adicione pelo menos um bloco ao artigo")
-      // FILTER: Removes blocks with locked === true
-      .transform((blocks) => blocks.filter((block) => !block.locked)),
-  ),
+  // body: z.preprocess(
+  //   (val) => {
+  //     try {
+  //       return typeof val === "string" ? JSON.parse(val) : val;
+  //     } catch {
+  //       return [];
+  //     }
+  //   },
+  //   z
+  //     .array(BlockSchema)
+  //     .min(1, "Adicione pelo menos um bloco ao artigo")
+  //     .transform((blocks) => blocks.filter((block) => !block.locked)),
+  // ),
 });
 
 export { publishArticleSchema };

@@ -59,15 +59,18 @@ api-properties:
     mediaUpServSecret: ${CLOUDINARY_API_SECRET}
   jwt:
     issuer: ${API_URL}
-    expAccToken: 60000 # 900000 = 15 min; 3600000 = 60 min
+    expAccToken: 1200000 # 900000 = 15 min; 1200000 = 20 min
     expRefToken: 604800000 # 7 days
     accTokenPath: "/"
     refTokenPath: "/"
+  debug:
+    trackUserId: ${TESTER_UUID_REFRESH_TRACKER}
 
 # Logs
 logging:
   pattern:
-    console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
+    console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%X{request_id}]){magenta} %clr([%X{client_ip}]){blue} %clr([%X{user_id}]){green} %clr(%-40.40logger){cyan} : %m%n"
+    # console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
 
 # APP
 server:

@@ -5,13 +5,6 @@ type SelectFolder = {
   path: string;
 };
 
-type Pagination = {
-  size: number;
-  number: number;
-  totalElements: number;
-  totalPages: number;
-};
-
 type Folder = {
   id: string;
   path: string;
