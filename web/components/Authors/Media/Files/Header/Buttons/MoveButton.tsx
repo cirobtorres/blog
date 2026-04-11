@@ -12,8 +12,8 @@ import {
 } from "../../../../../AlertDialog";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import { Button } from "../../../../../Button";
 import moveFiles from "../../../../../../services/media/moveFiles";
 import FolderPopover from "../../../FolderPopover";
@@ -101,7 +101,7 @@ const MoveFilesAction = ({
       files.map((file, index) => formData.set("file-id-" + index, file.id));
 
       const result = moveFiles(prevState, formData);
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Editando arquivos...");
 
       return result;

@@ -13,8 +13,8 @@ import {
 import deleteFolders from "../../../../../../services/media/deleteFolders";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import { Button } from "../../../../../Button";
 
 export default function DeleteButton({
@@ -80,7 +80,7 @@ const DeleteFoldersAction = ({ folders }: { folders: Folder[] }) => {
     const foldersId = folders.map((folder) => folder.id);
 
     const result = deleteFolders(foldersId);
-    const promise = soonerPromise(result);
+    const promise = sonnerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;

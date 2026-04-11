@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { toast } from "sonner";
 
-export const soonerPromise = (
+export const sonnerPromise = (
   promise: Promise<ActionState>,
 ): Promise<ActionState> => {
   return new Promise((resolve, reject) => {

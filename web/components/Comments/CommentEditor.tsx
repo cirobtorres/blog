@@ -5,7 +5,7 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { sonnerToastPromise, soonerPromise } from "../../utils/sooner";
+import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
 
 export default function CommentEditor({
@@ -31,7 +31,7 @@ export default function CommentEditor({
         data: null,
       });
     });
-    const promise = soonerPromise(result);
+    const promise = sonnerPromise(result);
 
     sonnerToastPromise(
       promise,

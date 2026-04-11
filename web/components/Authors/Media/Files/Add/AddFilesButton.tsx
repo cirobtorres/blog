@@ -2,7 +2,7 @@
 
 import React from "react";
 import { AlertDialog, AlertDialogTrigger } from "../../../../AlertDialog";
-import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
+import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { convertToLargeDate } from "../../../../../utils/date";
 import { createFilesOnDb } from "../../../../../services/media/createFilesOnDb";
 import { Button } from "../../../../Button";
@@ -65,7 +65,7 @@ export default function AddFilesButton() {
       };
 
       const result = uploadLogic();
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando arquivos...");
 
       return result;

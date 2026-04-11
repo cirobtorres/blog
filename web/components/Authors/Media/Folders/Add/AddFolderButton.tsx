@@ -19,7 +19,7 @@ import {
 } from "../../../../Fieldset";
 import Spinner from "../../../../Spinner";
 import folderValidation from "../../../../../utils/zod-folder-validations";
-import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
+import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import FolderPopover from "../../FolderPopover";
 import { useCreateFolder } from "../../../../../services/hooks/folders/hook-folders";
 
@@ -48,7 +48,7 @@ export default function AddFolderButton() {
       formData.set("parentFolderId", validation.data.parentFolderId ?? "");
 
       const result = mutateAsync({ prevState, formData });
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando pasta...");
 
       return result;

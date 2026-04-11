@@ -20,8 +20,8 @@ import {
 import Spinner from "../../../../../Spinner";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import { convertToLargeDate } from "../../../../../../utils/date";
 import folderValidation from "../../../../../../utils/zod-folder-validations";
 import FolderPopover from "../../../FolderPopover";
@@ -60,7 +60,7 @@ export default function FolderCardEditButton({
       formData.set("folderDestinationId", validation.data.parentFolderId ?? "");
 
       const result = mutateAsync({ prevState, formData });
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
       return result;

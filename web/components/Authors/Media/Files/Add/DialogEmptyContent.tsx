@@ -9,7 +9,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "../../../../Tabs";
 import { cn } from "../../../../../utils/variants";
 import { Button } from "../../../../Button";
-import { sonnerToastPromise, soonerPromise } from "../../../../../utils/sooner";
+import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { fetchFileFromUrl } from "../../../../../utils/media-file-utils";
 import AnimatedIcon from "./AnimatedIcon";
 import Spinner from "../../../../Spinner";
@@ -43,7 +43,7 @@ export default function DialogEmptyContent({
       try {
         const downloadPromise = fetchFileFromUrl(url);
 
-        const result = soonerPromise(
+        const result = sonnerPromise(
           downloadPromise.then((file: File) => ({
             ok: true,
             success: "URL processada!",

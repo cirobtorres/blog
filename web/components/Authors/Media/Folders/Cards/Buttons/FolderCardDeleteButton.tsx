@@ -13,8 +13,8 @@ import {
 import { Button } from "../../../../../Button";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import Spinner from "../../../../../Spinner";
 import deleteFolder from "../../../../../../services/media/deleteFolder";
 
@@ -59,7 +59,7 @@ const FolderCardDeleteAction = ({ folderId }: { folderId: string }) => {
     };
 
     const result = deleteFolder(folderId);
-    const promise = soonerPromise(result);
+    const promise = sonnerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;

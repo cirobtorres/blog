@@ -14,8 +14,8 @@ import Spinner from "../../../../../Spinner";
 import editFile from "../../../../../../services/media/editFile";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import {
   Fieldset,
   FieldsetError,
@@ -64,7 +64,7 @@ export default function EditButton({
       if (!validation.ok) return validation;
 
       const result = editFile(prevState, formData);
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
 
       return result;

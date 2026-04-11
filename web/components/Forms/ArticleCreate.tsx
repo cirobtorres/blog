@@ -12,7 +12,7 @@ import {
   publishArticleValidation,
 } from "../../services/article/publishArticle";
 import { Alert } from "../Alert";
-import { sonnerToastPromise, soonerPromise } from "../../utils/sooner";
+import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import Spinner from "../Spinner";
 import { Button } from "../Button";
 import ArticleEditorSlug from "../Editors/editors/ArticleEditorSlug";
@@ -27,6 +27,7 @@ import { FieldsetError } from "../Fieldset";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { useAuth } from "../../providers/AuthProvider";
 import { slugify } from "../../utils/strings-transforms";
+import { toast } from "sonner";
 
 const defaultState = {
   ok: false,
@@ -64,7 +65,7 @@ export function ArticleCreate() {
         }),
       );
 
-      const promise = soonerPromise(result as Promise<ActionState>);
+      const promise = sonnerPromise(result as Promise<ActionState>);
       sonnerToastPromise(promise, success, error, "Publicando artigo...");
 
       return result;
@@ -90,7 +91,10 @@ export function ArticleCreate() {
             </div>
             <Button
               type="button"
-              onClick={() => router.push(articleLink)}
+              onClick={() => {
+                toast.dismiss();
+                router.push(articleLink);
+              }}
               variant="default"
               className={cn("h-6 text-xs", focusRing)}
             >
@@ -126,7 +130,7 @@ export function ArticleCreate() {
       // validatedFormData.set("body", JSON.stringify(validatedBody));
 
       const result = publishArticle(prevState, formData);
-      const promise = soonerPromise(result);
+      const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Publicando artigo...");
 
       return result;

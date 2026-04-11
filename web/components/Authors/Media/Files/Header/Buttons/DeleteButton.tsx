@@ -12,8 +12,8 @@ import {
 } from "../../../../../AlertDialog";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import deleteFiles from "../../../../../../services/media/deleteFiles";
 import { Button } from "../../../../../Button";
 
@@ -80,7 +80,7 @@ const DeleteFilesAction = ({ files }: { files: Media[] }) => {
     const filesId = files.map((file) => file.id);
 
     const result = deleteFiles(filesId);
-    const promise = soonerPromise(result);
+    const promise = sonnerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;

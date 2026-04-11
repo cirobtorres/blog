@@ -3,8 +3,8 @@
 import React from "react";
 import {
   sonnerToastPromise,
-  soonerPromise,
-} from "../../../../../../utils/sooner";
+  sonnerPromise,
+} from "../../../../../../utils/sonner";
 import Spinner from "../../../../../Spinner";
 import deleteFile from "../../../../../../services/media/deleteFile";
 import {
@@ -87,7 +87,7 @@ const DeleteMediaAction = ({ id }: { id: string }) => {
     };
 
     const result = deleteFile({ id });
-    const promise = soonerPromise(result);
+    const promise = sonnerPromise(result);
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;
