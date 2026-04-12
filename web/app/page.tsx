@@ -49,26 +49,26 @@ export default async function HomePage({
   const { content: articles, page }: { content: Article[]; page: Pagination } =
     articlesResult;
 
+  const hasArticles = articles.length > 0;
+
   return (
     <div className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]">
       <Header className="fixed" />
       <main className="mt-height-header">
-        {articles.length > 0 ? (
-          !(params?.page || params?.page === "0") ? (
+        {!hasArticles &&
+          (!(params?.page || params?.page === "0") ? (
             <RenderArticles articles={articles} />
           ) : (
             <ContentPositioner>
               <LoopCards articles={articles} />
             </ContentPositioner>
-          )
-        ) : (
-          <ContentPositioner>
-            <section className="h-full flex justify-center items-center">
-              <span className="font-medium text-neutral-500 pointer-events-none">
-                Nenhum artigo publicado =/
-              </span>
-            </section>
-          </ContentPositioner>
+          ))}
+        {hasArticles && (
+          <section className="h-full flex justify-center items-center">
+            <span className="font-medium text-neutral-500 pointer-events-none">
+              Nenhum artigo publicado =/
+            </span>
+          </section>
         )}
         <ArticlePagination {...page} />
       </main>
