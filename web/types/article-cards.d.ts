@@ -12,8 +12,8 @@ interface ArticleCardImage extends Omit<
   "src" | "alt"
 > {
   id: string;
-  src?: string;
-  alt?: string;
+  src: string;
+  alt: string;
 }
 
 interface ArticleCardDate extends React.ComponentProps<"time"> {

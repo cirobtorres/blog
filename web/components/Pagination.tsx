@@ -1,8 +1,7 @@
 import * as React from "react";
-
-import { cn } from "../utils/variants";
 import Link from "next/link";
 import { Button } from "./Button";
+import { cn } from "../utils/variants";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
