@@ -1,15 +1,12 @@
 "use client";
 
 import React from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { cn, focusRing } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
-
-const defaultState = {
-  ok: false,
-  success: null,
-  error: null,
-  data: null,
-};
+import { serverFetch } from "../../../services/auth-fetch-actions";
+import { apiServerUrls } from "../../../routing/routes";
+import Spinner from "../../Spinner";
 
 export default function ArticleEditorSlug({
   error,
@@ -18,20 +15,46 @@ export default function ArticleEditorSlug({
   error?: boolean;
 }) {
   const { title, slug, setSlug } = useArticleStore();
+  const [isChecking, setIsChecking] = React.useState(false);
+  const [isSlugTaken, setIsSlugTaken] = React.useState<
+    "valid" | "invalid" | "empty"
+  >("empty");
 
-  const [, action, isPending] = React.useActionState(
-    async (prevState: ActionState, formData: FormData) => {
-      // Generate unique slug
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+  const validateSlug = useDebouncedCallback(async (currentSlug: string) => {
+    if (!currentSlug || currentSlug.length < 5) return;
 
-      return defaultState;
-    },
-    defaultState,
-  );
+    setIsChecking(true);
+    try {
+      const response = await serverFetch(
+        `${apiServerUrls.article.slug}/${currentSlug}`,
+      );
+      setIsSlugTaken(response.ok ? "invalid" : "valid"); // !ok (404) = expected
+    } catch (err) {
+      if (slug) {
+        setIsSlugTaken("invalid");
+      } else {
+        setIsSlugTaken("empty");
+      }
+    } finally {
+      setIsChecking(false);
+    }
+  }, 2000);
 
   React.useEffect(() => {
     setSlug(title);
-  }, [title, setSlug]);
+    validateSlug(title);
+    if (title.length === 0) {
+      setIsSlugTaken("empty");
+    }
+  }, [title, setSlug, validateSlug]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSlug(val);
+    validateSlug(val);
+  };
+
+  const isSlugValid = !!slug && !!(isSlugTaken === "invalid");
 
   return (
     <fieldset className="flex flex-col">
@@ -50,46 +73,65 @@ export default function ArticleEditorSlug({
           name="slug"
           autoComplete="off"
           value={slug}
-          onChange={(e) => setSlug(e.target.value)}
+          onChange={handleChange}
           className={cn(
             "w-full p-2 pr-9 text-sm border outline-none outline-transparent appearance-none rounded transition-shadow duration-300 placeholder:text-neutral-700 dark:placeholder:text-neutral-600",
             focusRing,
-            error
-              ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
-              : "bg-stone-200 dark:bg-stone-900",
+            isSlugValid
+              ? "border-emerald-500 dark:border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/10 focus-visible:border-emerald-500 dark:focus-visible:border-emerald-500"
+              : error
+                ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
+                : "bg-stone-200 dark:bg-stone-900",
           )}
           {...props}
         />
-        <button
-          type="submit"
-          disabled={isPending}
-          formAction={action}
-          className={cn(
-            "absolute top-1/2 -translate-y-1/2 right-0.5 size-8 flex justify-center items-center border border-transparent rounded transition-all duration-300",
-            isPending ? "cursor-auto opacity-50" : "cursor-pointer",
-            focusRing,
-          )}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={cn(
-              "size-4 stroke-neutral-500",
-              isPending && "animate-spin",
-            )}
-          >
-            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-          </svg>
-        </button>
+        <div className="absolute top-1/2 -translate-y-1/2 right-0.5 size-8 flex justify-center items-center">
+          {isChecking ? (
+            <Spinner />
+          ) : isSlugTaken === "valid" ? (
+            <span className="text-destructive">
+              <UnvalidIcon />
+            </span>
+          ) : isSlugValid ? (
+            <span className="text-emerald-500">
+              <ValidIcon />
+            </span>
+          ) : null}
+        </div>
       </div>
     </fieldset>
   );
 }
+
+const ValidIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
+
+const UnvalidIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+);

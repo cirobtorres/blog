@@ -1,9 +1,6 @@
 package com.cirobtorres.blog.api.article.controllers;
 
-import com.cirobtorres.blog.api.article.dtos.ArticleCreateDTO;
-import com.cirobtorres.blog.api.article.dtos.ArticleDTO;
-import com.cirobtorres.blog.api.article.dtos.ArticlesDTO;
-import com.cirobtorres.blog.api.article.dtos.CreateArticlesDTO;
+import com.cirobtorres.blog.api.article.dtos.*;
 import com.cirobtorres.blog.api.article.services.ArticlesService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("articles")
@@ -27,7 +25,7 @@ public class ArticlesController {
     }
 
     @PostMapping
-    public ResponseEntity<ArticleCreateDTO> create(
+    public ResponseEntity<ArticleCreateDTO> createArticle(
             @RequestBody CreateArticlesDTO createArticleDTO
     ) {
         ArticleCreateDTO article = articlesService.createArticle(createArticleDTO);
@@ -35,7 +33,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/{year}/{month}/{day}/{slug}")
-    public ResponseEntity<ArticleDTO> read(
+    public ResponseEntity<ArticleDTO> getArticlePage(
             @PathVariable int year,
             @PathVariable int month,
             @PathVariable int day,
@@ -45,11 +43,19 @@ public class ArticlesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ArticlesDTO>> list(
+    public ResponseEntity<Page<ArticlesDTO>> listAllByQueryParams(
             @RequestParam(name = "q", required = false) String query,
             @RequestParam Map<String, String> allParams,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(articlesService.listPublishedPaged(query, allParams, pageable));
+    }
+
+    @GetMapping("slug/{slug}")
+    public ResponseEntity<ArticleDTO> getBySlug(
+            @PathVariable ArticleSlugDTO slug
+    ) {
+        ArticleDTO article = articlesService.findBySlug(slug);
+        return ResponseEntity.ok(article);
     }
 }

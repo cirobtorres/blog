@@ -1,9 +1,6 @@
 package com.cirobtorres.blog.api.article.services;
 
-import com.cirobtorres.blog.api.article.dtos.ArticleCreateDTO;
-import com.cirobtorres.blog.api.article.dtos.ArticleDTO;
-import com.cirobtorres.blog.api.article.dtos.ArticlesDTO;
-import com.cirobtorres.blog.api.article.dtos.CreateArticlesDTO;
+import com.cirobtorres.blog.api.article.dtos.*;
 import com.cirobtorres.blog.api.article.entities.Articles;
 import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.article.repositories.ArticlesRepository;
@@ -14,6 +11,7 @@ import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,7 +38,22 @@ public class ArticlesService {
     }
 
     @Transactional
-    public ArticleCreateDTO createArticle(CreateArticlesDTO dto) {
+    public ArticleDTO findBySlug(@NonNull ArticleSlugDTO slugDTO) {
+        String slug = slugDTO.slug();
+
+        Articles article = articlesRepository
+                .findBySlug(slug)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Article not found for slug=" + slug
+                        )
+                );
+
+        return new ArticleDTO(article);
+    }
+
+    @Transactional
+    public ArticleCreateDTO createArticle(@NonNull CreateArticlesDTO dto) {
         Author author = authorRepository
                 .findByUserId(dto.userId())
                 .orElseThrow(
