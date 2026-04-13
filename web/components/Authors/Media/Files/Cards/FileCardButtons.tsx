@@ -31,6 +31,9 @@ export default function FileCardButtons() {
 
   if (isPending) return <FileCardsLoadingSimplified />;
 
+  // TODO: query media
+  // TODO: filter media
+
   return (
     <FileCardSectionWrapper>
       <div className="w-full flex justify-between">

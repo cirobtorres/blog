@@ -21,7 +21,9 @@ export default function ArticleEditorSlug({
   >("empty");
 
   const validateSlug = useDebouncedCallback(async (currentSlug: string) => {
-    if (!currentSlug || currentSlug.length < 5) return;
+    if (!currentSlug || currentSlug.length < 5) {
+      return;
+    }
 
     setIsChecking(true);
     try {
@@ -40,18 +42,25 @@ export default function ArticleEditorSlug({
     }
   }, 2000);
 
+  const setValidateSlug = React.useCallback(
+    (title: string) => {
+      if (title.length < 5) {
+        setIsSlugTaken("empty");
+      }
+      validateSlug(title);
+    },
+    [validateSlug],
+  );
+
   React.useEffect(() => {
     setSlug(title);
-    validateSlug(title);
-    if (title.length === 0) {
-      setIsSlugTaken("empty");
-    }
-  }, [title, setSlug, validateSlug]);
+    setValidateSlug(title);
+  }, [title, setSlug, setValidateSlug]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSlug(val);
-    validateSlug(val);
+    setValidateSlug(val);
   };
 
   const isSlugValid = !!slug && !!(isSlugTaken === "invalid");

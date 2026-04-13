@@ -1,28 +1,93 @@
+"use client";
+
+import React from "react";
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "../../Combobox";
+
+const queriedTags = [
+  "Next.js",
+  "Java",
+  "Java Spring Boot",
+  "Javascript",
+  "Python",
+  "Django",
+  "NestJS",
+  "Node.js",
+  "Blender",
+  "Renders",
+  "Renderização",
+  "Modelagem 3D",
+  "Shading",
+  "Animação",
+  "Topologia",
+  "Material",
+  "Textura",
+  "Ciência da Computação",
+  "Programação",
+  "Database",
+  "Banco de Dados",
+  "Diagramas Entidade Relacionamentos",
+] as const;
+
 export default function ArticleEditorCategory() {
+  const [tags] = React.useState(queriedTags.toSorted());
+
   return (
     <div className="flex flex-col">
-      <span className="text-neutral-600 dark:text-neutral-500 font-medium mb-2">
+      <label
+        htmlFor="tag-combobox"
+        className="text-neutral-600 dark:text-neutral-500 font-medium mb-2"
+      >
         Tags
-      </span>
-      <div className="w-full h-9.5 flex justify-between border rounded bg-stone-200 dark:bg-stone-900">
-        <span className="text-sm leading-9 px-2 text-neutral-700 dark:text-neutral-600">
-          Tags
-        </span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="stroke-neutral-500 h-full mr-2"
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
-      </div>
+      </label>
+      <ComboboxMultiple id="tag-combobox" tags={tags} />
     </div>
   );
 }
+
+const ComboboxMultiple = ({
+  id,
+  tags,
+}: {
+  id?: string;
+  tags: readonly string[];
+}) => {
+  const anchor = useComboboxAnchor();
+
+  return (
+    <Combobox id={id} multiple autoHighlight items={tags}>
+      <ComboboxChips ref={anchor}>
+        <ComboboxValue>
+          {(values) => (
+            <>
+              {values.map((value: string) => (
+                <ComboboxChip key={value}>{value}</ComboboxChip>
+              ))}
+              <ComboboxChipsInput />
+            </>
+          )}
+        </ComboboxValue>
+      </ComboboxChips>
+      <ComboboxContent anchor={anchor}>
+        <ComboboxEmpty>Nada encontrado.</ComboboxEmpty>
+        <ComboboxList>
+          {(item) => (
+            <ComboboxItem key={item} value={item}>
+              {item}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  );
+};

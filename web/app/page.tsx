@@ -55,7 +55,7 @@ export default async function HomePage({
     <div className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]">
       <Header className="fixed" />
       <main className="mt-height-header">
-        {!hasArticles &&
+        {hasArticles &&
           (!(params?.page || params?.page === "0") ? (
             <RenderArticles articles={articles} />
           ) : (
@@ -63,7 +63,7 @@ export default async function HomePage({
               <LoopCards articles={articles} />
             </ContentPositioner>
           ))}
-        {hasArticles && (
+        {!hasArticles && (
           <section className="h-full flex justify-center items-center">
             <span className="font-medium text-neutral-500 pointer-events-none">
               Nenhum artigo publicado =/
@@ -110,6 +110,7 @@ const LastPublishedArticle = ({ article }: { article: Article }) => (
           <h2 className="text-neutral-100 text-3xl font-bold">
             {article.title}
           </h2>
+          {article.subtitle}
         </div>
       </div>
     </div>

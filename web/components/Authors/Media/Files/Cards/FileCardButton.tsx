@@ -4,6 +4,7 @@ import Image from "next/image";
 import { DashedBackground } from "../../../../DashedBackground";
 import { FileCardInfos, FileCardWrapper } from "./FileCardUtils";
 import { useArticleStore } from "../../../../../zustand-store/article-state";
+import { cn, focusRing } from "../../../../../utils/variants";
 
 export default function FileCardButton({
   file,
@@ -17,7 +18,10 @@ export default function FileCardButton({
   return (
     <button
       type="button"
-      className="cursor-pointer"
+      className={cn(
+        "cursor-pointer rounded-lg border border-transparent transition-shadow duration-300",
+        focusRing,
+      )}
       onClick={() => {
         setLoading(true);
         selectBanner({ id: file.id, url: file.url, alt: file.alt });

@@ -113,21 +113,8 @@ export function ArticleCreate() {
 
       if (!validation.ok) return validation;
 
-      // const {
-      //   title: validatedTitle,
-      //   subtitle: validatedSubtitle,
-      //   slug: validatedSlug,
-      //   banner: validatedBannerMediaId,
-      //   body: validatedBody,
-      // } = validation.data;
-
       formData.set("body", JSON.stringify(blocks));
       formData.set("userId", user?.data?.id ?? "anonymous");
-      // validatedFormData.set("title", validatedTitle);
-      // validatedFormData.set("subtitle", validatedSubtitle);
-      // validatedFormData.set("slug", validatedSlug);
-      // validatedFormData.set("banner", validatedBannerMediaId);
-      // validatedFormData.set("body", JSON.stringify(validatedBody));
 
       const result = publishArticle(prevState, formData);
       const promise = sonnerPromise(result);
@@ -158,13 +145,25 @@ export function ArticleCreate() {
       </div>
       <AlertActionErrorList publishState={publishState} />
       <div className="w-full flex flex-col gap-2">
-        <ArticleEditorTitle error={publishState?.error?.title} />
-        <FieldsetError error={publishState.error?.title?.errors} />
-        <ArticleEditorSlug error={publishState?.error?.slug} />
-        <FieldsetError error={publishState.error?.slug?.errors} />
-        <ArticleEditorSubtitle error={publishState?.error?.subtitle} />
-        <FieldsetError error={publishState.error?.subtitle?.errors} />
-        <ArticleEditorCategory />
+        <div className="w-full flex gap-2">
+          <div className="w-full">
+            <ArticleEditorTitle error={publishState?.error?.title} />
+            <FieldsetError error={publishState.error?.title?.errors} />
+          </div>
+          <div className="w-full">
+            <ArticleEditorSubtitle error={publishState?.error?.subtitle} />
+            <FieldsetError error={publishState.error?.subtitle?.errors} />
+          </div>
+        </div>
+        <div className="w-full flex gap-2">
+          <div className="w-full">
+            <ArticleEditorCategory />
+          </div>
+          <div className="w-full">
+            <ArticleEditorSlug error={publishState?.error?.slug} />
+            <FieldsetError error={publishState.error?.slug?.errors} />
+          </div>
+        </div>
         <ArticleEditorBanner error={publishState?.error?.banner}>
           <FolderBreadcrumbState />
           <FolderCardButtons />
@@ -220,28 +219,12 @@ const AlertActionErrorList = ({
             </p>
           ),
         )}
-      {/* No editor added */}
-      {/* {publishState?.error?.body &&
-        publishState?.error?.body.errors.map((err: string[], index: number) => (
-          <p key={"body-" + index} className="text-destructive!">
-            {err}
-          </p>
-        ))} */}
-      {/* Editor invalid */}
-      {/* {publishState?.error?.body?.items &&
-        publishState?.error?.body.items.map(
-          ({ error }: { error: string }, index: number) => (
-            <p key={"body-err-" + index} className="text-destructive!">
-              {error}
-            </p>
-          ),
-        )} */}
     </Alert>
   ) : null;
 };
 
 const ArticleEditorsWrapper = ({ children }: { children: React.ReactNode }) => (
-  <section className="w-full max-w-4xl mx-auto flex-1 flex flex-col">
+  <section className="w-full max-w-6xl mx-auto flex-1 flex flex-col">
     <form>{children}</form>
   </section>
 );
