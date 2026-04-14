@@ -22,8 +22,8 @@ import Image from "next/image";
 const mountURL = ({ createdAt, title }: Article) => {
   const date = new Date(createdAt);
   const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDay();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
   const slug = slugify(title);
 
   return `/articles/${year}/${month}/${day}/${slug}`;

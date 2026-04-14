@@ -2,7 +2,7 @@ import { Alert } from "../../../Alert";
 import { Link } from "../../../Links";
 import { Blockquote, H2, H3, Li, Ol, P, Ul } from "../../../Typography";
 
-export default function ArticleContent() {
+export default function ArticleContent({ body }: { body: string[] }) {
   return (
     <article className="w-full max-w-article-body my-6">
       <H2>Lorem ipsum dolor sit amet.</H2>

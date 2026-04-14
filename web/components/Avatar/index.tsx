@@ -1,10 +1,16 @@
 import Image from "next/image";
 
-export function Avatar() {
+export function Avatar({
+  authorName,
+  authorPicUrl,
+}: {
+  authorName: string;
+  authorPicUrl?: string | null;
+}) {
   return (
     <div className="flex items-center gap-4">
       <Image
-        src="https://placehold.co/32x32/000/fff/jpeg"
+        src={authorPicUrl ?? "/images/not-authenticated.png"}
         alt="Avatar do autor do artigo"
         aria-label="Avatar do autor do artigo"
         width={32}
@@ -12,7 +18,7 @@ export function Avatar() {
         className="shrink-0 rounded-full"
       />
       <p className="text-neutral-900 dark:text-neutral-100 font-medium">
-        Fulano de tal
+        {authorName}
       </p>
     </div>
   );
