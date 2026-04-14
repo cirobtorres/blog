@@ -103,12 +103,12 @@ public class ArticlesService {
         LocalDateTime pub = article.getPublishedAt();
 
         if (
-                pub == null ||
-                        pub.getYear() != year ||
-                        pub.getMonthValue() != month ||
-                        pub.getDayOfMonth() != day
+                pub == null
+                || pub.getYear() != year
+                || pub.getMonthValue() != month
+                || pub.getDayOfMonth() != day
         ) {
-            throw new ResourceNotFoundException("Invalid URL for article");
+            throw new ResourceNotFoundException("Invalid date on URL for article");
         }
 
         return new ArticleDTO(article);
@@ -148,5 +148,9 @@ public class ArticlesService {
         */
 
         return articlesRepository.findAll(spec, pageable).map(ArticlesDTO::new);
+    }
+
+    public List<String> findAllSlugs() {
+        return articlesRepository.findAllSlugs();
     }
 }

@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("articles")
@@ -49,6 +49,12 @@ public class ArticlesController {
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(articlesService.listPublishedPaged(query, allParams, pageable));
+    }
+
+    @GetMapping("slug")
+    public ResponseEntity<List<String>> getAllBySlug() {
+        List<String> slugs = articlesService.findAllSlugs();
+        return ResponseEntity.ok(slugs);
     }
 
     @GetMapping("slug/{slug}")
