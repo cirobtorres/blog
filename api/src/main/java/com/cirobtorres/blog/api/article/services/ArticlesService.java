@@ -140,10 +140,10 @@ public class ArticlesService {
             }
         }
 
-        /* PSEUDOCODE CATEGORY:
-           if (allParams.containsKey("category")) {
+        /* PSEUDOCODE TAG:
+           if (allParams.containsKey("tag")) {
                spec = spec.and((root, query, cb) ->
-                   cb.equal(root.join("categories").get("slug"), allParams.get("category")));
+                   cb.equal(root.join("categories").get("slug"), allParams.get("tag")));
            }
         */
 

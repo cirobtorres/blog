@@ -1,6 +1,13 @@
 import { JSX } from "react";
 import { toast } from "sonner";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export const sonnerPromise = (
   promise: Promise<ActionState>,
 ): Promise<ActionState> => {
@@ -14,7 +21,7 @@ export const sonnerPromise = (
         }
       })
       .catch((e) => {
-        reject({ ok: false, error: "Erro inesperado", data: null });
+        reject({ ...defaultState, error: "Erro de conexão ou servidor" });
       });
   });
 };

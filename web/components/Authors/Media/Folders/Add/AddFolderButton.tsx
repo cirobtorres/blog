@@ -23,6 +23,13 @@ import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import FolderPopover from "../../FolderPopover";
 import { useCreateFolder } from "../../../../../services/hooks/folders/hook-folders";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function AddFolderButton() {
   const { mutateAsync } = useCreateFolder();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -53,12 +60,7 @@ export default function AddFolderButton() {
 
       return result;
     },
-    {
-      ok: false,
-      success: null,
-      error: null,
-      data: null,
-    } as ActionState,
+    defaultState,
   );
 
   return (
@@ -115,7 +117,10 @@ export default function AddFolderButton() {
           </div>
           <FieldsetError />
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <Button

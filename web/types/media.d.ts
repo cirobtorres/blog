@@ -50,7 +50,7 @@ type Media = {
 };
 
 // Comes from server (pagination)
-type MediaResponsePageable = {
+type PageableMedia = {
   content: Media[];
   page: Pagination;
 };

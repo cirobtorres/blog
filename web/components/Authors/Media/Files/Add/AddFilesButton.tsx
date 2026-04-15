@@ -11,7 +11,7 @@ import DialogCardsContent from "./DialogCardsContent";
 import createFile from "../../../../../services/cloudinary/createFile";
 import validateFiles from "../../../../../utils/zod-file-validations";
 
-const initialState: ActionState = {
+const defaultState: ActionState = {
   ok: false,
   success: null,
   error: null,
@@ -27,7 +27,7 @@ export default function AddFilesButton() {
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       if (formData.get("_action") === "reset") {
-        return initialState;
+        return defaultState;
       }
 
       const success = (serverResponse: ActionState) => {
@@ -70,7 +70,7 @@ export default function AddFilesButton() {
 
       return result;
     },
-    initialState,
+    defaultState,
   );
 
   const handleReset = () => {
@@ -78,7 +78,7 @@ export default function AddFilesButton() {
     formData.append("_action", "reset");
     React.startTransition(() => {
       action(formData);
-    }); // Triggers action only to reset to its initialState
+    }); // Triggers action only to reset to its defaultState
     setOpenStep(null);
     setFiles([]);
   };

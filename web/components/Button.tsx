@@ -1,5 +1,3 @@
-import * as React from "react";
-import { type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 import { buttonVariants, cn } from "../utils/variants";
 
@@ -8,10 +6,7 @@ export function Button({
   variant = "default",
   asChild = false,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
+}: BlogButton) {
   const Comp = asChild ? Slot.Root : "button";
 
   return (

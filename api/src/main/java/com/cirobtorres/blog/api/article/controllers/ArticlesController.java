@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.article.controllers;
 
 import com.cirobtorres.blog.api.article.dtos.*;
 import com.cirobtorres.blog.api.article.services.ArticlesService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,8 +60,9 @@ public class ArticlesController {
 
     @GetMapping("slug/{slug}")
     public ResponseEntity<ArticleDTO> getBySlug(
-            @PathVariable ArticleSlugDTO slug
+            @PathVariable @NonNull ArticleSlugDTO slug
     ) {
+        System.out.println("slug=" + slug.slug());
         ArticleDTO article = articlesService.findBySlug(slug);
         return ResponseEntity.ok(article);
     }

@@ -17,9 +17,7 @@ export async function getFilesAction(
       serverFetch(countUrl),
     ]);
 
-    const data: MediaResponsePageable = resData.ok
-      ? await resData.json()
-      : null;
+    const data: PageableMedia = resData.ok ? await resData.json() : null;
     const count = resCount.ok ? await resCount.json() : 0;
 
     return { ...data, count };

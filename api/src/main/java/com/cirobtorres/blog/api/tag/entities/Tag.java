@@ -20,6 +20,9 @@ public class Tag {
     @Column
     private String name;
 
+    @Column(unique = true)
+    private String slug;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
@@ -35,15 +38,22 @@ public class Tag {
     // BUILDER----------------------------------------------------------------------------------------------------
     private Tag(Builder builder) {
         this.name = builder.name;
+        this.slug = builder.slug;
     }
 
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
         private String name;
+        private String slug;
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder slug(String slug) {
+            this.slug = slug;
             return this;
         }
 
@@ -58,6 +68,9 @@ public class Tag {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

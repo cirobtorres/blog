@@ -17,6 +17,13 @@ import {
 import deleteFiles from "../../../../../../services/media/deleteFiles";
 import { Button } from "../../../../../Button";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function DeleteButton({
   files,
   disabled,
@@ -52,7 +59,10 @@ export default function DeleteButton({
             </div>
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <DeleteFilesAction files={files} />
@@ -84,7 +94,7 @@ const DeleteFilesAction = ({ files }: { files: Media[] }) => {
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;
-  }, null);
+  }, defaultState);
   return (
     <Button
       type="submit"

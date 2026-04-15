@@ -27,6 +27,13 @@ import folderValidation from "../../../../../../utils/zod-folder-validations";
 import FolderPopover from "../../../FolderPopover";
 import { useEditFolder } from "../../../../../../services/hooks/folders/hook-folders";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function FolderCardEditButton({
   id,
   name,
@@ -65,12 +72,7 @@ export default function FolderCardEditButton({
 
       return result;
     },
-    {
-      ok: false,
-      success: null,
-      error: null,
-      data: null,
-    } as ActionState,
+    defaultState,
   );
 
   return (
@@ -136,7 +138,10 @@ export default function FolderCardEditButton({
             </div>
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <EditMediaAction isPending={isPending} />

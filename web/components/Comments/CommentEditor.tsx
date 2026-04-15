@@ -8,6 +8,13 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function CommentEditor({
   ...props
 }: Omit<React.ComponentProps<typeof EditorContent>, "editor">) {
@@ -22,13 +29,12 @@ export default function CommentEditor({
     }
   }, [editor]);
 
-  const [state, action, isPending] = React.useActionState(async () => {
+  const [, action, isPending] = React.useActionState(async () => {
     const result: Promise<ActionState> = new Promise((resolve) => {
       setTimeout(resolve, 2000, {
+        ...defaultState,
         ok: true,
         success: "Teste",
-        error: null,
-        data: null,
       });
     });
     const promise = sonnerPromise(result);
@@ -40,8 +46,8 @@ export default function CommentEditor({
       "Salvando...",
     );
 
-    return null;
-  }, null);
+    return defaultState;
+  }, defaultState);
 
   if (!editor) return <p>Loading...</p>;
 

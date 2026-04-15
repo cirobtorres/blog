@@ -109,7 +109,8 @@ public class SecurityConfiguration {
                                 "/auth/password-reset-email-request",
                                 "/auth/password-reset-code",
                                 "/articles/**",
-                                "/media/**"
+                                "/media/**",
+                                "/tags/**"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -127,9 +128,11 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/media/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/media/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/media/**").hasAuthority("AUTHOR")
-                        //.requestMatchers(HttpMethod.POST, "/articles").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.DELETE, "/articles/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.POST, "/tags/**").hasAuthority("AUTHOR")
+                        .requestMatchers(HttpMethod.DELETE, "/tags/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.GET, "/auth/validation", "/auth/me", "/articles/**").permitAll()
                         .requestMatchers("/.well-known/jwks.json").permitAll()
                         .anyRequest().authenticated()

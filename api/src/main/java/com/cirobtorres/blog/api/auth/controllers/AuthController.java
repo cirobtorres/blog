@@ -1,8 +1,9 @@
-package com.cirobtorres.blog.api.auth;
+package com.cirobtorres.blog.api.auth.controllers;
 
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.auditToken.dtos.AuditTokenDTO;
+import com.cirobtorres.blog.api.auth.services.AuthService;
 import com.cirobtorres.blog.api.jwt.dtos.PassResTokenDTO;
 import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
 import com.cirobtorres.blog.api.jwt.services.JwtService;
@@ -71,7 +72,7 @@ public class AuthController {
     ) throws NoSuchAlgorithmException, MessagingException {
         TokensDTO tokens = authService.register(userRegisterDTO);
         jwtService.addTokensToCookies(response, tokens);
-        return ResponseEntity.created(URI.create("/api/users/me")).build();
+        return ResponseEntity.created(URI.create("/api/auth/me")).build();
     }
 
     @GetMapping("me")

@@ -193,7 +193,10 @@ function AlertDialogCancel({
 
 function AlertDialogHeaderCancel() {
   return (
-    <AlertDialogCancel className="absolute top-1/2 -translate-y-1/2 right-3 size-8">
+    <AlertDialogCancel
+      variant="outline"
+      className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -258,7 +261,7 @@ const AlertDialogExitConfirmation = ({
         <p className="text-sm text-neutral-500">{children}</p>
       </div>
       <AlertDialogFooter>
-        <AlertDialogCancel className="w-full max-w-20 h-8">
+        <AlertDialogCancel variant="outline" className="w-full max-w-20 h-8">
           Voltar
         </AlertDialogCancel>
         <Button onClick={onConfirm} className="w-full max-w-20 h-8">

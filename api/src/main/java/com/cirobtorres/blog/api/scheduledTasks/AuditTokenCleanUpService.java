@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.auditToken;
+package com.cirobtorres.blog.api.scheduledTasks;
 
 import com.cirobtorres.blog.api.auditToken.repositories.AuditTokenRepository;
 import org.slf4j.Logger;

@@ -14,6 +14,13 @@ import { fetchFileFromUrl } from "../../../../../utils/media-file-utils";
 import AnimatedIcon from "./AnimatedIcon";
 import Spinner from "../../../../Spinner";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function DialogEmptyContent({
   openStep,
   addFiles,
@@ -23,50 +30,44 @@ export default function DialogEmptyContent({
 }) {
   const [tab, setTab] = React.useState("pc");
   const [url, setUrl] = React.useState("");
-  const [, urlAction, urlIsPending] = React.useActionState(
-    async () => {
-      const success = (serverResponse: ActionState) => {
-        const file = serverResponse.data as File;
-        addFiles([file]);
-        setUrl("");
-        return (
-          <div className="flex flex-col">
-            <p>{serverResponse.success}</p>
-          </div>
-        );
+  const [, urlAction, urlIsPending] = React.useActionState(async () => {
+    const success = (serverResponse: ActionState) => {
+      const file = serverResponse.data as File;
+      addFiles([file]);
+      setUrl("");
+      return (
+        <div className="flex flex-col">
+          <p>{serverResponse.success}</p>
+        </div>
+      );
+    };
+
+    const error = (serverResponse: ActionState) => {
+      return <p>{serverResponse.error}</p>;
+    };
+
+    try {
+      const downloadPromise = fetchFileFromUrl(url);
+
+      const result = sonnerPromise(
+        downloadPromise.then((file: File) => ({
+          ...defaultState,
+          ok: true,
+          success: "URL processada!",
+          data: file,
+        })),
+      );
+
+      sonnerToastPromise(result, success, error, "Buscando imagem...");
+
+      return result;
+    } catch (e) {
+      return {
+        ...defaultState,
+        error: "Não foi possível carregar a imagem",
       };
-
-      const error = (serverResponse: ActionState) => {
-        return <p>{serverResponse.error}</p>;
-      };
-
-      try {
-        const downloadPromise = fetchFileFromUrl(url);
-
-        const result = sonnerPromise(
-          downloadPromise.then((file: File) => ({
-            ok: true,
-            success: "URL processada!",
-            error: null,
-            data: file,
-          })),
-        );
-
-        sonnerToastPromise(result, success, error, "Buscando imagem...");
-
-        return result;
-      } catch (e) {
-        console.error(e);
-        return {
-          ok: false,
-          success: null,
-          error: "Não foi possível carregar a imagem",
-          data: null,
-        };
-      }
-    },
-    { ok: false, success: null, error: null, data: null },
-  );
+    }
+  }, defaultState);
 
   const uploadProps = { tab, url, setUrl };
 

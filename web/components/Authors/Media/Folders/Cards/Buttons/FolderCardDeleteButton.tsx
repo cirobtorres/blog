@@ -18,6 +18,13 @@ import {
 import Spinner from "../../../../../Spinner";
 import deleteFolder from "../../../../../../services/media/deleteFolder";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function FolderCardDeleteButton({ id, path }: Folder) {
   return (
     <AlertDialog>
@@ -33,7 +40,10 @@ export default function FolderCardDeleteButton({ id, path }: Folder) {
             ?
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <FolderCardDeleteAction folderId={id} />
@@ -63,7 +73,7 @@ const FolderCardDeleteAction = ({ folderId }: { folderId: string }) => {
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;
-  }, null);
+  }, defaultState);
   return (
     <Button
       type="submit"

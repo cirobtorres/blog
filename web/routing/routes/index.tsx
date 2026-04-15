@@ -58,6 +58,9 @@ const apiServerUrls = {
     exists: API_SERVER + "/media/folders/exists",
     move: API_SERVER + "/media/folders/move/all",
   },
+  tags: {
+    root: API_SERVER + "/tags",
+  },
 };
 
 const apiClientUrls = {

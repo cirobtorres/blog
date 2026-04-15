@@ -1,4 +1,4 @@
-package com.cirobtorres.blog.api.auth;
+package com.cirobtorres.blog.api.auth.services;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.auditToken.dtos.AuditTokenDTO;

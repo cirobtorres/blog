@@ -51,7 +51,7 @@ export default async function FileCardLinks({
 
   const [mediaPromise, count] = await Promise.all([
     serverFetch(getUrl, options).then(
-      (res) => res.json() as Promise<MediaResponsePageable>,
+      (res) => res.json() as Promise<PageableMedia>,
     ),
     serverFetch(countUrl, options).then((res) => res.json() as Promise<number>),
   ]);

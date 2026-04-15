@@ -18,6 +18,13 @@ import { Button } from "../../../../../Button";
 import moveFiles from "../../../../../../services/media/moveFiles";
 import FolderPopover from "../../../FolderPopover";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function MoveButton({
   files,
   disabled,
@@ -65,7 +72,10 @@ export default function MoveButton({
             </div>
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <MoveFilesAction files={files} onSuccess={() => setIsOpen(false)} />
@@ -106,12 +116,7 @@ const MoveFilesAction = ({
 
       return result;
     },
-    {
-      ok: false,
-      success: null,
-      error: null,
-      data: null,
-    },
+    defaultState,
   );
   return (
     <Button

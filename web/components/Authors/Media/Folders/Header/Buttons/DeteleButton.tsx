@@ -17,6 +17,13 @@ import {
 } from "../../../../../../utils/sonner";
 import { Button } from "../../../../../Button";
 
+const defaultState: ActionState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
+
 export default function DeleteButton({
   folders,
   disabled,
@@ -52,7 +59,10 @@ export default function DeleteButton({
             </div>
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel className="w-full max-w-30 h-8">
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
               Cancelar
             </AlertDialogCancel>
             <DeleteFoldersAction folders={folders} />
@@ -84,7 +94,7 @@ const DeleteFoldersAction = ({ folders }: { folders: Folder[] }) => {
     sonnerToastPromise(promise, success, error, "Excluindo arquivo...");
 
     return result;
-  }, null);
+  }, defaultState);
   return (
     <Button
       type="submit"

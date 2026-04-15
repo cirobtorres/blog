@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Combobox,
   ComboboxChip,
@@ -13,34 +12,11 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "../../Combobox";
+import { useTags } from "../../../services/hooks/tags/hook-tags";
 
-const queriedTags = [
-  "Next.js",
-  "Java",
-  "Java Spring Boot",
-  "Javascript",
-  "Python",
-  "Django",
-  "NestJS",
-  "Node.js",
-  "Blender",
-  "Renders",
-  "Renderização",
-  "Modelagem 3D",
-  "Shading",
-  "Animação",
-  "Topologia",
-  "Material",
-  "Textura",
-  "Ciência da Computação",
-  "Programação",
-  "Database",
-  "Banco de Dados",
-  "Diagramas Entidade Relacionamentos",
-] as const;
-
-export default function ArticleEditorCategory() {
-  const [tags] = React.useState(queriedTags.toSorted());
+export default function ArticleEditorTag() {
+  const { data } = useTags();
+  const { content: tags, page } = data ? data : { content: [] };
 
   return (
     <div className="flex flex-col">
@@ -55,13 +31,7 @@ export default function ArticleEditorCategory() {
   );
 }
 
-const ComboboxMultiple = ({
-  id,
-  tags,
-}: {
-  id?: string;
-  tags: readonly string[];
-}) => {
+const ComboboxMultiple = ({ id, tags }: { id?: string; tags: Tag[] }) => {
   const anchor = useComboboxAnchor();
 
   return (
@@ -70,9 +40,9 @@ const ComboboxMultiple = ({
         <ComboboxValue>
           {(values) => (
             <>
-              {values.map((value: string) => (
-                <ComboboxChip key={value}>{value}</ComboboxChip>
-              ))}
+              {values.map((value: string) => {
+                return <ComboboxChip key={value}>{value}</ComboboxChip>;
+              })}
               <ComboboxChipsInput />
             </>
           )}
@@ -81,11 +51,13 @@ const ComboboxMultiple = ({
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>Nada encontrado.</ComboboxEmpty>
         <ComboboxList>
-          {(item) => (
-            <ComboboxItem key={item} value={item}>
-              {item}
-            </ComboboxItem>
-          )}
+          {(item: Tag) => {
+            return (
+              <ComboboxItem key={item.id} value={item.name}>
+                {item.name}
+              </ComboboxItem>
+            );
+          }}
         </ComboboxList>
       </ComboboxContent>
     </Combobox>
