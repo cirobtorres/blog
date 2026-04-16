@@ -191,10 +191,14 @@ const Dialog = ({
         <Terms />
       </div>
       <AlertDialogFooter>
-        <AlertDialogCancel className="w-full max-w-30 h-8">
+        <AlertDialogCancel variant="outline" className="w-full max-w-30 h-8">
           Voltar
         </AlertDialogCancel>
-        <AlertDialogAction onClick={action} className="w-full max-w-30 h-8">
+        <AlertDialogAction
+          variant="outline"
+          onClick={action}
+          className="w-full max-w-30 h-8"
+        >
           Confirmar
         </AlertDialogAction>
       </AlertDialogFooter>

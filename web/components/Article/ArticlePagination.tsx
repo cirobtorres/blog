@@ -65,7 +65,7 @@ export default function ArticlePagination({ number, totalPages }: Pagination) {
               tabIndex={isFirst ? -1 : 0}
               disabled={isFirst}
               aria-disabled={isFirst}
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
                 if (isFirst) {
                   e.preventDefault();
                 }
@@ -102,7 +102,7 @@ export default function ArticlePagination({ number, totalPages }: Pagination) {
               tabIndex={isLast ? -1 : 0}
               disabled={isLast}
               aria-disabled={isLast}
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
                 if (isLast) {
                   e.preventDefault();
                 }

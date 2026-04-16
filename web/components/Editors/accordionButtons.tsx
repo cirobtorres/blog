@@ -156,6 +156,7 @@ const Delete = ({
           <AlertDialogTitle>
             Excluir
             <AlertDialogCancel
+              variant="outline"
               onClick={handleCloseDialog}
               className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
             >
@@ -186,6 +187,7 @@ const Delete = ({
         </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel
+            variant="outline"
             onClick={handleCloseDialog}
             className=" w-full max-w-22 h-8! bg-stone-800"
           >
@@ -259,7 +261,7 @@ const Drag = ({ locked }: { locked: boolean }) => {
           ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:hover:border-stone-500 dark:active:bg-stone-600 dark:active:border-stone-400 pointer-events-auto disabled:pointer-events-auto dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100"
           : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100",
       )}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         console.log("Move");
       }}

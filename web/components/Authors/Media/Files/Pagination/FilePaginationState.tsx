@@ -50,7 +50,7 @@ export default function FilePaginationState({
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
               e.preventDefault();
               if (!isFirst) setModalPage(currentPage - 1);
             }}
@@ -74,7 +74,9 @@ export default function FilePaginationState({
               <PaginationLink
                 href="#"
                 isActive={displayPage === item}
-                onClick={(e) => {
+                onClick={(
+                  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+                ) => {
                   e.preventDefault();
                   setModalPage(item - 1);
                 }}
@@ -89,7 +91,7 @@ export default function FilePaginationState({
         <PaginationItem>
           <PaginationNext
             href="#"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
               e.preventDefault();
               if (!isLast) setModalPage(currentPage + 1);
             }}

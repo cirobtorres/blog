@@ -493,6 +493,7 @@ export function HtmlEditor({
                 <AlertDialogTitle>
                   Hyperlink
                   <AlertDialogCancel
+                    variant="outline"
                     onClick={() => {
                       setIsDialogOpen(false);
                       editor.chain().focus();
@@ -550,6 +551,7 @@ export function HtmlEditor({
               <AlertDialogFooter className="p-2">
                 <div className="flex-1">
                   <AlertDialogCancel
+                    variant="outline"
                     onClick={() => {
                       setIsDialogOpen(false);
                       editor.chain().focus().unsetLink().run();
@@ -561,6 +563,7 @@ export function HtmlEditor({
                 </div>
                 <div className="flex gap-1">
                   <AlertDialogCancel
+                    variant="outline"
                     onClick={() => {
                       setIsDialogOpen(false);
                     }}
@@ -569,6 +572,7 @@ export function HtmlEditor({
                     Cancelar
                   </AlertDialogCancel>
                   <AlertDialogAction
+                    variant="outline"
                     onClick={() => {
                       setIsDialogOpen(false);
                       if (editor?.isActive("link")) {

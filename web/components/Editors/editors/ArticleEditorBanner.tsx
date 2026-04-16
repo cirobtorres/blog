@@ -83,7 +83,7 @@ export default function ArticleEditorBanner({
           </div>
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel className="w-full max-w-30 h-8">
+          <AlertDialogCancel variant="outline" className="w-full max-w-30 h-8">
             Cancelar
           </AlertDialogCancel>
         </AlertDialogFooter>
