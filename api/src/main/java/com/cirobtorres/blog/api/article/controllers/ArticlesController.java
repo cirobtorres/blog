@@ -25,14 +25,6 @@ public class ArticlesController {
         this.articlesService = articlesService;
     }
 
-    @PostMapping
-    public ResponseEntity<ArticleCreateDTO> createArticle(
-            @RequestBody CreateArticlesDTO createArticleDTO
-    ) {
-        ArticleCreateDTO article = articlesService.createArticle(createArticleDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(article);
-    }
-
     @GetMapping("/{year}/{month}/{day}/{slug}")
     public ResponseEntity<ArticleDTO> getArticlePage(
             @PathVariable int year,
@@ -44,12 +36,12 @@ public class ArticlesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ArticlesDTO>> listAllByQueryParams(
+    public ResponseEntity<Page<ArticlesDTO>> getAllByQueryParams(
             @RequestParam(name = "q", required = false) String query,
             @RequestParam Map<String, String> allParams,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(articlesService.listPublishedPaged(query, allParams, pageable));
+        return ResponseEntity.ok(articlesService.getAllByQueryParams(query, allParams, pageable));
     }
 
     @GetMapping("slug")
@@ -65,5 +57,13 @@ public class ArticlesController {
         System.out.println("slug=" + slug.slug());
         ArticleDTO article = articlesService.findBySlug(slug);
         return ResponseEntity.ok(article);
+    }
+
+    @PostMapping
+    public ResponseEntity<ArticleCreateDTO> createArticle(
+            @RequestBody CreateArticlesDTO createArticleDTO
+    ) {
+        ArticleCreateDTO article = articlesService.createArticle(createArticleDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(article);
     }
 }

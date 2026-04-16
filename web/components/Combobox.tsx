@@ -194,16 +194,21 @@ function ComboboxSeparator({
 
 function ComboboxChips({
   className,
+  error,
   ...props
 }: React.ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> &
   ComboboxPrimitive.Chips.Props & {
     className?: string;
+    error?: boolean;
   }) {
   return (
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
       className={cn(
-        "w-full flex min-h-9.5 flex-wrap items-center gap-1 rounded border bg-stone-200 dark:bg-stone-900 bg-clip-padding p-1 px-2 has-data-[slot=combobox-chip]:px-1 text-sm transition-shadow duration-300 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary",
+        "w-full flex min-h-9.5 flex-wrap items-center gap-1 rounded border bg-clip-padding p-1 px-2 has-data-[slot=combobox-chip]:px-1 text-sm transition-shadow duration-300 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950",
+        error
+          ? "border-destructive/50 bg-destructive/5 has-focus-visible:border-destructive dark:has-focus-visible:border-destructive"
+          : "has-focus-visible:border-primary dark:has-focus-visible:border-primary bg-stone-200 dark:bg-stone-900",
         className,
       )}
       {...props}

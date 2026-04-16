@@ -1,6 +1,5 @@
 package com.cirobtorres.blog.api.tag.entities;
 
-
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -33,7 +32,8 @@ public class Tag {
 
     // DEFAULT CONSTRUCTOR----------------------------------------------------------------------------------------
     @Deprecated
-    public Tag() {}
+    public Tag() {
+    }
 
     // BUILDER----------------------------------------------------------------------------------------------------
     private Tag(Builder builder) {
@@ -41,7 +41,9 @@ public class Tag {
         this.slug = builder.slug;
     }
 
-    public static Builder builder() { return new Builder(); }
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static class Builder {
         private String name;

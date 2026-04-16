@@ -3,7 +3,7 @@
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { slugify } from "../utils/strings-transforms";
-import { convertToLargeDate } from "../utils/date";
+import { convertToLargeDate, mountURL } from "../utils/date";
 import { serverFetch } from "../services/auth-fetch-actions";
 import { apiServerUrls } from "../routing/routes";
 import ArticlePagination from "../components/Article/ArticlePagination";
@@ -18,16 +18,6 @@ import {
 } from "../components/Article/ArticleCards";
 import Link from "next/link";
 import Image from "next/image";
-
-const mountURL = ({ createdAt, title }: Article) => {
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const slug = slugify(title);
-
-  return `/articles/${year}/${month}/${day}/${slug}`;
-};
 
 export default async function HomePage({
   searchParams,

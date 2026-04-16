@@ -4,6 +4,7 @@ import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.author.entities.Author;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.enums.MediaType;
+import com.cirobtorres.blog.api.tag.entities.Tag;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,6 +13,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +43,14 @@ public class Articles {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     private Media media;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "article_tags",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "article_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -75,6 +87,7 @@ public class Articles {
         this.subtitle = builder.subtitle;
         this.body = builder.body;
         this.media = builder.media;
+        this.tags = builder.tags;
         this.slug = builder.slug;
         this.status = builder.status;
         this.publishedAt = builder.publishedAt;
@@ -86,6 +99,7 @@ public class Articles {
         private String subtitle;
         private String body;
         private Media media;
+        private Set<Tag> tags = new HashSet<>();
         private String slug;
         private ArticlesStatus status;
         private LocalDateTime publishedAt;
@@ -112,6 +126,11 @@ public class Articles {
 
         public Builder media(Media media) {
             this.media = media;
+            return this;
+        }
+
+        public Builder tags(Set<Tag> tags) {
+            this.tags = tags;
             return this;
         }
 
@@ -178,6 +197,9 @@ public class Articles {
         }
         this.media = media;
     }
+
+    public Set<Tag> getTags() { return tags; }
+    public void setTags(Set<Tag> tags) { this.tags = tags; }
 
     public String getSlug() {
         return slug;

@@ -92,7 +92,7 @@ export default function ArticleEditorSlug({
             isSlugValid
               ? "border-emerald-500 dark:border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/10 focus-visible:border-emerald-500 dark:focus-visible:border-emerald-500"
               : !!(isSlugTaken === "invalid") || error
-                ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
+                ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
                 : "bg-stone-200 dark:bg-stone-900",
           )}
           {...props}

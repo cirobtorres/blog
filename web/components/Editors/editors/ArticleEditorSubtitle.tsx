@@ -7,7 +7,7 @@ export function ArticleEditorSubtitle({
   error,
   ...props
 }: FieldsetTextareaProps & {
-  error?: string[] | undefined;
+  error?: boolean;
 }) {
   const { subtitle, setSubtitle } = useArticleStore();
 
@@ -33,7 +33,7 @@ export function ArticleEditorSubtitle({
           "resize-none p-2 text-sm outline-none border not-dark:shadow placeholder:text-neutral-700 dark:placeholder:text-neutral-600 bg-stone-200 dark:bg-stone-900 rounded-sm transition-shadow duration-300 peer scrollbar",
           focusWithinRing,
           error
-            ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
+            ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
             : "bg-stone-200 dark:bg-stone-900",
         )}
         {...props}

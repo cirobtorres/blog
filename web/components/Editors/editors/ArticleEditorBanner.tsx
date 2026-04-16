@@ -45,7 +45,7 @@ export default function ArticleEditorBanner({
             "cursor-pointer relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
             focusRing,
             error
-              ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5"
+              ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
               : "bg-stone-200 dark:bg-stone-900",
           )}
         >

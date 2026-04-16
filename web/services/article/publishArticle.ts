@@ -1,39 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "../../routing/routes";
-import * as z from "zod";
-import { publishArticleSchema } from "./zod-validations";
 import { serverFetch } from "../auth-fetch-actions";
-
-const publishArticleValidation = async (
-  prevState: ActionState,
-  formData: FormData,
-): Promise<ActionState> => {
-  const rawData = Object.fromEntries(formData.entries());
-
-  const result = publishArticleSchema.safeParse({
-    ...rawData,
-  });
-
-  if (!result.success) {
-    const error = z.treeifyError(result.error).properties;
-    return {
-      ok: false,
-      success: null,
-      error,
-      data: null,
-    };
-  }
-
-  // const { title, subtitle, slug, banner } = result.data;
-
-  return {
-    ok: true,
-    success: null,
-    error: null,
-    data: null,
-  };
-};
 
 const publishArticle = async (
   prevState: ActionState,
@@ -41,6 +9,7 @@ const publishArticle = async (
 ): Promise<ActionState> => {
   // FETCH
   const validatedData = Object.fromEntries(formData.entries());
+  const { tags } = validatedData;
 
   try {
     const response = await serverFetch(apiServerUrls.article.root, {
@@ -48,7 +17,10 @@ const publishArticle = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...validatedData }),
+      body: JSON.stringify({
+        ...validatedData,
+        tags: JSON.parse(tags as string),
+      }),
       cache: "no-store",
     });
 
@@ -81,4 +53,4 @@ const publishArticle = async (
   }
 };
 
-export { publishArticleValidation, publishArticle };
+export { publishArticle };

@@ -6,6 +6,8 @@ import com.cirobtorres.blog.api.tag.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +39,11 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<Page<TagDTO>> getAllTags(
-            Pageable pageable
+            @PageableDefault(
+                    sort = "name",
+                    direction = Sort.Direction.ASC,
+                    size = 100
+            ) Pageable pageable
     ) {
         Page<TagDTO> tagDTOs = tagService.getAllTags(pageable);
         return ResponseEntity.ok(tagDTOs);

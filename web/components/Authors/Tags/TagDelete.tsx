@@ -5,6 +5,15 @@ import { Button } from "../../Button";
 import { sonnerPromise, sonnerToastPromise } from "../../../utils/sonner";
 import Spinner from "../../Spinner";
 import { useDeleteTag } from "../../../services/hooks/tags/hook-tags";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+} from "../../AlertDialog";
 
 const defaultState: ActionState = {
   ok: false,
@@ -13,7 +22,7 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export default function TagDelete({ tagId }: { tagId: string }) {
+export default function TagDelete({ tag }: { tag: Tag }) {
   const { mutateAsync } = useDeleteTag();
   const [, action, isPending] = React.useActionState(async () => {
     const success = (responseStatus: ActionState) => (
@@ -23,7 +32,7 @@ export default function TagDelete({ tagId }: { tagId: string }) {
       <p>{responseStatus?.error ?? "Ocorreu algum erro"}</p>
     );
 
-    const promise = mutateAsync({ tagId });
+    const promise = mutateAsync({ tagId: tag.id });
     const result = sonnerPromise(promise);
     sonnerToastPromise(result, success, error, "Excluindo tag...");
 
@@ -31,15 +40,33 @@ export default function TagDelete({ tagId }: { tagId: string }) {
   }, defaultState);
 
   return (
-    <form action={action}>
-      <Button
-        disabled={isPending}
-        variant="destructive"
-        className="size-fit p-1"
-      >
-        {isPending ? <Spinner /> : <CloseIcon />}
-      </Button>
-    </form>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" className="size-fit p-1">
+          <CloseIcon />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="max-w-xs">
+        <AlertDialogHeader>Excluir Tag?</AlertDialogHeader>
+        <AlertDialogDescription className="p-4">
+          <strong className="text-destructive">Excluir</strong> {tag.name}?
+        </AlertDialogDescription>
+        <AlertDialogFooter className="w-full">
+          <AlertDialogCancel variant="outline" className="w-full max-w-30 h-8">
+            Cancelar
+          </AlertDialogCancel>
+          <form action={action} className="w-full max-w-30 ml-auto mr-0">
+            <Button
+              disabled={isPending}
+              variant="destructive"
+              className="w-full max-w-30 h-8"
+            >
+              {isPending && <Spinner className="p-1" />} Confirmar
+            </Button>
+          </form>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

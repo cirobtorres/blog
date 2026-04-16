@@ -1,5 +1,42 @@
 import * as z from "zod";
 
+const publishArticleSchema = z.object({
+  title: z
+    .string()
+    .min(5, "O título deve ter pelo menos 5 caracteres")
+    .max(128, "Título muito longo"),
+  subtitle: z.string().min(1, "O subtítulo é obrigatório"),
+  slug: z
+    .string()
+    .min(5, "A slug deve ter pelo menos 5 caracteres")
+    .max(128, "Slug muito longa"),
+  tags: z
+    .string()
+    .transform((str, ctx) => {
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        ctx.addIssue({ code: "custom", message: "Invalid JSON" });
+        return z.NEVER;
+      }
+    })
+    .pipe(z.array(z.string()).min(1, "Adicione ao menos uma tag")),
+  banner: z.uuid("Você precisa selecionar uma imagem"),
+  // body: z.preprocess(
+  //   (val) => {
+  //     try {
+  //       return typeof val === "string" ? JSON.parse(val) : val;
+  //     } catch {
+  //       return [];
+  //     }
+  //   },
+  //   z
+  //     .array(BlockSchema)
+  //     .min(1, "Adicione pelo menos um bloco ao artigo")
+  //     .transform((blocks) => blocks.filter((block) => !block.locked)),
+  // ),
+});
+
 const HtmlBlockSchema = z
   .object({
     type: z.literal("html"),
@@ -74,31 +111,5 @@ const BlockSchema = z.discriminatedUnion("type", [
   ImageBlockSchema,
   // More schemas here...
 ]);
-
-const publishArticleSchema = z.object({
-  title: z
-    .string()
-    .min(5, "O título deve ter pelo menos 5 caracteres")
-    .max(128, "Título muito longo"),
-  subtitle: z.string().min(1, "O subtítulo é obrigatório"),
-  slug: z
-    .string()
-    .min(5, "A slug deve ter pelo menos 5 caracteres")
-    .max(128, "Slug muito longa"),
-  banner: z.uuid("Você precisa selecionar uma imagem"),
-  // body: z.preprocess(
-  //   (val) => {
-  //     try {
-  //       return typeof val === "string" ? JSON.parse(val) : val;
-  //     } catch {
-  //       return [];
-  //     }
-  //   },
-  //   z
-  //     .array(BlockSchema)
-  //     .min(1, "Adicione pelo menos um bloco ao artigo")
-  //     .transform((blocks) => blocks.filter((block) => !block.locked)),
-  // ),
-});
 
 export { publishArticleSchema };

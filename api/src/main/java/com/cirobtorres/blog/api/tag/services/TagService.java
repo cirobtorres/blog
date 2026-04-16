@@ -64,10 +64,12 @@ public class TagService {
         return new TagDTO(tag);
     }
 
+    @Transactional
     public Page<TagDTO> getAllTags(Pageable pageable) {
         return tagRepository.findAll(pageable).map(TagDTO::new);
     }
 
+    @Transactional
     public void deleteTagById(String id) {
         UUID uuid = UUID.fromString(id);
 
@@ -76,7 +78,6 @@ public class TagService {
                                 "Tag of uuid=" + uuid + " not found"
                         )
                 );
-
 
         tagRepository.delete(tag);
     }

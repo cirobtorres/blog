@@ -1,34 +1,41 @@
 "use client";
 
 import React from "react";
+import * as z from "zod";
 import { ArticleEditorTitle } from "../../../Editors/editors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../../../Editors/editors/ArticleEditorSubtitle";
 import { AddBlockButton, BlockList } from "../../../Editors/blocks";
-import { convertToLargeDate } from "../../../../utils/date";
+import { convertToLargeDate, mountURL } from "../../../../utils/date";
 import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../../../utils/variants";
-import {
-  publishArticle,
-  publishArticleValidation,
-} from "../../../../services/article/publishArticle";
+import { publishArticle } from "../../../../services/article/publishArticle";
 import { sonnerToastPromise, sonnerPromise } from "../../../../utils/sonner";
 import { Button } from "../../../Button";
-import ArticleEditorSlug from "../../../Editors/editors/ArticleEditorSlug";
-import ArticleEditorTag from "../../../Editors/editors/ArticleEditorTag";
-import ArticleEditorBanner from "../../../Editors/editors/ArticleEditorBanner";
-import FolderBreadcrumbState from "../../Media/FolderBreadcrumbState";
-import FolderCardButtons from "../../Media/Folders/Cards/FolderCardButtons";
 import { Hr } from "../../../utils";
-import FileCardButtons from "../../Media/Files/Cards/FileCardButtons";
 import { useArticleStore } from "../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../Fieldset";
 import { useAuth } from "../../../../providers/AuthProvider";
 import { slugify } from "../../../../utils/strings-transforms";
 import { toast } from "sonner";
+import { publishArticleSchema } from "../../../../services/article/zod-validations";
+import ArticleEditorSlug from "../../../Editors/editors/ArticleEditorSlug";
+import ArticleEditorTag from "../../../Editors/editors/ArticleEditorTag";
+import ArticleEditorBanner from "../../../Editors/editors/ArticleEditorBanner";
+import FolderBreadcrumbState from "../../Media/FolderBreadcrumbState";
+import FolderCardButtons from "../../Media/Folders/Cards/FolderCardButtons";
+import FileCardButtons from "../../Media/Files/Cards/FileCardButtons";
 import ArticleEditorsWrapper from "./ArticleEditorWrapper";
 import AlertErrorList from "./AlertErrorList";
 import ArticlePopoverButton from "./ArticlePopoverButton";
 import ArticleButton from "./ArticleButton";
+
+interface ArticleErrors {
+  title?: { errors?: string[] };
+  subtitle?: { errors?: string[] };
+  slug?: { errors?: string[] };
+  banner?: { errors?: string[] };
+  tags?: { errors?: string[] };
+}
 
 const defaultState: ActionState = {
   ok: false,
@@ -40,6 +47,9 @@ const defaultState: ActionState = {
 export function ArticleCreate() {
   const { user } = useAuth();
   const { blocks } = useArticleStore();
+  const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
+    null,
+  );
   const [, setIsOpenState] = React.useState(false);
   const router = useRouter();
 
@@ -47,12 +57,6 @@ export function ArticleCreate() {
     async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
-        const date = new Date(serverResponse.data.createdAt);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDay();
-        const slug = slugify(serverResponse.data.title);
-        const articleLink = `/articles/${year}/${month}/${day}/${slug}`;
         return (
           <>
             <div className="flex flex-col">
@@ -63,7 +67,7 @@ export function ArticleCreate() {
               type="button"
               onClick={() => {
                 toast.dismiss();
-                router.push(articleLink);
+                router.push(mountURL(serverResponse.data));
               }}
               variant="default"
               className={cn("h-6 text-xs", focusRing)}
@@ -79,9 +83,6 @@ export function ArticleCreate() {
         return <p>{serverResponse.error ?? "Artigo não publicado"}</p>;
       };
 
-      const validation = await publishArticleValidation(prevState, formData);
-      if (!validation.ok) return validation;
-
       formData.set("body", JSON.stringify(blocks));
       formData.set("userId", user?.data?.id ?? "anonymous");
 
@@ -94,31 +95,37 @@ export function ArticleCreate() {
     defaultState,
   );
 
-  const count = React.useRef(0);
+  const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.currentTarget);
+    const rawData = Object.fromEntries(formData.entries());
 
-  React.useEffect(() => {
-    count.current++;
-    console.log("ArticleCreate count=", count.current);
-  });
+    const result = publishArticleSchema.safeParse({
+      ...rawData,
+    });
+
+    if (!result.success) {
+      const error = z.treeifyError(result.error).properties;
+      setErrors(error);
+      event.preventDefault(); // Interrupct Action
+      return;
+    }
+
+    setErrors(null);
+  };
 
   return (
-    <ArticleEditorsWrapper>
+    <ArticleEditorsWrapper action={action} onSubmit={onSubmit}>
       <div className="flex justify-between items-center my-6">
         <h1 className="w-full text-3xl font-extrabold">Escrever novo artigo</h1>
         <div className="w-full flex justify-end items-center gap-2">
           <ArticleButton
             variant="link"
-            formAction={action}
             disabled={isPending}
             className="w-full max-w-30 h-8"
           >
             Salvar
           </ArticleButton>
-          <ArticleButton
-            formAction={action}
-            disabled={isPending}
-            className="w-full max-w-30 h-8"
-          >
+          <ArticleButton disabled={isPending} className="w-full max-w-30 h-8">
             Publicar
           </ArticleButton>
           <ArticlePopoverButton />
@@ -128,33 +135,34 @@ export function ArticleCreate() {
       <div className="w-full flex flex-col gap-2">
         <div className="w-full flex gap-2">
           <div className="w-full">
-            <ArticleEditorTitle error={state?.error?.title} />
-            <FieldsetError error={state.error?.title?.errors} />
+            <ArticleEditorTitle error={!!errors?.title?.errors} />
+            <FieldsetError error={errors?.title?.errors} />
           </div>
           <div className="w-full">
-            <ArticleEditorSubtitle error={state?.error?.subtitle} />
-            <FieldsetError error={state.error?.subtitle?.errors} />
+            <ArticleEditorSubtitle error={!!errors?.subtitle?.errors} />
+            <FieldsetError error={errors?.subtitle?.errors} />
           </div>
         </div>
         <div className="w-full flex gap-2">
           <div className="w-full">
-            <ArticleEditorTag />
+            <ArticleEditorTag error={!!errors?.tags?.errors} />
+            <FieldsetError error={errors?.tags?.errors} />
           </div>
           <div className="w-full">
-            <ArticleEditorSlug error={state?.error?.slug} />
-            <FieldsetError error={state.error?.slug?.errors} />
+            <ArticleEditorSlug error={!!errors?.slug?.errors} />
+            <FieldsetError error={errors?.slug?.errors} />
           </div>
         </div>
-        <ArticleEditorBanner error={state?.error?.banner}>
+        <ArticleEditorBanner error={!!errors?.banner?.errors}>
           <FolderBreadcrumbState />
           <FolderCardButtons />
           <Hr className="my-6" />
           <FileCardButtons />
         </ArticleEditorBanner>
-        <FieldsetError error={state.error?.banner?.errors} />
+        <FieldsetError error={errors?.banner?.errors} />
       </div>
       <div className="mt-2">
-        <BlockList blocksErrors={state.error?.body?.items} />
+        <BlockList />
       </div>
       <div className="mt-2">
         <AddBlockButton />

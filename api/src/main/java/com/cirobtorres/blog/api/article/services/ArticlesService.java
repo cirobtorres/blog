@@ -9,6 +9,8 @@ import com.cirobtorres.blog.api.author.repositories.AuthorRepository;
 import com.cirobtorres.blog.api.exceptions.ResourceNotFoundException;
 import com.cirobtorres.blog.api.media.entities.Media;
 import com.cirobtorres.blog.api.media.repositories.MediaRepository;
+import com.cirobtorres.blog.api.tag.entities.Tag;
+import com.cirobtorres.blog.api.tag.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.jspecify.annotations.NonNull;
@@ -18,23 +20,26 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticlesService {
     private final ArticlesRepository articlesRepository;
     private final AuthorRepository authorRepository;
     private final MediaRepository mediaRepository;
+    private final TagRepository tagsRepository;
 
     public ArticlesService(
             ArticlesRepository articlesRepository,
             AuthorRepository authorRepository,
-            MediaRepository mediaRepository
+            MediaRepository mediaRepository,
+            TagRepository tagsRepository
     ) {
         this.articlesRepository = articlesRepository;
         this.authorRepository = authorRepository;
         this.mediaRepository = mediaRepository;
+        this.tagsRepository = tagsRepository;
     }
 
     @Transactional
@@ -54,11 +59,20 @@ public class ArticlesService {
 
     @Transactional
     public ArticleCreateDTO createArticle(@NonNull CreateArticlesDTO dto) {
+        System.out.println("----------dto.tags()=" + dto.tags());
         Author author = authorRepository
                 .findByUserId(dto.userId())
                 .orElseThrow(
                         () -> new EntityNotFoundException(
                                 "Author not found for user_id=" + dto.userId()
+                        )
+                );
+
+        Set<Tag> tags = tagsRepository
+                .findAllByIdIn(dto.tags())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "tags: " + dto.tags() + " not found"
                         )
                 );
 
@@ -73,8 +87,9 @@ public class ArticlesService {
         Articles article = new Articles.Builder()
                 .author(author)
                 .title(dto.title())
-                .slug(dto.slug())
                 .subtitle(dto.subtitle())
+                .tags(tags)
+                .slug(dto.slug())
                 .media(bannerMedia)
                 .body(dto.body())
                 .status(ArticlesStatus.PUBLISHED)
@@ -115,7 +130,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public Page<ArticlesDTO> listPublishedPaged(String q, Map<String, String> allParams, Pageable pageable) {
+    public Page<ArticlesDTO> getAllByQueryParams(String q, Map<String, String> allParams, Pageable pageable) {
         Specification<Articles> spec =
                 (root, query, cb) ->
                         cb.equal(root.get("status"), ArticlesStatus.PUBLISHED);

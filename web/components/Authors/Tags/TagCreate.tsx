@@ -52,15 +52,12 @@ export default function TagCreate() {
     defaultState,
   );
 
-  const beforeSubmitValidation = (
-    event: React.SubmitEvent<HTMLFormElement>,
-  ) => {
+  const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
     const formDataName = formData.get("name")?.toString() ?? "";
     const formDataSlug = formData.get("slug")?.toString() ?? "";
     const errors: TagErrors = {};
 
-    // VALIDATIONS
     if (formDataName.length < MIN_LENGTH) {
       (errors["name"] ??= []).push("Tag muito pequena");
     }
@@ -93,7 +90,7 @@ export default function TagCreate() {
   return (
     <form
       action={action}
-      onSubmit={beforeSubmitValidation}
+      onSubmit={onSubmit} // VALIDATIONS
       className="w-full max-w-md p-4 rounded border bg-stone-850"
     >
       <div className="flex items-center gap-2">
