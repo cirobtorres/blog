@@ -27,8 +27,7 @@ interface TagErrors {
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 65;
 
-export default function TagCreate() {
-  const { data } = useTags();
+export default function TagCreate({ tags }: { tags: Tag[] }) {
   const { mutateAsync } = useCreateTag();
   const [name, setName] = React.useState("");
   const [slug, setSlug] = React.useState("");
@@ -66,7 +65,7 @@ export default function TagCreate() {
       (errors["name"] ??= []).push("Tag grande demais");
     }
 
-    if (data?.content.filter((tag) => tag.slug === formDataSlug)?.[0]) {
+    if (tags.filter((tag) => tag.slug === formDataSlug)?.[0]) {
       (errors["name"] ??= []).push("Tag já existe");
     }
 

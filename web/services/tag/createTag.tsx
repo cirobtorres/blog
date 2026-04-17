@@ -40,6 +40,7 @@ export default async function createTag(
 
     return { ...defaultState, ok: true, success: "Tag salva!", data: tag };
   } catch (e) {
+    console.error("createTag error:", e);
     return { ...defaultState, error: "Erro inesperado" };
   }
 }

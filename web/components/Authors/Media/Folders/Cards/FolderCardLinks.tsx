@@ -12,11 +12,11 @@ import {
   FolderCardTitle,
 } from "./FolderCardsUtils";
 
+const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
 export default async function FolderCardLinks({
-  accessToken,
   currentPath,
 }: {
-  accessToken?: string;
   currentPath?: string[];
 }) {
   const decodedPath = currentPath
@@ -34,12 +34,12 @@ export default async function FolderCardLinks({
   const getUrl = `${apiServerUrls.mediaFolders.root}?${query.toString()}`;
   const countUrl = `${apiServerUrls.mediaFolders.count}?${query.toString()}`;
 
-  const options = {
+  const options: RequestInit = {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    next: { tags: ["folders"] },
+    next: { tags: ["folders"], revalidate: TAG_REVALIDATE_TIME },
+    cache: "force-cache",
   };
 
   const [folders, count] = await Promise.all([

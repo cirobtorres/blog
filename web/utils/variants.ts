@@ -30,13 +30,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "text-neutral-100 bg-primary/65 border-primary hover:not-disabled:bg-primary/80 disabled:opacity-50",
+          "text-neutral-100 bg-primary/65 border-primary hover:bg-primary/80 disabled:opacity-50",
         outline:
           "text-neutral-500 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900 hover:text-neutral-900 hover:bg-stone-300 dark:hover:bg-stone-800 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600 focus-visible:text-neutral-900 focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100 focus-visible:border-primary dark:focus-visible:border-primary disabled:opacity-50",
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-300 dark:hover:bg-stone-800 focus-visible:opacity-100 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100 focus-visible:border-primary dark:focus-visible:border-primary focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800",
         destructive:
-          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 hover:not-disabled:border-destructive/75 dark:hover:not-disabled:border-destructive/75 hover:not-disabled:bg-destructive/30 dark:hover:not-disabled:bg-destructive/30 focus-visible:border-destructive dark:focus-visible:border-destructive disabled:opacity-50",
+          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 hover:border-destructive/75 dark:hover:border-destructive/75 hover:bg-destructive/30 dark:hover:bg-destructive/30 focus-visible:border-destructive dark:focus-visible:border-destructive disabled:opacity-50",
         link: "text-primary bg-stone-200 dark:bg-stone-925 disabled:opacity-50",
       },
     },

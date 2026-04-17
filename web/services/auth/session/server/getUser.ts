@@ -5,6 +5,8 @@ import { apiServerUrls } from "../../../../routing/routes";
 import { cache } from "react";
 import { serverFetch } from "../../../auth-fetch-actions";
 
+const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
 const getUser = cache(async (): Promise<SessionUser> => {
   const cookieStore = await cookies();
   const headerList = await headers();
@@ -22,7 +24,11 @@ const getUser = cache(async (): Promise<SessionUser> => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      cache: "no-store",
+      next: {
+        tags: ["user"],
+        revalidate: TAG_REVALIDATE_TIME,
+      },
+      cache: "force-cache",
     });
 
     if (response.status === 204 || response.status === 401) {

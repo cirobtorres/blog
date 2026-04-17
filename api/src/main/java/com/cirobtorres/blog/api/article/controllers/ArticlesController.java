@@ -25,6 +25,7 @@ public class ArticlesController {
         this.articlesService = articlesService;
     }
 
+    // GET----------------------------------------------------------------------------------------------------
     @GetMapping("/{year}/{month}/{day}/{slug}")
     public ResponseEntity<ArticleDTO> getArticlePage(
             @PathVariable int year,
@@ -36,7 +37,7 @@ public class ArticlesController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ArticlesDTO>> getAllByQueryParams(
+    public ResponseEntity<Page<ArticleDTO>> getAllByQueryParams(
             @RequestParam(name = "q", required = false) String query,
             @RequestParam Map<String, String> allParams,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
@@ -59,11 +60,30 @@ public class ArticlesController {
         return ResponseEntity.ok(article);
     }
 
+    // POST---------------------------------------------------------------------------------------------------
     @PostMapping
-    public ResponseEntity<ArticleCreateDTO> createArticle(
-            @RequestBody CreateArticlesDTO createArticleDTO
+    public ResponseEntity<ArticleDTO> createArticle(
+            @RequestBody ArticleSaveDTO createArticleDTO
     ) {
-        ArticleCreateDTO article = articlesService.createArticle(createArticleDTO);
+        ArticleDTO article = articlesService.createArticle(createArticleDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
+    }
+
+    // PUT----------------------------------------------------------------------------------------------------
+    @PutMapping("{id}")
+    public ResponseEntity<ArticleDTO> putArticle(
+            @RequestBody ArticleSaveDTO createArticleDTO
+    ) {
+        // TODO
+        return ResponseEntity.noContent().build();
+    }
+
+    // DELETE-------------------------------------------------------------------------------------------------
+    @DeleteMapping("{id}")
+    public ResponseEntity<ArticleDTO> deleteArticle(
+            @PathVariable String id
+    ) {
+        // TODO
+        return ResponseEntity.noContent().build();
     }
 }

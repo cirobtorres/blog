@@ -2,7 +2,6 @@
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import { slugify } from "../utils/strings-transforms";
 import { convertToLargeDate, mountURL } from "../utils/date";
 import { serverFetch } from "../services/auth-fetch-actions";
 import { apiServerUrls } from "../routing/routes";

@@ -2,9 +2,6 @@ package com.cirobtorres.blog.api.article.entities;
 
 import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.author.entities.Author;
-import com.cirobtorres.blog.api.media.entities.Media;
-import com.cirobtorres.blog.api.media.enums.MediaType;
-import com.cirobtorres.blog.api.tag.entities.Tag;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -13,9 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -27,30 +23,9 @@ public class Articles {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false, unique = true)
+    @JoinColumn(name = "author_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Author author;
-
-    @Column(nullable = false, length = 200)
-    private String title;
-
-    @Column(length = 200)
-    private String subtitle;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String body;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "media_id")
-    private Media media;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "article_tags",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "article_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
 
     @Column(nullable = false, unique = true)
     private String slug;
@@ -68,6 +43,13 @@ public class Articles {
     @Column(name = "published_at")
     private LocalDateTime publishedAt;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_published_revision_id")
+    private Revisions currentPublishedRevision;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Revisions> revisions = new ArrayList<>();
+
     @Column(nullable = false, updatable = false, name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
@@ -83,54 +65,21 @@ public class Articles {
     // BUILDER----------------------------------------------------------------------------------------------------
     private Articles(Builder builder) {
         this.author = builder.author;
-        this.title = builder.title;
-        this.subtitle = builder.subtitle;
-        this.body = builder.body;
-        this.media = builder.media;
-        this.tags = builder.tags;
         this.slug = builder.slug;
-        this.status = builder.status;
+        this.status = builder.status != null ? builder.status : ArticlesStatus.DRAFT;
         this.publishedAt = builder.publishedAt;
+        this.currentPublishedRevision = builder.currentPublishedRevision;
     }
 
     public static class Builder {
         private Author author;
-        private String title;
-        private String subtitle;
-        private String body;
-        private Media media;
-        private Set<Tag> tags = new HashSet<>();
         private String slug;
         private ArticlesStatus status;
         private LocalDateTime publishedAt;
+        private Revisions currentPublishedRevision;
 
         public Builder author(Author author) {
             this.author = author;
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder subtitle(String subtitle) {
-            this.subtitle = subtitle;
-            return this;
-        }
-
-        public Builder body(String body) {
-            this.body = body;
-            return this;
-        }
-
-        public Builder media(Media media) {
-            this.media = media;
-            return this;
-        }
-
-        public Builder tags(Set<Tag> tags) {
-            this.tags = tags;
             return this;
         }
 
@@ -146,6 +95,11 @@ public class Articles {
 
         public Builder publishedAt(LocalDateTime publishedAt) {
             this.publishedAt = publishedAt;
+            return this;
+        }
+
+        public Builder currentPublishedRevision(Revisions revision) {
+            this.currentPublishedRevision = revision;
             return this;
         }
 
@@ -168,38 +122,6 @@ public class Articles {
     public void setAuthor(Author author) {
         this.author = author;
     }
-
-    public String getTitle() {
-        return title;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getBody() {
-        return body;
-    }
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public Media getMedia() { return media; }
-    public void setMedia(Media media) {
-        if (media != null && media.getType() != MediaType.IMAGE) {
-            throw new IllegalArgumentException("Media type must be IMAGE.");
-        }
-        this.media = media;
-    }
-
-    public Set<Tag> getTags() { return tags; }
-    public void setTags(Set<Tag> tags) { this.tags = tags; }
 
     public String getSlug() {
         return slug;
@@ -227,6 +149,12 @@ public class Articles {
 
     public LocalDateTime getPublishedAt() { return publishedAt; }
     public void setPublishedAt(LocalDateTime publishedAt) { this.publishedAt = publishedAt; }
+
+    public Revisions getCurrentPublishedRevision() { return currentPublishedRevision; }
+    public void setCurrentPublishedRevision(Revisions currentPublishedRevision) { this.currentPublishedRevision = currentPublishedRevision; }
+
+    public List<Revisions> getRevisions() { return revisions; }
+    public void setRevisions(List<Revisions> revisions) { this.revisions = revisions; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

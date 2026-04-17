@@ -1,5 +1,5 @@
-import { Button } from "../../../Button";
-import Spinner from "../../../Spinner";
+import { Button } from "../../Button";
+import Spinner from "../../Spinner";
 
 export default function ArticleButton({
   className,

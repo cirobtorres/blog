@@ -2,8 +2,10 @@ package com.cirobtorres.blog.api.article.services;
 
 import com.cirobtorres.blog.api.article.dtos.*;
 import com.cirobtorres.blog.api.article.entities.Articles;
+import com.cirobtorres.blog.api.article.entities.Revisions;
 import com.cirobtorres.blog.api.article.enums.ArticlesStatus;
 import com.cirobtorres.blog.api.article.repositories.ArticlesRepository;
+import com.cirobtorres.blog.api.article.repositories.RevisionsRepository;
 import com.cirobtorres.blog.api.author.entities.Author;
 import com.cirobtorres.blog.api.author.repositories.AuthorRepository;
 import com.cirobtorres.blog.api.exceptions.ResourceNotFoundException;
@@ -12,6 +14,7 @@ import com.cirobtorres.blog.api.media.repositories.MediaRepository;
 import com.cirobtorres.blog.api.tag.entities.Tag;
 import com.cirobtorres.blog.api.tag.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
@@ -21,22 +24,24 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ArticlesService {
     private final ArticlesRepository articlesRepository;
+    private final RevisionsRepository revisionsRepository;
     private final AuthorRepository authorRepository;
     private final MediaRepository mediaRepository;
     private final TagRepository tagsRepository;
 
     public ArticlesService(
             ArticlesRepository articlesRepository,
+            RevisionsRepository revisionsRepository,
             AuthorRepository authorRepository,
             MediaRepository mediaRepository,
             TagRepository tagsRepository
     ) {
         this.articlesRepository = articlesRepository;
+        this.revisionsRepository = revisionsRepository;
         this.authorRepository = authorRepository;
         this.mediaRepository = mediaRepository;
         this.tagsRepository = tagsRepository;
@@ -58,8 +63,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public ArticleCreateDTO createArticle(@NonNull CreateArticlesDTO dto) {
-        System.out.println("----------dto.tags()=" + dto.tags());
+    public ArticleDTO createArticle(@NonNull ArticleSaveDTO dto) {
         Author author = authorRepository
                 .findByUserId(dto.userId())
                 .orElseThrow(
@@ -86,19 +90,27 @@ public class ArticlesService {
 
         Articles article = new Articles.Builder()
                 .author(author)
-                .title(dto.title())
-                .subtitle(dto.subtitle())
-                .tags(tags)
                 .slug(dto.slug())
-                .media(bannerMedia)
-                .body(dto.body())
-                .status(ArticlesStatus.PUBLISHED)
+                .status(ArticlesStatus.DRAFT)
                 .publishedAt(LocalDateTime.now())
                 .build();
 
-        Articles createdArticle = articlesRepository.save(article);
+        Articles savedArticle = articlesRepository.save(article);
 
-        return new ArticleCreateDTO(createdArticle);
+        Revisions revision = new Revisions.Builder()
+                .title(dto.title())
+                .subtitle(dto.subtitle())
+                .body(dto.body())
+                .media(bannerMedia)
+                .tags(tags)
+                .article(savedArticle) // Link
+                .build();
+
+        Revisions savedRevision = revisionsRepository.save(revision);
+        savedArticle.setCurrentPublishedRevision(savedRevision);
+        articlesRepository.save(savedArticle);
+
+        return new ArticleDTO(savedArticle, savedRevision);
     }
 
     @Transactional
@@ -130,7 +142,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public Page<ArticlesDTO> getAllByQueryParams(String q, Map<String, String> allParams, Pageable pageable) {
+    public Page<ArticleDTO> getAllByQueryParams(String q, Map<String, String> allParams, Pageable pageable) {
         Specification<Articles> spec =
                 (root, query, cb) ->
                         cb.equal(root.get("status"), ArticlesStatus.PUBLISHED);
@@ -138,10 +150,11 @@ public class ArticlesService {
         // SEARCH TITLE OR SUBTITLE
         if (q != null && !q.isBlank()) {
             spec = spec.and((root, query, cb) -> {
+                Join<Articles, Revisions> revisionJoin = root.join("currentPublishedRevision");
                 String searchLabel = "%" + q.toLowerCase() + "%";
                 return cb.or(
-                        cb.like(cb.lower(root.get("title")), searchLabel),
-                        cb.like(cb.lower(root.get("subtitle")), searchLabel)
+                        cb.like(cb.lower(revisionJoin.get("title")), searchLabel),
+                        cb.like(cb.lower(revisionJoin.get("subtitle")), searchLabel)
                 );
             });
         }
@@ -155,14 +168,14 @@ public class ArticlesService {
             }
         }
 
-        /* PSEUDOCODE TAG:
+        /* TODO PSEUDOCODE TAG:
            if (allParams.containsKey("tag")) {
                spec = spec.and((root, query, cb) ->
                    cb.equal(root.join("categories").get("slug"), allParams.get("tag")));
            }
         */
 
-        return articlesRepository.findAll(spec, pageable).map(ArticlesDTO::new);
+        return articlesRepository.findAll(spec, pageable).map(ArticleDTO::new);
     }
 
     public List<String> findAllSlugs() {

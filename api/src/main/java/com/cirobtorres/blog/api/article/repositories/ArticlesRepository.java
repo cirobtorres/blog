@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ArticlesRepository extends JpaRepository<Articles, UUID>, JpaSpecificationExecutor<Articles> {
+    @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags", "currentPublishedRevision.media"})
     Optional<Articles> findBySlugAndStatus(String slug, ArticlesStatus status);
 
     @EntityGraph(attributePaths = {"author", "media"})
@@ -23,7 +24,7 @@ public interface ArticlesRepository extends JpaRepository<Articles, UUID>, JpaSp
 
     @NonNull
     @Override
-    @EntityGraph(attributePaths = {"author", "media"})
+    @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags"})
     Page<Articles> findAll(@NonNull Specification<Articles> spec, @NonNull Pageable pageable);
 
     @Query("SELECT a.slug FROM Articles a")

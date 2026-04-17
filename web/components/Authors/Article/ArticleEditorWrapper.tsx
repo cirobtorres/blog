@@ -8,7 +8,7 @@ export default function ArticleEditorsWrapper({
   onSubmit: React.SubmitEventHandler<HTMLFormElement> | undefined;
 }) {
   return (
-    <section className="w-full max-w-6xl mx-auto flex-1 flex flex-col">
+    <section className="w-full max-w-6xl mx-auto px-2 flex-1 flex flex-col">
       <form action={action} onSubmit={onSubmit}>
         {children}
       </form>

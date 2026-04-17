@@ -5,27 +5,30 @@ import * as z from "zod";
 import { ArticleEditorTitle } from "../../../Editors/editors/ArticleEditorTitle";
 import { ArticleEditorSubtitle } from "../../../Editors/editors/ArticleEditorSubtitle";
 import { AddBlockButton, BlockList } from "../../../Editors/blocks";
-import { convertToLargeDate } from "../../../../utils/date";
-import { buttonVariants, cn } from "../../../../utils/variants";
+import { convertToLargeDate, mountURL } from "../../../../utils/date";
+import { useRouter } from "next/navigation";
+import { cn, focusRing } from "../../../../utils/variants";
+import { publishArticle } from "../../../../services/article/publishArticle";
 import { sonnerToastPromise, sonnerPromise } from "../../../../utils/sonner";
+import { Button } from "../../../Button";
 import { Hr } from "../../../utils";
 import { useArticleStore } from "../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../Fieldset";
 import { useAuth } from "../../../../providers/AuthProvider";
+import { toast } from "sonner";
 import { publishArticleSchema } from "../../../../services/article/zod-validations";
-import { ButtonPlaceholder } from "../ArticlePopoverButton";
-import { saveArticle } from "../../../../services/article/saveArticle";
-import { LoadingSkeleton } from "../ArticlesLoader";
 import ArticleEditorSlug from "../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../Editors/editors/ArticleEditorTag";
 import ArticleEditorBanner from "../../../Editors/editors/ArticleEditorBanner";
 import FolderBreadcrumbState from "../../Media/FolderBreadcrumbState";
 import FolderCardButtons from "../../Media/Folders/Cards/FolderCardButtons";
 import FileCardButtons from "../../Media/Files/Cards/FileCardButtons";
+import { saveArticle } from "../../../../services/article/saveArticle";
 import ArticleEditorsWrapper from "../ArticleEditorWrapper";
-import AlertErrorList from "../AlertErrorList";
 import ArticleButton from "../ArticleButton";
-import { useRouter } from "next/navigation";
+import { ArticlePopoverButton } from "../ArticlePopoverButton";
+import AlertErrorList from "../AlertErrorList";
+import { LoadingSkeleton } from "../ArticlesLoader";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -42,15 +45,14 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export function ArticleCreate() {
+export function ArticleUpdate() {
   const { user } = useAuth();
   const { blocks } = useArticleStore();
-  const [isMounted, setIsMounted] = React.useState(false);
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
     null,
   );
   const [, setIsOpenState] = React.useState(false);
-  const { replace } = useRouter();
+  const router = useRouter();
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
@@ -64,26 +66,72 @@ export function ArticleCreate() {
       formData.set("userId", user.data.id);
       formData.set("body", JSON.stringify(blocks));
 
-      const success = (serverResponse: ActionState) => {
+      const intent = formData.get("intent")?.toString();
+
+      if (intent === "save") {
+        const publishSuccess = (serverResponse: ActionState) => {
+          const now = convertToLargeDate(new Date());
+          return (
+            <div className="flex flex-col">
+              <p>{serverResponse.success ?? "Artigo salvo!"}</p>
+              <p className="text-xs text-neutral-500">{now}</p>
+            </div>
+          );
+        };
+
+        const saveError = (serverResponse: ActionState) => {
+          setIsOpenState(true);
+          return <p>{serverResponse.error ?? "Artigo não pôde ser salvo"}</p>;
+        };
+
+        const saveResult = saveArticle(prevState, formData);
+        const savePromise = sonnerPromise(saveResult);
+        sonnerToastPromise(
+          savePromise,
+          publishSuccess,
+          saveError,
+          "Salvando artigo...",
+        );
+        return saveResult;
+      }
+
+      const publishSuccess = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
-        replace(`/users/authors/articles/${serverResponse.data.id}`);
         return (
-          <div className="flex flex-col">
-            <p>{serverResponse.success ?? "Artigo salvo!"}</p>
-            <p className="text-xs text-neutral-500">{now}</p>
-          </div>
+          <>
+            <div className="flex flex-col">
+              <p>Artigo criado com sucesso!</p>
+              <p className="text-xs text-neutral-500">{now}</p>
+            </div>
+            <Button
+              type="button"
+              onClick={() => {
+                toast.dismiss();
+                router.push(mountURL(serverResponse.data));
+              }}
+              variant="default"
+              className={cn("h-6 text-xs", focusRing)}
+            >
+              Artigo
+            </Button>
+          </>
         );
       };
 
-      const error = (serverResponse: ActionState) => {
+      const publishError = (serverResponse: ActionState) => {
         setIsOpenState(true);
-        return <p>{serverResponse.error ?? "Artigo não pôde ser salvo"}</p>;
+        return <p>{serverResponse.error ?? "Artigo não publicado"}</p>;
       };
 
-      const result = saveArticle(prevState, formData);
-      const promise = sonnerPromise(result);
-      sonnerToastPromise(promise, success, error, "Salvando artigo...");
-      return result;
+      const publishResult = publishArticle(prevState, formData);
+      const publishPromise = sonnerPromise(publishResult);
+      sonnerToastPromise(
+        publishPromise,
+        publishSuccess,
+        publishError,
+        "Publicando artigo...",
+      );
+      return publishResult;
     },
     defaultState,
   );
@@ -106,6 +154,8 @@ export function ArticleCreate() {
     setErrors(null);
   };
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -119,21 +169,23 @@ export function ArticleCreate() {
           </h1>
           <div className="w-full flex justify-end items-center gap-2">
             <ArticleButton
+              name="intent"
+              value="save"
               variant="link"
               disabled={isPending}
               className="w-full max-w-30 h-8"
             >
               Salvar
             </ArticleButton>
-            <div
-              className={cn(
-                buttonVariants(),
-                "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/65",
-              )}
+            <ArticleButton
+              name="intent"
+              value="publish"
+              disabled={isPending}
+              className="w-full max-w-30 h-8"
             >
               Publicar
-            </div>
-            <ButtonPlaceholder />
+            </ArticleButton>
+            <ArticlePopoverButton />
           </div>
         </div>
         <AlertErrorList state={state} />

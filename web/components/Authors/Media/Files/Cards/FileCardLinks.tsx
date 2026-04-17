@@ -7,12 +7,12 @@ import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
 import FileCardLink from "./FileCardLink";
 import { serverFetch } from "../../../../../services/auth-fetch-actions";
 
+const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
 export default async function FileCardLinks({
-  accessToken,
   currentPath,
   searchParams,
 }: {
-  accessToken?: string;
   currentPath?: string[];
   searchParams?: { [key: string]: string | undefined };
 }) {
@@ -44,9 +44,12 @@ export default async function FileCardLinks({
   const getUrl = `${apiServerUrls.media.root}?${query.toString()}`;
   const countUrl = `${apiServerUrls.media.count}?${query.toString()}`;
 
-  const options = {
-    headers: { Authorization: `Bearer ${accessToken}` },
-    next: { tags: ["files"] },
+  const options: RequestInit = {
+    next: {
+      tags: ["files"],
+      revalidate: TAG_REVALIDATE_TIME,
+    },
+    cache: "force-cache",
   };
 
   const [mediaPromise, count] = await Promise.all([

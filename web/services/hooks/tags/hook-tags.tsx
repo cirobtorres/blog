@@ -3,12 +3,15 @@ import getTags from "../../tag/getTags";
 import createTag from "../../tag/createTag";
 import deleteTag from "../../tag/deleteTag";
 
+const TAGS_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
 export function useTags() {
   return useQuery({
     queryKey: ["tags"],
     queryFn: async (): Promise<PageableTag> => {
       return await getTags();
     },
+    staleTime: TAGS_REVALIDATE_TIME,
   });
 }
 

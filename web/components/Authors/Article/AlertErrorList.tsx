@@ -1,4 +1,4 @@
-import { Alert } from "../../../Alert";
+import { Alert } from "../../Alert";
 
 export default function AlertErrorList({ state }: { state: ActionState }) {
   return state?.error ? (
@@ -27,6 +27,11 @@ export default function AlertErrorList({ state }: { state: ActionState }) {
             {err}
           </p>
         ))}
+      {state?.error && (
+        <p key={"form-error"} className="text-destructive!">
+          {state.error}
+        </p>
+      )}
     </Alert>
   ) : null;
 }

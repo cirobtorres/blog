@@ -24,4 +24,15 @@ type ArticleCreate = {
   createdAt: string;
 };
 
+type ArticleSave = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  slug: string;
+  authorId: string;
+  bannerUrl?: string;
+  status: "DRAFT";
+  createdAt: string;
+};
+
 type ArticleStatus = "PUBLISHED" | "DRAFT" | "ARCHIVED";

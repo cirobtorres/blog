@@ -6,6 +6,7 @@ import { extractTokenFromHeader } from "../helpers/server";
 import { applyCookiesInAction } from "../helpers/actions";
 import * as z from "zod";
 import { coordinatedRefresh } from "../helpers/refresh";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 const validateOtpSchema = z.object({
   code: z
@@ -76,6 +77,8 @@ const validateOTP = async (
 
   // SUCCESS--------------------------------------------------
   if (response.ok) {
+    revalidateTag("user", { expire: 0 });
+    revalidatePath("/", "layout");
     return { ok: true, success: null, error: null, data: null };
   }
 

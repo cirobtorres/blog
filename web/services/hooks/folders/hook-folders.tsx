@@ -4,12 +4,15 @@ import createFolder from "../../media/createFolder";
 import editFolder from "../../media/editFolder";
 import { getFoldersAction } from "./actions";
 
+const FOLDERS_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
 export function useFolders() {
   return useQuery({
     queryKey: ["folders"],
     queryFn: async (): Promise<SelectFolder[]> => {
       return await listFolders();
     },
+    staleTime: FOLDERS_REVALIDATE_TIME,
   });
 }
 
@@ -17,7 +20,7 @@ export function useFoldersWithCount(currentModalFolder: string = "") {
   return useQuery({
     queryKey: ["media-folders", currentModalFolder],
     queryFn: () => getFoldersAction(currentModalFolder),
-    staleTime: 1000 * 60 * 5, // 5 min
+    staleTime: FOLDERS_REVALIDATE_TIME,
   });
 }
 
