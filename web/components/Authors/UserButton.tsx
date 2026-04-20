@@ -13,7 +13,7 @@ import React from "react";
 
 export function UserButton() {
   const [isMounted, setIsMounted] = React.useState(false);
-  const { user: userData, setUser } = useAuth();
+  const { user: userData } = useAuth();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -103,7 +103,7 @@ export function UserButton() {
           >
             Profile settings
           </Link>
-          <LogoutButton setUser={setUser} />
+          <LogoutButton />
         </div>
       </PopoverContent>
     </Popover>

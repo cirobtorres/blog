@@ -5,20 +5,7 @@ import { apiServerUrls, publicWebUrls } from "../../routing/routes";
 import { cookies } from "next/headers";
 import { parseSetCookie } from "../helpers/server";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import * as z from "zod";
-
-const signUpSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Pelo menos 3 caracteres")
-    .max(65, "Nome muito longo"),
-  email: z.email("E-mail inválido").trim().toLowerCase(),
-  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
-  strength: z.number().min(4, "Senha muito fraca"),
-  termsCheckbox: z.refine((value) => value === "true", {
-    message: "Você precisa concordar com as políticas de uso de dados",
-  }),
-});
+import { serverFetch } from "../auth-fetch-actions";
 
 const signUp = async (
   prevState: ActionState,
@@ -31,32 +18,17 @@ const signUp = async (
     data: null,
   };
   const isProd = process.env.NODE_ENV === "production";
-  const rawData = Object.fromEntries(formData.entries());
-
-  const result = signUpSchema.safeParse({
-    ...rawData,
-    strength: Number(rawData.strength),
-  });
-
-  if (!result.success) {
-    const error = z.treeifyError(result.error).properties;
-
-    return {
-      ...returnState,
-      error,
-    };
-  }
-
-  const { name, email, password } = result.data;
+  const { name, email, password, termsCheckbox } = Object.fromEntries(
+    formData.entries(),
+  ); // TODO
 
   try {
-    const response = await fetch(apiServerUrls.register, {
+    const options: RequestInit = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-      credentials: "include",
-      cache: "no-store",
-    });
+      body: JSON.stringify({ name, email, password, termsCheckbox }),
+    };
+    const response = await serverFetch(apiServerUrls.register, options);
 
     // Backend errors
     if (!response.ok) {
@@ -125,6 +97,7 @@ const signUp = async (
       });
     }
   } catch (e) {
+    console.error("signUp error:", e);
     return {
       ...returnState,
       error: { form: { errors: ["Falha na conexão com o servidor"] } },

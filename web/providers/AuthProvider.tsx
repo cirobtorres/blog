@@ -4,9 +4,6 @@ import React from "react";
 
 type AuthProviderProps = {
   user: SessionUser | null;
-  setUser: React.Dispatch<
-    React.SetStateAction<UserSignedIn | UserSignedOut | null>
-  >;
 };
 
 export const AuthContext = React.createContext<AuthProviderProps | undefined>(
@@ -20,14 +17,8 @@ export default function AuthProvider({
   children: React.ReactNode;
   initialUser: SessionUser | null;
 }) {
-  const [user, setUser] = React.useState(initialUser);
-
-  React.useEffect(() => {
-    setUser(initialUser);
-  }, [initialUser]);
-
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user: initialUser }}>
       {children}
     </AuthContext.Provider>
   );

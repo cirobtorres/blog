@@ -9,15 +9,10 @@ import {
   protectedWebUrls,
   publicWebUrls,
 } from "../../routing/routes";
-import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { serverFetch } from "../auth-fetch-actions";
 
-const signInSchema = z.object({
-  email: z.email("E-mail inválido").trim().toLowerCase(),
-  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
-});
-
-const returnState = {
+const defaultState = {
   ok: false,
   success: null,
   error: null,
@@ -29,29 +24,15 @@ const signIn = async (
   formData: FormData,
 ): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
-  const rawData = Object.fromEntries(formData.entries());
+  const { email, password } = Object.fromEntries(formData.entries());
 
-  const result = signInSchema.safeParse({
-    ...rawData,
-  });
-
-  if (!result.success) {
-    const error = z.treeifyError(result.error).properties;
-
-    return {
-      ...returnState,
-      error,
-    };
-  }
-
-  const { email, password } = result.data;
-
-  const response = await fetch(apiServerUrls.login, {
+  const options: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
     cache: "no-store",
-  });
+  };
+  const response = await serverFetch(apiServerUrls.login, options);
 
   if (response.ok) {
     const cookieStore = await cookies();
@@ -131,7 +112,7 @@ const signIn = async (
     response.status === 409 // Ex: Wrong email/password
   ) {
     return {
-      ...returnState,
+      ...defaultState,
       error: {
         email: {
           errors: ["Email ou senha não existem"],
@@ -143,7 +124,7 @@ const signIn = async (
     };
   } else
     return {
-      ...returnState,
+      ...defaultState,
       error: {
         form: {
           errors: ["Ocorreu um erro inesperado. Tente mais tarde"],

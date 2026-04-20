@@ -24,8 +24,8 @@ export function FieldsetPassword({
   ref: React.RefObject<null>;
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
-  passErrors: string[];
-  strErrors: string[];
+  passErrors?: string[];
+  strErrors?: string[];
   strength?: ZxcvbnResult;
   copyToClipboard?: boolean;
   genPassword?: boolean;
@@ -58,11 +58,7 @@ export function FieldsetPassword({
           />
         )}
         <FieldsetPassTypeBtn inputRef={ref} state={type} setState={setType} />
-        <FieldsetLabel
-          htmlFor="password"
-          label="Senha"
-          // error={!!passErrors}
-        />
+        <FieldsetLabel htmlFor="password" label="Senha" />
       </Fieldset>
       <FieldsetError error={passErrors} />
       <FieldsetError error={strErrors} />

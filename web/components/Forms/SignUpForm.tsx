@@ -26,6 +26,35 @@ import {
 import { cn, focusRing } from "../../utils/variants";
 import { Button } from "../Button";
 import { P } from "../Typography";
+import * as z from "zod";
+
+const signUpSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Pelo menos 3 caracteres")
+    .max(65, "Nome muito longo"),
+  email: z.email("E-mail inválido").trim().toLowerCase(),
+  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
+  strength: z.number().min(4, "Senha muito fraca"),
+  termsCheckbox: z.refine((value) => value === "on", {
+    message: "Você precisa concordar com as políticas de uso de dados",
+  }),
+});
+
+interface ZodReturnError {
+  name?: { errors: string[] } | undefined;
+  email?: { errors: string[] } | undefined;
+  password?: { errors: string[] } | undefined;
+  strength?: { errors: string[] } | undefined;
+  termsCheckbox?: { errors: string[] } | undefined;
+}
+
+const defaultState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
 
 export default function SignUpForm() {
   const [name, setName] = React.useState("");
@@ -33,6 +62,9 @@ export default function SignUpForm() {
   const [password, setPassword] = React.useState("");
   const [termsDialog, setTermsDialog] = React.useState(false);
   const [termsCheckbox, setTermsCheckbox] = React.useState(true);
+  const [errors, setErrors] = React.useState<ZodReturnError | undefined>(
+    undefined,
+  );
   const passRef = React.useRef(null);
 
   const options = {
@@ -42,76 +74,61 @@ export default function SignUpForm() {
   const strength = zxcvbn(password);
 
   const [state, action, isPending] = React.useActionState(
-    async (prevState: ActionState) => {
-      const formData = new FormData();
-
-      formData.set("name", name);
-      formData.set("email", email);
-      formData.set("password", password);
-      formData.set("termsCheckbox", String(termsCheckbox));
-      formData.set("strength", strength.score.toString());
-
-      return await signUp(prevState, formData);
-    },
-    {
-      ok: false,
-      success: null,
-      error: {
-        name: {
-          errors: null,
-        },
-        email: {
-          errors: null,
-        },
-        password: {
-          errors: null,
-        },
-        strength: {
-          errors: null,
-        },
-        termsCheckbox: {
-          errors: null,
-        },
-      },
-      data: null,
-    },
+    async (prevState: ActionState, formData: FormData) =>
+      await signUp(prevState, formData),
+    defaultState,
   );
 
+  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const rawData = Object.fromEntries(formData.entries());
+
+    const result = signUpSchema.safeParse({
+      ...rawData,
+      strength: Number(rawData.strength),
+    });
+
+    if (!result.success) {
+      const zodErrors = z.treeifyError(result.error).properties;
+      setErrors(zodErrors);
+      e.preventDefault();
+      return;
+    }
+  };
+
   return (
-    <form action={action} className="w-full flex flex-col justify-center gap-2">
-      <Fieldset error={!!state.error.name?.errors}>
+    <form
+      action={action}
+      onSubmit={onSubmit}
+      className="w-full flex flex-col justify-center gap-2"
+    >
+      <Fieldset error={!!errors?.name?.errors}>
         <FieldsetInput
           id="name"
+          name="name"
           value={name}
           placeholder="John Doe"
           maxLength={65}
           onChange={(e) => setName(e.target.value)}
-          error={state.error.name?.errors}
+          error={!!errors?.name?.errors}
         />
-        <FieldsetLabel
-          htmlFor="name"
-          label="Nome"
-          // error={!!state.error.name?.errors}
-        />
+        <FieldsetLabel htmlFor="name" label="Nome" />
       </Fieldset>
-      <FieldsetError error={state.error.name?.errors} />
-      <Fieldset error={!!state.error.email?.errors}>
+      <FieldsetError error={errors?.name?.errors} />
+      <Fieldset error={!!errors?.email?.errors}>
         <FieldsetInput
           id="email"
+          name="email"
           type="email"
           value={email}
           placeholder="johndoe@email.com"
           onChange={(e) => setEmail(e.target.value)}
           className="truncate"
-          error={state.error.email?.errors}
+          error={!!errors?.email?.errors}
         />
-        <FieldsetLabel
-          htmlFor="email"
-          label="E-mail"
-          // error={!!state.error.email?.errors}
-        />
+        <FieldsetLabel htmlFor="email" label="E-mail" />
       </Fieldset>
-      <FieldsetError error={state.error.email?.errors} />
+      <FieldsetError error={errors?.email?.errors} />
       <FieldsetPassword
         ref={passRef}
         value={password}
@@ -119,15 +136,15 @@ export default function SignUpForm() {
         strength={strength}
         copyToClipboard
         genPassword
-        passErrors={state.error.password?.errors}
-        strErrors={state.error.strength?.errors}
+        passErrors={errors?.password?.errors}
+        strErrors={errors?.strength?.errors}
       />
       <fieldset className="flex items-start gap-2">
         <Checkbox
           id="terms-checkbox"
-          name="terms-checkbox"
+          name="termsCheckbox"
           checked={termsCheckbox}
-          aria-invalid={!!state.error.termsCheckbox?.errors}
+          aria-invalid={!!errors?.termsCheckbox?.errors}
           onCheckedChange={(checked) => setTermsCheckbox(checked === true)}
         />
         <label
@@ -150,8 +167,8 @@ export default function SignUpForm() {
           do website.
         </label>
       </fieldset>
-      <FieldsetError error={state.error?.termsCheckbox?.errors} />
-      <FieldsetError error={state.error?.form?.errors} />
+      <FieldsetError error={errors?.termsCheckbox?.errors} />
+      <FieldsetError error={state?.error?.form?.errors} />
       <Button type="submit" disabled={isPending} className="rounded h-9.5">
         {isPending && <Spinner />} {isPending ? "Cadastrando" : "Confirmar"}
       </Button>

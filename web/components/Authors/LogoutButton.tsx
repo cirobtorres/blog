@@ -1,20 +1,17 @@
 "use client";
 
 import React from "react";
-import { logout } from "../../services/auth/session/server/logout";
+import { serverLogout } from "../../services/auth/session/server/logout";
 import Spinner from "../Spinner";
 import { Button } from "../Button";
+import { useRouter } from "next/navigation";
 
-export function LogoutButton({
-  setUser,
-}: {
-  setUser: React.Dispatch<
-    React.SetStateAction<UserSignedIn | UserSignedOut | null>
-  >;
-}) {
+export function LogoutButton() {
+  const router = useRouter();
+
   const [, action, isPending] = React.useActionState(async () => {
-    await logout();
-    setUser({ ok: false, data: null });
+    await serverLogout();
+    router.refresh();
   }, null);
 
   return (

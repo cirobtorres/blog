@@ -5,6 +5,26 @@ import { Toaster } from "sonner";
 import AuthProvider from "../providers/AuthProvider";
 import getUser from "../services/auth/session/server/getUser";
 
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const user = await getUser();
+  return (
+    <html lang="pt">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AuthProvider key={user.data?.id ?? "guest"} initialUser={user}>
+          {children}
+          <Toaster position="top-center" />
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}
+
 export const metadata: Metadata = {
   title: {
     default: "Ciro Torres | Blog",
@@ -57,23 +77,3 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const user = await getUser();
-  return (
-    <html lang="pt">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider key={user.data?.id ?? "guest"} initialUser={user}>
-          {children}
-          <Toaster position="top-center" />
-        </AuthProvider>
-      </body>
-    </html>
-  );
-}

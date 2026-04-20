@@ -10,7 +10,7 @@ import SignUpForm from "../../../components/Forms/SignUpForm";
 const SignUpFormLoad = () => (
   <div className="w-full flex flex-col justify-center gap-2">
     {Array.from({ length: 3 }).map((_, index) => (
-      <Skeleton key={index} className="h-10 flex items-center" />
+      <Skeleton key={index} className="h-9.5 flex items-center" />
     ))}
     <Skeleton className="w-full h-1.5 rounded-full" />
     <div className="grid grid-cols-[14px_1fr] gap-2">
@@ -20,7 +20,7 @@ const SignUpFormLoad = () => (
         <Skeleton className="w-1/4 h-3.5" />
       </div>
     </div>
-    <Skeleton className="w-full h-10.5" />
+    <Skeleton className="w-full h-9.5" />
   </div>
 );
 

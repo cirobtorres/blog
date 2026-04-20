@@ -6,25 +6,20 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { cn, focusRing } from "../../../utils/variants";
 import { protectedWebUrls } from "../../../routing/routes";
 import { Link } from "../../Links";
-import { logout } from "../../../services/auth/session/server/logout";
+import { serverLogout } from "../../../services/auth/session/server/logout";
 import Spinner from "../../Spinner";
+import { useRouter } from "next/navigation";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
   "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800 font-normal transition-[background-color,box-shadow] duration-300 rounded";
 
-export default function UserSignedIn({
-  user,
-  setUser,
-}: {
-  user: AuthSessionConfirmed;
-  setUser: React.Dispatch<
-    React.SetStateAction<UserSignedIn | UserSignedOut | null>
-  >;
-}) {
+export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
+  const router = useRouter();
+
   const [, action, isPending] = React.useActionState(async () => {
-    await logout();
-    setUser({ ok: false, data: null });
+    await serverLogout();
+    router.refresh();
   }, null);
 
   return (

@@ -19,8 +19,8 @@ import java.util.List;
 public class MailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final boolean isProd;
     private final String mailerFrom;
+    private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
     public MailService(
@@ -40,13 +40,11 @@ public class MailService {
             String name,
             String vToken
     ) throws MessagingException {
-        if (!isProd) log.info("VerificationTokenService.sendValidationEmail(): BEGIN");
         Context context = new Context();
         context.setVariable("name", name);
         context.setVariable("code", vToken.toCharArray());
         String htmlTemplate = templateEngine.process("email-validation", context);
         sendMail(to, "Confirmação de cadastro", htmlTemplate);
-        if (!isProd) log.info("VerificationTokenService.sendValidationEmail(): END, email sent!");
     }
 
     @Async
@@ -82,14 +80,12 @@ public class MailService {
             String name,
             String code
     ) throws MessagingException {
-        if (!isProd) log.info("VerificationTokenService.sendResetPasswordEmail(): BEGIN");
         Context context = new Context();
         context.setVariable("name", name);
         context.setVariable("email", to);
         context.setVariable("code", code.toCharArray());
         String htmlTemplate = templateEngine.process("email-reset-password", context);
         sendMail(to, "Redefinição de senha", htmlTemplate);
-        if (!isProd) log.info("VerificationTokenService.sendResetPasswordEmail(): END, email sent!");
     }
 
     private void sendMail(
@@ -97,7 +93,6 @@ public class MailService {
             String subject,
             String htmlContent
     ) throws MessagingException {
-        if (!isProd) log.info("VerificationTokenService.sendHtmlEmail() BEGIN");
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
@@ -106,8 +101,6 @@ public class MailService {
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
 
-        if (!isProd) log.info("VerificationTokenService.sendHtmlEmail(): SENDING...");
         mailSender.send(mimeMessage);
-        if (!isProd) log.info("VerificationTokenService.sendHtmlEmail(): END, email sent!");
     }
 }

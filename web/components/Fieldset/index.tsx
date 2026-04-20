@@ -27,7 +27,7 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     placeholder={props.placeholder ?? ""}
     aria-invalid={!!error}
     className={cn(
-      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 placeholder:text-transparent placeholder:select-none border peer",
+      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-shadow duration-300 placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
       error
         ? "text-neutral-100 border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
@@ -220,16 +220,19 @@ const PasswordStrength = ({ strength }: { strength: Score }) => {
   const color = getStr(strength);
 
   return (
-    <div className="w-full inline-grid overflow-hidden rounded-full not-dark:shadow">
-      <div
-        className="z-10 col-start-1 row-start-1 w-0 h-1 m-px rounded-full transition-width duration-300"
-        style={{
-          width: percentage + "%",
-          backgroundColor: color,
-        }}
-      />
-      <div className="col-start-1 row-start-1 w-full h-1.5 rounded-full border bg-stone-100 dark:bg-stone-800" />
-    </div>
+    <>
+      <input hidden type="hidden" name="strength" value={strength} />
+      <div className="w-full inline-grid overflow-hidden rounded-full not-dark:shadow">
+        <div
+          className="z-10 col-start-1 row-start-1 w-0 h-1 m-px rounded-full transition-width duration-300"
+          style={{
+            width: percentage + "%",
+            backgroundColor: color,
+          }}
+        />
+        <div className="col-start-1 row-start-1 w-full h-1.5 rounded-full border bg-stone-100 dark:bg-stone-800" />
+      </div>
+    </>
   );
 };
 

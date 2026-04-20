@@ -47,10 +47,10 @@ export function Header({
   // Forcing it to render as Client Component
   // Suppress Hydration error due dynamic IDs mismatch between RadixUI & Next.js
   // Because one was rendered on server and the other on client
-  const [isMounted, setIsMounted] = React.useState(false);
-  const { user, setUser } = useAuth();
+  // const [isMounted, setIsMounted] = React.useState(false);
   const headerRef = React.useRef<HTMLElement>(null);
   const scrollingDownRef = React.useRef(0);
+  const { user } = useAuth();
 
   const hideNavbarListener = () => {
     let prevScrollPos = window.scrollY;
@@ -92,18 +92,16 @@ export function Header({
     };
   }, [sticky]);
 
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // React.useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
-  if (!isMounted) return <Unmounted />; // While it has not mounted
+  // if (!isMounted) return <Unmounted />;
 
   function renderAuthArea() {
     if (user === null) return <UserSkeleton />;
 
-    if (user.ok) {
-      return <UserSignedIn user={user} setUser={setUser} />;
-    }
+    if (user.ok) return <UserSignedIn user={user} />;
 
     return <UserSignedOff />;
   }
@@ -149,22 +147,22 @@ const UserSkeleton = () => (
   </div>
 );
 
-const Unmounted = () => (
-  <div className="flex justify-center items-center ml-auto mr-0">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
-    >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  </div>
-);
+// const Unmounted = () => (
+//   <div className="flex justify-center items-center ml-auto mr-0">
+//     <svg
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="24"
+//       height="24"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//       className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
+//     >
+//       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+//       <circle cx="12" cy="7" r="4" />
+//     </svg>
+//   </div>
+// );

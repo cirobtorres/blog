@@ -2,12 +2,11 @@
 
 import { cookies, headers } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
-import { cache } from "react";
 import { serverFetch } from "../../../auth-fetch-actions";
 
-const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+// const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 
-const getUser = cache(async (): Promise<SessionUser> => {
+const getUser = async (): Promise<SessionUser> => {
   const cookieStore = await cookies();
   const headerList = await headers();
   const authHeader = headerList.get("authorization");
@@ -24,11 +23,12 @@ const getUser = cache(async (): Promise<SessionUser> => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      next: {
-        tags: ["user"],
-        revalidate: TAG_REVALIDATE_TIME,
-      },
-      cache: "force-cache",
+      // next: {
+      //   tags: ["user"],
+      //   revalidate: TAG_REVALIDATE_TIME,
+      // },
+      // cache: "force-cache",
+      cache: "no-store",
     });
 
     if (response.status === 204 || response.status === 401) {
@@ -50,6 +50,6 @@ const getUser = cache(async (): Promise<SessionUser> => {
     console.error("getUser:", e);
     return { ok: false, data: null };
   }
-});
+};
 
 export default getUser;

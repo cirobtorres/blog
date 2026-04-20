@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import React, { useActionState, useRef } from "react";
 import {
   Fieldset,
   FieldsetInput,
@@ -11,61 +11,80 @@ import { signIn } from "../../services/auth/signIn";
 import Spinner from "../Spinner";
 import { FieldsetPassword } from "../Fieldset/FieldsetPassword";
 import { Button } from "../Button";
+import * as z from "zod";
+
+const signInSchema = z.object({
+  email: z.email("E-mail inválido").trim().toLowerCase(),
+  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
+});
+
+interface ZodReturnError {
+  email?: { errors: string[] } | undefined;
+  password?: { errors: string[] } | undefined;
+}
+
+const defaultState = {
+  ok: false,
+  success: null,
+  error: null,
+  data: null,
+};
 
 export default function SignInForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [errors, setErrors] = React.useState<ZodReturnError | undefined>(
+    undefined,
+  );
   const passRef = useRef(null);
 
   const [state, action, isPending] = useActionState(
-    async (prevState: ActionState) => {
-      const formData = new FormData();
-
-      formData.set("email", email);
-      formData.set("password", password);
-
-      return await signIn(prevState, formData);
-    },
-    {
-      ok: false,
-      success: null,
-      error: {
-        email: {
-          errors: null,
-        },
-        password: {
-          errors: null,
-        },
-      },
-      data: null,
-    },
+    async (prevState: ActionState, formData: FormData) =>
+      await signIn(prevState, formData),
+    defaultState,
   );
 
+  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const rawData = Object.fromEntries(formData.entries());
+
+    const result = signInSchema.safeParse({
+      ...rawData,
+    });
+
+    if (!result.success) {
+      const zodErrors = z.treeifyError(result.error).properties;
+      setErrors(zodErrors);
+      e.preventDefault();
+      return;
+    }
+  };
+
   return (
-    <form action={action} className="w-full flex flex-col justify-center gap-2">
-      <Fieldset error={!!state.error.email?.errors}>
+    <form
+      action={action}
+      onSubmit={onSubmit}
+      className="w-full flex flex-col justify-center gap-2"
+    >
+      <Fieldset error={!!errors?.email?.errors}>
         <FieldsetInput
           id="email"
+          name="email"
           value={email}
           placeholder="johndoe@email.com"
           onChange={(e) => setEmail(e.target.value)}
-          error={!!state.error.email?.errors}
+          error={!!errors?.email?.errors}
         />
-        <FieldsetLabel
-          htmlFor="email"
-          label="E-mail"
-          // error={!!state.error.email?.errors}
-        />
+        <FieldsetLabel htmlFor="email" label="E-mail" />
       </Fieldset>
-      <FieldsetError error={state.error.email?.errors} />
+      <FieldsetError error={errors?.email?.errors} />
       <FieldsetPassword
         ref={passRef}
         value={password}
         onChange={setPassword}
-        passErrors={state.error.password?.errors}
-        strErrors={state.error.strength?.errors}
+        passErrors={errors?.password?.errors}
       />
-      <FieldsetError error={state.error.form?.errors} />
+      <FieldsetError error={state.error?.form?.errors} />
       <Button disabled={isPending} className="rounded h-9.5">
         {isPending && <Spinner />} {isPending ? "Carregando" : "Confirmar"}
       </Button>

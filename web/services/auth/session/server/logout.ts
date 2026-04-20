@@ -3,11 +3,11 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { apiClientUrls, publicWebUrls } from "../../../../routing/routes";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { hasAutorities } from "../../../../routing/protected/hasAutorities";
 import { serverFetch } from "../../../auth-fetch-actions";
 
-export async function logout() {
+export async function serverLogout() {
   const headersList = await headers();
   const cookieStore = await cookies();
   const referer = headersList.get("referer");
@@ -33,7 +33,8 @@ export async function logout() {
   }
   cookieStore.delete("access_token");
   cookieStore.delete("refresh_token");
-
+  revalidateTag("user", { expire: 0 });
+  revalidatePath("/", "layout");
   const required = hasAutorities(pathname);
 
   if (required) {
@@ -41,8 +42,6 @@ export async function logout() {
       `${publicWebUrls.signIn}?login=required&callbackUrl=${encodeURIComponent(pathname)}`,
     );
   }
-
-  revalidatePath("/", "layout");
 
   return {
     ok: true,

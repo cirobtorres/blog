@@ -70,7 +70,6 @@ api-properties:
 logging:
   pattern:
     console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%X{request_id}]){magenta} %clr([%X{client_ip}]){blue} %clr([%X{user_id}]){green} %clr(%-40.40logger){cyan} : %m%n"
-    # console: "%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n"
 
 # APP
 server:
