@@ -88,9 +88,9 @@ public class ArticlesController {
     // DELETE-------------------------------------------------------------------------------------------------
     @DeleteMapping("id/{id}")
     public ResponseEntity<ArticleDTO> deleteArticle(
-            @PathVariable String id
+            @PathVariable UUID id
     ) {
-        // TODO
+        articlesService.deleteArticle(id);
         return ResponseEntity.noContent().build();
     }
 }

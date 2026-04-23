@@ -56,8 +56,20 @@ const BlockItem = React.memo(function BlockItem({
   }
 });
 
-const BlockList = ({ blocksErrors }: { blocksErrors?: BodyItemError[] }) => {
-  const blocks = useArticleStore((state) => state.blocks);
+const BlockList = ({
+  defaultVal,
+  blocksErrors,
+}: {
+  defaultVal?: string;
+  blocksErrors?: BodyItemError[];
+}) => {
+  const { blocks, setBlocks } = useArticleStore();
+
+  React.useEffect(() => {
+    if (defaultVal) {
+      setBlocks(JSON.parse(defaultVal));
+    }
+  }, [defaultVal, setBlocks]);
 
   const errorMap = React.useMemo(() => {
     const map: Record<string, BlockPropertyErrors> = {};
@@ -116,11 +128,10 @@ const AddBlockButton = () => {
   const { blocks, setBlocks } = useArticleStore();
 
   const addBlock = (type: Blocks["type"]) => {
-    const usedIds = blocks
+    const ids = blocks
       .map((b) => parseInt(b.id.split("-").pop() || "0", 10))
       .filter((n) => !isNaN(n));
-    const nextId = (usedIds.length > 0 ? Math.max(...usedIds) : 0) + 1;
-
+    const nextId = (ids.length > 0 ? Math.max(...ids) : 0) + 1;
     const newBlock = createNewBlock(`${type}-${nextId}`, false, type);
     setBlocks([...blocks, newBlock]);
   };

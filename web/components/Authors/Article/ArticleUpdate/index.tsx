@@ -52,6 +52,7 @@ export function ArticleUpdate({
   tags,
   slug,
   media,
+  body,
   status,
 }: Article) {
   const { user } = useAuth();
@@ -114,7 +115,7 @@ export function ArticleUpdate({
       formData.set("userId", user.data.id);
       formData.set("body", JSON.stringify(blocks));
 
-      const publishSuccess = (serverResponse: ActionState) => {
+      const success = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
         return (
           <>
@@ -137,20 +138,15 @@ export function ArticleUpdate({
         );
       };
 
-      const publishError = (serverResponse: ActionState) => {
+      const error = (serverResponse: ActionState) => {
         setIsOpenState(true);
         return <p>{serverResponse.error ?? "Artigo não publicado"}</p>;
       };
 
-      const publishResult = publishArticle(prevState, formData);
-      const publishPromise = sonnerPromise(publishResult);
-      sonnerToastPromise(
-        publishPromise,
-        publishSuccess,
-        publishError,
-        "Publicando artigo...",
-      );
-      return publishResult;
+      const result = publishArticle(prevState, formData);
+      const promise = sonnerPromise(result);
+      sonnerToastPromise(promise, success, error, "Publicando artigo...");
+      return result;
     },
     defaultState,
   );
@@ -202,7 +198,7 @@ export function ArticleUpdate({
             >
               Publicar
             </ArticleButton>
-            <ArticlePopoverButton />
+            <ArticlePopoverButton articleId={id} status={status} />
           </div>
         </div>
         <AlertErrorList state={saveState || publishState} />
@@ -265,7 +261,7 @@ export function ArticleUpdate({
           <FieldsetError error={errors?.banner?.errors} />
         </div>
         <div className="mt-2">
-          <BlockList />
+          <BlockList defaultVal={body} />
         </div>
         <div className="mt-2">
           <AddBlockButton />

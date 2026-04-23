@@ -6,7 +6,7 @@ type Article = {
   author: Author;
   media: ArticleBanner;
   tags: Tag[];
-  body: string[];
+  body: string;
   status: ArticleStatus;
   likeCount: number;
   commentCount: number;

@@ -203,10 +203,7 @@ public class ArticlesService {
                         )
                 );
 
-        article.setSlug(createArticleDTO.slug());
-        article.setStatus(createArticleDTO.status());
-
-        Revisions revisions = new Revisions.Builder()
+        Revisions revision = new Revisions.Builder()
                 .title(createArticleDTO.title())
                 .subtitle(createArticleDTO.subtitle())
                 .tags(tags)
@@ -215,8 +212,11 @@ public class ArticlesService {
                 .article(article)
                 .build();
 
-        article.getRevisions().add(revisions);
-        article.setCurrentPublishedRevision(revisions);
+        Revisions savedRevision = revisionsRepository.save(revision);
+        article.setSlug(createArticleDTO.slug());
+        article.setStatus(createArticleDTO.status());
+        article.setCurrentPublishedRevision(savedRevision);
+        article.getRevisions().add(savedRevision);
         articlesRepository.save(article);
         return new ArticleDTO(article);
     }
@@ -229,5 +229,17 @@ public class ArticlesService {
         return articlesRepository.findById(id).map(ArticleDTO::new).orElseThrow(
                 () -> new ResourceNotFoundException("Article with id=" + id + " was not found")
         );
+    }
+
+    public void deleteArticle(UUID id) {
+        Articles article = articlesRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Article not found"
+                        )
+                );
+
+        articlesRepository.delete(article);
     }
 }

@@ -50,7 +50,7 @@ export function ArticleCardLink({
       href={href}
       {...props}
       className={cn(
-        "transition-[border,box-shadow] duration-300 rounded-xl border bg-stone-200 dark:bg-stone-900 focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
+        "transition-shadow duration-300 rounded-2xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
         focusRing,
         className,
       )}
@@ -68,7 +68,7 @@ export function ArticleCardImage({
   ...props
 }: ArticleCardImage) {
   return fill ? (
-    <div className="relative w-full h-50 shrink-0 rounded-xl overflow-hidden">
+    <div className="relative w-full h-50 shrink-0 rounded-2xl overflow-hidden">
       <Image
         src={src}
         alt={alt || ""}
@@ -134,7 +134,7 @@ ArticleCardSubtitle.displayName = "ArticleCardSubtitle";
 
 export function ArticleIsPublished() {
   return (
-    <div className="z-10 absolute top-4 right-4 size-2 rounded-full animate-pulse-green bg-emerald-500 border-2 border-emerald-500 hover:border-emerald-300" />
+    <div className="z-10 absolute top-4 right-4 size-2 rounded-full animate-pulse-green bg-emerald-500" />
   );
 }
 
