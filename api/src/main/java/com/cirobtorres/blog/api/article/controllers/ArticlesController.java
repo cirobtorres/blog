@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("articles")
@@ -33,7 +34,7 @@ public class ArticlesController {
             @PathVariable int day,
             @PathVariable String slug
     ) {
-        return ResponseEntity.ok(articlesService.findByUrlMetadata(year, month, day, slug));
+        return ResponseEntity.ok(articlesService.getByUrlMetadata(year, month, day, slug));
     }
 
     @GetMapping
@@ -46,17 +47,23 @@ public class ArticlesController {
     }
 
     @GetMapping("slug")
-    public ResponseEntity<List<String>> getAllBySlug() {
-        List<String> slugs = articlesService.findAllSlugs();
+    public ResponseEntity<List<String>> getAllSlug() {
+        List<String> slugs = articlesService.getAllSlugs();
         return ResponseEntity.ok(slugs);
+    }
+
+    @GetMapping("id/{id}")
+    public ResponseEntity<ArticleDTO> getById(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.ok(articlesService.getById(id));
     }
 
     @GetMapping("slug/{slug}")
     public ResponseEntity<ArticleDTO> getBySlug(
             @PathVariable @NonNull ArticleSlugDTO slug
     ) {
-        System.out.println("slug=" + slug.slug());
-        ArticleDTO article = articlesService.findBySlug(slug);
+        ArticleDTO article = articlesService.getBySlug(slug);
         return ResponseEntity.ok(article);
     }
 
@@ -70,16 +77,16 @@ public class ArticlesController {
     }
 
     // PUT----------------------------------------------------------------------------------------------------
-    @PutMapping("{id}")
+    @PutMapping("id/{id}")
     public ResponseEntity<ArticleDTO> putArticle(
             @RequestBody ArticleSaveDTO createArticleDTO
     ) {
-        // TODO
-        return ResponseEntity.noContent().build();
+        ArticleDTO article = articlesService.putArticle(createArticleDTO);
+        return ResponseEntity.ok(article);
     }
 
     // DELETE-------------------------------------------------------------------------------------------------
-    @DeleteMapping("{id}")
+    @DeleteMapping("id/{id}")
     public ResponseEntity<ArticleDTO> deleteArticle(
             @PathVariable String id
     ) {

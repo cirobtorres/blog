@@ -58,6 +58,5 @@ export const mountURL = ({ createdAt, title }: Article) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const slug = slugify(title);
-
   return `/articles/${year}/${month}/${day}/${slug}`;
 };

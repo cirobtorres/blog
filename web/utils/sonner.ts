@@ -8,6 +8,19 @@ const defaultState: ActionState = {
   data: null,
 };
 
+export const toastStyles = {
+  classNames: {
+    toast:
+      "rounded-lg! text-neutral-900! border-stone-300! bg-stone-200! dark:text-neutral-100! dark:border-stone-700! dark:bg-stone-800!",
+    content: "w-full",
+    title: "w-full flex justify-between items-center",
+    // icon: "",
+    // loading: "",
+    // description: "",
+    // closeButton: "",
+  },
+};
+
 export const sonnerPromise = (
   promise: Promise<ActionState>,
 ): Promise<ActionState> => {
@@ -21,6 +34,7 @@ export const sonnerPromise = (
         }
       })
       .catch((e) => {
+        console.error("sonnerPromise error:", e);
         reject({ ...defaultState, error: "Erro de conexão ou servidor" });
       });
   });
@@ -36,15 +50,6 @@ export const sonnerToastPromise = (
     loading,
     success: (data) => success(data),
     error: (data) => error(data),
-    classNames: {
-      toast:
-        "rounded-lg! text-neutral-900! border-stone-300! bg-stone-200! dark:text-neutral-100! dark:border-stone-700! dark:bg-stone-800!",
-      content: "w-full",
-      title: "w-full flex justify-between items-center",
-      // icon: "",
-      // loading: "",
-      // description: "",
-      // closeButton: "",
-    },
+    ...toastStyles,
   });
 };

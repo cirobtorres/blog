@@ -12,11 +12,10 @@ import { slugify } from "../../../utils/strings-transforms";
 import Spinner from "../../Spinner";
 
 export default function ArticleEditorSlug({
+  defaultVal,
   error,
   ...props
-}: React.ComponentProps<"input"> & {
-  error?: boolean;
-}) {
+}: React.ComponentProps<"input"> & { defaultVal?: string; error?: boolean }) {
   const { title, slug, setSlug } = useArticleStore();
   const [isChecking, setIsChecking] = React.useState(false);
   const [isSlugTaken, setIsSlugTaken] = React.useState<
@@ -35,6 +34,7 @@ export default function ArticleEditorSlug({
       );
       setIsSlugTaken(response.ok ? "invalid" : "valid");
     } catch (e) {
+      console.error("ArticleEditorSlug error (useDebouncedCallback):", e);
       if (slug) {
         setIsSlugTaken("invalid");
       } else {
@@ -58,7 +58,8 @@ export default function ArticleEditorSlug({
   React.useEffect(() => {
     setSlug(slugify(title));
     setValidateSlug(slugify(title));
-  }, [title, setSlug, setValidateSlug]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = slugify(e.target.value);
@@ -67,6 +68,13 @@ export default function ArticleEditorSlug({
   };
 
   const isSlugValid = !!slug && !!(isSlugTaken === "valid");
+
+  React.useEffect(() => {
+    if (defaultVal) {
+      setSlug(defaultVal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <fieldset className="flex flex-col">

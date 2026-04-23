@@ -18,6 +18,11 @@ interface ArticleState {
   setSubtitle: (subtitle: string) => void;
   setSlug: (slug: string) => void;
   openMediaLibrary: (target: "banner" | null) => void;
+  selectBannerDirectly: (data: {
+    id: string;
+    url: string;
+    alt: string;
+  }) => void;
   selectBanner: ({
     id,
     url,
@@ -54,6 +59,8 @@ export const useArticleStore = create<ArticleState>((set) => ({
   setSlug: (slug) => set({ slug: slugify(slug) }),
   openMediaLibrary: (target) => set({ activeMediaTarget: target }),
   setCurrentModalFolder: (path) => set({ currentModalFolder: path }),
+  selectBannerDirectly: ({ id, url, alt }) =>
+    set({ bannerMediaId: id, bannerUrl: url, bannerAlt: alt }),
   selectBanner: ({ id, url, alt }) => {
     set((state) => {
       if (state.activeMediaTarget === "banner") {

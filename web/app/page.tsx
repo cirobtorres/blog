@@ -87,7 +87,7 @@ const LastPublishedArticle = ({ article }: { article: Article }) => (
   >
     <Image
       id={article.id}
-      src={article.media.bannerUrl}
+      src={article.media.url}
       alt={article.media.alt}
       fill
       priority
@@ -120,8 +120,9 @@ const LoopCards = ({ articles }: { articles: Article[] }) => (
           <ArticleCard id={article.id}>
             <ArticleCardImage
               id={article.id}
-              src={article.media.bannerUrl}
+              src={article.media.url}
               alt={article.media.alt}
+              fill
             />
             <ArticleCardDate>{convertToLargeDate(new Date())}</ArticleCardDate>
             <ArticleCardTitle>{article.title}</ArticleCardTitle>

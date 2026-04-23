@@ -5,6 +5,7 @@ type Article = {
   slug: string;
   author: Author;
   media: ArticleBanner;
+  tags: Tag[];
   body: string[];
   status: ArticleStatus;
   likeCount: number;

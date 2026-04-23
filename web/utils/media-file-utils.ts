@@ -35,3 +35,8 @@ export async function fetchFileFromUrl(url: string): Promise<File> {
 
   return new File([blob], fileName, { type: contentType });
 }
+
+export function getOptimizedMediaUrl(url: string, width: number) {
+  if (!url.includes("cloudinary.com")) return url;
+  return url.replace("/upload/", `/upload/c_fill,w_${width},q_auto,f_auto/`);
+}

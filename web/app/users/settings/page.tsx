@@ -91,7 +91,7 @@ const UserCard = ({
         <span className="relative">
           Email
           {isEmailUnverified && (
-            <div className="absolute size-2 -top-1 -left-2 rounded-full animate-pulse-notification bg-yellow-500" />
+            <div className="absolute size-2 -top-1 -left-2 rounded-full animate-pulse-yellow bg-yellow-500" />
           )}
         </span>
         : <strong className="text-neutral-300">{user?.providerEmail} </strong>

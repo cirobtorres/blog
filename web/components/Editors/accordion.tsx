@@ -47,7 +47,7 @@ function EditorsAccordionItem({
           ? "bg-stone-900 border-stone-800"
           : hasError
             ? "border-destructive/50 bg-destructive/15 dark:bg-destructive/15 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
-            : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-primary dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 group",
+            : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 group",
         className,
       )}
       {...props}

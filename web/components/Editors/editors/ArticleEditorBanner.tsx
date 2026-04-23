@@ -17,9 +17,16 @@ import React from "react";
 
 export default function ArticleEditorBanner({
   children,
+  defaultVal,
   error,
 }: {
   children: React.ReactNode;
+  defaultVal?: {
+    id: string;
+    url: string;
+    alt: string;
+    caption: string;
+  };
   error: boolean;
 }) {
   const {
@@ -30,15 +37,23 @@ export default function ArticleEditorBanner({
     activeMediaTarget,
     setLoading,
     openMediaLibrary,
+    selectBannerDirectly,
   } = useArticleStore();
   const isOpen = activeMediaTarget === "banner";
+
+  React.useEffect(() => {
+    if (defaultVal && !bannerMediaId) {
+      selectBannerDirectly(defaultVal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AlertDialog
       open={isOpen}
       onOpenChange={(open) => !open && openMediaLibrary(null)}
     >
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger suppressHydrationWarning asChild>
         <button
           onClick={() => openMediaLibrary("banner")}
           className={cn(
@@ -73,11 +88,14 @@ export default function ArticleEditorBanner({
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-250">
         <AlertDialogHeader>Adicionar imagem</AlertDialogHeader>
-        <AlertDialogDescription className="sr-only">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-          omnis autem debitis dolorem exercitationem.
+        <AlertDialogDescription
+          id="media-library-description"
+          className="sr-only"
+        >
+          Selecione uma imagem da sua biblioteca para utilizar como banner do
+          artigo.
         </AlertDialogDescription>
-        <div className="p-1">
+        <div className="p-1" aria-describedby="media-library-description">
           <div className="max-h-120 p-4 overflow-y-auto scrollbar">
             {children}
           </div>

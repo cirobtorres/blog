@@ -17,18 +17,18 @@ import { FieldsetError } from "../../../Fieldset";
 import { useAuth } from "../../../../providers/AuthProvider";
 import { toast } from "sonner";
 import { publishArticleSchema } from "../../../../services/article/zod-validations";
+import { ArticlePopoverButton } from "../ArticlePopoverButton";
+import { LoadingSkeleton } from "../ArticlesLoader";
 import ArticleEditorSlug from "../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../Editors/editors/ArticleEditorTag";
 import ArticleEditorBanner from "../../../Editors/editors/ArticleEditorBanner";
 import FolderBreadcrumbState from "../../Media/FolderBreadcrumbState";
 import FolderCardButtons from "../../Media/Folders/Cards/FolderCardButtons";
 import FileCardButtons from "../../Media/Files/Cards/FileCardButtons";
-import { saveArticle } from "../../../../services/article/saveArticle";
 import ArticleEditorsWrapper from "../ArticleEditorWrapper";
 import ArticleButton from "../ArticleButton";
-import { ArticlePopoverButton } from "../ArticlePopoverButton";
 import AlertErrorList from "../AlertErrorList";
-import { LoadingSkeleton } from "../ArticlesLoader";
+import putSaveArticle from "../../../../services/article/putSaveArticle";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -45,7 +45,15 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export function ArticleUpdate() {
+export function ArticleUpdate({
+  id,
+  title,
+  subtitle,
+  tags,
+  slug,
+  media,
+  status,
+}: Article) {
   const { user } = useAuth();
   const { blocks } = useArticleStore();
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
@@ -54,7 +62,7 @@ export function ArticleUpdate() {
   const [, setIsOpenState] = React.useState(false);
   const router = useRouter();
 
-  const [state, action, isPending] = React.useActionState(
+  const [saveState, saveAction, isSavePending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       if (!user?.data?.id) {
         return {
@@ -66,41 +74,52 @@ export function ArticleUpdate() {
       formData.set("userId", user.data.id);
       formData.set("body", JSON.stringify(blocks));
 
-      const intent = formData.get("intent")?.toString();
-
-      if (intent === "save") {
-        const publishSuccess = (serverResponse: ActionState) => {
-          const now = convertToLargeDate(new Date());
-          return (
-            <div className="flex flex-col">
-              <p>{serverResponse.success ?? "Artigo salvo!"}</p>
-              <p className="text-xs text-neutral-500">{now}</p>
-            </div>
-          );
-        };
-
-        const saveError = (serverResponse: ActionState) => {
-          setIsOpenState(true);
-          return <p>{serverResponse.error ?? "Artigo não pôde ser salvo"}</p>;
-        };
-
-        const saveResult = saveArticle(prevState, formData);
-        const savePromise = sonnerPromise(saveResult);
-        sonnerToastPromise(
-          savePromise,
-          publishSuccess,
-          saveError,
-          "Salvando artigo...",
+      const publishSuccess = (serverResponse: ActionState) => {
+        const now = convertToLargeDate(new Date());
+        return (
+          <div className="flex flex-col">
+            <p>{serverResponse.success ?? "Artigo salvo!"}</p>
+            <p className="text-xs text-neutral-500">{now}</p>
+          </div>
         );
-        return saveResult;
+      };
+
+      const saveError = (serverResponse: ActionState) => {
+        setIsOpenState(true);
+        return <p>{serverResponse.error ?? "Artigo não foi salvo"}</p>;
+      };
+
+      const saveResult = putSaveArticle(prevState, formData);
+      const savePromise = sonnerPromise(saveResult);
+      sonnerToastPromise(
+        savePromise,
+        publishSuccess,
+        saveError,
+        "Salvando artigo...",
+      );
+      return saveResult;
+    },
+    defaultState,
+  );
+
+  const [publishState, publishAction, isPublishPending] = React.useActionState(
+    async (prevState: ActionState, formData: FormData) => {
+      if (!user?.data?.id) {
+        return {
+          ...defaultState,
+          error: ["Você precisa estar logado"],
+        };
       }
+
+      formData.set("userId", user.data.id);
+      formData.set("body", JSON.stringify(blocks));
 
       const publishSuccess = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
         return (
           <>
             <div className="flex flex-col">
-              <p>Artigo criado com sucesso!</p>
+              <p>{serverResponse.success || "Artigo publicado!"}</p>
               <p className="text-xs text-neutral-500">{now}</p>
             </div>
             <Button
@@ -162,25 +181,23 @@ export function ArticleUpdate() {
 
   if (isMounted)
     return (
-      <ArticleEditorsWrapper action={action} onSubmit={onSubmit}>
-        <div className="flex justify-between items-center my-6">
+      <ArticleEditorsWrapper onSubmit={onSubmit}>
+        <div className="flex justify-between items-center mb-6">
           <h1 className="w-full text-3xl font-extrabold">
             Escrever novo artigo
           </h1>
           <div className="w-full flex justify-end items-center gap-2">
             <ArticleButton
-              name="intent"
-              value="save"
               variant="link"
-              disabled={isPending}
+              formAction={saveAction}
+              disabled={isPublishPending || isSavePending}
               className="w-full max-w-30 h-8"
             >
               Salvar
             </ArticleButton>
             <ArticleButton
-              name="intent"
-              value="publish"
-              disabled={isPending}
+              formAction={publishAction}
+              disabled={isPublishPending || isSavePending}
               className="w-full max-w-30 h-8"
             >
               Publicar
@@ -188,29 +205,58 @@ export function ArticleUpdate() {
             <ArticlePopoverButton />
           </div>
         </div>
-        <AlertErrorList state={state} />
+        <AlertErrorList state={saveState || publishState} />
         <div className="w-full flex flex-col gap-2">
+          <input
+            hidden
+            type="hidden"
+            className="appearance-none"
+            name="id"
+            value={id}
+          />
+          <input
+            hidden
+            type="hidden"
+            className="appearance-none"
+            name="status"
+            value={status}
+          />
           <div className="w-full flex gap-2">
             <div className="w-full">
-              <ArticleEditorTitle error={!!errors?.title?.errors} />
+              <ArticleEditorTitle
+                defaultVal={title}
+                error={!!errors?.title?.errors}
+              />
               <FieldsetError error={errors?.title?.errors} />
             </div>
             <div className="w-full">
-              <ArticleEditorSubtitle error={!!errors?.subtitle?.errors} />
+              <ArticleEditorSubtitle
+                defaultVal={subtitle}
+                error={!!errors?.subtitle?.errors}
+              />
               <FieldsetError error={errors?.subtitle?.errors} />
             </div>
           </div>
           <div className="w-full flex gap-2">
             <div className="w-full">
-              <ArticleEditorTag error={!!errors?.tags?.errors} />
+              <ArticleEditorTag
+                defaultTags={tags}
+                error={!!errors?.tags?.errors}
+              />
               <FieldsetError error={errors?.tags?.errors} />
             </div>
             <div className="w-full">
-              <ArticleEditorSlug error={!!errors?.slug?.errors} />
+              <ArticleEditorSlug
+                defaultVal={slug}
+                error={!!errors?.slug?.errors}
+              />
               <FieldsetError error={errors?.slug?.errors} />
             </div>
           </div>
-          <ArticleEditorBanner error={!!errors?.banner?.errors}>
+          <ArticleEditorBanner
+            defaultVal={media}
+            error={!!errors?.banner?.errors}
+          >
             <FolderBreadcrumbState />
             <FolderCardButtons />
             <Hr className="my-6" />

@@ -50,7 +50,7 @@ export function ArticleCardLink({
       href={href}
       {...props}
       className={cn(
-        "transition-[border,box-shadow] duration-300 rounded-xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
+        "transition-[border,box-shadow] duration-300 rounded-xl border bg-stone-200 dark:bg-stone-900 focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
         focusRing,
         className,
       )}
@@ -60,18 +60,31 @@ export function ArticleCardLink({
 
 ArticleCardLink.displayName = "ArticleCardLink";
 
-export function ArticleCardImage({ src, alt, ...props }: ArticleCardImage) {
-  return (
-    <div className="relative w-full h-50 rounded-xl overflow-hidden">
+export function ArticleCardImage({
+  src,
+  alt,
+  fill,
+  className,
+  ...props
+}: ArticleCardImage) {
+  return fill ? (
+    <div className="relative w-full h-50 shrink-0 rounded-xl overflow-hidden">
       <Image
         src={src}
         alt={alt || ""}
         {...props}
         fill
         sizes="(max-width: 480px) 100vw, (max-width: 960px) 50vw, 33vw"
-        className="absolute object-cover"
+        className={cn("absolute object-cover", className)}
       />
     </div>
+  ) : (
+    <Image
+      src={src}
+      alt={alt || ""}
+      {...props}
+      className={cn("object-cover", className)}
+    />
   );
 }
 
@@ -92,7 +105,12 @@ export function ArticleCardDate({ className, ...props }: ArticleCardDate) {
 ArticleCardDate.displayName = "ArticleCardDate";
 
 export function ArticleCardTitle({ className, ...props }: ArticleCardTitle) {
-  return <h2 {...props} className={cn("px-2 text-lg font-bold", className)} />;
+  return (
+    <h2
+      {...props}
+      className={cn("px-2 text-lg font-bold line-clamp-2 shrink-0", className)}
+    />
+  );
 }
 
 ArticleCardTitle.displayName = "ArticleCardTitle";
@@ -102,8 +120,22 @@ export function ArticleCardSubtitle({
   ...props
 }: ArticleCardSubtitle) {
   return (
-    <p {...props} className={cn("px-2 text-sm text-neutral-500", className)} />
+    <p
+      {...props}
+      className={cn(
+        "px-2 text-sm text-neutral-500 line-clamp-3 shrink-0",
+        className,
+      )}
+    />
   );
 }
 
 ArticleCardSubtitle.displayName = "ArticleCardSubtitle";
+
+export function ArticleIsPublished() {
+  return (
+    <div className="z-10 absolute top-4 right-4 size-2 rounded-full animate-pulse-green bg-emerald-500 border-2 border-emerald-500 hover:border-emerald-300" />
+  );
+}
+
+ArticleIsPublished.displayName = "ArticleIsPublished";

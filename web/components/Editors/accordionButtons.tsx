@@ -17,7 +17,7 @@ import { Button } from "../Button";
 const buttonSizes = "w-7 h-9";
 
 const buttonStyles =
-  "cursor-pointer outline-none shrink-0 transition-none rounded hover:bg-stone-300 dark:hover:bg-stone-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 focus-visible:bg-stone-300 dark:focus-visible:bg-stone-700 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100";
+  "cursor-pointer outline-none shrink-0 transition-none rounded border border-transparent hover:bg-stone-300 dark:hover:border-transparent dark:hover:bg-stone-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 focus-visible:bg-stone-300 dark:focus-visible:bg-stone-700 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100";
 
 const Chevron = () => {
   return (
@@ -55,8 +55,8 @@ const Disable = ({
         focusRing,
         buttonSizes,
         locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:hover:border-stone-500 dark:active:bg-stone-600 dark:active:border-stone-400 dark:focus-within:bg-stone-700 dark:focus-within:border-primary dark:focus-within:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100",
+          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
+          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
       )}
       onClick={onDisable}
     >
@@ -126,8 +126,8 @@ const Delete = ({
             focusRing,
             buttonSizes,
             locked
-              ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:hover:border-stone-500 dark:active:bg-stone-600 dark:active:border-stone-400 dark:focus-within:bg-stone-700 dark:focus-within:border-primary dark:focus-within:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-              : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100",
+              ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
+              : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
           )}
           onClick={handleOpenDialog}
         >
@@ -223,8 +223,8 @@ const MoveDownward = ({
         focusRing,
         buttonSizes,
         locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:hover:border-stone-500 dark:active:bg-stone-600 dark:active:border-stone-400 dark:focus-within:bg-stone-700 dark:focus-within:border-primary dark:focus-within:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100",
+          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:active:border-stone-400 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
+          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
       )}
       onClick={moveDownward}
     >
@@ -258,8 +258,8 @@ const Drag = ({ locked }: { locked: boolean }) => {
         buttonSizes,
         "cursor-move",
         locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:hover:border-stone-500 dark:active:bg-stone-600 dark:active:border-stone-400 pointer-events-auto disabled:pointer-events-auto dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:border-stone-600 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100",
+          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:active:border-stone-400 pointer-events-auto disabled:pointer-events-auto dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100"
+          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
       )}
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();

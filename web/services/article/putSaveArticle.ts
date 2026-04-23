@@ -3,17 +3,17 @@
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../auth-fetch-actions";
 
-const saveArticle = async (
+export default async function putSaveArticle(
   prevState: ActionState,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionState> {
   // FETCH
   const validatedData = Object.fromEntries(formData.entries());
-  const { tags } = validatedData;
+  const { id, tags } = validatedData;
 
   try {
     const options: RequestInit = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -23,7 +23,10 @@ const saveArticle = async (
       }),
       cache: "no-store",
     };
-    const response = await serverFetch(apiServerUrls.article.root, options);
+    const response = await serverFetch(
+      apiServerUrls.article.id + "/" + id,
+      options,
+    );
 
     if (response.ok) {
       const data: ArticleSave = await response.json();
@@ -53,6 +56,4 @@ const saveArticle = async (
       data: null,
     };
   }
-};
-
-export { saveArticle };
+}

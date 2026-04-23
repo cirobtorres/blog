@@ -28,7 +28,7 @@ public class TagService {
                 .findById(uuid)
                 .orElseThrow(
                         () -> new EntityNotFoundException(
-                                "Tag of uuid=" + uuid + " not found"
+                                "Tag not found"
                         )
                 );
 
@@ -41,7 +41,7 @@ public class TagService {
                 .findBySlug(slug)
                 .orElseThrow(
                         () -> new EntityNotFoundException(
-                                "Tag of slug=" + slug + " not found"
+                                "Tag not found"
                         )
                 );
 
@@ -75,7 +75,7 @@ public class TagService {
 
         Tag tag = tagRepository.findById(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(
-                                "Tag of uuid=" + uuid + " not found"
+                                "Tag not found"
                         )
                 );
 
@@ -85,7 +85,7 @@ public class TagService {
     public void deleteTagBySlug(String slug) {
         Tag tag = tagRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(
-                                "Tag of slug=" + slug + " not found"
+                                "Tag not found"
                         )
                 );
 

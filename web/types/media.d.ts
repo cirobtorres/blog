@@ -63,7 +63,8 @@ type FileContextType = {
 };
 
 type ArticleBanner = {
-  bannerUrl: string;
+  id: string;
+  url: string;
   alt: string;
   caption: string;
 };

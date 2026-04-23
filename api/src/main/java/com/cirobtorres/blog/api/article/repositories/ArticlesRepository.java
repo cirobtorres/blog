@@ -24,6 +24,11 @@ public interface ArticlesRepository extends JpaRepository<Articles, UUID>, JpaSp
 
     @NonNull
     @Override
+    @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags", "currentPublishedRevision.media"})
+    Optional<Articles> findById(UUID id);
+
+    @NonNull
+    @Override
     @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags"})
     Page<Articles> findAll(@NonNull Specification<Articles> spec, @NonNull Pageable pageable);
 

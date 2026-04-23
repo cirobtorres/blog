@@ -48,7 +48,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public ArticleDTO findBySlug(@NonNull ArticleSlugDTO slugDTO) {
+    public ArticleDTO getBySlug(@NonNull ArticleSlugDTO slugDTO) {
         String slug = slugDTO.slug();
 
         Articles article = articlesRepository
@@ -114,7 +114,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public ArticleDTO findByUrlMetadata(int year, int month, int day, String slug) {
+    public ArticleDTO getByUrlMetadata(int year, int month, int day, String slug) {
         // QUERY
         Articles article = articlesRepository
                 .findBySlug(slug)
@@ -131,9 +131,9 @@ public class ArticlesService {
 
         if (
                 pub == null
-                || pub.getYear() != year
-                || pub.getMonthValue() != month
-                || pub.getDayOfMonth() != day
+                        || pub.getYear() != year
+                        || pub.getMonthValue() != month
+                        || pub.getDayOfMonth() != day
         ) {
             throw new ResourceNotFoundException("Invalid date on URL for article");
         }
@@ -168,17 +168,66 @@ public class ArticlesService {
             }
         }
 
-        /* TODO PSEUDOCODE TAG:
-           if (allParams.containsKey("tag")) {
-               spec = spec.and((root, query, cb) ->
-                   cb.equal(root.join("categories").get("slug"), allParams.get("tag")));
-           }
-        */
+        // TODO
+        if (allParams.containsKey("tag")) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.join("tags").get("slug"), allParams.get("tag")));
+        }
 
         return articlesRepository.findAll(spec, pageable).map(ArticleDTO::new);
     }
 
-    public List<String> findAllSlugs() {
+    @Transactional
+    public ArticleDTO putArticle(ArticleSaveDTO createArticleDTO) {
+        Articles article = articlesRepository
+                .findById(createArticleDTO.id())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Article not found"
+                        )
+                );
+
+        Set<Tag> tags = tagsRepository
+                .findAllByIdIn(createArticleDTO.tags())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Tags not found"
+                        )
+                );
+
+        Media bannerMedia = mediaRepository
+                .findById(createArticleDTO.banner())
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Media not found"
+                        )
+                );
+
+        article.setSlug(createArticleDTO.slug());
+        article.setStatus(createArticleDTO.status());
+
+        Revisions revisions = new Revisions.Builder()
+                .title(createArticleDTO.title())
+                .subtitle(createArticleDTO.subtitle())
+                .tags(tags)
+                .media(bannerMedia)
+                .body(createArticleDTO.body())
+                .article(article)
+                .build();
+
+        article.getRevisions().add(revisions);
+        article.setCurrentPublishedRevision(revisions);
+        articlesRepository.save(article);
+        return new ArticleDTO(article);
+    }
+
+    public List<String> getAllSlugs() {
         return articlesRepository.findAllSlugs();
+    }
+
+    public ArticleDTO getById(UUID id) {
+        return articlesRepository.findById(id).map(ArticleDTO::new).orElseThrow(
+                () -> new ResourceNotFoundException("Article with id=" + id + " was not found")
+        );
     }
 }

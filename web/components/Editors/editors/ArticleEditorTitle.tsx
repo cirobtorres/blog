@@ -1,15 +1,25 @@
 "use client";
 
+import React from "react";
 import { cn, focusWithinRing } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
 
 export function ArticleEditorTitle({
+  defaultVal,
   error,
   ...props
 }: FieldsetTextareaProps & {
+  defaultVal?: string;
   error?: boolean;
 }) {
   const { title, setTitle } = useArticleStore();
+
+  React.useEffect(() => {
+    if (defaultVal) {
+      setTitle(defaultVal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <fieldset className="flex flex-col">

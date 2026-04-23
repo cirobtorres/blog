@@ -32,9 +32,20 @@ import {
   AlertDialogTrigger,
 } from "../../AlertDialog";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
+import { DashedBackground } from "../../DashedBackground";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../../HoverCard";
 
 const btnGroupStyle =
-  "flex [&_button]:border [&_button]:first:rounded-l [&_button]:border-r-0 [&_button]:last:border-r [&_button]:last:rounded-r [&_button]:focus-visible:z-10 [&_button]:focus-visible:border-transparent";
+  "w-fit flex [&_button]:border [&_button]:first:rounded-l [&_button]:last:rounded-r [&_button]:focus-visible:z-10";
+
+const dashedBgStyle =
+  "w-1 border-y dark:bg-[repeating-linear-gradient(315deg,#44403b_0,#44403b_1px,transparent_0,transparent_50%)] bg-size-[5px_5px]";
+
+const btnActive =
+  "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800 hover:bg-stone-450 dark:hover:bg-stone-750";
+
+const btnNotActive =
+  "[&_svg]:stroke-neutral-400 dark:[&_svg]:stroke-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800";
 
 const validateAllowedUri = (
   url: string,
@@ -304,168 +315,15 @@ export function HtmlEditor({
     <>
       <div className="flex gap-2 pb-1">
         <div className={btnGroupStyle}>
-          <button
-            type="button"
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }
-            className={cn(
-              editorState?.isActiveHeading2
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800 hover:bg-stone-450 dark:hover:bg-stone-750"
-                : "[&_svg]:stroke-neutral-400 dark:[&_svg]:stroke-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M4 12h8" />
-              <path d="M4 18V6" />
-              <path d="M12 18V6" />
-              <path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
-            className={cn(
-              editorState?.isActiveHeading3
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M4 12h8" />
-              <path d="M4 18V6" />
-              <path d="M12 18V6" />
-              <path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2" />
-              <path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 4 }).run()
-            }
-            className={cn(
-              editorState?.isActiveHeading4
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M12 18V6" />
-              <path d="M17 10v3a1 1 0 0 0 1 1h3" />
-              <path d="M21 10v8" />
-              <path d="M4 12h8" />
-              <path d="M4 18V6" />
-            </svg>
-          </button>
-        </div>
-        <div className={btnGroupStyle}>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={cn(
-              editorState?.isActiveBold
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleHighlight().run()}
-            className={cn(
-              editorState?.isActiveHighlight
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="m9 11-6 6v3h9l3-3" />
-              <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" />
-            </svg>
-          </button>
-        </div>
-        <div className={btnGroupStyle}>
-          <AlertDialog open={isDialogOpen}>
-            <AlertDialogTrigger asChild>
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
               <button
                 type="button"
-                tabIndex={0}
-                onClick={handleLinkClick}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
                 className={cn(
-                  editorState?.isActiveLink
-                    ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                    : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                  editorState?.isActiveHeading2 ? btnActive : btnNotActive,
                   "cursor-pointer transition-all duration-300",
                   focusRing,
                 )}
@@ -482,11 +340,199 @@ export function HtmlEditor({
                   strokeLinejoin="round"
                   className="size-8 p-1.5"
                 >
-                  <path d="M9 17H7A5 5 0 0 1 7 7h2" />
-                  <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
-                  <line x1="8" x2="16" y1="12" y2="12" />
+                  <path d="M4 12h8" />
+                  <path d="M4 18V6" />
+                  <path d="M12 18V6" />
+                  <path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1" />
                 </svg>
               </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Título H2</p>
+            </HoverCardContent>
+          </HoverCard>
+          <DashedBackground className={dashedBgStyle} />
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 3 }).run()
+                }
+                className={cn(
+                  editorState?.isActiveHeading3 ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M4 12h8" />
+                  <path d="M4 18V6" />
+                  <path d="M12 18V6" />
+                  <path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2" />
+                  <path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Título H3</p>
+            </HoverCardContent>
+          </HoverCard>
+          <DashedBackground className={dashedBgStyle} />
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 4 }).run()
+                }
+                className={cn(
+                  editorState?.isActiveHeading4 ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M12 18V6" />
+                  <path d="M17 10v3a1 1 0 0 0 1 1h3" />
+                  <path d="M21 10v8" />
+                  <path d="M4 12h8" />
+                  <path d="M4 18V6" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Título H4</p>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+        <div className={btnGroupStyle}>
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+                className={cn(
+                  editorState?.isActiveBold ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Negrito</p>
+            </HoverCardContent>
+          </HoverCard>
+          <DashedBackground className={dashedBgStyle} />
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHighlight().run()}
+                className={cn(
+                  editorState?.isActiveHighlight ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="m9 11-6 6v3h9l3-3" />
+                  <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Realçar</p>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+        <div className={btnGroupStyle}>
+          <AlertDialog open={isDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <HoverCard openDelay={0} closeDelay={0}>
+                <HoverCardTrigger asChild>
+                  <button
+                    type="button"
+                    tabIndex={0}
+                    onClick={handleLinkClick}
+                    className={cn(
+                      editorState?.isActiveLink
+                        ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
+                        : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                      "cursor-pointer transition-all duration-300",
+                      focusRing,
+                    )}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="size-8 p-1.5"
+                    >
+                      <path d="M9 17H7A5 5 0 0 1 7 7h2" />
+                      <path d="M15 7h2a5 5 0 1 1 0 10h-2" />
+                      <line x1="8" x2="16" y1="12" y2="12" />
+                    </svg>
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent side="top" sideOffset={1}>
+                  <p className="text-xs">Hiperlink</p>
+                </HoverCardContent>
+              </HoverCard>
             </AlertDialogTrigger>
             <AlertDialogContent className="sm:max-w-md gap-2">
               <AlertDialogHeaderPrimitive>
@@ -591,118 +637,144 @@ export function HtmlEditor({
           </AlertDialog>
         </div>
         <div className={btnGroupStyle}>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={cn(
-              editorState?.isActiveBulletList
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M3 5h.01" />
-              <path d="M3 12h.01" />
-              <path d="M3 19h.01" />
-              <path d="M8 5h13" />
-              <path d="M8 12h13" />
-              <path d="M8 19h13" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={cn(
-              editorState?.isActiveOrderedList
-                ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                : "text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              "cursor-pointer transition-all duration-300",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M11 5h10" />
-              <path d="M11 12h10" />
-              <path d="M11 19h10" />
-              <path d="M4 4h1v5" />
-              <path d="M4 9h2" />
-              <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
-            </svg>
-          </button>
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className={cn(
+                  editorState?.isActiveBulletList ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M3 5h.01" />
+                  <path d="M3 12h.01" />
+                  <path d="M3 19h.01" />
+                  <path d="M8 5h13" />
+                  <path d="M8 12h13" />
+                  <path d="M8 19h13" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Lista</p>
+            </HoverCardContent>
+          </HoverCard>
+          <DashedBackground className={dashedBgStyle} />
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                className={cn(
+                  editorState?.isActiveOrderedList ? btnActive : btnNotActive,
+                  "cursor-pointer transition-all duration-300",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M11 5h10" />
+                  <path d="M11 12h10" />
+                  <path d="M11 19h10" />
+                  <path d="M4 4h1v5" />
+                  <path d="M4 9h2" />
+                  <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Lista Numérica</p>
+            </HoverCardContent>
+          </HoverCard>
         </div>
         <div className={btnGroupStyle}>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().undo().run()}
-            className={cn(
-              "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="M9 14 4 9l5-5" />
-              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().redo().run()}
-            className={cn(
-              "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
-              focusRing,
-            )}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-8 p-1.5"
-            >
-              <path d="m15 14 5-5-5-5" />
-              <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13" />
-            </svg>
-          </button>
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().undo().run()}
+                className={cn(
+                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="M9 14 4 9l5-5" />
+                  <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Desfazer</p>
+            </HoverCardContent>
+          </HoverCard>
+          <DashedBackground className={dashedBgStyle} />
+          <HoverCard openDelay={0} closeDelay={0}>
+            <HoverCardTrigger asChild>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().redo().run()}
+                className={cn(
+                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800",
+                  focusRing,
+                )}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-8 p-1.5"
+                >
+                  <path d="m15 14 5-5-5-5" />
+                  <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13" />
+                </svg>
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" sideOffset={1}>
+              <p className="text-xs">Refazer</p>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </div>
       <EditorContent

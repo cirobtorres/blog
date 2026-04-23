@@ -7,14 +7,16 @@ interface ArticleCardLink extends Omit<
   children: React.ReactNode;
 }
 
-interface ArticleCardImage extends Omit<
-  React.ComponentProps<typeof Image>,
-  "src" | "alt"
-> {
+type BaseProps = Omit<React.ComponentProps<typeof Image>, "src" | "alt"> & {
   id: string;
   src: string;
   alt: string;
-}
+  className?: string;
+};
+
+type ArticleCardImage =
+  | (BaseProps & { fill: true; width?: never; height?: never })
+  | (BaseProps & { fill?: false | undefined; width: number; height: number });
 
 interface ArticleCardDate extends React.ComponentProps<"time"> {
   className?: string;

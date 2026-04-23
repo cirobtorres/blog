@@ -17,7 +17,19 @@ export default async function deleteTag(tagId: string) {
     apiServerUrls.tags.root + "/id/" + tagId,
     options,
   );
-  if (!response.ok) return { ...initialState, error: "Ocorreu algum erro" };
+  if (!response.ok) {
+    if (response.status === 409) {
+      return {
+        ...initialState,
+        error:
+          "Esta tag ainda está vinculada a artigo(s) e portanto não pode ser excluída",
+      };
+    }
+    return {
+      ...initialState,
+      error: "Ocorreu algum erro",
+    };
+  }
   revalidateTag("tags", { expire: 0 });
   revalidatePath("/users/authors/tags", "layout");
   return { ...initialState, ok: true, success: "Tag excluída!" };

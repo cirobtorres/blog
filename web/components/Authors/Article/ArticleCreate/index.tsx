@@ -66,7 +66,7 @@ export function ArticleCreate() {
 
       const success = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
-        replace(`/users/authors/articles/${serverResponse.data.id}`);
+        replace(`/users/authors/articles/write/${serverResponse.data.id}`);
         return (
           <div className="flex flex-col">
             <p>{serverResponse.success ?? "Artigo salvo!"}</p>
@@ -77,7 +77,7 @@ export function ArticleCreate() {
 
       const error = (serverResponse: ActionState) => {
         setIsOpenState(true);
-        return <p>{serverResponse.error ?? "Artigo não pôde ser salvo"}</p>;
+        return <p>{serverResponse.error ?? "Artigo não foi salvo"}</p>;
       };
 
       const result = saveArticle(prevState, formData);

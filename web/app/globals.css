@@ -73,7 +73,10 @@
   --animate-circular-open: circular-open 400ms ease-out forwards;
   --animate-fade-in-up: fade-in-up 250ms ease-out both;
   --animate-balloon: balloon 250ms ease-out both;
-  --animate-pulse-notification: pulse-notification 1.5s infinite;
+  --animate-pulse-yellow: pulse-yellow 1.5s infinite;
+  --animate-pulse-green: pulse-green 1.5s infinite;
+  --animate-pulse-blue: pulse-blue 1.5s infinite;
+  --animate-pulse-red: pulse-red 1.5s infinite;
 
   /* FONT-FAMILY */
   --font-inter: "Inter";
@@ -152,7 +155,7 @@
     }
   }
 
-  @keyframes pulse-notification {
+  @keyframes pulse-yellow {
     0% {
       transform: scale(0.95);
       box-shadow: 0 0 0 0 oklch(79.5% 0.184 86.047 / 0.7);
@@ -164,6 +167,51 @@
     100% {
       transform: scale(0.95);
       box-shadow: 0 0 0 0 oklch(79.5% 0.184 86.047 / 0);
+    }
+  }
+
+  @keyframes pulse-green {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(69.6% 0.17 162.48 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(69.6% 0.17 162.48 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(69.6% 0.17 162.48 / 0);
+    }
+  }
+
+  @keyframes pulse-blue {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(62.3% 0.214 259.815 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(62.3% 0.214 259.815 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(62.3% 0.214 259.815 / 0);
+    }
+  }
+
+  @keyframes pulse-red {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(63.7% 0.237 25.331 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(63.7% 0.237 25.331 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(63.7% 0.237 25.331 / 0);
     }
   }
 }

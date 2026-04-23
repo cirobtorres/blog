@@ -44,6 +44,7 @@ const apiServerUrls = {
   // Articles
   article: {
     root: API_SERVER + "/articles",
+    id: API_SERVER + "/articles/id",
     slug: API_SERVER + "/articles/slug",
   },
   media: {

@@ -15,7 +15,13 @@ import {
 import { useTags } from "../../../services/hooks/tags/hook-tags";
 import React from "react";
 
-export default function ArticleEditorTag({ error }: { error?: boolean }) {
+export default function ArticleEditorTag({
+  defaultTags,
+  error,
+}: {
+  defaultTags?: Tag[];
+  error?: boolean;
+}) {
   const { data } = useTags();
   const { content: tags, page } = data ? data : { content: [] };
 
@@ -27,50 +33,66 @@ export default function ArticleEditorTag({ error }: { error?: boolean }) {
       >
         Tags
       </label>
-      <TagComboboxMultiple id="tag-combobox" tags={tags} error={error} />
+      <TagComboboxMultiple
+        defaultTags={defaultTags}
+        id="tag-combobox"
+        tags={tags}
+        error={error}
+      />
     </div>
   );
 }
+
+const repeatMap = (filtered: Tag[], listToBeFiltered: Tag[]) => {
+  return filtered
+    .map((dt) => listToBeFiltered.find((t) => t.id === dt.id))
+    .filter(Boolean) as Tag[];
+};
 
 const TagComboboxMultiple = ({
   id,
   tags,
   error,
+  defaultTags,
 }: {
   id?: string;
   tags: Tag[];
   error?: boolean;
+  defaultTags?: Tag[];
 }) => {
   const anchor = useComboboxAnchor();
-  // Agora o estado armazena IDs (strings de UUID, presumo)
-  const [selectedTagIds, setSelectedTagIds] = React.useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = React.useState<Tag[]>(() => {
+    if (!defaultTags) return [];
+    return repeatMap(defaultTags, tags);
+  });
+
+  React.useEffect(() => {
+    if (defaultTags) {
+      setSelectedTags(repeatMap(defaultTags, tags));
+    }
+  }, [tags, defaultTags]);
 
   return (
     <>
       <input
-        hidden
         type="hidden"
         name="tags"
-        // Envia o array de IDs serializado
-        value={JSON.stringify(selectedTagIds)}
+        value={JSON.stringify(selectedTags.map((t) => t.id))}
       />
       <Combobox
         id={id}
         multiple
         autoHighlight
         items={tags}
-        value={selectedTagIds}
-        onValueChange={setSelectedTagIds}
+        value={selectedTags}
+        onValueChange={setSelectedTags}
       >
         <ComboboxChips ref={anchor} error={error}>
           <ComboboxValue>
-            {(values: string[]) => (
+            {(values: Tag[]) => (
               <>
-                {values.map((id: string) => {
-                  const tag = tags.find((t) => t.id === id);
-                  return (
-                    <ComboboxChip key={id}>{tag ? tag.name : id}</ComboboxChip>
-                  );
+                {values.map((tag: Tag) => {
+                  return <ComboboxChip key={tag.id}>{tag.name}</ComboboxChip>;
                 })}
                 <ComboboxChipsInput />
               </>
@@ -82,7 +104,7 @@ const TagComboboxMultiple = ({
           <ComboboxList>
             {(item: Tag) => {
               return (
-                <ComboboxItem key={item.id} value={item.id}>
+                <ComboboxItem key={item.id} value={item}>
                   {item.name}
                 </ComboboxItem>
               );

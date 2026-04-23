@@ -3,7 +3,6 @@
 import React from "react";
 import { Button } from "../../Button";
 import { sonnerPromise, sonnerToastPromise } from "../../../utils/sonner";
-import Spinner from "../../Spinner";
 import { useDeleteTag } from "../../../services/hooks/tags/hook-tags";
 import {
   AlertDialog,
@@ -14,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "../../AlertDialog";
+import Spinner from "../../Spinner";
 
 const defaultState: ActionState = {
   ok: false,
@@ -29,14 +29,19 @@ export default function TagDelete({ tag }: { tag: Tag }) {
       <p>{responseStatus?.success ?? "Tag excluída!"}</p>
     );
     const error = (responseStatus: ActionState) => (
-      <p>{responseStatus?.error ?? "Ocorreu algum erro"}</p>
+      <div className="flex flex-col">
+        <p className="text-sm text-neutral-100">Erro!</p>
+        <p className="text-xs text-neutral-400">
+          {responseStatus?.error ?? "Ocorreu algum erro"}
+        </p>
+      </div>
     );
 
     const promise = mutateAsync({ tagId: tag.id });
     const result = sonnerPromise(promise);
     sonnerToastPromise(result, success, error, "Excluindo tag...");
 
-    return result;
+    return promise;
   }, defaultState);
 
   return (
