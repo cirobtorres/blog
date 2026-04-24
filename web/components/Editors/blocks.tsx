@@ -3,9 +3,15 @@
 import React from "react";
 import { EditorsAccordion } from "./accordion";
 import { HtmlEditor } from "./editors/ArticleEditorHtml";
-import { AddAccordionButton } from "./addAccordionButton";
-import { FieldsetError } from "../Fieldset";
+import { CodeEditor, LanguageSelect } from "./editors/ArticleEditorCode";
 import { useArticleStore } from "../../zustand-store/article-state";
+import { AddAccordionButton } from "./addAccordionButton";
+import {
+  Fieldset,
+  FieldsetError,
+  FieldsetInput,
+  FieldsetLabel,
+} from "../Fieldset";
 
 const BlockItem = React.memo(function BlockItem({
   block,
@@ -42,7 +48,50 @@ const BlockItem = React.memo(function BlockItem({
         </>
       );
     case "code":
-      return;
+      const filenameEditorId = "input-filename-" + block.id;
+      const codeEditorId = "input-code-" + block.id;
+      return (
+        <>
+          <EditorsAccordion
+            id={block.id}
+            label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+            locked={block.locked}
+            onDelete={deleteBlock}
+            onDisable={toggleBlockLock}
+            moveDownward={moveBlockDownward}
+            hasError={!!error}
+          >
+            <div className="flex gap-1 mb-1">
+              <Fieldset>
+                <FieldsetInput
+                  id={filenameEditorId}
+                  placeholder="path/to/my/file.py"
+                  value={(block.data as CodeEditor)?.filename ?? ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateBlock(block.id, { filename: e.target.value })
+                  }
+                />
+                <FieldsetLabel
+                  htmlFor={filenameEditorId}
+                  label="Caminho do Arquivo"
+                />
+              </Fieldset>
+              <LanguageSelect
+                defaultLanguage={
+                  (block.data as CodeEditor)?.language ?? "Typescript"
+                }
+                setLanguage={(val) => updateBlock(block.id, { language: val })}
+              />
+            </div>
+            <CodeEditor
+              id={codeEditorId}
+              defaultValue={(block.data as CodeEditor)?.code ?? ""}
+              setVal={(val) => updateBlock(block.id, { code: val })}
+            />
+          </EditorsAccordion>
+          <FieldsetError error={dataErrors?.code?.errors} />
+        </>
+      );
     case "accordion":
       return;
     case "image":
@@ -109,7 +158,7 @@ const createNewBlock = (
       return {
         ...base,
         type: "code",
-        data: { filename: "", code: "", language: "typescript" },
+        data: { filename: "", code: "", language: "Typescript" },
       };
     case "image":
       return { ...base, type: "image", data: { url: "" } };
