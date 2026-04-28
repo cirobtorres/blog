@@ -8,7 +8,7 @@ import ArticleBody from "../../../../../../components/Article/ArticleBody";
 import Comments from "../../../../../../components/Comments";
 import { serverFetch } from "../../../../../../services/auth-fetch-actions";
 import { apiServerUrls } from "../../../../../../routing/routes";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   const response = await fetch(apiServerUrls.article.slug);
@@ -31,7 +31,7 @@ export default async function ArticlePageId({
 
   const response = await serverFetch(getUrl);
 
-  if (!response.ok) return notFound();
+  // if (!response.ok) return notFound();
 
   const article = await response.json();
 

@@ -19,7 +19,7 @@ public interface ArticlesRepository extends JpaRepository<Articles, UUID>, JpaSp
     @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags", "currentPublishedRevision.media"})
     Optional<Articles> findBySlugAndStatus(String slug, ArticlesStatus status);
 
-    @EntityGraph(attributePaths = {"author", "media"})
+    @EntityGraph(attributePaths = {"author", "currentPublishedRevision", "currentPublishedRevision.tags", "currentPublishedRevision.media"})
     Optional<Articles> findBySlug(String slug);
 
     @NonNull

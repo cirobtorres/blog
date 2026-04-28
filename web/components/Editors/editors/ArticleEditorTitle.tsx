@@ -12,7 +12,7 @@ export function ArticleEditorTitle({
   defaultVal?: string;
   error?: boolean;
 }) {
-  const { title, setTitle } = useArticleStore();
+  const { title, setTitle, setSlug } = useArticleStore();
 
   React.useEffect(() => {
     if (defaultVal) {
@@ -20,6 +20,14 @@ export function ArticleEditorTitle({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleTitle = (
+    e: React.ChangeEvent<HTMLTextAreaElement, HTMLTextAreaElement>,
+  ) => {
+    const val = e.target.value;
+    setTitle(val);
+    setSlug(val);
+  };
 
   return (
     <fieldset className="flex flex-col">
@@ -36,7 +44,7 @@ export function ArticleEditorTitle({
         autoFocus
         rows={2}
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleTitle}
         maxLength={128}
         spellCheck={false}
         placeholder="Título"

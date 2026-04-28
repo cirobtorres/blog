@@ -16,7 +16,7 @@ export default function ArticleEditorSlug({
   error,
   ...props
 }: React.ComponentProps<"input"> & { defaultVal?: string; error?: boolean }) {
-  const { title, slug, setSlug } = useArticleStore();
+  const { slug, setSlug } = useArticleStore();
   const [isChecking, setIsChecking] = React.useState(false);
   const [isSlugTaken, setIsSlugTaken] = React.useState<
     "valid" | "invalid" | "empty"
@@ -28,6 +28,7 @@ export default function ArticleEditorSlug({
     }
 
     setIsChecking(true);
+
     try {
       const response = await fetchAction(
         apiServerUrls.article.slug + "/" + currentSlug,
@@ -46,20 +47,14 @@ export default function ArticleEditorSlug({
   }, 2000);
 
   const setValidateSlug = React.useCallback(
-    (title: string) => {
-      if (title.length < 5) {
+    (val: string) => {
+      if (val.length < 5) {
         setIsSlugTaken("empty");
       }
-      validateSlug(title);
+      validateSlug(val);
     },
     [validateSlug],
   );
-
-  React.useEffect(() => {
-    setSlug(slugify(title));
-    setValidateSlug(slugify(title));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = slugify(e.target.value);

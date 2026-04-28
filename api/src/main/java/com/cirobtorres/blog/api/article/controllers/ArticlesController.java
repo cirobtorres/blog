@@ -27,7 +27,7 @@ public class ArticlesController {
     }
 
     // GET----------------------------------------------------------------------------------------------------
-    @GetMapping("/{year}/{month}/{day}/{slug}")
+    @GetMapping("{year}/{month}/{day}/{slug}")
     public ResponseEntity<ArticleDTO> getArticlePage(
             @PathVariable int year,
             @PathVariable int month,

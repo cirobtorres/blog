@@ -1,6 +1,6 @@
 "use server";
 
-import { ArticleUpdate } from "../../../../../../components/Authors/Article/ArticleUpdate";
+import ArticleUpdate from "../../../../../../components/Authors/Article/ArticleUpdate";
 import { apiServerUrls } from "../../../../../../routing/routes";
 import { serverFetch } from "../../../../../../services/auth-fetch-actions";
 

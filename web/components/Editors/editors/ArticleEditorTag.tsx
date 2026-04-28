@@ -15,15 +15,25 @@ import {
 import { useTags } from "../../../services/hooks/tags/hook-tags";
 import React from "react";
 
+const repeatMap = (filtered: Tag[], listToBeFiltered: Tag[]) => {
+  return filtered
+    .map((dt) => listToBeFiltered.find((t) => t.id === dt.id))
+    .filter(Boolean) as Tag[];
+};
+
 export default function ArticleEditorTag({
-  defaultTags,
+  tags,
+  setTags,
   error,
 }: {
-  defaultTags?: Tag[];
+  tags: Tag[];
+  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
   error?: boolean;
 }) {
+  const anchor = useComboboxAnchor();
   const { data } = useTags();
-  const { content: tags, page } = data ? data : { content: [] };
+  const { content: allTags, page } = data ? data : { content: [] };
+  const selectedTags = repeatMap(tags, allTags);
 
   return (
     <div className="flex flex-col">
@@ -33,59 +43,18 @@ export default function ArticleEditorTag({
       >
         Tags
       </label>
-      <TagComboboxMultiple
-        defaultTags={defaultTags}
-        id="tag-combobox"
-        tags={tags}
-        error={error}
-      />
-    </div>
-  );
-}
-
-const repeatMap = (filtered: Tag[], listToBeFiltered: Tag[]) => {
-  return filtered
-    .map((dt) => listToBeFiltered.find((t) => t.id === dt.id))
-    .filter(Boolean) as Tag[];
-};
-
-const TagComboboxMultiple = ({
-  id,
-  tags,
-  error,
-  defaultTags,
-}: {
-  id?: string;
-  tags: Tag[];
-  error?: boolean;
-  defaultTags?: Tag[];
-}) => {
-  const anchor = useComboboxAnchor();
-  const [selectedTags, setSelectedTags] = React.useState<Tag[]>(() => {
-    if (!defaultTags) return [];
-    return repeatMap(defaultTags, tags);
-  });
-
-  React.useEffect(() => {
-    if (defaultTags) {
-      setSelectedTags(repeatMap(defaultTags, tags));
-    }
-  }, [tags, defaultTags]);
-
-  return (
-    <>
       <input
         type="hidden"
         name="tags"
-        value={JSON.stringify(selectedTags.map((t) => t.id))}
+        value={JSON.stringify(tags.map((t) => t.id))}
       />
       <Combobox
-        id={id}
+        id="tag-combobox"
         multiple
         autoHighlight
-        items={tags}
+        items={allTags}
         value={selectedTags}
-        onValueChange={setSelectedTags}
+        onValueChange={setTags}
       >
         <ComboboxChips ref={anchor} error={error}>
           <ComboboxValue>
@@ -112,6 +81,6 @@ const TagComboboxMultiple = ({
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
-    </>
+    </div>
   );
-};
+}

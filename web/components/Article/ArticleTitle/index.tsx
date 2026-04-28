@@ -10,7 +10,7 @@ export default function ArticleTitle({
   title,
   subtitle,
   author: { name: authorName, pictureUrl: authorPicUrl },
-  media: { bannerUrl: artBannerUrl, alt: artBannerAlt },
+  media: { url: artBannerUrl, alt: artBannerAlt },
   likeCount,
   commentCount,
   createdAt,
