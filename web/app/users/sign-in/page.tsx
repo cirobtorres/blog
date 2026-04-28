@@ -18,7 +18,7 @@ export default async function SignInPage({
         <NextLink
           href={publicWebUrls.home}
           aria-label="Retornar para home page"
-          className="z-10 absolute top-1/2 -translate-y-1/2 size-14 rounded-full -left-7 border bg-stone-200 dark:bg-stone-900"
+          className="z-10 hidden min-[700px]:block absolute top-1/2 -translate-y-1/2 size-14 rounded-full -left-7 border bg-stone-200 dark:bg-stone-900"
         />
         <div className="h-screen p-1">
           <div className="h-full p-8 overflow-y-auto scrollbar">
@@ -70,10 +70,6 @@ export default async function SignInPage({
   );
 }
 
-const LeftBanner = ({ children }: { children?: string }) => (
-  <div className="grayscale flex justify-center items-center [background:linear-gradient(90deg,rgba(255,255,255,0.25),rgba(255,255,255,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]">
-    <div className="max-w-150 px-8">
-      <h2 className="text-2xl font-bold">{children}</h2>
-    </div>
-  </div>
+const LeftBanner = () => (
+  <div className="grayscale flex justify-center items-center [background:linear-gradient(90deg,rgba(255,255,255,0.25),rgba(255,255,255,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')] dark:[background:linear-gradient(90deg,rgba(0,0,0,0.25),rgba(0,0,0,1)),radial-gradient(circle,rgba(0,0,0,0.0),rgba(0,0,0,1)),url('https://store-images.s-microsoft.com/image/apps.20650.14336626908214534.584cecb6-3f58-4dd3-9758-900c83416f32.aacd9cd9-55fe-43b1-a452-49dad64f4772')]" />
 );

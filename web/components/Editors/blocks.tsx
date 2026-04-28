@@ -61,32 +61,15 @@ const BlockItem = React.memo(function BlockItem({
             moveDownward={moveBlockDownward}
             hasError={!!error}
           >
-            <div className="flex gap-1 mb-1">
-              <Fieldset>
-                <FieldsetInput
-                  id={filenameEditorId}
-                  placeholder="path/to/my/file.py"
-                  value={(block.data as CodeEditor)?.filename ?? ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateBlock(block.id, { filename: e.target.value })
-                  }
-                />
-                <FieldsetLabel
-                  htmlFor={filenameEditorId}
-                  label="Caminho do Arquivo"
-                />
-              </Fieldset>
-              <LanguageSelect
-                defaultLanguage={
-                  (block.data as CodeEditor)?.language ?? "Typescript"
-                }
-                setLanguage={(val) => updateBlock(block.id, { language: val })}
-              />
-            </div>
             <CodeEditor
-              id={codeEditorId}
+              editorId={codeEditorId}
+              filenameId={filenameEditorId}
               defaultValue={(block.data as CodeEditor)?.code ?? ""}
               setVal={(val) => updateBlock(block.id, { code: val })}
+              defaultLanguage={(block.data as CodeEditor)?.language ?? "ts"}
+              setLanguage={(val) => updateBlock(block.id, { language: val })}
+              defaultFilename={(block.data as CodeEditor)?.filename ?? ""}
+              setFilename={(val) => updateBlock(block.id, { filename: val })}
             />
           </EditorsAccordion>
           <FieldsetError error={dataErrors?.code?.errors} />
