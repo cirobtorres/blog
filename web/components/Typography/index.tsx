@@ -1,4 +1,6 @@
 import { cn } from "../../utils/variants";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../HoverCard";
+import { Link } from "../Links";
 
 export function H2({
   className,
@@ -87,6 +89,42 @@ export function P({
         className,
       )}
     />
+  );
+}
+
+export function Mark({
+  className,
+  ...props
+}: React.ComponentProps<"mark"> & { className?: string }) {
+  return (
+    <mark
+      {...props}
+      className={cn(
+        "border rounded-lg italic px-1 py-0.5 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900",
+        className,
+      )}
+    />
+  );
+}
+
+export function A({
+  href,
+  children,
+  ...props
+}: React.ComponentProps<typeof Link> & { className?: string }) {
+  if (!href) return <span>{children}</span>;
+
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Link href={href} {...props}>
+          {children}
+        </Link>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        <span className="text-xs break-all text-neutral-500">{href}</span>
+      </HoverCardContent>
+    </HoverCard>
   );
 }
 

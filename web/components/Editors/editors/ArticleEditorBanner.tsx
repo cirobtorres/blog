@@ -57,7 +57,7 @@ export default function ArticleEditorBanner({
         <button
           onClick={() => openMediaLibrary("banner")}
           className={cn(
-            "cursor-pointer relative w-full flex justify-center items-center aspect-[calc(21/9)] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
+            "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
             focusRing,
             error
               ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"

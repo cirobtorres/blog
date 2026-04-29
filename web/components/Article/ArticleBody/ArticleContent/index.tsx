@@ -2,10 +2,15 @@ import { Alert } from "../../../Alert";
 import { Link } from "../../../Links";
 import { Blockquote, H2, H3, Li, Ol, P, Ul } from "../../../Typography";
 
-export default function ArticleContent({ body }: { body: string }) {
+export default function ArticleContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <article className="w-full max-w-article-body my-6">
-      <H2>Lorem ipsum dolor sit amet.</H2>
+      {children}
+      {/* <H2>Lorem ipsum dolor sit amet.</H2>
       <P>
         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere
         architecto molestias exercitationem cupiditate! Repellat error assumenda
@@ -174,7 +179,7 @@ export default function ArticleContent({ body }: { body: string }) {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam nulla
           voluptates animi magnam distinctio ratione delectus!
         </Li>
-      </Ol>
+      </Ol> */}
     </article>
   );
 }
