@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "../../Links";
 import { publicWebUrls } from "../../../routing/routes";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";

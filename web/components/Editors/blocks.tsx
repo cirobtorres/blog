@@ -3,15 +3,11 @@
 import React from "react";
 import { EditorsAccordion } from "./accordion";
 import { HtmlEditor } from "./editors/ArticleEditorHtml";
-import { CodeEditor, LanguageSelect } from "./editors/ArticleEditorCode";
+import { CodeEditor } from "./editors/ArticleEditorCode";
 import { useArticleStore } from "../../zustand-store/article-state";
 import { AddAccordionButton } from "./addAccordionButton";
-import {
-  Fieldset,
-  FieldsetError,
-  FieldsetInput,
-  FieldsetLabel,
-} from "../Fieldset";
+import { FieldsetError } from "../Fieldset";
+import AlertEditor from "./editors/ArticleEditorAlert";
 
 const BlockItem = React.memo(function BlockItem({
   block,
@@ -66,7 +62,7 @@ const BlockItem = React.memo(function BlockItem({
               filenameId={filenameEditorId}
               defaultValue={(block.data as CodeEditor)?.code ?? ""}
               setVal={(val) => updateBlock(block.id, { code: val })}
-              defaultLanguage={(block.data as CodeEditor)?.language ?? "ts"}
+              defaultLanguage={(block.data as CodeEditor)?.language ?? "tsx"}
               setLanguage={(val) => updateBlock(block.id, { language: val })}
               defaultFilename={(block.data as CodeEditor)?.filename ?? ""}
               setFilename={(val) => updateBlock(block.id, { filename: val })}
@@ -82,7 +78,32 @@ const BlockItem = React.memo(function BlockItem({
     case "images":
       return;
     case "alert":
-      return;
+      const alertEditorTitleId = "input-alert-title-" + block.id;
+      const alertEditorTypeId = "input-alert-type-" + block.id;
+      const alertEditorHtmlId = "input-alert-body-" + block.id;
+      return (
+        <EditorsAccordion
+          id={block.id}
+          label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+          locked={block.locked}
+          onDelete={deleteBlock}
+          onDisable={toggleBlockLock}
+          moveDownward={moveBlockDownward}
+          hasError={!!error}
+        >
+          <AlertEditor
+            titleId={alertEditorTitleId}
+            typeId={alertEditorTypeId}
+            htmlId={alertEditorHtmlId}
+            defaultValue={(block.data as AlertEditor)?.body ?? ""}
+            setVal={(val) => updateBlock(block.id, { body: val })}
+            defaultTitle={(block.data as AlertEditor)?.title ?? ""}
+            setTitle={(val) => updateBlock(block.id, { title: val })}
+            defaultType={(block.data as AlertEditor)?.type ?? "default"}
+            setType={(val) => updateBlock(block.id, { type: val })}
+          />
+        </EditorsAccordion>
+      );
     default:
       return null;
   }
@@ -141,12 +162,16 @@ const createNewBlock = (
       return {
         ...base,
         type: "code",
-        data: { filename: "", code: "", language: "Typescript" },
+        data: { filename: "", code: "", language: "tsx" },
       };
     case "image":
       return { ...base, type: "image", data: { url: "" } };
     case "alert":
-      return { ...base, type: "alert", data: null };
+      return {
+        ...base,
+        type: "alert",
+        data: { title: "", type: "default", body: "" },
+      };
     case "accordion":
       return { ...base, type: "accordion", data: null };
     case "images":

@@ -18,68 +18,15 @@ import {
   SelectValue,
 } from "../../Select";
 import React from "react";
-import { useArticleStore } from "../../../zustand-store/article-state";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
-
-const SHELL: BundledLanguage[] = ["shell", "bash"];
-const LANGUAGES: BundledLanguage[] = ["ts", "py", "java", "c#", "c++"];
-const STYLE_LANGUAGES: BundledLanguage[] = ["css"];
-const DB_LANGUAGES: BundledLanguage[] = ["sql"];
-
-const formatCodeBlockLanguage = (lang: BundledLanguage | null | undefined) => {
-  switch (lang?.toLocaleLowerCase()) {
-    case "ts":
-      return "Typescript";
-    case "typescript":
-      return "Typescript";
-    case "py":
-      return "Python";
-    case "python":
-      return "Python";
-    case "c#":
-      return "C#";
-    case "c++":
-      return "C++";
-    case "bash":
-      return "Bash";
-    case "shell":
-      return "Shell";
-    case "java":
-      return "Java";
-    case "sql":
-      return "SQL";
-    case "css":
-      return "CSS";
-    default:
-      return "plain text";
-  }
-};
-
-const convertBack = (lang?: string): BundledLanguage => {
-  if (!lang) return "ts";
-  switch (lang.toLocaleLowerCase()) {
-    case "typescript":
-      return "ts";
-    case "python":
-      return "py";
-    case "c#":
-      return "c#";
-    case "c++":
-      return "c++";
-    case "java":
-      return "java";
-    case "bash":
-      return "bash";
-    case "shell":
-      return "shell";
-    case "sql":
-      return "sql";
-    case "css":
-      return "css";
-    default:
-      return "ts";
-  }
-};
+import {
+  convertBack,
+  DB_LANGUAGES,
+  formatCodeBlockLanguage,
+  LANGUAGES,
+  SHELL,
+  STYLE_LANGUAGES,
+} from "../../../utils/shiki";
 
 export function CodeEditor({
   editorId,
@@ -100,7 +47,6 @@ export function CodeEditor({
   setLanguage: (data: string) => void;
   setFilename: (data: string) => void;
 }) {
-  const {} = useArticleStore();
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -130,7 +76,7 @@ export function CodeEditor({
         },
       }).configure({
         defaultTheme: "dark-plus",
-        defaultLanguage: defaultLanguage ?? "ts",
+        defaultLanguage: defaultLanguage ?? "tsx",
         // themes: {
         //   light: "light-plus",
         //   dark: "dark-plus"
@@ -161,7 +107,7 @@ export function CodeEditor({
           <FieldsetInput
             id={filenameId}
             placeholder="path/to/my/file.py"
-            value={defaultFilename ?? "ts"}
+            value={defaultFilename ?? "tsx"}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setFilename(e.target.value)
             }
@@ -196,11 +142,11 @@ export function LanguageSelect({
   setLanguage: (data: string) => void;
 }) {
   const [lang, setLang] = React.useState<BundledLanguage | undefined>(
-    convertBack(defaultLanguage) ?? "ts",
+    convertBack(defaultLanguage) ?? "tsx",
   );
   return (
     <Select
-      value={lang ?? ""}
+      value={lang ?? "tsx"}
       onValueChange={(val) => {
         setLanguage(val);
         setLang(val.toLowerCase() as BundledLanguage);

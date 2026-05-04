@@ -108,6 +108,7 @@ export function Header({
 
   return (
     <header
+      id="main-header"
       ref={headerRef}
       className={cn(
         "z-50 sticky top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900",

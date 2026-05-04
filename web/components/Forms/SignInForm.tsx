@@ -39,8 +39,13 @@ export default function SignInForm() {
   const passRef = useRef(null);
 
   const [state, action, isPending] = useActionState(
-    async (prevState: ActionState, formData: FormData) =>
-      await signIn(prevState, formData),
+    async (prevState: ActionState, formData: FormData) => {
+      const promise = await signIn(prevState, formData);
+      if (!promise.ok && promise.error) {
+        setErrors(promise.error);
+      }
+      return promise;
+    },
     defaultState,
   );
 

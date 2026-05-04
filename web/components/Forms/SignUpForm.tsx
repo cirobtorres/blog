@@ -74,8 +74,13 @@ export default function SignUpForm() {
   const strength = zxcvbn(password);
 
   const [state, action, isPending] = React.useActionState(
-    async (prevState: ActionState, formData: FormData) =>
-      await signUp(prevState, formData),
+    async (prevState: ActionState, formData: FormData) => {
+      const promise = await signUp(prevState, formData);
+      if (!promise.ok && promise.error) {
+        setErrors(promise.error);
+      }
+      return promise;
+    },
     defaultState,
   );
 

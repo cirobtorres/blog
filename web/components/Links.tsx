@@ -21,7 +21,7 @@ export function Link({
             href={href}
             data-variant="external"
             target="_blank"
-            className={cn(linkVariants({ variant }), className)}
+            className={cn(linkVariants({ variant }), "group", className)}
           >
             {children}
             <svg
@@ -40,7 +40,7 @@ export function Link({
             </svg>
           </NextLink>
         </HoverCardTrigger>
-        <HoverCardContent>
+        <HoverCardContent side="top">
           <p className="text-xs text-neutral-400 dark:text-neutral-500">
             {href}
           </p>

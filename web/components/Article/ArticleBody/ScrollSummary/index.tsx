@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../Accordion";
-import { cn, linkVariants } from "../../../../utils/variants";
+import { cn } from "../../../../utils/variants";
 import React from "react";
 
 export default function ScrollSummary({
@@ -21,7 +21,7 @@ export default function ScrollSummary({
     if (anchors.length === 0) return;
 
     const linkAnchorsListener = () => {
-      const header = document.getElementById("floating-header");
+      const header = document.getElementById("main-header");
       const headerHeight = header?.offsetHeight ?? 0;
 
       let currentSectionIndex = 0;
@@ -38,7 +38,7 @@ export default function ScrollSummary({
         }
       });
 
-      const links = anchorListRef.current?.querySelectorAll("li");
+      const links = anchorListRef.current?.querySelectorAll("a");
       links?.forEach((link, index) => {
         link.setAttribute(
           "aria-current",
@@ -64,16 +64,18 @@ export default function ScrollSummary({
           </AccordionTrigger>
           <AccordionContent>
             <div className="hidden overflow-y-hidden md:block md:max-h-[50svh] ms-3.5 relative dark:before:bg-neutral-800">
-              <nav className="before:absolute before:-left-3.5 before:inset-y-0 before:w-px before:bg-neutral-200">
+              <nav
+                ref={anchorListRef}
+                className="before:absolute before:-left-3.5 before:inset-y-0 before:w-px before:bg-neutral-200"
+              >
                 {anchors.map((anchor, i) => (
                   <Link
                     key={anchor.id}
                     href={"#" + anchor.id}
-                    data-active={i === 0 ? "true" : "false"}
+                    aria-current={i === 0 ? "true" : "false"}
                     aria-label={`Navegar até a sessão "${anchor.text}"`}
                     className={cn(
-                      linkVariants(),
-                      "block text-xs text-neutral-500 ml-1 p-px my-1 no-underline!",
+                      "block text-xs ml-1 p-px my-1 transition-colors duration-300 no-underline!",
                     )}
                   >
                     {anchor.text}

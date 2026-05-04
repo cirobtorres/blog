@@ -6,9 +6,13 @@ import parse, { DOMNode, domToReact, Element } from "html-react-parser";
 import { slugify } from "../../../utils/strings-transforms";
 import ArticleContent from "./ArticleContent";
 import BackToTopButton from "./BackToTopButton";
-import { cn, focusRing } from "../../../utils/variants";
+import { alertVariants, cn, focusRing } from "../../../utils/variants";
 import * as Typography from "../../Typography";
 import NextLink from "next/link";
+import CopyToClipBoard from "../../CopyToClipBoard";
+import { highlightCodeWithShiki } from "../../../utils/shiki";
+import Spinner from "../../Spinner";
+import { Alert } from "../../Alert";
 
 const typographyMap: Record<string, React.ElementType> = {
   h2: Typography.H2,
@@ -48,7 +52,6 @@ export default function ArticleBody({ body }: Article) {
 
 export function processBlocks(blocks: Blocks[]) {
   const anchors: { id: string; text: string }[] = [];
-  let headingCounter = 0;
 
   const replaceOptions = (domNode: DOMNode) => {
     if (domNode.type !== "tag") return;
@@ -63,8 +66,7 @@ export function processBlocks(blocks: Blocks[]) {
         .map((c) => (c.type === "text" ? c.data : ""))
         .join("");
 
-      headingCounter++;
-      const id = `${slugify(text)}-${headingCounter}`;
+      const id = slugify(text);
       anchors.push({ id, text });
 
       const Component = typographyMap[tagName];
@@ -106,7 +108,22 @@ export function processBlocks(blocks: Blocks[]) {
       });
     }
     if (block.type === "code") {
-      return <CodeRenderer key={block.id} {...block.data} />;
+      return <CodeRenderer key={block.id} {...(block.data as CodeEditor)} />;
+    }
+    if (block.type === "alert") {
+      const alertData = block.data as AlertEditor;
+      return (
+        <Alert
+          key={block.id}
+          title={alertData?.title}
+          variant={alertData?.type as keyof typeof alertVariants}
+          className="mt-6"
+        >
+          {parse(alertData?.body, {
+            replace: replaceOptions,
+          })}
+        </Alert>
+      );
     }
     return null;
   });
@@ -114,10 +131,7 @@ export function processBlocks(blocks: Blocks[]) {
   return { processedNodes, anchors };
 }
 
-const CodeRenderer = () => {
-  return <div className="w-full h-8 bg-red-500" />;
-};
-
+// Helpers-------------------------------------------------------------------------------------------------
 const LinkIcon = ({ className }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -142,4 +156,94 @@ const cleanProps = (attribs: Record<string, string>) => {
     ...rest,
     className: charClass, // Convert "class" to "className"
   };
+};
+
+// Code----------------------------------------------------------------------------------------------------
+const CodeRenderer = ({ filename, code, language }: CodeEditor) => {
+  const [shikiCode, setShikiCode] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    (async () => {
+      const highlightedCode = await highlightCodeWithShiki({
+        language,
+        code,
+      });
+      setShikiCode(highlightedCode);
+      setLoading(false);
+    })();
+  }, [language, code]);
+
+  return (
+    <div className="mt-6 overflow-hidden flex flex-col rounded border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-900">
+      <div className="relative flex items-center justify-between p-2 border-b border-stone-300 dark:border-stone-700">
+        <span className="text-sm text-neutral-400 dark:text-neutral-500">
+          {filename}
+        </span>
+        <CopyToClipBoard toCopy={code} />
+      </div>
+      <div className="flex items-center justify-center min-h-11">
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{ __html: shikiCode }}
+            className="overflow-auto max-w-full min-w-0 [&_pre_code]:max-h-100 [&_pre_code]:py-4"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+// TODO----------------------------------------------------------------------------------------------------
+const YouTubePlayerComponent = ({
+  ...props
+}: React.ComponentProps<"iframe">) => {
+  return (
+    <iframe
+      title="Reprodutor de vídeo"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      referrerPolicy="strict-origin-when-cross-origin"
+      loading="lazy"
+      className="w-full aspect-video not-first:mt-6 overflow-hidden rounded-lg not-dark:shadow-lg"
+      {...props}
+    />
+  );
+};
+
+const ImageComponent = () => {
+  {
+    /* <figure className="not-first:mt-6 w-full flex flex-col">
+        <Image
+          src="https://placehold.co/1920x1080/000/fff/jpeg"
+          alt="Placeholder image example 1"
+          loading="lazy"
+          sizes="(max-width: 1024px) 100vw, 1020px"
+          width={1920}
+          height={1080}
+        />
+        <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
+          <small>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
+            voluptatem, quia nisi laudantium magnam dicta dolores tempora
+            cupiditate suscipit quae ipsa, doloribus eos!
+          </small>
+        </figcaption>
+      </figure> */
+  }
+
+  return (
+    <figure className="not-first:mt-6 w-full flex flex-col">
+      <div className="bg-[url('https://techgage.com/wp-content/uploads/2023/03/Blender-3.5-Splash-Screen.jpg')] w-full aspect-video bg-contain rounded-lg" />
+      <figcaption className="text-neutral-900 dark:text-neutral-400 text-start">
+        <small>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus
+          voluptatem, quia nisi laudantium magnam dicta dolores tempora
+          cupiditate suscipit quae ipsa, doloribus eos!
+        </small>
+      </figcaption>
+    </figure>
+  );
 };

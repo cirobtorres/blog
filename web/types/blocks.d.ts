@@ -18,7 +18,11 @@ type AccordionBlock<T extends object> = T & {
 type HtmlEditor = { body: string };
 type CodeEditor = { filename: string; code: string; language: BundledLanguage };
 type AccordionEditor = null;
-type AlertEditor = null;
+type AlertEditor = {
+  type: typeof alertVariants;
+  title: string;
+  body: string;
+};
 type ImageEditor = { url: string };
 type ImagesEditor = null;
 

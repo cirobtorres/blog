@@ -7,8 +7,8 @@ import { cn, focusRing } from "../../../utils/variants";
 import { protectedWebUrls } from "../../../routing/routes";
 import { Link } from "../../Links";
 import { serverLogout } from "../../../services/auth/session/server/logout";
-import Spinner from "../../Spinner";
 import { useRouter } from "next/navigation";
+import Spinner from "../../Spinner";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
@@ -16,7 +16,6 @@ const elStyleItem =
 
 export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
   const router = useRouter();
-
   const [, action, isPending] = React.useActionState(async () => {
     await serverLogout();
     router.refresh();
@@ -25,24 +24,27 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
   return (
     <div className="ml-auto mr-0">
       <Popover>
-        <PopoverTrigger
-          asChild
-          tabIndex={0}
-          className={cn(
-            "flex items-center justify-start gap-2 cursor-pointer border border-transparent transition-all duration-300 group",
-            focusRing,
-          )}
-        >
-          <Image
-            src={
-              user.data.pictureUrl ??
-              "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
-            }
-            alt="User avatar"
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
+        <PopoverTrigger asChild>
+          <button
+            suppressHydrationWarning // aria-control id missmatch between radix and server
+            type="button"
+            tabIndex={0}
+            className={cn(
+              "flex items-center justify-start gap-2 cursor-pointer border border-transparent transition-all duration-300 group",
+              focusRing,
+            )}
+          >
+            <Image
+              src={
+                user.data.pictureUrl ??
+                "https://placehold.co/100x100/0a0a0a/f5f5f5/jpg"
+              }
+              alt="User avatar"
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
+          </button>
         </PopoverTrigger>
         <PopoverContent
           align="end"

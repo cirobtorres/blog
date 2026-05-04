@@ -1,5 +1,4 @@
 import { cn } from "../../utils/variants";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../HoverCard";
 import { Link } from "../Links";
 
 export function H2({
@@ -10,7 +9,7 @@ export function H2({
     <h2
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight text-balance not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight text-balance not-first:mt-6",
         className,
       )}
     />
@@ -25,7 +24,7 @@ export function H3({
     <h3
       {...props}
       className={cn(
-        "text-lg lg:text-xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -40,7 +39,7 @@ export function H4({
     <h4
       {...props}
       className={cn(
-        "text-lg lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+        "text-lg lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
         className,
       )}
     />
@@ -55,7 +54,7 @@ export function H4({
 //     <h5
 //       {...props}
 //       className={cn(
-//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
 //         className,
 //       )}
 //     />
@@ -70,7 +69,7 @@ export function H4({
 //     <h6
 //       {...props}
 //       className={cn(
-//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-20 tracking-tight not-first:mt-6",
+//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
 //         className,
 //       )}
 //     />
@@ -115,16 +114,14 @@ export function A({
   if (!href) return <span>{children}</span>;
 
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Link href={href} {...props}>
-          {children}
-        </Link>
-      </HoverCardTrigger>
-      <HoverCardContent>
-        <span className="text-xs break-all text-neutral-500">{href}</span>
-      </HoverCardContent>
-    </HoverCard>
+    <Link
+      href={href}
+      {...props}
+      variant="markdown"
+      className="[&_svg]:size-3! [&_svg]:transition-colors [&_svg]:duration-300 [&_svg]:stroke-primary/75! [&_svg]:dark:stroke-primary/75! [&_svg]:group-hover:stroke-primary! [&_svg]:dark:group-hover:stroke-primary!"
+    >
+      {children}
+    </Link>
   );
 }
 

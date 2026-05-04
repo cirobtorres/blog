@@ -27,6 +27,11 @@ const AlertDescription = ({
   return <div className={cn("font-medium", className)} {...props} />;
 };
 
+const alWraClasses = "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4";
+
+const alDesClasses =
+  "row-start-2 col-start-2 [&_h2_svg]:size-6 [&_h3_svg]:size-6 [&_h4_svg]:size-6";
+
 const Alert = ({
   title,
   children,
@@ -40,80 +45,50 @@ const Alert = ({
   switch (variant) {
     case "info":
       return (
-        <AlertWrapper
-          variant={variant}
-          className={cn(
-            "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4",
-            className,
-          )}
-        >
+        <AlertWrapper variant={variant} className={cn(alWraClasses, className)}>
           <AlertInfoIcon />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="row-start-2 col-start-2">
+          <AlertDescription className={alDesClasses}>
             {children}
           </AlertDescription>
         </AlertWrapper>
       );
     case "warn":
       return (
-        <AlertWrapper
-          variant={variant}
-          className={cn(
-            "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4",
-            className,
-          )}
-        >
+        <AlertWrapper variant={variant} className={cn(alWraClasses, className)}>
           <AlertInfoIcon />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="row-start-2 col-start-2">
+          <AlertDescription className={alDesClasses}>
             {children}
           </AlertDescription>
         </AlertWrapper>
       );
     case "alert":
       return (
-        <AlertWrapper
-          variant={variant}
-          className={cn(
-            "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4",
-            className,
-          )}
-        >
+        <AlertWrapper variant={variant} className={cn(alWraClasses, className)}>
           <AlertInfoIcon />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="row-start-2 col-start-2">
+          <AlertDescription className={alDesClasses}>
             {children}
           </AlertDescription>
         </AlertWrapper>
       );
     case "success":
       return (
-        <AlertWrapper
-          variant={variant}
-          className={cn(
-            "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4",
-            className,
-          )}
-        >
+        <AlertWrapper variant={variant} className={cn(alWraClasses, className)}>
           <AlertSuccessIcon />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="row-start-2 col-start-2">
+          <AlertDescription className={alDesClasses}>
             {children}
           </AlertDescription>
         </AlertWrapper>
       );
     default:
       return (
-        <AlertWrapper
-          variant={variant}
-          className={cn(
-            "grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 [&_svg]:size-4",
-            className,
-          )}
-        >
+        <AlertWrapper variant={variant} className={cn(alWraClasses, className)}>
           <AlertInfoIcon />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className="row-start-2 col-start-2">
+          <AlertDescription className={alDesClasses}>
             {children}
           </AlertDescription>
         </AlertWrapper>
