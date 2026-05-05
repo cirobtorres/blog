@@ -115,10 +115,10 @@ const signIn = async (
       ...defaultState,
       error: {
         email: {
-          errors: ["Email ou senha não existem"],
+          errors: ["Email ou senha incorretos"],
         },
         password: {
-          errors: ["Email ou senha não existem"],
+          errors: ["Email ou senha incorretos"],
         },
       },
     };

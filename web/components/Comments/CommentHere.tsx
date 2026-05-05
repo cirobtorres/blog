@@ -2,6 +2,8 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Link } from "../Links";
+import { cn, focusRing } from "../../utils/variants";
+import { publicWebUrls } from "../../routing/routes";
 
 export default function CommentHere() {
   const pathname = usePathname();
@@ -9,11 +11,15 @@ export default function CommentHere() {
   const search = searchParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#create-comment";
-  const loginUrl = `/users/sign-in?redirect_url=${encodeURIComponent(fullPath)}`;
+  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`;
 
   return (
-    <div className="w-full border rounded-lg px-4 py-3 bg-stone-900">
-      <Link href={loginUrl} variant="external">
+    <div className="w-full border rounded-lg px-3 py-3 bg-stone-900">
+      <Link
+        href={loginUrl}
+        variant="external"
+        className={cn("px-1 border border-transparent", focusRing)}
+      >
         Login...
       </Link>
     </div>

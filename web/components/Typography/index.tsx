@@ -9,7 +9,7 @@ export function H2({
     <h2
       {...props}
       className={cn(
-        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight text-balance not-first:mt-6",
+        "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight text-pretty not-first:mt-6",
         className,
       )}
     />
@@ -24,7 +24,7 @@ export function H3({
     <h3
       {...props}
       className={cn(
-        "text-lg lg:text-xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
+        "text-lg lg:text-xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight text-pretty not-first:mt-6",
         className,
       )}
     />
@@ -39,42 +39,12 @@ export function H4({
     <h4
       {...props}
       className={cn(
-        "text-lg lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
+        "text-lg lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight text-pretty not-first:mt-6",
         className,
       )}
     />
   );
 }
-
-// export function H5({
-//   className,
-//   ...props
-// }: React.ComponentProps<"h5"> & { className?: string }) {
-//   return (
-//     <h5
-//       {...props}
-//       className={cn(
-//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
-//         className,
-//       )}
-//     />
-//   );
-// }
-
-// export function H6({
-//   className,
-//   ...props
-// }: React.ComponentProps<"h6"> & { className?: string }) {
-//   return (
-//     <h6
-//       {...props}
-//       className={cn(
-//         "text-lg lg:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 scroll-m-12 tracking-tight not-first:mt-6",
-//         className,
-//       )}
-//     />
-//   );
-// }
 
 export function P({
   className,
@@ -122,6 +92,24 @@ export function A({
     >
       {children}
     </Link>
+  );
+}
+
+export function B({
+  className,
+  ...props
+}: React.ComponentProps<"b"> & { className?: string }) {
+  return (
+    <b {...props} className={cn("font-bold text-primary/75", className)} />
+  );
+}
+
+export function Strong({
+  className,
+  ...props
+}: React.ComponentProps<"strong"> & { className?: string }) {
+  return (
+    <strong {...props} className={cn("font-bold text-primary/75", className)} />
   );
 }
 

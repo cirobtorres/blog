@@ -8,6 +8,7 @@ import { useArticleStore } from "../../zustand-store/article-state";
 import { AddAccordionButton } from "./addAccordionButton";
 import { FieldsetError } from "../Fieldset";
 import AlertEditor from "./editors/ArticleEditorAlert";
+import AccordionEditor from "./editors/ArticleEditorAccordion";
 
 const BlockItem = React.memo(function BlockItem({
   block,
@@ -72,7 +73,24 @@ const BlockItem = React.memo(function BlockItem({
         </>
       );
     case "accordion":
-      return;
+      return (
+        <EditorsAccordion
+          id={block.id}
+          label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+          locked={block.locked}
+          onDelete={deleteBlock}
+          onDisable={toggleBlockLock}
+          moveDownward={moveBlockDownward}
+          hasError={!!error}
+        >
+          <AccordionEditor
+            accordions={(block.data as AccordionEditor)?.accordions ?? null}
+            setAccordions={(val: Accordion[]) =>
+              updateBlock(block.id, { accordions: val })
+            }
+          />
+        </EditorsAccordion>
+      );
     case "image":
       return;
     case "images":
@@ -95,12 +113,12 @@ const BlockItem = React.memo(function BlockItem({
             titleId={alertEditorTitleId}
             typeId={alertEditorTypeId}
             htmlId={alertEditorHtmlId}
-            defaultValue={(block.data as AlertEditor)?.body ?? ""}
-            setVal={(val) => updateBlock(block.id, { body: val })}
             defaultTitle={(block.data as AlertEditor)?.title ?? ""}
             setTitle={(val) => updateBlock(block.id, { title: val })}
             defaultType={(block.data as AlertEditor)?.type ?? "default"}
             setType={(val) => updateBlock(block.id, { type: val })}
+            defaultValue={(block.data as AlertEditor)?.body ?? ""}
+            setVal={(val) => updateBlock(block.id, { body: val })}
           />
         </EditorsAccordion>
       );
@@ -165,7 +183,7 @@ const createNewBlock = (
         data: { filename: "", code: "", language: "tsx" },
       };
     case "image":
-      return { ...base, type: "image", data: { url: "" } };
+      return { ...base, type: "image", data: { id: "", url: "" } };
     case "alert":
       return {
         ...base,
@@ -173,9 +191,15 @@ const createNewBlock = (
         data: { title: "", type: "default", body: "" },
       };
     case "accordion":
-      return { ...base, type: "accordion", data: null };
+      return {
+        ...base,
+        type: "accordion",
+        data: {
+          accordions: [{ id: crypto.randomUUID(), title: "", body: "" }],
+        },
+      };
     case "images":
-      return { ...base, type: "images", data: null };
+      return { ...base, type: "images", data: { id: "", url: "" } };
     default:
       throw new Error("Tipo inválido");
   }

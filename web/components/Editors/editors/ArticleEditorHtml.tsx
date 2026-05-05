@@ -47,10 +47,18 @@ export function HtmlEditor({
   id,
   setVal,
   defaultValue,
+  options = {
+    buttons: {
+      heading: true,
+      list: true,
+    },
+    editor: "[&_.tiptap.ProseMirror]:h-100",
+  },
 }: {
   id: string;
   setVal: (data: string) => void;
   defaultValue?: string;
+  options?: HtmlEditorOptions;
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [textLinkInput, setTextLinkInput] = React.useState("");
@@ -251,120 +259,122 @@ export function HtmlEditor({
   return (
     <>
       <div className="flex gap-2 pb-1">
-        <div className={btnGroupStyle}>
-          <HoverCard openDelay={0} closeDelay={0}>
-            <HoverCardTrigger asChild>
-              <button
-                type="button"
-                onClick={() =>
-                  editor.chain().focus().toggleHeading({ level: 2 }).run()
-                }
-                className={cn(
-                  editorState?.isActiveHeading2 ? btnActive : btnNotActive,
-                  "cursor-pointer transition-all duration-300",
-                  focusRing,
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-8 p-1.5"
+        {options?.buttons?.heading ? (
+          <div className={btnGroupStyle}>
+            <HoverCard openDelay={0} closeDelay={0}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 2 }).run()
+                  }
+                  className={cn(
+                    editorState?.isActiveHeading2 ? btnActive : btnNotActive,
+                    "cursor-pointer transition-all duration-300",
+                    focusRing,
+                  )}
                 >
-                  <path d="M4 12h8" />
-                  <path d="M4 18V6" />
-                  <path d="M12 18V6" />
-                  <path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1" />
-                </svg>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent side="top" sideOffset={1}>
-              <p className="text-xs">Título H2</p>
-            </HoverCardContent>
-          </HoverCard>
-          <DashedBackground className={dashedBgStyle} />
-          <HoverCard openDelay={0} closeDelay={0}>
-            <HoverCardTrigger asChild>
-              <button
-                type="button"
-                onClick={() =>
-                  editor.chain().focus().toggleHeading({ level: 3 }).run()
-                }
-                className={cn(
-                  editorState?.isActiveHeading3 ? btnActive : btnNotActive,
-                  "cursor-pointer transition-all duration-300",
-                  focusRing,
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-8 p-1.5"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-8 p-1.5"
+                  >
+                    <path d="M4 12h8" />
+                    <path d="M4 18V6" />
+                    <path d="M12 18V6" />
+                    <path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1" />
+                  </svg>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" sideOffset={1}>
+                <p className="text-xs">Título H2</p>
+              </HoverCardContent>
+            </HoverCard>
+            <DashedBackground className={dashedBgStyle} />
+            <HoverCard openDelay={0} closeDelay={0}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 3 }).run()
+                  }
+                  className={cn(
+                    editorState?.isActiveHeading3 ? btnActive : btnNotActive,
+                    "cursor-pointer transition-all duration-300",
+                    focusRing,
+                  )}
                 >
-                  <path d="M4 12h8" />
-                  <path d="M4 18V6" />
-                  <path d="M12 18V6" />
-                  <path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2" />
-                  <path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2" />
-                </svg>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent side="top" sideOffset={1}>
-              <p className="text-xs">Título H3</p>
-            </HoverCardContent>
-          </HoverCard>
-          <DashedBackground className={dashedBgStyle} />
-          <HoverCard openDelay={0} closeDelay={0}>
-            <HoverCardTrigger asChild>
-              <button
-                type="button"
-                onClick={() =>
-                  editor.chain().focus().toggleHeading({ level: 4 }).run()
-                }
-                className={cn(
-                  editorState?.isActiveHeading4 ? btnActive : btnNotActive,
-                  "cursor-pointer transition-all duration-300",
-                  focusRing,
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-8 p-1.5"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-8 p-1.5"
+                  >
+                    <path d="M4 12h8" />
+                    <path d="M4 18V6" />
+                    <path d="M12 18V6" />
+                    <path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2" />
+                    <path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2" />
+                  </svg>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" sideOffset={1}>
+                <p className="text-xs">Título H3</p>
+              </HoverCardContent>
+            </HoverCard>
+            <DashedBackground className={dashedBgStyle} />
+            <HoverCard openDelay={0} closeDelay={0}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() =>
+                    editor.chain().focus().toggleHeading({ level: 4 }).run()
+                  }
+                  className={cn(
+                    editorState?.isActiveHeading4 ? btnActive : btnNotActive,
+                    "cursor-pointer transition-all duration-300",
+                    focusRing,
+                  )}
                 >
-                  <path d="M12 18V6" />
-                  <path d="M17 10v3a1 1 0 0 0 1 1h3" />
-                  <path d="M21 10v8" />
-                  <path d="M4 12h8" />
-                  <path d="M4 18V6" />
-                </svg>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent side="top" sideOffset={1}>
-              <p className="text-xs">Título H4</p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-8 p-1.5"
+                  >
+                    <path d="M12 18V6" />
+                    <path d="M17 10v3a1 1 0 0 0 1 1h3" />
+                    <path d="M21 10v8" />
+                    <path d="M4 12h8" />
+                    <path d="M4 18V6" />
+                  </svg>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" sideOffset={1}>
+                <p className="text-xs">Título H4</p>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+        ) : null}
         <div className={btnGroupStyle}>
           <HoverCard openDelay={0} closeDelay={0}>
             <HoverCardTrigger asChild>
@@ -430,8 +440,7 @@ export function HtmlEditor({
               <p className="text-xs">Realçar</p>
             </HoverCardContent>
           </HoverCard>
-        </div>
-        <div className={btnGroupStyle}>
+          <DashedBackground className={dashedBgStyle} />
           <AlertDialog open={isDialogOpen}>
             <AlertDialogTrigger asChild>
               <HoverCard openDelay={0} closeDelay={0}>
@@ -573,81 +582,87 @@ export function HtmlEditor({
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        <div className={btnGroupStyle}>
-          <HoverCard openDelay={0} closeDelay={0}>
-            <HoverCardTrigger asChild>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={cn(
-                  editorState?.isActiveBulletList ? btnActive : btnNotActive,
-                  "cursor-pointer transition-all duration-300",
-                  focusRing,
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-8 p-1.5"
+        {options?.buttons?.list ? (
+          <div className={btnGroupStyle}>
+            <HoverCard openDelay={0} closeDelay={0}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() =>
+                    editor.chain().focus().toggleBulletList().run()
+                  }
+                  className={cn(
+                    editorState?.isActiveBulletList ? btnActive : btnNotActive,
+                    "cursor-pointer transition-all duration-300",
+                    focusRing,
+                  )}
                 >
-                  <path d="M3 5h.01" />
-                  <path d="M3 12h.01" />
-                  <path d="M3 19h.01" />
-                  <path d="M8 5h13" />
-                  <path d="M8 12h13" />
-                  <path d="M8 19h13" />
-                </svg>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent side="top" sideOffset={1}>
-              <p className="text-xs">Lista</p>
-            </HoverCardContent>
-          </HoverCard>
-          <DashedBackground className={dashedBgStyle} />
-          <HoverCard openDelay={0} closeDelay={0}>
-            <HoverCardTrigger asChild>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={cn(
-                  editorState?.isActiveOrderedList ? btnActive : btnNotActive,
-                  "cursor-pointer transition-all duration-300",
-                  focusRing,
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="size-8 p-1.5"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-8 p-1.5"
+                  >
+                    <path d="M3 5h.01" />
+                    <path d="M3 12h.01" />
+                    <path d="M3 19h.01" />
+                    <path d="M8 5h13" />
+                    <path d="M8 12h13" />
+                    <path d="M8 19h13" />
+                  </svg>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" sideOffset={1}>
+                <p className="text-xs">Lista</p>
+              </HoverCardContent>
+            </HoverCard>
+            <DashedBackground className={dashedBgStyle} />
+            <HoverCard openDelay={0} closeDelay={0}>
+              <HoverCardTrigger asChild>
+                <button
+                  type="button"
+                  onClick={() =>
+                    editor.chain().focus().toggleOrderedList().run()
+                  }
+                  className={cn(
+                    editorState?.isActiveOrderedList ? btnActive : btnNotActive,
+                    "cursor-pointer transition-all duration-300",
+                    focusRing,
+                  )}
                 >
-                  <path d="M11 5h10" />
-                  <path d="M11 12h10" />
-                  <path d="M11 19h10" />
-                  <path d="M4 4h1v5" />
-                  <path d="M4 9h2" />
-                  <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
-                </svg>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent side="top" sideOffset={1}>
-              <p className="text-xs">Lista Numérica</p>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-8 p-1.5"
+                  >
+                    <path d="M11 5h10" />
+                    <path d="M11 12h10" />
+                    <path d="M11 19h10" />
+                    <path d="M4 4h1v5" />
+                    <path d="M4 9h2" />
+                    <path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02" />
+                  </svg>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent side="top" sideOffset={1}>
+                <p className="text-xs">Lista Numérica</p>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+        ) : null}
         <div className={btnGroupStyle}>
           <HoverCard openDelay={0} closeDelay={0}>
             <HoverCardTrigger asChild>
@@ -722,7 +737,8 @@ export function HtmlEditor({
         spellCheck={false}
         onFocus={() => editor.chain().selectTextblockEnd().focus()}
         className={cn(
-          "p-1 flex flex-col transition-all duration-300 rounded border bg-stone-200/50 dark:bg-stone-950 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary [&_.tiptap.ProseMirror]:h-100 [&_.tiptap.ProseMirror]:overflow-y-auto [&_.tiptap.ProseMirror]:p-2 [&_.tiptap.ProseMirror]:pr-6 [&_.tiptap.ProseMirror]:rounded-b-xs [&_.tiptap.ProseMirror]:outline-none [&_.tiptap.ProseMirror]:transition-all [&_.tiptap.ProseMirror]:scrollbar [&_.tiptap.ProseMirror_h2]:text-lg lg:[&_.tiptap.ProseMirror_h2]:text-2xl [&_.tiptap.ProseMirror_h2]:font-semibold [&_.tiptap.ProseMirror_h2]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h2]:text-neutral-100 [&_.tiptap.ProseMirror_h2]:scroll-m-20 [&_.tiptap.ProseMirror_h2]:tracking-tight [&_.tiptap.ProseMirror_h2]:text-balance [&_.tiptap.ProseMirror_h2]:not-first:mt-6 [&_.tiptap.ProseMirror_h3]:text-lg [&_.tiptap.ProseMirror_h3]:lg:text-xl [&_.tiptap.ProseMirror_h3]:font-semibold [&_.tiptap.ProseMirror_h3]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h3]:text-neutral-100 [&_.tiptap.ProseMirror_h3]:scroll-m-20 [&_.tiptap.ProseMirror_h3]:tracking-tight [&_.tiptap.ProseMirror_h3]:not-first:mt-6 [&_.tiptap.ProseMirror_h4]:text-lg [&_.tiptap.ProseMirror_h4]:lg:text-lg [&_.tiptap.ProseMirror_h4]:font-semibold [&_.tiptap.ProseMirror_h4]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h4]:text-neutral-100 [&_.tiptap.ProseMirror_h4]:scroll-m-20 [&_.tiptap.ProseMirror_h4]:tracking-tight [&_.tiptap.ProseMirror_h4]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-base [&_.tiptap.ProseMirror_p]:font-normal [&_.tiptap.ProseMirror_p]:leading-7 [&_.tiptap.ProseMirror_p]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-neutral-900 dark:[&_.tiptap.ProseMirror_p]:text-neutral-400 [&_.tiptap.ProseMirror_strong]:text-primary [&_.tiptap.ProseMirror_strong]:font-bold [&_.tiptap.ProseMirror_mark]:text-neutral-500 [&_.tiptap.ProseMirror_mark]:border dark:[&_.tiptap.ProseMirror_mark]:bg-stone-850 [&_.tiptap.ProseMirror_mark]:px-1 [&_.tiptap.ProseMirror_mark]:rounded-lg [&_.tiptap.ProseMirror_mark]:py-0.5 [&_.tiptap.ProseMirror_a]:text-primary [&_.tiptap.ProseMirror_a]:border dark:[&_.tiptap.ProseMirror_a]:bg-stone-850 [&_.tiptap.ProseMirror_a]:underline [&_.tiptap.ProseMirror_a]:underline-offset-2 [&_.tiptap.ProseMirror_a]:px-1 [&_.tiptap.ProseMirror_a]:rounded-lg [&_.tiptap.ProseMirror_a]:py-0.5 [&_.tiptap.ProseMirror_ul]:not-first:mt-6 [&_.tiptap.ProseMirror_ul]:ml-6 [&_.tiptap.ProseMirror_ul]:list-disc [&_.tiptap.ProseMirror_ul~li]:first:mt-6 [&_.tiptap.ProseMirror_ol]:not-first:mt-6 [&_.tiptap.ProseMirror_ol]:ml-6 [&_.tiptap.ProseMirror_ol]:list-decimal [&_.tiptap.ProseMirror_ol~li]:first:mt-6 [&_.tiptap.ProseMirror_li]:text-neutral-900 dark:[&_.tiptap.ProseMirror_li]:text-neutral-400",
+          "p-1 flex flex-col transition-all duration-300 rounded border bg-stone-200/50 dark:bg-stone-950 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary [&_.tiptap.ProseMirror]:overflow-y-auto [&_.tiptap.ProseMirror]:p-2 [&_.tiptap.ProseMirror]:pr-6 [&_.tiptap.ProseMirror]:rounded-b-xs [&_.tiptap.ProseMirror]:outline-none [&_.tiptap.ProseMirror]:transition-all [&_.tiptap.ProseMirror]:scrollbar [&_.tiptap.ProseMirror_h2]:text-lg lg:[&_.tiptap.ProseMirror_h2]:text-2xl [&_.tiptap.ProseMirror_h2]:font-semibold [&_.tiptap.ProseMirror_h2]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h2]:text-neutral-100 [&_.tiptap.ProseMirror_h2]:scroll-m-20 [&_.tiptap.ProseMirror_h2]:tracking-tight [&_.tiptap.ProseMirror_h2]:text-balance [&_.tiptap.ProseMirror_h2]:not-first:mt-6 [&_.tiptap.ProseMirror_h3]:text-lg [&_.tiptap.ProseMirror_h3]:lg:text-xl [&_.tiptap.ProseMirror_h3]:font-semibold [&_.tiptap.ProseMirror_h3]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h3]:text-neutral-100 [&_.tiptap.ProseMirror_h3]:scroll-m-20 [&_.tiptap.ProseMirror_h3]:tracking-tight [&_.tiptap.ProseMirror_h3]:not-first:mt-6 [&_.tiptap.ProseMirror_h4]:text-lg [&_.tiptap.ProseMirror_h4]:lg:text-lg [&_.tiptap.ProseMirror_h4]:font-semibold [&_.tiptap.ProseMirror_h4]:text-neutral-900 dark:[&_.tiptap.ProseMirror_h4]:text-neutral-100 [&_.tiptap.ProseMirror_h4]:scroll-m-20 [&_.tiptap.ProseMirror_h4]:tracking-tight [&_.tiptap.ProseMirror_h4]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-base [&_.tiptap.ProseMirror_p]:font-normal [&_.tiptap.ProseMirror_p]:leading-7 [&_.tiptap.ProseMirror_p]:not-first:mt-6 [&_.tiptap.ProseMirror_p]:text-neutral-900 dark:[&_.tiptap.ProseMirror_p]:text-neutral-400 [&_.tiptap.ProseMirror_strong]:text-primary [&_.tiptap.ProseMirror_strong]:font-bold [&_.tiptap.ProseMirror_mark]:text-neutral-500 [&_.tiptap.ProseMirror_mark]:border dark:[&_.tiptap.ProseMirror_mark]:bg-stone-850 [&_.tiptap.ProseMirror_mark]:px-1 [&_.tiptap.ProseMirror_mark]:rounded-lg [&_.tiptap.ProseMirror_mark]:py-0.5 [&_.tiptap.ProseMirror_a]:text-primary [&_.tiptap.ProseMirror_a]:border dark:[&_.tiptap.ProseMirror_a]:bg-stone-850 [&_.tiptap.ProseMirror_a]:underline [&_.tiptap.ProseMirror_a]:underline-offset-2 [&_.tiptap.ProseMirror_a]:px-1 [&_.tiptap.ProseMirror_a]:rounded-lg [&_.tiptap.ProseMirror_a]:py-0.5 [&_.tiptap.ProseMirror_ul]:not-first:mt-6 [&_.tiptap.ProseMirror_ul]:ml-6 [&_.tiptap.ProseMirror_ul]:list-disc [&_.tiptap.ProseMirror_ul~li]:first:mt-6 [&_.tiptap.ProseMirror_ol]:not-first:mt-6 [&_.tiptap.ProseMirror_ol]:ml-6 [&_.tiptap.ProseMirror_ol]:list-decimal [&_.tiptap.ProseMirror_ol~li]:first:mt-6 [&_.tiptap.ProseMirror_li]:text-neutral-900 dark:[&_.tiptap.ProseMirror_li]:text-neutral-400",
+          options?.editor,
         )}
       />
     </>

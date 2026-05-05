@@ -117,7 +117,7 @@ export function Header({
       )}
     >
       <div className="w-full flex items-center justify-between max-w-300 mx-auto">
-        <Link href="/" className="mr-6">
+        <Link href="/" className="border border-transparent mr-6">
           <div className="size-8 rounded-full bg-neutral-900 dark:bg-neutral-100" />
         </Link>
         <nav className="md:flex flex-1 hidden gap-6">

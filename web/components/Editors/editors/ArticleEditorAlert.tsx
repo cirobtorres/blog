@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Fieldset, FieldsetInput, FieldsetLabel } from "../../Fieldset";
 import {
   Select,

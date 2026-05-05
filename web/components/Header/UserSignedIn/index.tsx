@@ -30,7 +30,7 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
             type="button"
             tabIndex={0}
             className={cn(
-              "flex items-center justify-start gap-2 cursor-pointer border border-transparent transition-all duration-300 group",
+              "flex items-center justify-start gap-2 cursor-pointer rounded-lg border border-transparent transition-all duration-300 group",
               focusRing,
             )}
           >

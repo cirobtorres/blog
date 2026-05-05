@@ -1,24 +1,31 @@
 "use client";
 
-import ScrollSummary from "./ScrollSummary";
 import React from "react";
-import parse, { DOMNode, domToReact, Element } from "html-react-parser";
-import { slugify } from "../../../utils/strings-transforms";
-import ArticleContent from "./ArticleContent";
-import BackToTopButton from "./BackToTopButton";
-import { alertVariants, cn, focusRing } from "../../../utils/variants";
-import * as Typography from "../../Typography";
 import NextLink from "next/link";
-import CopyToClipBoard from "../../CopyToClipBoard";
+import parse, { DOMNode, domToReact, Element } from "html-react-parser";
+import * as Typography from "../../Typography";
+import { slugify } from "../../../utils/strings-transforms";
+import { alertVariants, cn, focusRing } from "../../../utils/variants";
 import { highlightCodeWithShiki } from "../../../utils/shiki";
-import Spinner from "../../Spinner";
 import { Alert } from "../../Alert";
+import CopyToClipBoard from "../../CopyToClipBoard";
+import BackToTopButton from "./BackToTopButton";
+import ScrollSummary from "./ScrollSummary";
+import Spinner from "../../Spinner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../../Accordion";
 
 const typographyMap: Record<string, React.ElementType> = {
   h2: Typography.H2,
   h3: Typography.H3,
   h4: Typography.H4,
   p: Typography.P,
+  b: Typography.B,
+  strong: Typography.Strong,
   mark: Typography.Mark,
   a: Typography.A,
   blockquote: Typography.Blockquote,
@@ -34,15 +41,15 @@ export default function ArticleBody({ body }: Article) {
   }, [body]);
 
   return (
-    <div className="w-full max-w-article-body mx-auto px-6">
-      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_1fr_300px] gap-2">
+    <div className="w-full max-w-article-body mx-auto px-6 my-8">
+      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_1fr_minmax(0,300px)] gap-4">
         <ScrollSummary anchors={anchors} />
-        <ArticleContent>
+        <article className="w-full max-w-article-body overflow-hidden">
           {processedNodes.map((node, index) => (
             <React.Fragment key={index}>{node}</React.Fragment>
           ))}
-        </ArticleContent>
-        <div className="sticky size-fit hidden lg:block top-[calc(50%-var(--height-header))] ml-auto mr-0">
+        </article>
+        <div className="sticky size-fit hidden lg:block top-[calc(50%-var(--height-header))] ml-0 mr-auto">
           <BackToTopButton />
         </div>
       </section>
@@ -51,7 +58,7 @@ export default function ArticleBody({ body }: Article) {
 }
 
 export function processBlocks(blocks: Blocks[]) {
-  const anchors: { id: string; text: string }[] = [];
+  const anchors: { id: string; text: string; padding: number }[] = [];
 
   const replaceOptions = (domNode: DOMNode) => {
     if (domNode.type !== "tag") return;
@@ -66,8 +73,9 @@ export function processBlocks(blocks: Blocks[]) {
         .map((c) => (c.type === "text" ? c.data : ""))
         .join("");
 
+      const padding = Number(tagName.slice(1));
       const id = slugify(text);
-      anchors.push({ id, text });
+      anchors.push({ id, text, padding });
 
       const Component = typographyMap[tagName];
       const children = domToReact(element.children as DOMNode[]);
@@ -77,7 +85,7 @@ export function processBlocks(blocks: Blocks[]) {
           <NextLink
             href={`#${id}`}
             className={cn(
-              "w-fit flex items-center gap-2 rounded border border-transparent transition-shadow duration-300 group", // scroll-mt-[var(--header-height)]
+              "w-fit flex items-center gap-2 rounded border border-transparent transition-shadow duration-300 group",
               focusRing,
             )}
           >
@@ -107,9 +115,11 @@ export function processBlocks(blocks: Blocks[]) {
         replace: replaceOptions,
       });
     }
+
     if (block.type === "code") {
       return <CodeRenderer key={block.id} {...(block.data as CodeEditor)} />;
     }
+
     if (block.type === "alert") {
       const alertData = block.data as AlertEditor;
       return (
@@ -117,12 +127,43 @@ export function processBlocks(blocks: Blocks[]) {
           key={block.id}
           title={alertData?.title}
           variant={alertData?.type as keyof typeof alertVariants}
-          className="mt-6"
+          className="not-first:mt-6"
         >
           {parse(alertData?.body, {
             replace: replaceOptions,
           })}
         </Alert>
+      );
+    }
+
+    if (block.type === "accordion") {
+      console.log(block);
+      const accordionData = block.data as AccordionEditor;
+      return (
+        <Accordion
+          key={block.id}
+          type="multiple"
+          className="not-first:mt-6 px-4 border rounded-lg bg-stone-200 dark:bg-stone-900"
+        >
+          {accordionData.accordions.map((accordion) => {
+            return (
+              <AccordionItem
+                key={accordion.id}
+                value={accordion.id}
+                className="not-last:border-b hover:"
+              >
+                <AccordionTrigger className="text-base px-0">
+                  {accordion.title}
+                </AccordionTrigger>
+                <AccordionContent>
+                  {parse(accordion?.body, {
+                    replace: replaceOptions,
+                  })}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       );
     }
     return null;

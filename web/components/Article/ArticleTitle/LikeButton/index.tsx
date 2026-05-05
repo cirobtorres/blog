@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { cn, focusRing } from "../../../../utils/variants";
 
 const initialState = {
   ok: false,
@@ -20,7 +21,10 @@ export default function LikeButton({ size = 20 }: { size?: number }) {
       <button
         type="submit"
         disabled={isPending}
-        className="cursor-pointer flex items-center"
+        className={cn(
+          "cursor-pointer flex items-center rounded border border-transparent transition-all duration-300",
+          focusRing,
+        )}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

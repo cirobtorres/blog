@@ -7,6 +7,7 @@ import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
+import { cn, focusRing } from "../../utils/variants";
 
 const defaultState: ActionState = {
   ok: false,
@@ -52,25 +53,25 @@ export default function CommentEditor({
   if (!editor) return <p>Loading...</p>;
 
   return (
-    <form action={action} className="w-full flex flex-col gap-0.5">
+    <form action={action} className="w-full flex flex-col gap-1">
       <EditorContent
         {...props}
         editor={editor}
         className="[&_.tiptap.ProseMirror]:border-b **:outline-none relative w-full h-full text-left text-sm text-neutral-900 dark:text-neutral-100 [scrollbar-width:none] [-ms-overflow-style:none] [&_.tiptap.ProseMirror]:py-2 after:absolute after:top-[calc(100%-1px)] after:left-1/2 after:-translate-x-1/2 after:h-0.5 after:w-0 focus-within:after:w-full after:bg-primary focus-within:after:duration-200 transition-all"
       />
-      <div className="flex justify-end items-center gap-0.5">
+      <div className="flex justify-end items-center gap-1">
         <Button
           type="button"
           disabled={isPending}
           variant="outline"
-          className="w-full max-w-30 h-6"
+          className={cn("w-full max-w-30 h-6 focus-visible:z-10", focusRing)}
         >
           Cancelar
         </Button>
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full max-w-30 h-6"
+          className={cn("w-full max-w-30 h-6 focus-visible:z-10", focusRing)}
         >
           Salvar
         </Button>

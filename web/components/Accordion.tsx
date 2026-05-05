@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Accordion as AccordionPrimitive } from "radix-ui";
-import { cn } from "../utils/variants";
+import { cn, focusRing } from "../utils/variants";
 
 function Accordion({
   className,
@@ -25,7 +25,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("not-last:border-b", className)}
+      className={className}
       {...props}
     />
   );
@@ -41,7 +41,8 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 text-left text-sm font-medium transition-all outline-none disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+          "group/accordion-trigger cursor-pointer relative flex flex-1 items-start justify-between rounded-lg border border-transparent py-2.5 px-1 text-left text-sm font-medium transition-all duration-300 outline-none disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-neutral-900 dark:**:data-[slot=accordion-trigger-icon]:text-neutral-100",
+          focusRing,
           className,
         )}
         {...props}
@@ -49,12 +50,12 @@ function AccordionTrigger({
         {children}
         <ChevronDownIcon
           data-slot="accordion-trigger-icon"
-          className="pointer-events-none shrink-0 group-aria-expanded/accordion-trigger:hidden"
+          className="my-auto pointer-events-none shrink-0 transition-transform duration-100 group-aria-expanded/accordion-trigger:rotate-180"
         />
-        <ChevronUpIcon
+        {/* <ChevronUpIcon
           data-slot="accordion-trigger-icon"
           className="pointer-events-none hidden shrink-0 group-aria-expanded/accordion-trigger:inline"
-        />
+        /> */}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );

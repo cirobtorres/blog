@@ -43,7 +43,7 @@ export default function BackToTopButton() {
       aria-label="Voltar ao topo da página"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={cn(
-        "relative flex cursor-pointer rounded transition-all duration-300 group",
+        "relative flex cursor-pointer rounded transition-all duration-300 border border-transparent group",
         focusRing,
       )}
     >

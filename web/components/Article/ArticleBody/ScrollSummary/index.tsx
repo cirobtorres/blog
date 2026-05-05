@@ -7,13 +7,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../Accordion";
-import { cn } from "../../../../utils/variants";
+import { cn, focusRing } from "../../../../utils/variants";
 import React from "react";
 
 export default function ScrollSummary({
   anchors,
 }: {
-  anchors: { id: string; text: string }[];
+  anchors: { id: string; text: string; padding: number }[];
 }) {
   const anchorListRef = React.useRef<HTMLUListElement>(null);
 
@@ -54,33 +54,37 @@ export default function ScrollSummary({
   }, [anchors]);
 
   return (
-    <aside className="w-full h-fit md:sticky md:top-[25svh] ml-auto mr-0">
+    <aside className="w-full h-fit lg:sticky lg:top-16 ml-auto border rounded-lg bg-stone-200 dark:bg-stone-900">
       <Accordion type="single" defaultValue="summary" collapsible>
         <AccordionItem value="summary">
-          <AccordionTrigger className="mb-3">
+          <AccordionTrigger className="mx-1.5 my-1.5 hover:bg-stone-250 dark:hover:bg-stone-800">
             <p className="text-xs font-medium text-neutral-500 dark:text-neutral-100">
               Sumário
             </p>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="hidden overflow-y-hidden md:block md:max-h-[50svh] ms-3.5 relative dark:before:bg-neutral-800">
-              <nav
-                ref={anchorListRef}
-                className="before:absolute before:-left-3.5 before:inset-y-0 before:w-px before:bg-neutral-200"
-              >
-                {anchors.map((anchor, i) => (
-                  <Link
-                    key={anchor.id}
-                    href={"#" + anchor.id}
-                    aria-current={i === 0 ? "true" : "false"}
-                    aria-label={`Navegar até a sessão "${anchor.text}"`}
-                    className={cn(
-                      "block text-xs ml-1 p-px my-1 transition-colors duration-300 no-underline!",
-                    )}
-                  >
-                    {anchor.text}
-                  </Link>
-                ))}
+            <div className="overflow-y-hidden lg:max-h-[50svh] pr-1">
+              <nav ref={anchorListRef}>
+                {anchors.map((anchor, i) => {
+                  const { padding } = anchor;
+                  return (
+                    <Link
+                      key={anchor.id}
+                      href={"#" + anchor.id}
+                      aria-current={i === 0 ? "true" : "false"}
+                      aria-label={`Navegar até a sessão "${anchor.text}"`}
+                      className={cn(
+                        "block text-xs ml-1 py-px px-1 my-1 font-medium border border-transparent rounded transition-all duration-300 no-underline! hover:bg-stone-250 dark:hover:bg-stone-800",
+                        focusRing,
+                      )}
+                      style={{ paddingLeft: padding * 8 + "px" }}
+                    >
+                      <AccordionItem value={anchor.text}>
+                        {anchor.text}
+                      </AccordionItem>
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
           </AccordionContent>
@@ -89,6 +93,3 @@ export default function ScrollSummary({
     </aside>
   );
 }
-
-// aria-current
-// relative dark:text-neutral-100 hover:bg-transparent hover:text-neutral-100 data-[active=true]:bg-transparent data-[depth=3]:ps-4.5 data-[depth=4]:ps-5.5 data-[active=true]:text-neutral-100 before:absolute data-[active=true]:before:w-0.75 data-[active=true]:before:bg-primary before:inset-y-px before:-left-4.75 before:w-px before:rounded-full

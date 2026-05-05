@@ -50,7 +50,7 @@ const signUp = async (
         return {
           ...returnState,
           error: {
-            form: { errors: ["Dados inválidos. Verifique os campos."] },
+            form: { errors: ["Dados inválidos"] },
           },
         };
       }
@@ -59,7 +59,7 @@ const signUp = async (
       return {
         ...returnState,
         error: {
-          form: { errors: ["Ocorreu um erro inesperado no servidor."] },
+          form: { errors: ["Ocorreu um erro inesperado"] },
         },
       };
     }
@@ -100,7 +100,7 @@ const signUp = async (
     console.error("signUp error:", e);
     return {
       ...returnState,
-      error: { form: { errors: ["Falha na conexão com o servidor"] } },
+      error: { form: { errors: ["Falha de conexão com o servidor"] } },
     };
   }
 

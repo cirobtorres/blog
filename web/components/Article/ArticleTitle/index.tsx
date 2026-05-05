@@ -4,6 +4,7 @@ import { ArtBreadcrumb } from "./Breadcrumb";
 import { convertToLargeDate } from "../../../utils/date";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
+import { cn, focusRing } from "../../../utils/variants";
 
 export default function ArticleTitle({
   id: articleId,
@@ -44,7 +45,13 @@ export default function ArticleTitle({
             {likeCount}
           </span>
           <span className="text-sm flex items-center gap-2">
-            <Link href="#comments" className="cursor-pointer flex items-center">
+            <Link
+              href="#comments"
+              className={cn(
+                "cursor-pointer flex items-center rounded border border-transparent transition-all duration-300",
+                focusRing,
+              )}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"

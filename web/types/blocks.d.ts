@@ -1,5 +1,8 @@
 type UpdateBlocks = Partial<Record<string, unknown>>;
 
+// |-----------------------------------------------------------------------------------|
+// |---------------------==========Base-For-Accordions==========-----------------------|
+// |-----------------------------------------------------------------------------------|
 type BlockType =
   | "html"
   | "code"
@@ -15,17 +18,36 @@ type AccordionBlock<T extends object> = T & {
   type: BlockType;
 };
 
-type HtmlEditor = { body: string };
-type CodeEditor = { filename: string; code: string; language: BundledLanguage };
-type AccordionEditor = null;
-type AlertEditor = {
-  type: typeof alertVariants;
-  title: string;
-  body: string;
-};
-type ImageEditor = { url: string };
-type ImagesEditor = null;
+// |-----------------------------------------------------------------------------------|
+// |---------------------------==========Editors==========-----------------------------|
+// |-----------------------------------------------------------------------------------|
 
+// HTML
+type HtmlEditor = { body: string };
+type HtmlEditorOptions = {
+  buttons?: {
+    heading?: boolean;
+    list?: boolean;
+  };
+  /** @description Tailwind classes */
+  editor?: string;
+};
+
+// CODE
+type CodeEditor = { filename: string; code: string; language: BundledLanguage };
+
+// ACCORDIONS
+type Accordion = { id: string; title: string; body: string };
+type AccordionEditor = { accordions: Accordion[] };
+type AlertEditor = { type: typeof alertVariants; title: string; body: string };
+
+// IMAGE(s)
+type ImageEditor = { id: string; url: string };
+type ImagesEditor = ImageEditor[];
+
+// |-----------------------------------------------------------------------------------|
+// |----------------------------==========Blocks==========-----------------------------|
+// |-----------------------------------------------------------------------------------|
 type Blocks =
   | AccordionBlock<{ data: HtmlEditor }>
   | AccordionBlock<{ data: CodeEditor }>

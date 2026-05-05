@@ -2,11 +2,11 @@ import {
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
-import { BundledLanguage, createHighlighter } from "shiki";
+import { BundledLanguage, BundledTheme, createHighlighter } from "shiki";
 import { cleanPreCodeBlocks, escapeCharacters } from "./strings-transforms";
 
-const THEMES = ["dark-plus"];
-const LANGS = [
+const THEMES: BundledTheme[] = ["dark-plus"];
+const LANGS: BundledLanguage[] = [
   "tsx",
   "ts",
   "js",
@@ -31,7 +31,7 @@ export const LANGUAGES: BundledLanguage[] = [
 ];
 export const STYLE_LANGUAGES: BundledLanguage[] = ["css"];
 export const DB_LANGUAGES: BundledLanguage[] = ["sql"];
-const DEFAULT_THEME = "dark-plus";
+const DEFAULT_THEME: BundledTheme = "dark-plus";
 
 export const highlightCodeWithShiki = async ({
   code,
@@ -80,11 +80,9 @@ export const formatCodeBlockLanguage = (
       return "Next.js";
     case "ts":
       return "Typescript";
-    case "typescript":
-      return "Typescript";
+    case "js":
+      return "Javascript";
     case "py":
-      return "Python";
-    case "python":
       return "Python";
     case "c#":
       return "C#";
@@ -101,7 +99,7 @@ export const formatCodeBlockLanguage = (
     case "css":
       return "CSS";
     default:
-      return "plain text";
+      return "Plain Text";
   }
 };
 
