@@ -43,6 +43,8 @@ services:
         - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
         - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     container_name: web
+    depends_on:
+      - api
     expose:
       - "3000"
     networks:
