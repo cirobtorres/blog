@@ -26,7 +26,7 @@ export const ArtBreadcrumb = () => {
           <BreadcrumbLink asChild>
             <Link
               href="/"
-              className="text-primary/75 hover:text-primary dark:hover:text-primary font-normal underline underline-offset-2"
+              className="text-primary/75 hover:text-primary dark:hover:text-primary font-normal underline underline-offset-2 border border-transparent"
             >
               Home
             </Link>

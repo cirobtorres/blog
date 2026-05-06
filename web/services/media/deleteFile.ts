@@ -37,7 +37,8 @@ export default async function deleteFile({ id }: { id: string }) {
   }
 
   revalidateTag("files", { expire: 0 });
-  revalidatePath(protectedWebUrls.media);
+  revalidateTag("media-files", { expire: 0 });
+  revalidatePath("/", "layout");
 
   return { ok: true, success: "Arquivo excluído!", error: null, data: null };
 }

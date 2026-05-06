@@ -17,21 +17,9 @@ interface ArticleState {
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
   setSlug: (slug: string) => void;
-  openMediaLibrary: (target: "banner" | null) => void;
-  selectBannerDirectly: (data: {
-    id: string;
-    url: string;
-    alt: string;
-  }) => void;
-  selectBanner: ({
-    id,
-    url,
-    alt,
-  }: {
-    id: string;
-    url: string;
-    alt: string;
-  }) => void;
+  hydrateBanner: (data: ImageEditor) => void;
+  openMediaLibrary: (target: string | null) => void;
+  selectImages: (images: ImageEditor[]) => void;
   setCurrentModalFolder: (path: string) => void;
   setModalPage: (page: number) => void;
   setBlocks: (blocks: Blocks[]) => void;
@@ -58,24 +46,52 @@ export const useArticleStore = create<ArticleState>((set) => ({
   setSubtitle: (subtitle) => set({ subtitle }),
   setSlug: (slug) => set({ slug: slugify(slug) }),
   openMediaLibrary: (target) => set({ activeMediaTarget: target }),
+  hydrateBanner: (data) => {
+    set({
+      bannerMediaId: data.id,
+      bannerUrl: data.url,
+      bannerAlt: data.alt,
+    });
+  },
   setCurrentModalFolder: (path) => set({ currentModalFolder: path }),
-  selectBannerDirectly: ({ id, url, alt }) =>
-    set({ bannerMediaId: id, bannerUrl: url, bannerAlt: alt }),
-  selectBanner: ({ id, url, alt }) => {
+  selectImages: (images) => {
     set((state) => {
+      // 1. Banner
       if (state.activeMediaTarget === "banner") {
+        const img = images[0];
+        if (!img) return { activeMediaTarget: null };
         return {
-          bannerMediaId: id,
-          bannerUrl: url,
-          bannerAlt: alt,
+          bannerMediaId: img.id,
+          bannerUrl: img.url,
+          bannerAlt: img.alt,
           activeMediaTarget: null,
         };
       }
-      const newBlocks = state.blocks.map((b) =>
-        b.id === state.activeMediaTarget
-          ? { ...b, data: { ...b.data, id, url, alt } }
-          : b,
-      );
+      // 2. Blocks (Editors)
+      const newBlocks = state.blocks.map((b) => {
+        if (b.id !== state.activeMediaTarget) return b;
+        // Multiple
+        if (b.type === "images") {
+          return {
+            ...b,
+            data: { ...b.data, images: images },
+          };
+        }
+        // Single
+        if (b.type === "image") {
+          const img = images[0];
+          return {
+            ...b,
+            data: {
+              ...b.data,
+              id: img?.id,
+              url: img?.url,
+              alt: img?.alt,
+            },
+          };
+        }
+        return b;
+      }) as Blocks[];
       return { blocks: newBlocks, activeMediaTarget: null };
     });
   },

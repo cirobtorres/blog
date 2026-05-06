@@ -2,9 +2,16 @@
 
 import Image from "next/image";
 import { DashedBackground } from "../../../../DashedBackground";
-import { FileCardInfos, FileCardWrapper } from "./FileCardUtils";
-import { useArticleStore } from "../../../../../zustand-store/article-state";
-import { cn, focusRing } from "../../../../../utils/variants";
+import {
+  FileCardFloatingButtonsWrapper,
+  FileCardInfos,
+  FileCardWrapper,
+} from "./FileCardUtils";
+import { Checkbox } from "../../../../Fieldset/Checkbox";
+import React from "react";
+import { SelectionContext } from "../../../../Editors/editors/utils";
+import { ExpandButton } from "./Buttons/ExpandButton";
+import DownloadButton from "./Buttons/DownloadButton";
 
 export default function FileCardButton({
   file,
@@ -13,25 +20,42 @@ export default function FileCardButton({
   file: Media;
   isPriority?: boolean;
 }) {
-  const { setLoading, selectBanner, openMediaLibrary } = useArticleStore();
+  const context = React.useContext(SelectionContext);
+  if (!context) return null;
+
+  const { tempSelection, setTempSelection, multiSelect } = context;
+  const isChecked = tempSelection.some((i) => i.id === file.id);
+
+  const toggle = () => {
+    if (isChecked) {
+      setTempSelection(tempSelection.filter((i) => i.id !== file.id));
+    } else {
+      if (multiSelect) {
+        setTempSelection([
+          ...tempSelection,
+          { id: file.id, url: file.url, alt: file.alt },
+        ]);
+      } else {
+        setTempSelection([{ id: file.id, url: file.url, alt: file.alt }]);
+      }
+    }
+  };
 
   return (
-    <button
-      type="button"
-      className={cn(
-        "cursor-pointer rounded-lg border border-transparent transition-shadow duration-300",
-        focusRing,
-      )}
-      onClick={() => {
-        setLoading(true);
-        selectBanner({ id: file.id, url: file.url, alt: file.alt });
-        openMediaLibrary(null);
-      }}
-    >
-      <FileCardWrapper>
+    <FileCardWrapper>
+      <label
+        htmlFor={"card-" + file.publicId}
+        className="relative w-full h-full overflow-hidden"
+      >
         <DashedBackground />
+        <Checkbox
+          id={"card-" + file.publicId}
+          className="absolute z-10 size-6 rounded left-2 top-2"
+          checked={isChecked}
+          onCheckedChange={toggle}
+        />
         <Image
-          src={file.url}
+          src={file.url ?? "https://placehold.co/1920x1080/000/fff/jpeg"}
           alt={file.name || "Media file"}
           fill
           priority={isPriority}
@@ -39,8 +63,12 @@ export default function FileCardButton({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
           className="absolute object-contain p-px"
         />
-        <FileCardInfos file={file} />
-      </FileCardWrapper>
-    </button>
+      </label>
+      <FileCardFloatingButtonsWrapper>
+        {file.url && <ExpandButton url={file.url} />}
+        <DownloadButton {...file} />
+      </FileCardFloatingButtonsWrapper>
+      <FileCardInfos file={file} />
+    </FileCardWrapper>
   );
 }

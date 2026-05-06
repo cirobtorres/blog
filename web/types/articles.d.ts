@@ -4,7 +4,7 @@ type Article = {
   subtitle: string;
   slug: string;
   author: Author;
-  media: ArticleBanner;
+  media: ImageEditor;
   tags: Tag[];
   body: string;
   status: ArticleStatus;

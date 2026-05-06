@@ -33,6 +33,11 @@ export default function FolderPopover({
   movingFolderIds?: string[];
 }) {
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState<string | null>(() => {
+    if (defaultValue) return defaultValue;
+    return null;
+  });
+
   const { data: folders, isPending } = useFolders();
   const pathname = usePathname();
   const currentFolder = decodeURIComponent(
@@ -40,10 +45,9 @@ export default function FolderPopover({
   );
   const currentFolderId =
     folders?.find((folder) => folder.path === currentFolder)?.id ?? null;
-  const [value, setValue] = React.useState<string | null>(defaultValue ?? null);
-  React.useEffect(() => {
-    if (value === null && currentFolderId) setValue(currentFolderId);
-  }, [currentFolderId, value]);
+
+  const actualValue = value ?? currentFolderId;
+
   const selectedFolderName = folders?.find(
     (folder) => folder.id === value,
   )?.name;
@@ -54,7 +58,7 @@ export default function FolderPopover({
       <input
         type="hidden"
         name={name ?? "folderDestinationId"}
-        value={value ?? ""}
+        value={actualValue ?? ""}
       />
       <Popover open={open} onOpenChange={setOpen}>
         {isPending || !value ? (

@@ -9,6 +9,7 @@ import { AddAccordionButton } from "./addAccordionButton";
 import { FieldsetError } from "../Fieldset";
 import AlertEditor from "./editors/ArticleEditorAlert";
 import AccordionEditor from "./editors/ArticleEditorAccordion";
+import { ArticleImageButton, ArticleImagesButton } from "./editors/utils";
 
 const BlockItem = React.memo(function BlockItem({
   block,
@@ -19,6 +20,7 @@ const BlockItem = React.memo(function BlockItem({
 }) {
   const { updateBlock, deleteBlock, toggleBlockLock, moveBlockDownward } =
     useArticleStore();
+  const { openMediaLibrary } = useArticleStore();
   const dataErrors = error?.data?.properties as BlockDataErrors | undefined;
 
   switch (block.type) {
@@ -92,9 +94,45 @@ const BlockItem = React.memo(function BlockItem({
         </EditorsAccordion>
       );
     case "image":
-      return;
+      const image = block.data as ImageEditor;
+      return (
+        <EditorsAccordion
+          id={block.id}
+          label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+          locked={block.locked}
+          onDelete={deleteBlock}
+          onDisable={toggleBlockLock}
+          moveDownward={moveBlockDownward}
+          hasError={!!error}
+        >
+          <ArticleImageButton
+            blockId={block.id}
+            text="Selecionar Imagem"
+            onClick={() => openMediaLibrary(block.id)}
+            data={image}
+          />
+        </EditorsAccordion>
+      );
     case "images":
-      return;
+      const images = block.data as ImagesEditor;
+      return (
+        <EditorsAccordion
+          id={block.id}
+          label={block.id.charAt(0).toUpperCase() + block.id.slice(1)}
+          locked={block.locked}
+          onDelete={deleteBlock}
+          onDisable={toggleBlockLock}
+          moveDownward={moveBlockDownward}
+          hasError={!!error}
+        >
+          <ArticleImagesButton
+            blockId={block.id}
+            text="Selecionar Imagens"
+            onClick={() => openMediaLibrary(block.id)}
+            data={images}
+          />
+        </EditorsAccordion>
+      );
     case "alert":
       const alertEditorTitleId = "input-alert-title-" + block.id;
       const alertEditorTypeId = "input-alert-type-" + block.id;
@@ -183,7 +221,17 @@ const createNewBlock = (
         data: { filename: "", code: "", language: "tsx" },
       };
     case "image":
-      return { ...base, type: "image", data: { id: "", url: "" } };
+      return {
+        ...base,
+        type: "image",
+        data: { id: "", url: "", alt: "", caption: "" },
+      };
+    case "images":
+      return {
+        ...base,
+        type: "images",
+        data: { images: [] },
+      };
     case "alert":
       return {
         ...base,
@@ -198,8 +246,6 @@ const createNewBlock = (
           accordions: [{ id: crypto.randomUUID(), title: "", body: "" }],
         },
       };
-    case "images":
-      return { ...base, type: "images", data: { id: "", url: "" } };
     default:
       throw new Error("Tipo inválido");
   }

@@ -42,8 +42,8 @@ type AccordionEditor = { accordions: Accordion[] };
 type AlertEditor = { type: typeof alertVariants; title: string; body: string };
 
 // IMAGE(s)
-type ImageEditor = { id: string; url: string };
-type ImagesEditor = ImageEditor[];
+type ImageEditor = { id: string; url: string; alt: string; caption?: string };
+type ImagesEditor = { images: ImageEditor[] };
 
 // |-----------------------------------------------------------------------------------|
 // |----------------------------==========Blocks==========-----------------------------|
