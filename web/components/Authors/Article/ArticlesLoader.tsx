@@ -32,7 +32,7 @@ export const LoadingSkeleton = () => (
           <Skeleton className="w-full max-w-138.5 h-9.5" />
         </div>
       </div>
-      <Skeleton className="w-full aspect-[calc(21/9)]" />
+      <Skeleton className="w-full aspect-[2.3333333333333335]" />
     </div>
     <div className="flex items-center gap-1 mt-2 mx-auto">
       {Array.from({ length: 7 }).map((_, i) => (
