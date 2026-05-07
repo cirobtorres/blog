@@ -1,9 +1,7 @@
-"use server";
-
 import { cookies } from "next/headers";
-import ForgetForm from "../../../../components/Forms/ForgetForm";
 import { Link } from "../../../../components/Links";
 import { publicWebUrls } from "../../../../routing/routes";
+import ForgetForm from "../../../../components/Users/Forget/ForgetForm";
 
 export default async function ForgotPasswordPage() {
   const cookieStore = await cookies();

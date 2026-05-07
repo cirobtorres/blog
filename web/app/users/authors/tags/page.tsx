@@ -1,12 +1,10 @@
-"use server";
-
 import { Suspense } from "react";
 import { Skeleton } from "../../../../components/Skeleton";
 import { serverFetch } from "../../../../services/auth-fetch-actions";
 import { apiServerUrls } from "../../../../routing/routes";
 import { Hr } from "../../../../components/utils";
-import TagCreate from "../../../../components/Authors/Tags/TagCreate";
-import TagFilter from "../../../../components/Authors/Tags/TagFilter";
+import TagCreate from "../../../../components/Users/Authors/Tags/TagCreate";
+import TagFilter from "../../../../components/Users/Authors/Tags/TagFilter";
 
 const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 

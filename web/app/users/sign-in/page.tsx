@@ -3,7 +3,7 @@ import { Link, LoginProviders } from "../../../components/Links";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
-import SignInForm from "../../../components/Forms/SignInForm";
+import SignInForm from "../../../components/Users/Sign-in/SignInForm";
 
 export default async function SignInPage({
   searchParams,

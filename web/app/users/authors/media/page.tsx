@@ -1,11 +1,9 @@
-"use server";
-
 import { Suspense } from "react";
 import { Hr } from "../../../../components/utils";
-import MediaFileCards from "../../../../components/Authors/Media/Files/Cards/FileCardLinks";
-import FolderCardsLoading from "../../../../components/Authors/Media/Folders/Cards/FolderCardsLoading";
-import FolderCardLinks from "../../../../components/Authors/Media/Folders/Cards/FolderCardLinks";
-import { FileCardsLoading } from "../../../../components/Authors/Media/Files/Cards/FileCardUtils";
+import MediaFileCards from "../../../../components/Users/Authors/Media/Files/Cards/FileCardLinks";
+import FolderCardsLoading from "../../../../components/Users/Authors/Media/Folders/Cards/FolderCardsLoading";
+import FolderCardLinks from "../../../../components/Users/Authors/Media/Folders/Cards/FolderCardLinks";
+import { FileCardsLoading } from "../../../../components/Users/Authors/Media/Files/Cards/FileCardUtils";
 
 export default async function AuthorsMediaPage({
   searchParams,

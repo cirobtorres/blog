@@ -1,7 +1,5 @@
-"use server";
-
 import { Suspense } from "react";
-import ValidateEmailFormServer from "../../../../components/ValidateEmailForm/server";
+import ValidateEmailFormServer from "../../../../components/Users/Sign-up/ValidateEmailForm/server";
 
 export default async function ValidateEmailPage({
   searchParams,

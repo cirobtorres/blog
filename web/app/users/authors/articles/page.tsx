@@ -1,5 +1,3 @@
-"use server";
-
 import { apiServerUrls } from "../../../../routing/routes";
 import { serverFetch } from "../../../../services/auth-fetch-actions";
 import { getOptimizedMediaUrl } from "../../../../utils/media-file-utils";

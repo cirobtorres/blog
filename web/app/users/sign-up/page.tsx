@@ -5,7 +5,7 @@ import { Skeleton } from "../../../components/Skeleton";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
-import SignUpForm from "../../../components/Forms/SignUpForm";
+import SignUpForm from "../../../components/Users/Sign-up/SignUpForm";
 
 const SignUpFormLoad = () => (
   <div className="w-full flex flex-col justify-center gap-2">

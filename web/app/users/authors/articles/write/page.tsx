@@ -1,6 +1,4 @@
-"use server";
-
-import ArticleCreate from "../../../../../components/Authors/Article/ArticleCreate";
+import ArticleCreate from "../../../../../components/Users/Authors/Article/ArticleCreate";
 
 export default async function AuthorsCreateArticlesPage() {
   return <ArticleCreate />;

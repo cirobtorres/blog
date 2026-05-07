@@ -12,10 +12,10 @@ import { Button } from "../../Button";
 import Spinner from "../../Spinner";
 import { cn, focusRing } from "../../../utils/variants";
 import Image from "next/image";
-import FolderBreadcrumbState from "../../Authors/Media/FolderBreadcrumbState";
-import FolderCardButtons from "../../Authors/Media/Folders/Cards/FolderCardButtons";
+import FolderBreadcrumbState from "../../Users/Authors/Media/FolderBreadcrumbState";
+import FolderCardButtons from "../../Users/Authors/Media/Folders/Cards/FolderCardButtons";
 import { Hr } from "../../utils";
-import FileCardButtons from "../../Authors/Media/Files/Cards/FileCardButtons";
+import FileCardButtons from "../../Users/Authors/Media/Files/Cards/FileCardButtons";
 import { DashedBackground } from "../../DashedBackground";
 
 interface SelectedImage {
@@ -184,9 +184,9 @@ export function ArticleImageButton({
           <input
             hidden
             type="hidden"
-            className="appearance-none"
             name={`image-${blockId}-${data.id}`}
             value={data.id}
+            className="absolute appearance-none -z-50"
           />
           <Image
             src={data.url}

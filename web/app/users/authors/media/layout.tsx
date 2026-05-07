@@ -1,8 +1,6 @@
-"use server";
-
-import AddFilesButton from "../../../../components/Authors/Media/Files/Add/AddFilesButton";
-import AddFolderButton from "../../../../components/Authors/Media/Folders/Add/AddFolderButton";
-import FolderBreadcrumbURL from "../../../../components/Authors/Media/FolderBreadcrumbURL";
+import AddFilesButton from "../../../../components/Users/Authors/Media/Files/Add/AddFilesButton";
+import AddFolderButton from "../../../../components/Users/Authors/Media/Folders/Add/AddFolderButton";
+import FolderBreadcrumbURL from "../../../../components/Users/Authors/Media/FolderBreadcrumbURL";
 
 export default async function MediaLayout({
   children,

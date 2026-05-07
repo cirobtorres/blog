@@ -1,5 +1,3 @@
-"use server";
-
 import {
   AboutPathLink,
   ArticlesPathLink,
@@ -7,9 +5,9 @@ import {
   TagPathLink,
   HomePathLink,
   UsersPathLink,
-} from "../../../components/Authors/Media/AsideNavButtons";
+} from "../../../components/Users/Authors/Media/AsideNavButtons";
 import Link from "next/link";
-import { UserButton } from "../../../components/Authors/UserButton";
+import { UserButton } from "../../../components/Users/Authors/UserButton";
 import { DashedBackground } from "../../../components/DashedBackground";
 import MediaFolderProdiver from "../../../providers/MediaFolderProdiver";
 import { cn, focusRing } from "../../../utils/variants";

@@ -1,5 +1,3 @@
-"use server";
-
 export default async function AuthorsPage() {
   return (
     <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 p-2">
