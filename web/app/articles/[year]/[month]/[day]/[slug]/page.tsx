@@ -1,5 +1,3 @@
-"use server";
-
 import { Suspense } from "react";
 import { Footer } from "../../../../../../components/Footer";
 import { Header } from "../../../../../../components/Header";
@@ -8,15 +6,23 @@ import ArticleBody from "../../../../../../components/Article/ArticleBody";
 import Comments from "../../../../../../components/Comments";
 import { serverFetch } from "../../../../../../services/auth-fetch-actions";
 import { apiServerUrls } from "../../../../../../routing/routes";
-// import { notFound } from "next/navigation";
+
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const response = await fetch(apiServerUrls.article.slug);
-  const slugs: string[] = await response.json();
-
-  return slugs.map((slug) => ({
-    slug: slug,
-  }));
+  try {
+    const response = await serverFetch(apiServerUrls.article.slug);
+    const slugs: string[] = await response.json();
+    return slugs.map((slug) => ({
+      slug: slug,
+    }));
+  } catch (e) {
+    console.error(
+      "Error during build: generateStaticParams function couldn't connect to the server",
+      e,
+    );
+    return [];
+  }
 }
 
 export default async function ArticlePageId({
@@ -30,8 +36,6 @@ export default async function ArticlePageId({
     apiServerUrls.article.root + `/${year}/${month}/${day}/${slug}`;
 
   const response = await serverFetch(getUrl);
-
-  // if (!response.ok) return notFound();
 
   const article = await response.json();
 
