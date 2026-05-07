@@ -17,6 +17,13 @@ import FolderCardButtons from "../../Users/Authors/Media/Folders/Cards/FolderCar
 import { Hr } from "../../utils";
 import FileCardButtons from "../../Users/Authors/Media/Files/Cards/FileCardButtons";
 import { DashedBackground } from "../../DashedBackground";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../../Carousel";
 
 interface SelectedImage {
   id: string;
@@ -214,48 +221,66 @@ export function ArticleImagesButton({
   data: ImagesEditor;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) {
-  const { loading, setLoading } = useArticleStore();
-  console.log(data.images.length);
+  const { setLoading } = useArticleStore();
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "cursor-pointer w-full flex justify-center items-center border border-transparent rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
-        focusRing,
-      )}
-    >
+    <div className="w-full h-100 flex justify-center items-center">
       {data.images.length > 0 ? (
-        <div className="p-4 grid grid-cols-8 gap-2 justify-center items-center">
-          {data.images.map((image) => {
-            return (
-              <div
+        <Carousel opts={{ align: "center", loop: true }}>
+          <CarouselContent className="-ml-2 max-w-120">
+            {data.images.map((image) => (
+              <CarouselItem
                 key={image.id}
-                className="relative w-40 h-full aspect-[2.3333333333333335] rounded overflow-hidden"
+                className="pl-2 basis-full flex justify-center"
               >
-                <DashedBackground />
-                <input
-                  hidden
-                  type="hidden"
-                  className="appearance-none"
-                  name={`image-${blockId}-${image.id}`}
-                  value={image.id}
-                />
-                <Image
-                  src={image.url}
-                  alt={image.alt}
-                  fill
-                  className="absolute object-cover"
-                  onLoadingComplete={() => setLoading(false)}
-                />
-              </div>
-            );
-          })}
-        </div>
+                <div className="relative w-100 aspect-video border rounded-lg overflow-hidden shrink-0">
+                  <DashedBackground />
+                  <input
+                    hidden
+                    type="hidden"
+                    name={`image-${blockId}-${image.id}`}
+                    value={image.id}
+                    className="absolute appearance-none invisible -z-50"
+                  />
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className="absolute object-cover"
+                    onLoadingComplete={() => setLoading(false)}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       ) : (
-        <DropZonePlaceholder text={text} loading={loading} />
+        <div className="flex flex-col justify-center items-center gap-2">
+          {text}
+          <Button
+            type="button"
+            onClick={onClick}
+            className={cn("size-8 rounded-lg not-dark:shadow", focusRing)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </Button>
+        </div>
       )}
-    </button>
+    </div>
   );
 }

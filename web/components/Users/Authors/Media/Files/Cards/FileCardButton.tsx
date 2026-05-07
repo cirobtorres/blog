@@ -9,7 +9,7 @@ import {
 } from "./FileCardUtils";
 import { Checkbox } from "../../../../../Fieldset/Checkbox";
 import React from "react";
-import { SelectionContext } from "../../../../../Editors/editors/utils";
+import { SelectionContext } from "../../../../../Editors/editors/ArticleEditorImage";
 import { ExpandButton } from "./Buttons/ExpandButton";
 import DownloadButton from "./Buttons/DownloadButton";
 

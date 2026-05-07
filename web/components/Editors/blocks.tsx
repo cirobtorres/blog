@@ -9,7 +9,10 @@ import { AddAccordionButton } from "./addAccordionButton";
 import { FieldsetError } from "../Fieldset";
 import AlertEditor from "./editors/ArticleEditorAlert";
 import AccordionEditor from "./editors/ArticleEditorAccordion";
-import { ArticleImageButton, ArticleImagesButton } from "./editors/utils";
+import {
+  ArticleImageButton,
+  ArticleImagesButton,
+} from "./editors/ArticleEditorImage";
 
 const BlockItem = React.memo(function BlockItem({
   block,

@@ -26,7 +26,7 @@ import putSaveArticle from "../../../../../services/article/putSaveArticle";
 import {
   ArticleBannerButton,
   ArticleMediaManager,
-} from "../../../../Editors/editors/utils";
+} from "../../../../Editors/editors/ArticleEditorImage";
 import { FileProvider } from "../../../../../providers/FileProvider";
 
 interface ArticleErrors {
