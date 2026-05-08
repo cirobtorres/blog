@@ -7,22 +7,26 @@ const publishArticle = async (
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> => {
-  // FETCH
   const validatedData = Object.fromEntries(formData.entries());
-  const { tags } = validatedData;
+  const { id, tags } = validatedData;
+  formData.set("status", "PUBLISHED");
+  const finalData = Object.fromEntries(formData.entries());
 
   try {
-    const response = await serverFetch(apiServerUrls.article.root, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await serverFetch(
+      apiServerUrls.article.root + "/id/" + id,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...finalData,
+          tags: JSON.parse(tags as string),
+        }),
+        cache: "no-store",
       },
-      body: JSON.stringify({
-        ...validatedData,
-        tags: JSON.parse(tags as string),
-      }),
-      cache: "no-store",
-    });
+    );
 
     if (response.ok) {
       const data: ArticleCreate = await response.json();

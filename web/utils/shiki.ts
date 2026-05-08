@@ -41,8 +41,8 @@ export const highlightCodeWithShiki = async ({
   language: string;
 }) => {
   const highlighter = await createHighlighter({
-    themes: THEMES,
     langs: LANGS,
+    themes: THEMES,
   });
   // Decode escaped characters
   const htmlDecoded = escapeCharacters(code);
@@ -53,6 +53,9 @@ export const highlightCodeWithShiki = async ({
   const html = highlighter.codeToHtml(cleaned, {
     lang: language || "tsx",
     theme: DEFAULT_THEME,
+    colorReplacements: {
+      "#1e1e1e": "transparent",
+    },
     transformers: [
       // transformerNotationDiff({
       //   matchAlgorithm: "v3",

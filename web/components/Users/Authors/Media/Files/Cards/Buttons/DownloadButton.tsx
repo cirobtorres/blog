@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { cn, focusRing } from "../../../../../../../utils/variants";
 
-export default function DownloadButton({ name, url }: Media) {
+export default function DownloadButton({
+  name,
+  url,
+}: {
+  name: string;
+  url: string;
+}) {
   const downloadUrl = url.replace("/upload/", "/upload/fl_attachment/");
   return (
     <Link

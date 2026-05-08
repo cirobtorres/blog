@@ -26,7 +26,7 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
       <Popover>
         <PopoverTrigger asChild>
           <button
-            suppressHydrationWarning // aria-control id missmatch between radix and server
+            suppressHydrationWarning // TODO
             type="button"
             tabIndex={0}
             className={cn(

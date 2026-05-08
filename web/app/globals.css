@@ -60,7 +60,7 @@
   --color-stone-950: oklch(0.16 0.005 85.1);
   --color-stone-975: oklch(0.14 0.004 85.1);
 
-  /* APP */
+  /* App */
   --height-header: 50px;
   --height-footer: 60px;
   --padding-article-content: 80px;
@@ -78,7 +78,7 @@
   --animate-pulse-blue: pulse-blue 1.5s infinite;
   --animate-pulse-red: pulse-red 1.5s infinite;
 
-  /* FONT-FAMILY */
+  /* Font-families */
   --font-inter: "Inter";
   /* --font-inter: "Inter", font-sans; */
 
@@ -217,9 +217,7 @@
 }
 
 @layer base {
-  /* html {
-    scrollbar-color: #555 #1e1e1e;
-  } */
+  /*------------------------------=====ENTIRE-WEBSITE=====------------------------------*/
   * {
     @apply border-stone-300 dark:border-stone-700;
   }
@@ -233,36 +231,44 @@
 
   /* Scrollbar */
   .scrollbar,
-  .tiptap.ProseMirror {
+  .tiptap.ProseMirror,
+  .alert-dialog-content {
     overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3b3b3b transparent;
   }
 
   .scrollbar::-webkit-scrollbar,
-  .tiptap.ProseMirror::-webkit-scrollbar {
-    width: 6px;
+  .tiptap.ProseMirror::-webkit-scrollbar,
+  .alert-dialog-content::-webkit-scrollbar {
+    width: 8px;
     height: 6px;
   }
 
   .scrollbar::-webkit-scrollbar-track,
-  .tiptap.ProseMirror::-webkit-scrollbar-track {
+  .tiptap.ProseMirror::-webkit-scrollbar-track,
+  .alert-dialog-content::-webkit-scrollbar-track {
     background: transparent;
   }
 
   .scrollbar::-webkit-scrollbar-thumb,
-  .tiptap.ProseMirror::-webkit-scrollbar-thumb {
+  .tiptap.ProseMirror::-webkit-scrollbar-thumb,
+  .alert-dialog-content::-webkit-scrollbar-thumb {
     cursor: default;
     border-radius: 9999px;
     border: 2px solid transparent;
-    background-color: var(--color-stone-800);
+    background-color: #3b3b3b;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover,
-  .tiptap.ProseMirror::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-stone-700);
+  .tiptap.ProseMirror::-webkit-scrollbar-thumb:hover,
+  .alert-dialog-content::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
   }
 
   .scrollbar::-webkit-scrollbar-corner,
-  .tiptap.ProseMirror::-webkit-scrollbar-corner {
+  .tiptap.ProseMirror::-webkit-scrollbar-corner,
+  .alert-dialog-content::-webkit-scrollbar-corner {
     background: transparent;
   }
 
@@ -326,7 +332,7 @@
   }
 
   /*------------------------------=====Shiki=====------------------------------*/
-  /* ADDING GRID WITH COUNTING LINES TO CODE BLOCK */
+  /* Adding grid with counting lines to code block */
   pre.shiki code {
     display: grid;
     grid-template-columns: 1fr;
@@ -358,7 +364,7 @@
     font-family: monospace;
   }
 
-  /*HIGHLIGHT*/
+  /* Highlight */
   pre.shiki code span.line.highlighted::after {
     content: "";
     position: absolute;
@@ -373,7 +379,7 @@
     /* background-color: oklch(0.541 0.281 293.009 / 0.1); */
   }
 
-  /*WORD*/
+  /* Word */
   pre.shiki code span.line .highlighted-word {
     border: 1px solid #525252;
     border-radius: 6px;
@@ -381,7 +387,7 @@
     background-color: #171717;
   }
 
-  /*DIFF - ADD*/
+  /* Diff: Add */
   /* pre.shiki code span.line.diff.add {
     background-color: #272727;
   } */
@@ -394,7 +400,7 @@
     color: #41be73 !important;
   } */
 
-  /*DIFF - REMOVE*/
+  /* Diff: Remove*/
 
   /* pre.shiki code span.line.diff.remove {
     background-color: rgba(15, 15, 15, 0.5);
@@ -413,7 +419,13 @@
     color: #fb2c36 !important;
   } */
 
-  /*SCROLLBAR*/
+  /* Background-color to TipTap */
+  .tiptap .shiki,
+  .tiptap pre {
+    background-color: var(--color-stone-950) !important;
+  }
+
+  /* Scrollbar */
   pre.shiki {
     overflow: auto;
     scrollbar-width: thin;

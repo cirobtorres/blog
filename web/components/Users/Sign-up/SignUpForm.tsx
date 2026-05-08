@@ -209,7 +209,7 @@ const Dialog = ({
       <AlertDialogDescription className="sr-only">
         Termos de proteção e uso de dados
       </AlertDialogDescription>
-      <div className="max-h-100 m-2 p-4 overflow-y-auto scrollbar">
+      <div className="max-h-100 m-2 p-4 overflow-y-auto">
         <Terms />
       </div>
       <AlertDialogFooter>

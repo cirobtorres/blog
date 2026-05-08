@@ -11,7 +11,7 @@ export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {
-    const response = await serverFetch(apiServerUrls.article.slug);
+    const response = await fetch(apiServerUrls.article.slug);
     const slugs: string[] = await response.json();
     return slugs.map((slug) => ({
       slug: slug,
@@ -37,7 +37,7 @@ export default async function ArticlePageId({
 
   const response = await serverFetch(getUrl);
 
-  const article = await response.json();
+  const article: Article = await response.json();
 
   return (
     <div className="min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">

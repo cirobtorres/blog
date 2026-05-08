@@ -12,6 +12,8 @@ import {
   ArticleIsPublished,
 } from "../../../../components/Article/ArticleCards";
 import { convertToLargeDate } from "../../../../utils/date";
+import { Link } from "../../../../components/Links";
+import { buttonVariants, cn } from "../../../../utils/variants";
 
 export default async function AuthorsArticlesPage() {
   const articlePromise = await serverFetch(apiServerUrls.article.root);
@@ -19,8 +21,18 @@ export default async function AuthorsArticlesPage() {
   const { content: articles, page }: { content: Article[]; page: Pagination } =
     articlesResult;
   return (
-    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 p-2">
-      <h1 className="text-3xl font-extrabold my-6">Artigos</h1>
+    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2">
+      <div className="flex justify-between items-center gap-2">
+        <h1 className="text-3xl font-extrabold my-6">Artigos</h1>
+        <div className="flex-1 flex justify-end items-center gap-2">
+          <Link
+            href="articles/write"
+            className={cn(buttonVariants(), "w-full max-w-30 h-8")}
+          >
+            Criar Novo
+          </Link>
+        </div>
+      </div>
       <ArticleCards>
         {articles.map((article: Article) => {
           return (

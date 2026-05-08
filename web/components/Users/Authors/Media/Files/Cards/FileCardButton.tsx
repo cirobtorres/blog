@@ -33,10 +33,12 @@ export default function FileCardButton({
       if (multiSelect) {
         setTempSelection([
           ...tempSelection,
-          { id: file.id, url: file.url, alt: file.alt },
+          { id: file.id, url: file.url, alt: file.alt, caption: file.caption },
         ]);
       } else {
-        setTempSelection([{ id: file.id, url: file.url, alt: file.alt }]);
+        setTempSelection([
+          { id: file.id, url: file.url, alt: file.alt, caption: file.caption },
+        ]);
       }
     }
   };

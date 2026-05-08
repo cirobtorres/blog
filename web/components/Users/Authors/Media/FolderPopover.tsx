@@ -107,7 +107,6 @@ export default function FolderPopover({
                         "/",
                     ),
                   );
-
                   const isDisabled = isSelf || isDescendant;
                   const isCurrent =
                     value === folder.id || currentFolder === folder.path;

@@ -24,11 +24,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../../Carousel";
+import { ExpandButton } from "../../Users/Authors/Media/Files/Cards/Buttons/ExpandButton";
+import DownloadButton from "../../Users/Authors/Media/Files/Cards/Buttons/DownloadButton";
 
 interface SelectedImage {
   id: string;
   url: string;
   alt: string;
+  caption: string;
 }
 
 export const DropZonePlaceholder = ({
@@ -213,27 +216,29 @@ export function ArticleImageButton({
 export function ArticleImagesButton({
   blockId,
   text,
-  data,
+  images,
   onClick,
+  setImages,
 }: {
   blockId: string;
   text: string;
-  data: ImagesEditor;
+  images: ImageEditor[];
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  setImages: (images: ImageEditor[]) => void;
 }) {
   const { setLoading } = useArticleStore();
 
   return (
     <div className="w-full h-100 flex justify-center items-center">
-      {data.images.length > 0 ? (
+      {images.length > 0 ? (
         <Carousel opts={{ align: "center", loop: true }}>
-          <CarouselContent className="-ml-2 max-w-120">
-            {data.images.map((image) => (
+          <CarouselContent className="-ml-2 max-w-180">
+            {images.map((image) => (
               <CarouselItem
                 key={image.id}
                 className="pl-2 basis-full flex justify-center"
               >
-                <div className="relative w-100 aspect-video border rounded-lg overflow-hidden shrink-0">
+                <div className="relative w-160 aspect-video border rounded-lg overflow-hidden shrink-0">
                   <DashedBackground />
                   <input
                     hidden
@@ -249,6 +254,36 @@ export function ArticleImagesButton({
                     className="absolute object-cover"
                     onLoadingComplete={() => setLoading(false)}
                   />
+                  <div className="w-full h-20 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1 backdrop-blur-sm">
+                    <ExpandButton url={image.url} />
+                    <DownloadButton {...{ name: image.id, url: image.url }} />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setImages(images.filter((i) => i.id !== image.id));
+                      }} // TODO
+                      className="size-8 not-dark:shadow-none"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </Button>
+                  </div>
                 </div>
               </CarouselItem>
             ))}

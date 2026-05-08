@@ -98,6 +98,7 @@ const BlockItem = React.memo(function BlockItem({
       );
     case "image":
       const image = block.data as ImageEditor;
+      console.log(block);
       return (
         <EditorsAccordion
           id={block.id}
@@ -108,6 +109,11 @@ const BlockItem = React.memo(function BlockItem({
           moveDownward={moveBlockDownward}
           hasError={!!error}
         >
+          {/* <input 
+            value={data.caption}
+            onChange={(e) => updateBlock(blockId, { caption: e.target.value })}
+            placeholder="Adicionar legenda..."
+          /> */}
           <ArticleImageButton
             blockId={block.id}
             text="Selecionar Imagem"
@@ -117,7 +123,6 @@ const BlockItem = React.memo(function BlockItem({
         </EditorsAccordion>
       );
     case "images":
-      const images = block.data as ImagesEditor;
       return (
         <EditorsAccordion
           id={block.id}
@@ -132,7 +137,8 @@ const BlockItem = React.memo(function BlockItem({
             blockId={block.id}
             text="Selecionar Imagens"
             onClick={() => openMediaLibrary(block.id)}
-            data={images}
+            images={(block.data as ImagesEditor)?.images ?? []}
+            setImages={(val) => updateBlock(block.id, { images: val })}
           />
         </EditorsAccordion>
       );

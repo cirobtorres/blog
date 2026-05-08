@@ -16,7 +16,6 @@ import { ButtonPlaceholder } from "../ArticlePopoverButton";
 import { saveArticle } from "../../../../../services/article/saveArticle";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
-import ArticleEditorsWrapper from "../ArticleEditorWrapper";
 import AlertErrorList from "../AlertErrorList";
 import ArticleButton from "../ArticleButton";
 import { useRouter } from "next/navigation";
@@ -88,6 +87,9 @@ export function ArticleCreate() {
   );
 
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // event.stopPropagation();
+
     const formData = new FormData(event.currentTarget);
     const rawData = Object.fromEntries(formData.entries());
 
@@ -98,86 +100,81 @@ export function ArticleCreate() {
     if (!result.success) {
       const error = z.treeifyError(result.error).properties;
       setErrors(error);
-      event.preventDefault(); // Interrupct Action
       return;
     }
 
     setErrors(null);
+
+    React.startTransition(() => {
+      action(formData);
+    });
   };
 
   return (
-    <ArticleEditorsWrapper action={action} onSubmit={onSubmit}>
-      <FileProvider>
-        <ArticleMediaManager />
-        <div className="flex justify-between items-center my-6">
-          <h1 className="w-full text-3xl font-extrabold">
-            Escrever novo artigo
-          </h1>
-          <div className="w-full flex justify-end items-center gap-2">
-            <ArticleButton
-              variant="link"
-              disabled={isPending}
-              className="w-full max-w-30 h-8"
-            >
-              Salvar
-            </ArticleButton>
-            <div
-              className={cn(
-                buttonVariants(),
-                "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/65",
-              )}
-            >
-              Publicar
-            </div>
-            <ButtonPlaceholder />
-          </div>
-        </div>
-        <AlertErrorList state={state} />
-        <div className="w-full flex flex-col gap-2">
-          <div className="w-full flex gap-2">
-            <div className="w-full">
-              <ArticleEditorTitle error={!!errors?.title?.errors} />
-              <FieldsetError error={errors?.title?.errors} />
-            </div>
-            <div className="w-full">
-              <ArticleEditorSubtitle error={!!errors?.subtitle?.errors} />
-              <FieldsetError error={errors?.subtitle?.errors} />
+    <section className="w-full max-w-6xl mx-auto my-6 px-2 flex-1 flex flex-col">
+      <form action={action} onSubmit={onSubmit}>
+        <FileProvider>
+          <ArticleMediaManager />
+          <div className="flex justify-between items-center my-6">
+            <h1 className="w-full text-3xl font-extrabold">
+              Escrever novo artigo
+            </h1>
+            <div className="w-full flex justify-end items-center gap-2">
+              <ArticleButton
+                variant="link"
+                disabled={isPending}
+                className="w-full max-w-30 h-8"
+              >
+                Salvar
+              </ArticleButton>
+              <div
+                className={cn(
+                  buttonVariants(),
+                  "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/65",
+                )}
+              >
+                Publicar
+              </div>
+              <ButtonPlaceholder />
             </div>
           </div>
-          <div className="w-full flex gap-2">
-            <div className="w-full">
-              <ArticleEditorTag
-                tags={selectedTags}
-                setTags={setSelectedTags}
-                error={!!errors?.tags?.errors}
-              />
-              <FieldsetError error={errors?.tags?.errors} />
+          <AlertErrorList state={state} />
+          <div className="w-full flex flex-col gap-2">
+            <div className="w-full flex gap-2">
+              <div className="w-full">
+                <ArticleEditorTitle error={!!errors?.title?.errors} />
+                <FieldsetError error={errors?.title?.errors} />
+              </div>
+              <div className="w-full">
+                <ArticleEditorSubtitle error={!!errors?.subtitle?.errors} />
+                <FieldsetError error={errors?.subtitle?.errors} />
+              </div>
             </div>
-            <div className="w-full">
-              <ArticleEditorSlug error={!!errors?.slug?.errors} />
-              <FieldsetError error={errors?.slug?.errors} />
+            <div className="w-full flex gap-2">
+              <div className="w-full">
+                <ArticleEditorTag
+                  tags={selectedTags}
+                  setTags={setSelectedTags}
+                  error={!!errors?.tags?.errors}
+                />
+                <FieldsetError error={errors?.tags?.errors} />
+              </div>
+              <div className="w-full">
+                <ArticleEditorSlug error={!!errors?.slug?.errors} />
+                <FieldsetError error={errors?.slug?.errors} />
+              </div>
             </div>
+            <ArticleBannerButton />
+            <FieldsetError error={errors?.banner?.errors} />
           </div>
-          {/* <ArticleImage
-          trigger={<ArticleBannerButton />}
-          multiSelect={false}
-          // error={!!errors?.banner?.errors}
-        >
-          <FolderBreadcrumbState />
-          <FolderCardButtons />
-          <Hr className="my-6" />
-          <FileCardButtons />
-        </ArticleImage> */}
-          <ArticleBannerButton />
-          <FieldsetError error={errors?.banner?.errors} />
-        </div>
-        <div className="mt-2">
-          <BlockList />
-        </div>
-        <div className="mt-2">
-          <AddBlockButton />
-        </div>
-      </FileProvider>
-    </ArticleEditorsWrapper>
+          <div className="mt-2">
+            <BlockList />
+          </div>
+          <div className="mt-2">
+            <AddBlockButton />
+          </div>
+        </FileProvider>
+      </form>
+    </section>
   );
 }

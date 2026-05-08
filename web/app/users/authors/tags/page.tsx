@@ -10,7 +10,7 @@ const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 
 export default async function TagsPage() {
   return (
-    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 p-2">
+    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2">
       <h1 className="text-3xl font-extrabold my-6">Gerenciar Tags</h1>
       <Suspense fallback={<LoadingTagState />}>
         <LoadTags />

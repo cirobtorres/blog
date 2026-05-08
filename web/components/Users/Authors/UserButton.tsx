@@ -65,7 +65,10 @@ export function UserButton() {
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-0 p-0">
+      <PopoverContent
+        suppressHydrationWarning // TODO
+        className="flex flex-col gap-0 p-0"
+      >
         <div className="flex flex-col gap-2 p-3">
           <div className="flex flex-col">
             <span className="font-bold">{user.name}</span>

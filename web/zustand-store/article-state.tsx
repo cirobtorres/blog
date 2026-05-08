@@ -87,6 +87,7 @@ export const useArticleStore = create<ArticleState>((set) => ({
               id: img?.id,
               url: img?.url,
               alt: img?.alt,
+              caption: img?.caption ?? (b.data as ImageEditor).caption ?? "",
             },
           };
         }

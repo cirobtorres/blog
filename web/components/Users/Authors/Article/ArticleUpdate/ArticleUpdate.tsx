@@ -19,7 +19,6 @@ import { publishArticleSchema } from "../../../../../services/article/zod-valida
 import { ArticlePopoverButton } from "../ArticlePopoverButton";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
-import ArticleEditorsWrapper from "../ArticleEditorWrapper";
 import ArticleButton from "../ArticleButton";
 import AlertErrorList from "../AlertErrorList";
 import putSaveArticle from "../../../../../services/article/putSaveArticle";
@@ -55,15 +54,7 @@ export function ArticleUpdate({
   status,
 }: Article) {
   const { user } = useAuth();
-  const {
-    blocks,
-    loading,
-    bannerMediaId,
-    bannerUrl,
-    bannerAlt,
-    setLoading,
-    openMediaLibrary,
-  } = useArticleStore();
+  const { blocks } = useArticleStore();
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
     null,
   );
@@ -160,6 +151,9 @@ export function ArticleUpdate({
   );
 
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // event.stopPropagation();
+
     const formData = new FormData(event.currentTarget);
     const rawData = Object.fromEntries(formData.entries());
 
@@ -170,110 +164,115 @@ export function ArticleUpdate({
     if (!result.success) {
       const error = z.treeifyError(result.error).properties;
       setErrors(error);
-      event.preventDefault(); // Interrupct Action
       return;
     }
 
     setErrors(null);
+
+    // "intent" = which button was clicked
+    // @ts-expect-error - submitter do exist in nativeEvent
+    const intent = event.nativeEvent.submitter?.value;
+    React.startTransition(() => {
+      if (intent === "publish") {
+        publishAction(formData);
+      } else {
+        saveAction(formData);
+      }
+    });
   };
 
   return (
-    <ArticleEditorsWrapper onSubmit={onSubmit}>
-      <FileProvider>
-        <ArticleMediaManager />
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="w-full text-3xl font-extrabold">
-            Escrever novo artigo
-          </h1>
-          <div className="w-full flex justify-end items-center gap-2">
-            <ArticleButton
-              variant="link"
-              formAction={saveAction}
-              disabled={isPublishPending || isSavePending}
-              className="w-full max-w-30 h-8"
-            >
-              Salvar
-            </ArticleButton>
-            <ArticleButton
-              formAction={publishAction}
-              disabled={isPublishPending || isSavePending}
-              className="w-full max-w-30 h-8"
-            >
-              Publicar
-            </ArticleButton>
-            <ArticlePopoverButton articleId={id} status={status} />
-          </div>
-        </div>
-        <AlertErrorList state={saveState || publishState} />
-        <div className="w-full flex flex-col gap-2">
-          <input
-            hidden
-            type="hidden"
-            className="appearance-none"
-            name="id"
-            value={id}
-          />
-          <input
-            hidden
-            type="hidden"
-            className="appearance-none"
-            name="status"
-            value={status}
-          />
-          <div className="w-full flex gap-2">
-            <div className="w-full">
-              <ArticleEditorTitle
-                defaultVal={title}
-                error={!!errors?.title?.errors}
-              />
-              <FieldsetError error={errors?.title?.errors} />
-            </div>
-            <div className="w-full">
-              <ArticleEditorSubtitle
-                defaultVal={subtitle}
-                error={!!errors?.subtitle?.errors}
-              />
-              <FieldsetError error={errors?.subtitle?.errors} />
+    <section className="w-full max-w-6xl mx-auto my-6 px-2 flex-1 flex flex-col">
+      <form onSubmit={onSubmit}>
+        <FileProvider>
+          <ArticleMediaManager />
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="w-full text-3xl font-extrabold">
+              Escrever novo artigo
+            </h1>
+            <div className="w-full flex justify-end items-center gap-2">
+              <ArticleButton
+                type="submit"
+                name="intent"
+                value="save"
+                variant="link"
+                disabled={isPublishPending || isSavePending}
+                className="w-full max-w-30 h-8"
+              >
+                Salvar
+              </ArticleButton>
+              <ArticleButton
+                type="submit"
+                name="intent"
+                value="publish"
+                disabled={isPublishPending || isSavePending}
+                className="w-full max-w-30 h-8"
+              >
+                Publicar
+              </ArticleButton>
+              <ArticlePopoverButton articleId={id} status={status} />
             </div>
           </div>
-          <div className="w-full flex gap-2">
-            <div className="w-full">
-              <ArticleEditorTag
-                tags={selectedTags}
-                setTags={setSelectedTags}
-                error={!!errors?.tags?.errors}
-              />
-              <FieldsetError error={errors?.tags?.errors} />
+          <AlertErrorList state={saveState || publishState} />
+          <div className="w-full flex flex-col gap-2">
+            <input
+              hidden
+              type="hidden"
+              className="appearance-none"
+              name="id"
+              value={id}
+            />
+            <input
+              hidden
+              type="hidden"
+              className="appearance-none"
+              name="status"
+              value={status}
+            />
+            <div className="w-full flex gap-2">
+              <div className="w-full">
+                <ArticleEditorTitle
+                  defaultVal={title}
+                  error={!!errors?.title?.errors}
+                />
+                <FieldsetError error={errors?.title?.errors} />
+              </div>
+              <div className="w-full">
+                <ArticleEditorSubtitle
+                  defaultVal={subtitle}
+                  error={!!errors?.subtitle?.errors}
+                />
+                <FieldsetError error={errors?.subtitle?.errors} />
+              </div>
             </div>
-            <div className="w-full">
-              <ArticleEditorSlug
-                defaultVal={slug}
-                error={!!errors?.slug?.errors}
-              />
-              <FieldsetError error={errors?.slug?.errors} />
+            <div className="w-full flex gap-2">
+              <div className="w-full">
+                <ArticleEditorTag
+                  tags={selectedTags}
+                  setTags={setSelectedTags}
+                  error={!!errors?.tags?.errors}
+                />
+                <FieldsetError error={errors?.tags?.errors} />
+              </div>
+              <div className="w-full">
+                <ArticleEditorSlug
+                  defaultVal={slug}
+                  error={!!errors?.slug?.errors}
+                />
+                <FieldsetError error={errors?.slug?.errors} />
+              </div>
             </div>
+            <ArticleBannerButton defaultBanner={media} />
+            <FieldsetError error={errors?.banner?.errors} />
           </div>
-          {/* <ArticleImage
-            defaultVal={media}
-            trigger={<ArticleBannerButton />}
-            multiSelect={false}
-            // error={!!errors?.banner?.errors}
-          >
-            <FolderBreadcrumbState />
-            <FolderCardButtons />
-            <Hr className="my-6" />
-            <FileCardButtons />
-          </ArticleImage> */}
-          <ArticleBannerButton defaultBanner={media} />
-          <FieldsetError error={errors?.banner?.errors} />
-        </div>
-        <div className="mt-2">
-          <BlockList defaultVal={body} />
-        </div>
-        <div className="mt-2">
-          <AddBlockButton />
-        </div>
-      </FileProvider>
-    </ArticleEditorsWrapper>
+          <div className="mt-2">
+            <BlockList defaultVal={body} />
+          </div>
+          <div className="mt-2">
+            <AddBlockButton />
+          </div>
+        </FileProvider>
+      </form>
+    </section>
   );
 }
