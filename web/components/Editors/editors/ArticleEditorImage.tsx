@@ -125,14 +125,14 @@ export function ArticleBannerButton({
     bannerAlt,
     setLoading,
     openMediaLibrary,
-    hydrateBanner,
+    selectBanner,
   } = useArticleStore();
 
   React.useEffect(() => {
     if (defaultBanner && !bannerMediaId) {
-      hydrateBanner(defaultBanner);
+      selectBanner(defaultBanner);
     }
-  }, [defaultBanner, bannerMediaId, hydrateBanner]);
+  }, [defaultBanner, bannerMediaId, selectBanner]);
 
   return (
     <button

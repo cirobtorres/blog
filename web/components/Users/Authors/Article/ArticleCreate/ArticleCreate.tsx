@@ -50,6 +50,13 @@ export function ArticleCreate() {
   const [, setIsOpenState] = React.useState(false);
   const { replace } = useRouter();
 
+  const { reset } = useArticleStore();
+
+  React.useEffect(() => {
+    // Preventing zustand from loading state saved from previous articles
+    return () => reset();
+  }, [reset]);
+
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       if (!user?.data?.id) {
@@ -115,7 +122,7 @@ export function ArticleCreate() {
       <form action={action} onSubmit={onSubmit}>
         <FileProvider>
           <ArticleMediaManager />
-          <div className="flex justify-between items-center my-6">
+          <div className="flex justify-between items-center mb-6">
             <h1 className="w-full text-3xl font-extrabold">
               Escrever novo artigo
             </h1>
@@ -146,7 +153,10 @@ export function ArticleCreate() {
                 <FieldsetError error={errors?.title?.errors} />
               </div>
               <div className="w-full">
-                <ArticleEditorSubtitle error={!!errors?.subtitle?.errors} />
+                <ArticleEditorSubtitle
+                  maxLength={200}
+                  error={!!errors?.subtitle?.errors}
+                />
                 <FieldsetError error={errors?.subtitle?.errors} />
               </div>
             </div>

@@ -28,13 +28,13 @@ export default function CodeRenderer({ filename, code, language }: CodeEditor) {
         </span>
         <CopyToClipBoard toCopy={code} />
       </div>
-      <div className="flex items-center justify-center min-h-11">
+      <div className="w-full flex-1 flex items-center min-h-11">
         {loading ? (
           <Spinner />
         ) : (
           <div
             dangerouslySetInnerHTML={{ __html: shikiCode }}
-            className="overflow-auto max-w-full min-w-0 [&_pre_code]:max-h-100 [&_pre_code]:py-4"
+            className="overflow-auto w-full flex-1 max-w-full min-w-0 [&_pre_code]:max-h-100 [&_pre_code]:py-4"
           />
         )}
       </div>

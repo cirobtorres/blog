@@ -12,18 +12,21 @@ import { slugify } from "../../../utils/strings-transforms";
 import Spinner from "../../Spinner";
 
 export default function ArticleEditorSlug({
+  articleId,
   defaultVal,
   error,
   ...props
-}: React.ComponentProps<"input"> & { defaultVal?: string; error?: boolean }) {
-  const { slug, setSlug } = useArticleStore();
+}: React.ComponentProps<"input"> & {
+  articleId?: string;
+  defaultVal?: string;
+  error?: boolean;
+}) {
+  const { slug, isSlugTaken, setSlug, setIsSlugTaken } = useArticleStore();
   const [isChecking, setIsChecking] = React.useState(false);
-  const [isSlugTaken, setIsSlugTaken] = React.useState<
-    "valid" | "invalid" | "empty"
-  >("empty");
 
   const validateSlug = useDebouncedCallback(async (currentSlug: string) => {
     if (!currentSlug || currentSlug.length < 5) {
+      setIsSlugTaken("empty");
       return;
     }
 
@@ -31,7 +34,12 @@ export default function ArticleEditorSlug({
 
     try {
       const response = await fetchAction(
-        apiServerUrls.article.slug + "/" + currentSlug,
+        apiServerUrls.article.slug +
+          "/" +
+          currentSlug +
+          "/check" +
+          "&excludeId=" +
+          articleId,
       );
       setIsSlugTaken(response.ok ? "invalid" : "valid");
     } catch (e) {
@@ -46,23 +54,15 @@ export default function ArticleEditorSlug({
     }
   }, 2000);
 
-  const setValidateSlug = React.useCallback(
-    (val: string) => {
-      if (val.length < 5) {
-        setIsSlugTaken("empty");
-      }
-      validateSlug(val);
-    },
-    [validateSlug],
-  );
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = slugify(e.target.value);
     setSlug(val);
-    setValidateSlug(val);
+    if (val.length < 5) setIsSlugTaken("empty");
   };
 
-  const isSlugValid = !!slug && !!(isSlugTaken === "valid");
+  React.useEffect(() => {
+    validateSlug(slug);
+  }, [slug, validateSlug]);
 
   React.useEffect(() => {
     if (defaultVal) {
@@ -70,6 +70,12 @@ export default function ArticleEditorSlug({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const hasContent = slug.length > 0;
+  const hasMinLength = slug.length >= 5;
+  const isServerValid = isSlugTaken === "valid";
+  const isSlugValid = hasContent && hasMinLength && isServerValid;
+  const hasError = isSlugTaken === "invalid" || error;
 
   return (
     <fieldset className="flex flex-col">
@@ -94,7 +100,7 @@ export default function ArticleEditorSlug({
             focusRing,
             isSlugValid
               ? "border-emerald-500 dark:border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/10 focus-visible:border-emerald-500 dark:focus-visible:border-emerald-500"
-              : !!(isSlugTaken === "invalid") || error
+              : hasError
                 ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
                 : "bg-stone-200 dark:bg-stone-900",
           )}

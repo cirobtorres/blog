@@ -60,6 +60,7 @@ export function ArticleUpdate({
   );
   const [, setIsOpenState] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState<Tag[]>(() => tags);
+
   const router = useRouter();
 
   const [saveState, saveAction, isSavePending] = React.useActionState(
@@ -240,6 +241,7 @@ export function ArticleUpdate({
               <div className="w-full">
                 <ArticleEditorSubtitle
                   defaultVal={subtitle}
+                  maxLength={200}
                   error={!!errors?.subtitle?.errors}
                 />
                 <FieldsetError error={errors?.subtitle?.errors} />
@@ -256,6 +258,7 @@ export function ArticleUpdate({
               </div>
               <div className="w-full">
                 <ArticleEditorSlug
+                  articleId={id}
                   defaultVal={slug}
                   error={!!errors?.slug?.errors}
                 />

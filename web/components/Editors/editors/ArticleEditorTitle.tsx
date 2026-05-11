@@ -3,6 +3,7 @@
 import React from "react";
 import { cn, focusWithinRing } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
+import { SentenceCounter } from "./utils";
 
 export function ArticleEditorTitle({
   defaultVal,
@@ -12,7 +13,7 @@ export function ArticleEditorTitle({
   defaultVal?: string;
   error?: boolean;
 }) {
-  const { title, setTitle, setSlug } = useArticleStore();
+  const { title, setTitle, setSlug, setIsSlugTaken } = useArticleStore();
 
   React.useEffect(() => {
     if (defaultVal) {
@@ -27,6 +28,7 @@ export function ArticleEditorTitle({
     const val = e.target.value;
     setTitle(val);
     setSlug(val);
+    if (val.length < 5) setIsSlugTaken("empty");
   };
 
   return (
@@ -57,6 +59,7 @@ export function ArticleEditorTitle({
         )}
         {...props}
       />
+      <SentenceCounter sentence={title} />
     </fieldset>
   );
 }

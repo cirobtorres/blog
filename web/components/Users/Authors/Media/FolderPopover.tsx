@@ -33,10 +33,7 @@ export default function FolderPopover({
   movingFolderIds?: string[];
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<string | null>(() => {
-    if (defaultValue) return defaultValue;
-    return null;
-  });
+  const [selectedValue, setSelectedValue] = React.useState<string | null>(null);
 
   const { data: folders, isPending } = useFolders();
   const pathname = usePathname();
@@ -46,7 +43,7 @@ export default function FolderPopover({
   const currentFolderId =
     folders?.find((folder) => folder.path === currentFolder)?.id ?? null;
 
-  const actualValue = value ?? currentFolderId;
+  const value = selectedValue ?? defaultValue ?? currentFolderId;
 
   const selectedFolderName = folders?.find(
     (folder) => folder.id === value,
@@ -58,7 +55,7 @@ export default function FolderPopover({
       <input
         type="hidden"
         name={name ?? "folderDestinationId"}
-        value={actualValue ?? ""}
+        value={value ?? ""}
       />
       <Popover open={open} onOpenChange={setOpen}>
         {isPending || !value ? (
@@ -117,7 +114,7 @@ export default function FolderPopover({
                         disabled={!!isDisabled}
                         onSelect={() => {
                           if (isDisabled) return;
-                          setValue(folder.id);
+                          setSelectedValue(folder.id);
                           setOpen(false);
                         }}
                         className={cn(

@@ -1,38 +1,60 @@
 import { create } from "zustand";
 import { slugify } from "../utils/strings-transforms";
 
-interface ArticleState {
+type ArticleStateAttr = ArticleStateAttrContent & ArticleStateAttrUtils;
+
+type ArticleStateAttrContent = {
   title: string;
   subtitle: string;
   slug: string;
-  loading: boolean;
   bannerMediaId: string | null;
   bannerUrl: string | null;
   bannerAlt: string | null;
   blocks: Blocks[];
+};
+
+type ArticleStateAttrUtils = {
+  loading: boolean;
+  isSlugTaken: "valid" | "invalid" | "empty";
   activeMediaTarget: "banner" | string | null;
   currentModalFolder: string;
   currentModalPage: number;
-  setLoading: (loading: boolean) => void;
+};
+
+type ArticleStateFuncContent = {
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
   setSlug: (slug: string) => void;
-  hydrateBanner: (data: ImageEditor) => void;
-  openMediaLibrary: (target: string | null) => void;
+  selectBanner: (data: ImageEditor) => void;
   selectImages: (images: ImageEditor[]) => void;
-  setCurrentModalFolder: (path: string) => void;
-  setModalPage: (page: number) => void;
   setBlocks: (blocks: Blocks[]) => void;
   updateBlock: (id: string, data: UpdateBlocks) => void;
+  reset: () => void;
+};
+
+type ArticleStateFuncUtils = {
+  // Accordion related
   deleteBlock: (id: string) => void;
   toggleBlockLock: (id: string) => void;
   moveBlockDownward: (id: string) => void;
-}
+  // Modals, validations, transitions
+  setLoading: (loading: boolean) => void;
+  setIsSlugTaken: (isSlugTaken: "valid" | "invalid" | "empty") => void;
+  openMediaLibrary: (target: string | null) => void;
+  setCurrentModalFolder: (path: string) => void;
+  setModalPage: (page: number) => void;
+};
 
-export const useArticleStore = create<ArticleState>((set) => ({
+type ArticleState = ArticleStateAttrContent &
+  ArticleStateAttrUtils &
+  ArticleStateFuncContent &
+  ArticleStateFuncUtils;
+
+const initialState: ArticleStateAttr = {
   title: "",
   subtitle: "",
   slug: "",
+  isSlugTaken: "empty",
   loading: false,
   bannerMediaId: null,
   bannerUrl: null,
@@ -41,12 +63,17 @@ export const useArticleStore = create<ArticleState>((set) => ({
   activeMediaTarget: null,
   currentModalFolder: "/",
   currentModalPage: 0,
+};
+
+export const useArticleStore = create<ArticleState>((set) => ({
+  ...initialState,
   setLoading: (loading) => set({ loading }),
   setTitle: (title) => set({ title }),
   setSubtitle: (subtitle) => set({ subtitle }),
   setSlug: (slug) => set({ slug: slugify(slug) }),
+  setIsSlugTaken: (isSlugTaken) => set({ isSlugTaken }),
   openMediaLibrary: (target) => set({ activeMediaTarget: target }),
-  hydrateBanner: (data) => {
+  selectBanner: (data) => {
     set({
       bannerMediaId: data.id,
       bannerUrl: data.url,
@@ -129,4 +156,5 @@ export const useArticleStore = create<ArticleState>((set) => ({
       ];
       return { blocks: newBlocks };
     }),
+  reset: () => set(initialState),
 }));

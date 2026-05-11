@@ -16,7 +16,7 @@ import { Link } from "../../../../components/Links";
 import { buttonVariants, cn } from "../../../../utils/variants";
 
 export default async function AuthorsArticlesPage() {
-  const articlePromise = await serverFetch(apiServerUrls.article.root);
+  const articlePromise = await serverFetch(apiServerUrls.article.root + "/me");
   const articlesResult = await articlePromise.json();
   const { content: articles, page }: { content: Article[]; page: Pagination } =
     articlesResult;
@@ -54,6 +54,16 @@ export default async function AuthorsArticlesPage() {
                 </ArticleCardDate>
                 <ArticleCardTitle>{article.title}</ArticleCardTitle>
                 <ArticleCardSubtitle>{article.subtitle}</ArticleCardSubtitle>
+                <span
+                  className={cn(
+                    "mt-auto mb-0 px-2 font-bold",
+                    article.status === "PUBLISHED"
+                      ? "text-emerald-600"
+                      : "text-sky-600",
+                  )}
+                >
+                  {article.status}
+                </span>
               </ArticleCard>
             </ArticleCardLink>
           );

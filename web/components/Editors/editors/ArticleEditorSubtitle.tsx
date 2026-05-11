@@ -3,6 +3,7 @@
 import React from "react";
 import { cn, focusWithinRing } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
+import { SentenceCounter } from "./utils";
 
 export function ArticleEditorSubtitle({
   defaultVal,
@@ -36,7 +37,7 @@ export function ArticleEditorSubtitle({
         rows={2}
         maxLength={256}
         spellCheck={false}
-        placeholder="Subtítulo"
+        placeholder={"Subtítulo"}
         value={subtitle}
         onChange={(e) => setSubtitle(e.target.value)}
         className={cn(
@@ -48,6 +49,7 @@ export function ArticleEditorSubtitle({
         )}
         {...props}
       />
+      <SentenceCounter sentence={subtitle} />
     </fieldset>
   );
 }

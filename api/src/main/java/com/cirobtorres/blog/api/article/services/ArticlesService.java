@@ -168,12 +168,25 @@ public class ArticlesService {
             }
         }
 
-        // TODO
         if (allParams.containsKey("tag")) {
             spec = spec.and((root, query, cb) ->
                     cb.equal(root.join("tags").get("slug"), allParams.get("tag")));
         }
 
+        return articlesRepository.findAll(spec, pageable).map(ArticleDTO::new);
+    }
+
+    @Transactional
+    public Page<ArticleDTO> getAllByAuthor(String userId, Pageable pageable) {
+        UUID uuid = UUID.fromString(userId);
+        Author author = authorRepository.findByUserId(uuid).orElseThrow(
+                () -> new EntityNotFoundException("Author not found")
+        );
+        Specification<Articles> spec = (
+                root,
+                query,
+                cb
+        ) -> cb.equal(root.get("author"), author);
         return articlesRepository.findAll(spec, pageable).map(ArticleDTO::new);
     }
 
@@ -239,7 +252,27 @@ public class ArticlesService {
                                 "Article not found"
                         )
                 );
-
         articlesRepository.delete(article);
+    }
+
+    public boolean isSlugAvailable(@NonNull ArticleSlugDTO slugDTO, UUID excludeId) {
+        String slug = slugDTO.slug();
+        if (excludeId != null) {
+            return !articlesRepository.existsBySlugAndIdNot(slug, excludeId);
+        }
+        return !articlesRepository.existsBySlug(slug);
+    }
+
+    public ArticleDTO unpublishArticle(UUID id) {
+        Articles article = articlesRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "Article not found"
+                        )
+                );
+        article.setStatus(ArticlesStatus.DRAFT);
+        articlesRepository.save(article);
+        return new ArticleDTO(article);
     }
 }

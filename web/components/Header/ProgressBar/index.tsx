@@ -1,15 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import React from "react";
 
 export const ProgressBar = () => {
   const pathname = usePathname();
-  const progressBarRef = useRef<HTMLDivElement>(null);
-  const progressBarBlurRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const progressBarRef = React.useRef<HTMLDivElement>(null);
+  const progressBarBlurRef = React.useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const lineProgressOnScroll = () => {
       const elementHeight =
         document.documentElement.scrollHeight - window.innerHeight;

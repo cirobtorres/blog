@@ -75,6 +75,7 @@ const UnpublishButton = ({
   const [isOpen, setIsOpen] = React.useState(false);
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
+      setIsOpen(false);
       return <p>{serverResponse.success || "Artigo despublicado!"}</p>;
     };
 
@@ -120,11 +121,17 @@ const UnpublishButton = ({
               Cancelar
             </AlertDialogCancel>
             <Button
+              type="button"
               disabled={isPending}
               variant="default"
               className="w-full max-w-30 h-8"
+              onClick={() => {
+                React.startTransition(() => {
+                  action();
+                });
+              }}
             >
-              {isPending && <Spinner />} Salvar
+              {isPending && <Spinner />} Confirmar
             </Button>
           </AlertDialogFooter>
         </form>
@@ -174,9 +181,15 @@ const DeleteButton = ({ articleId }: { articleId: string }) => {
               Cancelar
             </AlertDialogCancel>
             <Button
+              type="button"
               disabled={isPending}
               variant="destructive"
               className="w-full max-w-30 h-8"
+              onClick={() => {
+                React.startTransition(() => {
+                  action();
+                });
+              }}
             >
               {isPending && <Spinner />} Excluir
             </Button>

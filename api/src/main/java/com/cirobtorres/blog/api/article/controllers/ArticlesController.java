@@ -9,8 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -37,6 +41,7 @@ public class ArticlesController {
         return ResponseEntity.ok(articlesService.getByUrlMetadata(year, month, day, slug));
     }
 
+    // Public
     @GetMapping
     public ResponseEntity<Page<ArticleDTO>> getAllByQueryParams(
             @RequestParam(name = "q", required = false) String query,
@@ -44,6 +49,17 @@ public class ArticlesController {
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(articlesService.getAllByQueryParams(query, allParams, pageable));
+    }
+
+    // Protected
+    @GetMapping("me")
+    @PreAuthorize("hasAuthority('AUTHOR')")
+    public ResponseEntity<Page<ArticleDTO>> getMyArticles(
+            Authentication auth,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        String userId = auth.getName();
+        return ResponseEntity.ok(articlesService.getAllByAuthor(userId, pageable));
     }
 
     @GetMapping("slug")
@@ -67,6 +83,15 @@ public class ArticlesController {
         return ResponseEntity.ok(article);
     }
 
+    @GetMapping("slug/{slug}/check")
+    public ResponseEntity<Map<String, Boolean>> isSlugAvailable(
+            @PathVariable @NonNull ArticleSlugDTO slugDTO,
+            @RequestParam(required = false) UUID excludeId
+    ) {
+        boolean isAvailable = articlesService.isSlugAvailable(slugDTO, excludeId);
+        return ResponseEntity.ok(Map.of("available", isAvailable));
+    }
+
     // POST---------------------------------------------------------------------------------------------------
     @PostMapping
     public ResponseEntity<ArticleDTO> createArticle(
@@ -79,9 +104,18 @@ public class ArticlesController {
     // PUT----------------------------------------------------------------------------------------------------
     @PutMapping("id/{id}")
     public ResponseEntity<ArticleDTO> putArticle(
-            @RequestBody ArticleSaveDTO createArticleDTO
+            @PathVariable UUID id, // TODO: use id from URL instead
+            @RequestBody ArticleSaveDTO createArticleDTO // TODO: actual id is coming from here
     ) {
         ArticleDTO article = articlesService.putArticle(createArticleDTO);
+        return ResponseEntity.ok(article);
+    }
+
+    @PutMapping("id/{id}/unpublish")
+    public ResponseEntity<ArticleDTO> unpublishArticle(
+            @PathVariable UUID id
+    ) {
+        ArticleDTO article = articlesService.unpublishArticle(id);
         return ResponseEntity.ok(article);
     }
 

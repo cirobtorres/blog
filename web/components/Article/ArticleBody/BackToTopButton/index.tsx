@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React from "react";
 import { cn, focusRing } from "../../../../utils/variants";
 
 export default function BackToTopButton() {
@@ -10,9 +10,9 @@ export default function BackToTopButton() {
   const innerRadius = diameter / 2 - strokeWidth * 2;
   const circumference = 2 * Math.PI * innerRadius;
 
-  const [progress, setProgress] = useState(0); // 0 → 100
+  const [progress, setProgress] = React.useState(0); // 0 → 100
 
-  useEffect(() => {
+  React.useEffect(() => {
     const onScroll = () => {
       const totalHeight =
         document.documentElement.scrollHeight - window.innerHeight;

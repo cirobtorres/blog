@@ -22,7 +22,7 @@ export default async function unpublishArticle(id: string) {
       cache: "no-store",
     };
     const response = await serverFetch(
-      apiServerUrls.article.id + "/" + id,
+      apiServerUrls.article.id + "/" + id + "/unpublish",
       options,
     );
     if (!response.ok) {
