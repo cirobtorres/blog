@@ -118,7 +118,7 @@ export function ArticleCreate() {
   };
 
   return (
-    <section className="w-full max-w-6xl mx-auto my-6 px-2 flex-1 flex flex-col">
+    <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
       <form action={action} onSubmit={onSubmit}>
         <FileProvider>
           <ArticleMediaManager />

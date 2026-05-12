@@ -12,8 +12,8 @@ import {
   ArticleIsPublished,
 } from "../../../../components/Article/ArticleCards";
 import { convertToLargeDate } from "../../../../utils/date";
-import { Link } from "../../../../components/Links";
 import { buttonVariants, cn } from "../../../../utils/variants";
+import { Link } from "../../../../components/Links";
 
 export default async function AuthorsArticlesPage() {
   const articlePromise = await serverFetch(apiServerUrls.article.root + "/me");
@@ -21,9 +21,9 @@ export default async function AuthorsArticlesPage() {
   const { content: articles, page }: { content: Article[]; page: Pagination } =
     articlesResult;
   return (
-    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2">
+    <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2 my-6">
       <div className="flex justify-between items-center gap-2">
-        <h1 className="text-3xl font-extrabold my-6">Artigos</h1>
+        <h1 className="text-3xl font-extrabold mb-6">Artigos</h1>
         <div className="flex-1 flex justify-end items-center gap-2">
           <Link
             href="articles/write"
@@ -57,7 +57,7 @@ export default async function AuthorsArticlesPage() {
                 <span
                   className={cn(
                     "mt-auto mb-0 px-2 font-bold",
-                    article.status === "PUBLISHED"
+                    article.status.toUpperCase() === "PUBLISHED"
                       ? "text-emerald-600"
                       : "text-sky-600",
                   )}

@@ -21,12 +21,12 @@ export const ArtBreadcrumb = () => {
 
   return (
     <Breadcrumb className="mb-4">
-      <BreadcrumbList>
+      <BreadcrumbList className="block leading-relaxed">
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link
               href="/"
-              className="text-primary/75 hover:text-primary dark:hover:text-primary font-normal underline underline-offset-2 border border-transparent"
+              className="text-primary/75 hover:text-primary dark:hover:text-primary font-bold underline underline-offset-2 border border-transparent"
             >
               Home
             </Link>
@@ -45,7 +45,9 @@ export const ArtBreadcrumb = () => {
         <BreadcrumbSeparator />
         <BreadcrumbItem className="italic">Articles</BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem className="italic">{sugarPath}</BreadcrumbItem>
+        <BreadcrumbItem className="italic inline font-normal wrap-break-word">
+          {sugarPath}
+        </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );

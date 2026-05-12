@@ -5,6 +5,12 @@ import { highlightCodeWithShiki } from "../../../utils/shiki";
 import CopyToClipBoard from "../../CopyToClipBoard";
 import Spinner from "../../Spinner";
 
+const decodeHTMLEntities = (text: string) => {
+  const parser = new DOMParser();
+  const decoded = parser.parseFromString(text, "text/html");
+  return decoded.documentElement.textContent || "";
+};
+
 export default function CodeRenderer({ filename, code, language }: CodeEditor) {
   const [shikiCode, setShikiCode] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -26,7 +32,7 @@ export default function CodeRenderer({ filename, code, language }: CodeEditor) {
         <span className="text-sm text-neutral-400 dark:text-neutral-500">
           {filename}
         </span>
-        <CopyToClipBoard toCopy={code} />
+        <CopyToClipBoard toCopy={decodeHTMLEntities(code)} />
       </div>
       <div className="w-full flex-1 flex items-center min-h-11">
         {loading ? (

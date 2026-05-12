@@ -1,16 +1,13 @@
-import {
-  AboutPathLink,
-  ArticlesPathLink,
-  MediaPathLink,
-  TagPathLink,
-  HomePathLink,
-  UsersPathLink,
-} from "../../../components/Users/Authors/Media/AsideNavButtons";
 import Link from "next/link";
-import { UserButton } from "../../../components/Users/Authors/UserButton";
 import { DashedBackground } from "../../../components/DashedBackground";
-import MediaFolderProdiver from "../../../providers/MediaFolderProdiver";
 import { cn, focusRing } from "../../../utils/variants";
+import { UserButton } from "../../../components/Users/Authors/UserButton";
+import { TagLink } from "../../../components/Users/Authors/Media/AsideNavButtons/TagPathLink";
+import { AboutLink } from "../../../components/Users/Authors/Media/AsideNavButtons/AboutLink";
+import { HomeLink } from "../../../components/Users/Authors/Media/AsideNavButtons/HomeLink";
+import { ArticlesLink } from "../../../components/Users/Authors/Media/AsideNavButtons/ArticlesLink";
+import { MediaLink } from "../../../components/Users/Authors/Media/AsideNavButtons/MediaLink";
+import MediaFolderProdiver from "../../../providers/MediaFolderProdiver";
 
 export default async function AuthorLayout({
   children,
@@ -24,13 +21,12 @@ export default async function AuthorLayout({
           <nav className="fixed w-15 h-full mx-auto flex flex-col gap-2 py-2">
             <Logo />
             <div className="w-full h-px bg-stone-700" />
-            <HomePathLink />
-            <ArticlesPathLink />
-            <MediaPathLink />
-            <TagPathLink />
-            <UsersPathLink />
+            <HomeLink />
+            <ArticlesLink />
+            <MediaLink />
+            <TagLink />
             <div className="w-full flex flex-col gap-2 mt-auto">
-              <AboutPathLink />
+              <AboutLink />
               <div className="w-full h-px bg-stone-700" />
               <UserButton />
             </div>
