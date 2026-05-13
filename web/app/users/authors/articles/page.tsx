@@ -18,8 +18,8 @@ import { Link } from "../../../../components/Links";
 export default async function AuthorsArticlesPage() {
   const articlePromise = await serverFetch(apiServerUrls.article.root + "/me");
   const articlesResult = await articlePromise.json();
-  const { content: articles, page }: { content: Article[]; page: Pagination } =
-    articlesResult;
+  const articles: Article[] = articlesResult?.content ?? [];
+  const pagination: Pagination = articlesResult?.page ?? [];
   return (
     <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2 my-6">
       <div className="flex justify-between items-center gap-2">
