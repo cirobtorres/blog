@@ -26,7 +26,6 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
       <Popover>
         <PopoverTrigger asChild>
           <button
-            suppressHydrationWarning // TODO
             type="button"
             tabIndex={0}
             className={cn(

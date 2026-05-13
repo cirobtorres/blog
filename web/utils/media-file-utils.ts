@@ -25,15 +25,14 @@ export function VideoThumbnail(file: File): Promise<string> {
   });
 }
 
-export async function fetchFileFromUrl(url: string): Promise<File> {
-  const response = await serverFetch(url);
-  if (!response.ok) throw new Error("Falha ao baixar a imagem da URL");
-
-  const blob = await response.blob();
-  const fileName = url.split("/").pop()?.split("?")[0] || "downloaded-file";
-  const contentType = blob.type || "image/jpeg";
-
-  return new File([blob], fileName, { type: contentType });
+export async function fetchFileFromUrl(url: string): Promise<Response> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(
+      `Falha ao baixar a imagem da URL (${response.status})${response.statusText ? `: ${response.statusText}` : ""}`,
+    );
+  }
+  return response;
 }
 
 export function getOptimizedMediaUrl(url: string, width: number) {

@@ -25,6 +25,7 @@ import {
 } from "../../../../../../utils/sonner";
 import FolderPopover from "../../FolderPopover";
 import { useCreateFolder } from "../../../../../../services/hooks/folders/hook-folders";
+import { Skeleton } from "../../../../../Skeleton";
 
 const defaultState: ActionState = {
   ok: false,
@@ -35,6 +36,7 @@ const defaultState: ActionState = {
 
 export default function AddFolderButton() {
   const { mutateAsync } = useCreateFolder();
+  const popoverId = React.useId();
   const [isOpen, setIsOpen] = React.useState(false);
   const [folderName, setFolderName] = React.useState("");
   const [state, action, isPending] = React.useActionState(
@@ -69,7 +71,12 @@ export default function AddFolderButton() {
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="link" className="w-full max-w-44 h-8">
+        <Button
+          key={popoverId}
+          aria-controls={popoverId}
+          variant="link"
+          className="w-full max-w-44 h-8"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -87,7 +94,7 @@ export default function AddFolderButton() {
           Criar pasta
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent asChild className="max-w-lg">
+      <AlertDialogContent asChild id={popoverId} className="max-w-lg">
         <form action={action}>
           <AlertDialogHeader>Criar pasta</AlertDialogHeader>
           <AlertDialogDescription className="sr-only">

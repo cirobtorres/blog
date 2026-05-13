@@ -80,10 +80,12 @@ function AlertDialogHeaderPrimitive({
 
 function AlertDialogHeader({
   children,
+  callback,
   className,
   ...props
 }: Omit<React.ComponentProps<"div">, "children" | "className"> & {
   children: string;
+  callback?: (data?: unknown) => void;
   className?: string;
 }) {
   return (
@@ -96,7 +98,7 @@ function AlertDialogHeader({
       )}
     >
       <AlertDialogTitle>{children}</AlertDialogTitle>
-      <AlertDialogHeaderCancel />
+      <AlertDialogHeaderCancel callback={callback} />
     </div>
   );
 }
@@ -191,10 +193,15 @@ function AlertDialogCancel({
   );
 }
 
-function AlertDialogHeaderCancel() {
+function AlertDialogHeaderCancel({
+  callback,
+}: {
+  callback?: (data?: unknown) => void;
+}) {
   return (
     <AlertDialogCancel
       variant="outline"
+      onClick={callback}
       className="absolute top-1/2 -translate-y-1/2 right-3 size-8"
     >
       <svg

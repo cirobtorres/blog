@@ -43,11 +43,6 @@ export function Header({
   sticky?: boolean;
   progress?: boolean;
 }) {
-  // ----------------------------------------------------------------------
-  // Forcing it to render as Client Component
-  // Suppress Hydration error due dynamic IDs mismatch between RadixUI & Next.js
-  // Because one was rendered on server and the other on client
-  // const [isMounted, setIsMounted] = React.useState(false);
   const headerRef = React.useRef<HTMLElement>(null);
   const scrollingDownRef = React.useRef(0);
   const { user } = useAuth();

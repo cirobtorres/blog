@@ -1,5 +1,5 @@
 import { FileProvider } from "../../../../../../providers/FileProvider";
-import { cn } from "../../../../../../utils/variants";
+import { cn, focusWithinRing } from "../../../../../../utils/variants";
 import { Skeleton } from "../../../../../Skeleton";
 
 export function FileCardSectionWrapper({
@@ -82,7 +82,12 @@ export function FileCardFloatingButtonsWrapper({
 
 export function FileCardWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-150 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">
+    <article
+      className={cn(
+        "w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border hover:not-has-data-[state=checked]:border-stone-300 dark:hover:not-has-data-[state=checked]:border-stone-600 dark:hover:focus-within:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-150 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 group",
+        focusWithinRing,
+      )}
+    >
       <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
         <div className="relative">{children}</div>
       </div>

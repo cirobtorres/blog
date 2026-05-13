@@ -16,6 +16,8 @@ import {
 } from "../../../../../../../utils/sonner";
 import deleteFiles from "../../../../../../../services/media/deleteFiles";
 import { Button } from "../../../../../../Button";
+import Spinner from "../../../../../../Spinner";
+import { useFile } from "../../../../../../../providers/FileProvider";
 
 const defaultState: ActionState = {
   ok: false,
@@ -31,9 +33,26 @@ export default function DeleteButton({
   files: Media[];
   disabled?: boolean;
 }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const { clearSelection } = useFile();
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    clearSelection();
+  };
+
   return (
-    <AlertDialog>
-      <FilesExcludeTrigger disabled={disabled} />
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          type="submit"
+          variant="destructive"
+          disabled={disabled ?? true}
+          className="h-8 w-full max-w-30"
+        >
+          Excluir
+        </Button>
+      </AlertDialogTrigger>
       <AlertDialogContent asChild>
         <form className="max-w-xs">
           <AlertDialogHeader>Excluir pasta</AlertDialogHeader>
@@ -46,16 +65,6 @@ export default function DeleteButton({
                 </strong>{" "}
                 pastas?
               </p>
-              {/* <ul className="flex flex-wrap gap-x-3">
-                {files.map((folder) => (
-                  <li
-                    key={folder.id}
-                    className="text-neutral-900 dark:text-neutral-100"
-                  >
-                    {folder.name}
-                  </li>
-                ))}
-              </ul> */}
             </div>
           </AlertDialogDescription>
           <AlertDialogFooter>
@@ -65,7 +74,7 @@ export default function DeleteButton({
             >
               Cancelar
             </AlertDialogCancel>
-            <DeleteFilesAction files={files} />
+            <DeleteFilesAction files={files} closeModal={handleCloseModal} />
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>
@@ -73,9 +82,16 @@ export default function DeleteButton({
   );
 }
 
-const DeleteFilesAction = ({ files }: { files: Media[] }) => {
+const DeleteFilesAction = ({
+  files,
+  closeModal,
+}: {
+  files: Media[];
+  closeModal: () => void;
+}) => {
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
+      closeModal();
       return (
         <div className="flex flex-col">
           <p>{serverResponse.success}</p>
@@ -103,22 +119,7 @@ const DeleteFilesAction = ({ files }: { files: Media[] }) => {
       formAction={action}
       className="h-8 w-full max-w-30"
     >
-      Excluir
+      {isPending && <Spinner />} Excluir
     </Button>
-  );
-};
-
-const FilesExcludeTrigger = ({ disabled }: { disabled?: boolean }) => {
-  return (
-    <AlertDialogTrigger asChild>
-      <Button
-        type="submit"
-        variant="destructive"
-        disabled={disabled ?? true}
-        className="h-8 w-full max-w-30"
-      >
-        Excluir
-      </Button>
-    </AlertDialogTrigger>
   );
 };

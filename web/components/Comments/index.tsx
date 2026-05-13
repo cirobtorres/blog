@@ -1,5 +1,4 @@
 import CommentEditor from "./CommentEditor";
-import CommentHere from "./CommentHere";
 
 export default function Comments() {
   return (
@@ -9,7 +8,6 @@ export default function Comments() {
       </div>
       <div className="w-full max-w-comments mx-auto px-6 my-6">
         <section id="comments">
-          <CommentHere />
           <CommentEditor id="create-comment" name="create-comment" />
         </section>
       </div>

@@ -419,10 +419,14 @@
     color: #fb2c36 !important;
   } */
 
-  /* Background-color to TipTap */
+  /*------------------------------=====TipTap=====------------------------------*/
   .tiptap .shiki,
   .tiptap pre {
     background-color: var(--color-stone-950) !important;
+  }
+
+  .is-editor-empty {
+    color: var(--color-neutral-400);
   }
 
   /* Scrollbar */

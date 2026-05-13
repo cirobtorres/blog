@@ -14,7 +14,7 @@ export default function CommentHere() {
   const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`;
 
   return (
-    <div className="w-full border rounded-lg px-3 py-3 bg-stone-900">
+    <div className="w-full border rounded-lg px-3 py-3 bg-stone-300 dark:bg-stone-900">
       <Link
         href={loginUrl}
         variant="external"

@@ -13,9 +13,14 @@ import {
   sonnerToastPromise,
   sonnerPromise,
 } from "../../../../../../utils/sonner";
-import { fetchFileFromUrl } from "../../../../../../utils/media-file-utils";
 import AnimatedIcon from "./AnimatedIcon";
 import Spinner from "../../../../../Spinner";
+import { FieldsetError } from "../../../../../Fieldset";
+import { fetchFileFromUrl } from "../../../../../../utils/media-file-utils";
+
+interface Errors {
+  url: string[] | string;
+}
 
 const defaultState: ActionState = {
   ok: false,
@@ -33,51 +38,93 @@ export default function DialogEmptyContent({
 }) {
   const [tab, setTab] = React.useState("pc");
   const [url, setUrl] = React.useState("");
-  const [, urlAction, urlIsPending] = React.useActionState(async () => {
-    const success = (serverResponse: ActionState) => {
-      const file = serverResponse.data as File;
+  const [errors, setErrors] = React.useState<null | Errors>(null);
+  const [isPending, setIsPending] = React.useState(false);
+
+  const handleUrlUpload = async (e: React.ChangeEvent) => {
+    e.preventDefault();
+    if (!url) return setErrors({ url: "URL não pode ser vazia" });
+
+    setIsPending(true);
+
+    const success = (response: ActionState) => {
+      const file = response.data;
       addFiles([file]);
       setUrl("");
       return (
         <div className="flex flex-col">
-          <p>{serverResponse.success}</p>
+          <p>{response.success}</p>
         </div>
       );
     };
 
-    const error = (serverResponse: ActionState) => {
-      return <p>{serverResponse.error}</p>;
+    const error = (response: ActionState) => {
+      setErrors({ url: response.error });
+      return <p>{response.error}</p>;
     };
 
     try {
-      const downloadPromise = fetchFileFromUrl(url);
-
-      const result = sonnerPromise(
-        downloadPromise.then((file: File) => ({
-          ...defaultState,
-          ok: true,
-          success: "URL processada!",
-          data: file,
-        })),
+      console.log(url);
+      const filePromise = fetchFileFromUrl(
+        `/local/fetch-file?url=${encodeURIComponent(url)}`,
       );
+      const result = sonnerPromise(
+        filePromise
+          .then(async (response: Response) => {
+            const blob = await response.blob();
 
+            // Naming-the-file--------------------------------------------------
+            // 1. Header
+            const contentDisposition = response.headers.get(
+              "Content-Disposition",
+            );
+            let fileName = "file";
+
+            if (contentDisposition) {
+              const match = contentDisposition.match(/filename="?(.+?)"?$/);
+              if (match) fileName = match[1];
+            }
+
+            // 2. URL (fallback)
+            if (fileName === "file") {
+              const urlObj = new URL(response.url);
+              const pathname = urlObj.pathname;
+              const extracted = pathname.split("/").pop();
+              if (extracted) fileName = extracted;
+            }
+
+            // 3. MIME (fallback)
+            if (!fileName.includes(".")) {
+              const ext = blob.type.split("/")[1] || "bin";
+              fileName += `.${ext}`;
+            }
+
+            return new File([blob], fileName, { type: blob.type });
+          })
+          .then((file: File) => ({
+            ...defaultState,
+            ok: true,
+            success: "URL processada!",
+            data: file,
+          })),
+      );
       sonnerToastPromise(result, success, error, "Buscando imagem...");
-
-      return result;
     } catch (e) {
-      return {
-        ...defaultState,
-        error: "Não foi possível carregar a imagem",
-      };
+      setErrors({ url: "Falha ao baixar arquivo" });
+      console.error("handleUrlUpload error:", e);
+    } finally {
+      setIsPending(false);
     }
-  }, defaultState);
+  };
 
-  const uploadProps = { tab, url, setUrl };
+  const uploadProps = { tab, errors, url, setUrl };
 
   return (
     openStep === "upload" && (
       <AlertDialogContent className="ring-4 border-4 max-w-200 gap-0 p-0 overflow-hidden">
-        <AlertDialogHeader>Adicione arquivos</AlertDialogHeader>
+        <AlertDialogHeader callback={() => setErrors(null)}>
+          Adicione arquivos
+        </AlertDialogHeader>
         <AlertDialogDescription className="sr-only">
           Área de transferência de arquivos. Você pode arrastar arquivos do seu
           computador para esta zona ou alternar entre upload local e via URL
@@ -98,15 +145,22 @@ export default function DialogEmptyContent({
           <UrlUpload {...uploadProps} />
         </div>
         <AlertDialogFooter className="flex justify-between items-center sm:justify-between flex-row sm:flex-row">
-          <AlertDialogCancel variant="outline" className="w-full max-w-30 h-8">
+          <AlertDialogCancel
+            variant="outline"
+            onClick={() => setErrors(null)}
+            className="w-full max-w-30 h-8"
+          >
             Cancelar
           </AlertDialogCancel>
           {tab === "url" && (
-            <form action={urlAction} className="w-full max-w-30 h-8">
-              <Button disabled={urlIsPending} className="w-full max-w-30 h-8">
-                {urlIsPending && <Spinner />} Confirmar
-              </Button>
-            </form>
+            <Button
+              type="button"
+              disabled={isPending}
+              onClick={handleUrlUpload}
+              className="w-full max-w-30 h-8"
+            >
+              {isPending && <Spinner />} Confirmar
+            </Button>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -183,10 +237,12 @@ const LocalUpload = ({
 const UrlUpload = ({
   tab,
   url,
+  errors,
   setUrl,
 }: {
   tab: string;
   url: string;
+  errors: null | Errors;
   setUrl: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
@@ -197,7 +253,12 @@ const UrlUpload = ({
         </label>
         <label
           htmlFor="url"
-          className="w-full h-full block cursor-text p-2 rounded-lg border transition-all duration-300 bg-stone-200 dark:bg-stone-900 hover:bg-stone-250 hover:border-stone-400 dark:hover:bg-stone-850 dark:hover:border-stone-600 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary"
+          className={cn(
+            "w-full h-full block cursor-text p-2 rounded-lg border duration-300 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary",
+            errors
+              ? "transition-shadow bg-destructive/10 dark:bg-destructive/10 border-destructive/50 dark:border-destructive/50"
+              : "transition-all bg-stone-200 dark:bg-stone-900 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-250 dark:hover:bg-stone-850",
+          )}
         >
           <textarea
             id="url"
@@ -209,6 +270,7 @@ const UrlUpload = ({
             )}
           />
         </label>
+        <FieldsetError error={errors?.url} />
       </div>
     )
   );
