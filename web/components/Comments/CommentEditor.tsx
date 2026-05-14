@@ -13,6 +13,8 @@ import { cn, focusRing } from "../../utils/variants";
 import { useAuth } from "../../providers/AuthProvider";
 import CommentHere from "./CommentHere";
 import { Skeleton } from "../Skeleton";
+import Spinner from "../Spinner";
+import { Avatar } from "../Avatar";
 
 const defaultState: ActionState = {
   ok: false,
@@ -28,6 +30,7 @@ export default function CommentEditor({
   characterLimit?: number;
 }) {
   const { user } = useAuth();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -56,6 +59,22 @@ export default function CommentEditor({
 
   const characterCount = state?.characterCount ?? 0;
   const wordCount = state?.wordCount ?? 0;
+
+  const openEditor = React.useCallback(() => {
+    setIsOpen(true);
+    const currentChars = editor?.storage.characterCount.characters() ?? 0;
+    editor
+      ?.chain()
+      .focus()
+      .setTextSelection(currentChars + 1)
+      .run();
+  }, [editor]);
+
+  const closeEditor = React.useCallback(() => {
+    editor?.commands.clearContent();
+    editor?.commands.blur();
+    setIsOpen(false);
+  }, [editor]);
 
   React.useEffect(() => {
     if (editor && window.location.hash === "#create-comment") {
@@ -106,13 +125,21 @@ export default function CommentEditor({
 
   return (
     <form action={action} className="w-full flex flex-col gap-1">
+      <Avatar
+        key={user.data.id}
+        authorName={user.data.name}
+        authorPicUrl={
+          user.data.pictureUrl ?? "https://placehold.co/32x32/000/fff/jpeg"
+        }
+      />
       <EditorContent
         {...props}
         editor={editor}
-        className="relative w-full h-full text-left text-sm text-neutral-900 dark:text-neutral-100 **:outline-none [&_.tiptap.ProseMirror]:bg-stone-300 dark:[&_.tiptap.ProseMirror]:bg-stone-900 [&_.tiptap.ProseMirror]:rounded-t-lg [&_.tiptap.ProseMirror]:border [&_.tiptap.ProseMirror_p]:not-first:mb-3 [scrollbar-width:none] [-ms-overflow-style:none] [&_.tiptap.ProseMirror]:p-2 after:absolute after:top-[calc(100%-1px)] after:left-1/2 after:-translate-x-1/2 after:h-0.5 after:w-0 focus-within:after:w-full after:bg-primary focus-within:after:duration-200 transition-all"
+        onFocus={openEditor}
+        className="relative w-full h-full text-left text-sm text-neutral-900 dark:text-neutral-100 **:outline-none [&_.tiptap.ProseMirror]:border-b [&_.tiptap.ProseMirror_p]:not-only:mb-3 [&_.tiptap.ProseMirror_p]:last:mb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&_.tiptap.ProseMirror]:py-2 after:absolute after:top-[calc(100%-1px)] after:left-1/2 after:-translate-x-1/2 after:h-0.5 after:w-0 focus-within:after:w-full after:bg-primary focus-within:after:duration-200 transition-all" // [&_.tiptap.ProseMirror]:bg-stone-300 dark:[&_.tiptap.ProseMirror]:bg-stone-900 [&_.tiptap.ProseMirror]:rounded-t-lg [&_.tiptap.ProseMirror]:border
       />
       <div className="flex justify-between items-center gap-1">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 h-6">
           <span className="text-sm text-neutral-500">
             Tamanho: {characterCount}/{characterLimit}
           </span>
@@ -120,23 +147,32 @@ export default function CommentEditor({
             Palavras: {wordCount}
           </span>
         </div>
-        <div className="flex justify-end items-center gap-1">
-          <Button
-            type="button"
-            disabled={isPending}
-            variant="outline"
-            className={cn("w-full max-w-30 h-6 focus-visible:z-10", focusRing)}
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            disabled={isPending}
-            className={cn("w-full max-w-30 h-6 focus-visible:z-10", focusRing)}
-          >
-            Salvar
-          </Button>
-        </div>
+        {isOpen && (
+          <div className="flex justify-end items-center gap-1">
+            <Button
+              type="button"
+              disabled={isPending}
+              variant="outline"
+              onClick={closeEditor}
+              className={cn(
+                "w-full max-w-30 h-6 focus-visible:z-10",
+                focusRing,
+              )}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={cn(
+                "w-full max-w-30 h-6 focus-visible:z-10",
+                focusRing,
+              )}
+            >
+              {isPending && <Spinner />} Salvar
+            </Button>
+          </div>
+        )}
       </div>
     </form>
   );
