@@ -1,0 +1,14 @@
+@layer base {
+  .tiptap .shiki,
+  .tiptap pre {
+    background-color: var(--color-stone-950) !important;
+  }
+
+  .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--color-neutral-500);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+}

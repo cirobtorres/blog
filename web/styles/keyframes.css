@@ -1,0 +1,134 @@
+@theme inline {
+  @keyframes skeleton {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes bouncing-arrow {
+    0%,
+    100% {
+      top: 50%;
+      left: 50%;
+      transform: translate(0, -10%);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    50% {
+      top: 50%;
+      left: 50%;
+      transform: translate(0, 15%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+
+  @keyframes circular-open {
+    from {
+      clip-path: circle(0% at 50% 50%);
+    }
+    to {
+      clip-path: circle(150% at 50% 50%);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes balloon {
+    0% {
+      transform: scale(112%);
+      opacity: 0;
+    }
+    17% {
+      transform: scale(106%);
+      opacity: 1;
+    }
+    34% {
+      transform: scale(92%);
+      opacity: 1;
+    }
+    51% {
+      transform: scale(104%);
+      opacity: 1;
+    }
+    68% {
+      transform: scale(97%);
+      opacity: 1;
+    }
+    85% {
+      transform: scale(102%);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(100%);
+      opacity: 1;
+    }
+  }
+
+  @keyframes pulse-yellow {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(79.5% 0.184 86.047 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(79.5% 0.184 86.047 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(79.5% 0.184 86.047 / 0);
+    }
+  }
+
+  @keyframes pulse-green {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(69.6% 0.17 162.48 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(69.6% 0.17 162.48 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(69.6% 0.17 162.48 / 0);
+    }
+  }
+
+  @keyframes pulse-blue {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(62.3% 0.214 259.815 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(62.3% 0.214 259.815 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(62.3% 0.214 259.815 / 0);
+    }
+  }
+
+  @keyframes pulse-red {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(63.7% 0.237 25.331 / 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px oklch(63.7% 0.237 25.331 / 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 oklch(63.7% 0.237 25.331 / 0);
+    }
+  }
+}

@@ -11,10 +11,12 @@ import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
 import { cn, focusRing } from "../../utils/variants";
 import { useAuth } from "../../providers/AuthProvider";
-import CommentHere from "./CommentHere";
-import { Skeleton } from "../Skeleton";
-import Spinner from "../Spinner";
 import { Avatar } from "../Avatar";
+import { Skeleton } from "../Skeleton";
+import CommentHere from "./CommentHere";
+import Spinner from "../Spinner";
+import postComment from "../../services/comment/postComment";
+import { usePathname } from "next/navigation";
 
 const defaultState: ActionState = {
   ok: false,
@@ -24,13 +26,20 @@ const defaultState: ActionState = {
 };
 
 export default function CommentEditor({
+  articleId,
+  parentId,
   characterLimit = 512,
+  onSuccess,
   ...props
 }: Omit<React.ComponentProps<typeof EditorContent>, "editor"> & {
+  articleId: string;
+  parentId?: string;
   characterLimit?: number;
+  onSuccess?: () => void;
 }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
+  const articlePath = usePathname();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -83,21 +92,54 @@ export default function CommentEditor({
   }, [editor]);
 
   const [, action, isPending] = React.useActionState(async () => {
-    const result: Promise<ActionState> = new Promise((resolve) => {
-      setTimeout(resolve, 2000, {
-        ...defaultState,
-        ok: true,
-        success: "Teste",
-      });
-    });
-    const promise = sonnerPromise(result);
+    const success = (serverResponse: ActionState) => {
+      onSuccess?.();
+      return <p>{serverResponse.success ?? "Comentário salvo!"}</p>;
+    };
 
-    sonnerToastPromise(
-      promise,
-      () => <p>Comentário salvo!</p>,
-      () => <p>Erro ao salvar comentário</p>,
-      "Salvando...",
+    const error = (serverResponse: ActionState) => (
+      <p>{serverResponse.error ?? "Erro ao salvar comentário"}</p>
     );
+
+    const json = editor?.getJSON();
+    if (!json || !json.content)
+      return { ...defaultState, error: "JSON inválido ou vazio" };
+
+    // Remove every empty <p></p> (no content)
+    const filteredContent = json.content.filter((node) => {
+      if (node.type === "paragraph") {
+        if (!node.content || node.content.length === 0) return false;
+        // Type Guard
+        return node.content.some((child) => {
+          if ("text" in child && typeof child.text === "string") {
+            return child.text.trim() !== "";
+          }
+          return false;
+        });
+      }
+      return true; // Every other node is kept untouched
+    });
+
+    // No paragraph left
+    if (filteredContent.length === 0) {
+      setIsOpen(false);
+      return { ...defaultState, error: "JSON inválido ou vazio" };
+    }
+
+    // Rebuild cleaned JSON
+    const cleanJson = { ...json, content: filteredContent };
+    const obj = {
+      articleId,
+      articlePath,
+      parentId,
+      body: JSON.stringify(cleanJson),
+    };
+
+    const result = postComment(obj);
+    const promise = sonnerPromise(result);
+    sonnerToastPromise(promise, success, error, "Comentando...");
+    editor?.commands.clearContent();
+    setIsOpen(false);
 
     return defaultState;
   }, defaultState);

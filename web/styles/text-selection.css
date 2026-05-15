@@ -1,0 +1,12 @@
+@layer base {
+  ::selection {
+    background-color: color-mix(in oklab, var(--primary) 75%, black);
+    color: white;
+  }
+
+  input::selection,
+  textarea::selection {
+    background-color: color-mix(in oklab, var(--primary) 75%, black);
+    color: white;
+  }
+}

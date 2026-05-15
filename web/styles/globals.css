@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./aria-current.css";
+@import "./code-renderer.css";
+@import "./header.css";
+@import "./inputs.css";
+@import "./keyframes.css";
+@import "./scrollbars.css";
+@import "./text-selection.css";
+@import "./tiptap.css";
+
+:root {
+  --primary: oklch(0.541 0.281 293.009);
+  --secondary: oklch(0.432 0.232 292.759);
+  --success: oklch(59.6% 0.145 163.225);
+  --informative: oklch(54.6% 0.245 262.881);
+  --destructive: oklch(58.6% 0.253 17.585);
+  --warning: oklch(68.1% 0.162 75.834);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: oklch(0.606 0.25 292.717);
+    --secondary: oklch(0.432 0.232 292.759);
+    --success: oklch(59.6% 0.145 163.225);
+    --informative: oklch(54.6% 0.245 262.881);
+    --destructive: oklch(58.6% 0.253 17.585);
+    --warning: oklch(68.1% 0.162 75.834);
+  }
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-success: var(--success);
+  --color-informative: var(--informative);
+  --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-stone-25: oklch(0.988 0.002 85.1);
+  --color-stone-75: oklch(0.975 0.003 85.1);
+  --color-stone-125: oklch(0.945 0.004 85.1);
+  --color-stone-150: oklch(0.928 0.004 85.1);
+  --color-stone-175: oklch(0.91 0.005 85.1);
+  --color-stone-225: oklch(0.865 0.006 85.1);
+  --color-stone-250: oklch(0.84 0.007 85.1);
+  --color-stone-275: oklch(0.815 0.008 85.1);
+  --color-stone-325: oklch(0.76 0.009 85.1);
+  --color-stone-350: oklch(0.73 0.01 85.1);
+  --color-stone-375: oklch(0.7 0.01 85.1);
+  --color-stone-425: oklch(0.635 0.011 85.1);
+  --color-stone-450: oklch(0.602 0.012 85.1);
+  --color-stone-475: oklch(0.57 0.012 85.1);
+  --color-stone-525: oklch(0.51 0.012 85.1);
+  --color-stone-550: oklch(0.482 0.012 85.1);
+  --color-stone-575: oklch(0.455 0.012 85.1);
+  --color-stone-625: oklch(0.405 0.011 85.1);
+  --color-stone-675: oklch(0.36 0.01 85.1);
+  --color-stone-650: oklch(0.382 0.011 85.1);
+  --color-stone-725: oklch(0.32 0.009 85.1);
+  --color-stone-750: oklch(0.302 0.009 85.1);
+  --color-stone-775: oklch(0.285 0.008 85.1);
+  --color-stone-825: oklch(0.25 0.007 85.1);
+  --color-stone-850: oklch(0.232 0.007 85.1);
+  --color-stone-875: oklch(0.215 0.006 85.1);
+  --color-stone-925: oklch(0.18 0.005 85.1);
+  --color-stone-950: oklch(0.16 0.005 85.1);
+  --color-stone-975: oklch(0.14 0.004 85.1);
+
+  /* App */
+  --height-header: 50px;
+  --height-footer: 60px;
+  --padding-article-content: 80px;
+  --max-width-article-body: 1460px;
+  --max-width-article-title: 900px;
+  --max-width-comments: 860px;
+  --margin-height-header: var(--height-header);
+  --animate-bouncing-arrow: bouncing-arrow 1s infinite;
+  --animate-skeleton: skeleton 2s -1s infinite linear;
+  --animate-circular-open: circular-open 400ms ease-out forwards;
+  --animate-fade-in-up: fade-in-up 250ms ease-out both;
+  --animate-balloon: balloon 250ms ease-out both;
+  --animate-pulse-yellow: pulse-yellow 1.5s infinite;
+  --animate-pulse-green: pulse-green 1.5s infinite;
+  --animate-pulse-blue: pulse-blue 1.5s infinite;
+  --animate-pulse-red: pulse-red 1.5s infinite;
+  --font-inter: "Inter";
+  /* --font-inter: "Inter", font-sans; */
+}
+
+@layer base {
+  * {
+    @apply border-stone-300 dark:border-stone-700;
+  }
+  body {
+    @apply font-inter text-neutral-950 dark:text-neutral-100 bg-stone-100 dark:bg-stone-925;
+  }
+}

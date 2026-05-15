@@ -174,7 +174,7 @@ export function ArticleCreate() {
                 <FieldsetError error={errors?.slug?.errors} />
               </div>
             </div>
-            <ArticleBannerButton />
+            <ArticleBannerButton error={!!errors?.banner?.errors} />
             <FieldsetError error={errors?.banner?.errors} />
           </div>
           <div className="mt-2">

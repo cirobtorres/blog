@@ -1,0 +1,9 @@
+@layer base {
+  [aria-current="true"] {
+    color: var(--color-neutral-100);
+  }
+
+  [aria-current="false"] {
+    color: var(--color-neutral-500);
+  }
+}

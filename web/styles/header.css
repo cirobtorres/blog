@@ -1,0 +1,5 @@
+@layer base {
+  .header-hidden {
+    transform: translateY(calc(-1 * var(--height-header)));
+  }
+}

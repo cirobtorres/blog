@@ -47,6 +47,9 @@ const apiServerUrls = {
     id: API_SERVER + "/articles/id",
     slug: API_SERVER + "/articles/slug",
   },
+  comment: {
+    root: API_SERVER + "/comments",
+  },
   media: {
     root: API_SERVER + "/media",
     count: API_SERVER + "/media/count",

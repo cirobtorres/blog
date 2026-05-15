@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { Footer } from "../../../../../../components/Footer";
 import { Header } from "../../../../../../components/Header";
+import { serverFetch } from "../../../../../../services/auth-fetch-actions";
+import { apiServerUrls } from "../../../../../../routing/routes";
 import ArticleTitle from "../../../../../../components/Article/ArticleTitle";
 import ArticleBody from "../../../../../../components/Article/ArticleBody";
 import Comments from "../../../../../../components/Comments";
-import { serverFetch } from "../../../../../../services/auth-fetch-actions";
-import { apiServerUrls } from "../../../../../../routing/routes";
 
 export const dynamicParams = true;
 
@@ -47,7 +47,7 @@ export default async function ArticlePageId({
           <ArticleTitle {...article} />
         </Suspense>
         <ArticleBody {...article} />
-        <Comments />
+        <Comments articleId={article.id} />
       </main>
       <Footer />
     </div>

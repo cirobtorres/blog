@@ -115,8 +115,10 @@ export const SelectionContext = React.createContext<{
 
 export function ArticleBannerButton({
   defaultBanner,
+  error,
 }: {
   defaultBanner?: ImageEditor;
+  error?: boolean;
 }) {
   const {
     loading,
@@ -139,7 +141,10 @@ export function ArticleBannerButton({
       type="button"
       onClick={() => openMediaLibrary("banner")}
       className={cn(
-        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300 bg-stone-200 dark:bg-stone-900",
+        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
+        error
+          ? "bg-destructive/10 border-destructive/50"
+          : "bg-stone-200 dark:bg-stone-900",
         focusRing,
       )}
     >
