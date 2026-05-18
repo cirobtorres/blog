@@ -4,7 +4,7 @@ export function Avatar({
   authorName,
   authorPicUrl,
 }: {
-  authorName: string;
+  authorName?: string;
   authorPicUrl?: string | null;
 }) {
   return (
@@ -18,7 +18,7 @@ export function Avatar({
         className="shrink-0 rounded-full"
       />
       <p className="text-neutral-900 dark:text-neutral-100 font-medium">
-        {authorName}
+        {authorName ?? "Anônimo"}
       </p>
     </div>
   );

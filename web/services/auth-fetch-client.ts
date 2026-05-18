@@ -17,7 +17,7 @@ export async function clientFetch(
     if (isRefreshed) {
       return fetch(url, options);
     } else {
-      console.log("clientFetch failed");
+      console.error("clientFetch failed");
       // window.location.href = publicWebUrls.signIn + "?login=required";
     }
   }

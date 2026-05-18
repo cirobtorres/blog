@@ -21,6 +21,15 @@
     }
   }
 
+  @keyframes spinner-fade {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
   @keyframes circular-open {
     from {
       clip-path: circle(0% at 50% 50%);

@@ -6,8 +6,8 @@ type PageableComments = {
 type Comments = {
   id: string;
   body: string; // JSON do Tiptap
-  authorName: string;
-  authorPicUrl: string;
+  article: CommentArticle;
+  user: UserComment;
   likeCount: number;
   createdAt: string;
   parentId: string | null;
@@ -22,4 +22,14 @@ type ThreadProps = {
   comment: Comments;
   depth: number;
   maxDepth?: number;
+};
+
+type CommentArticle = {
+  id: string;
+};
+
+type UserComment = {
+  id: string;
+  name: string;
+  pictureUrl: string;
 };

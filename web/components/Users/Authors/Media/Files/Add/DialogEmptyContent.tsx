@@ -64,7 +64,6 @@ export default function DialogEmptyContent({
     };
 
     try {
-      console.log(url);
       const filePromise = fetchFileFromUrl(
         `/local/fetch-file?url=${encodeURIComponent(url)}`,
       );

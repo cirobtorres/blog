@@ -98,7 +98,6 @@ const BlockItem = React.memo(function BlockItem({
       );
     case "image":
       const image = block.data as ImageEditor;
-      console.log(block);
       return (
         <EditorsAccordion
           id={block.id}

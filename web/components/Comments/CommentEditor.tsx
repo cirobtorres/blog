@@ -25,20 +25,26 @@ const defaultState: ActionState = {
   data: null,
 };
 
+export const characterLimit = 512;
+
 export default function CommentEditor({
   articleId,
   parentId,
-  characterLimit = 512,
   onSuccess,
   ...props
 }: Omit<React.ComponentProps<typeof EditorContent>, "editor"> & {
   articleId: string;
   parentId?: string;
-  characterLimit?: number;
   onSuccess?: () => void;
 }) {
   const { user } = useAuth();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(() => {
+    if (typeof window !== "undefined") {
+      return window.location.hash === "#create-comment";
+    }
+    return false;
+  });
+  const formRef = React.useRef<HTMLFormElement>(null);
   const articlePath = usePathname();
 
   const editor = useEditor({
@@ -69,6 +75,15 @@ export default function CommentEditor({
   const characterCount = state?.characterCount ?? 0;
   const wordCount = state?.wordCount ?? 0;
 
+  const scrollToFormTop = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, []);
+
   const openEditor = React.useCallback(() => {
     setIsOpen(true);
     const currentChars = editor?.storage.characterCount.characters() ?? 0;
@@ -77,6 +92,7 @@ export default function CommentEditor({
       .focus()
       .setTextSelection(currentChars + 1)
       .run();
+    // scrollToFormTop();
   }, [editor]);
 
   const closeEditor = React.useCallback(() => {
@@ -87,13 +103,28 @@ export default function CommentEditor({
 
   React.useEffect(() => {
     if (editor && window.location.hash === "#create-comment") {
-      editor.commands.focus();
+      queueMicrotask(() => {
+        editor.commands.focus();
+        scrollToFormTop();
+      });
     }
-  }, [editor]);
+  }, [editor, scrollToFormTop]);
+
+  const handleSuccess = () => {
+    onSuccess?.();
+
+    if (window.location.hash === "#create-comment") {
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname + window.location.search,
+      );
+    }
+  };
 
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
-      onSuccess?.();
+      handleSuccess();
       return <p>{serverResponse.success ?? "Comentário salvo!"}</p>;
     };
 
@@ -128,7 +159,12 @@ export default function CommentEditor({
 
     // Rebuild cleaned JSON
     const cleanJson = { ...json, content: filteredContent };
+    const identityId = user?.data?.identityId;
+
+    if (!identityId) return { ...defaultState, error: "Usuário deslogado" };
+
     const obj = {
+      identityId,
       articleId,
       articlePath,
       parentId,
@@ -147,6 +183,10 @@ export default function CommentEditor({
   if (!editor)
     return (
       <div className="w-full flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-8 rounded-full" />
+          <Skeleton className="w-full max-w-24 h-5" />
+        </div>
         <Skeleton className="w-full h-9.5 bg-stone-900 rounded-t-lg rounded-b-none" />
         <div className="w-full flex justify-between items-center gap-1">
           <div className="w-full flex items-center gap-1">
@@ -166,12 +206,17 @@ export default function CommentEditor({
   }
 
   return (
-    <form action={action} className="w-full flex flex-col gap-1">
+    <form
+      ref={formRef}
+      action={action}
+      className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
+    >
       <Avatar
         key={user.data.id}
         authorName={user.data.name}
         authorPicUrl={
-          user.data.pictureUrl ?? "https://placehold.co/32x32/000/fff/jpeg"
+          user.data.pictureUrl ?? "/images/not-authenticated.png"
+          // user.data.pictureUrl ?? "https://placehold.co/32x32/000/fff/jpeg"
         }
       />
       <EditorContent

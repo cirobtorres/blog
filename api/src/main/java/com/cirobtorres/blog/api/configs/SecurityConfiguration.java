@@ -109,12 +109,21 @@ public class SecurityConfiguration {
                                 "/auth/password-reset-email-request",
                                 "/auth/password-reset-code",
                                 "/articles/**",
+                                "/comments/**",
                                 "/media/**",
                                 "/tags/**"
                         )
                 )
                 .sessionManagement(sm ->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/.well-known/jwks.json").permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/auth/validation",
+                                "/auth/me",
+                                "/articles/**",
+                                "/comments/**"
+                        ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/login",
@@ -124,17 +133,20 @@ public class SecurityConfiguration {
                                 "/auth/password-reset-email-request",
                                 "/auth/password-reset-code"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/password-reset").hasAuthority("PASSWORD_RESET")
+                        // Authenticated--------------------------------------------------------------------------------
+                        // Media
                         .requestMatchers(HttpMethod.GET, "/media/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/media/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/media/**").hasAuthority("AUTHOR")
+                        // Articles
                         .requestMatchers(HttpMethod.POST, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.PUT, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/articles/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/tags/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/tags/**").hasAuthority("AUTHOR")
-                        .requestMatchers(HttpMethod.GET, "/auth/validation", "/auth/me", "/articles/**").permitAll()
-                        .requestMatchers("/.well-known/jwks.json").permitAll()
+                        // Others
+                        .requestMatchers(HttpMethod.POST, "/auth/password-reset").hasAuthority("PASSWORD_RESET")
+                        // Everything else...
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth

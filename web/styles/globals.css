@@ -85,6 +85,7 @@
   --animate-pulse-green: pulse-green 1.5s infinite;
   --animate-pulse-blue: pulse-blue 1.5s infinite;
   --animate-pulse-red: pulse-red 1.5s infinite;
+  --animate-spinner-fade: spinner-fade 1.2s linear infinite;
   --font-inter: "Inter";
   /* --font-inter: "Inter", font-sans; */
 }

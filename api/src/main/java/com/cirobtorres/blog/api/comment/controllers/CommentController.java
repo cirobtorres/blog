@@ -1,7 +1,7 @@
 package com.cirobtorres.blog.api.comment.controllers;
 
 import com.cirobtorres.blog.api.comment.dtos.CommentDTO;
-import com.cirobtorres.blog.api.comment.repositories.CommentRepository;
+import com.cirobtorres.blog.api.comment.dtos.CommentPostDTO;
 import com.cirobtorres.blog.api.comment.services.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,15 +40,19 @@ public class CommentController {
 
     @GetMapping("id/{id}")
     public ResponseEntity<Void> getComment(
-            @PathVariable String id
+            @PathVariable UUID id
     ) {
         return ResponseEntity.noContent().build();
     }
 
     // POST-------------------------------------------------------------------------------------------------------
     @PostMapping
-    public ResponseEntity<Void> postComment() {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CommentDTO> postComment(
+            @RequestBody CommentPostDTO request
+    ) {
+        CommentDTO comment = commentService
+                .postComment(request);
+        return ResponseEntity.ok(comment);
     }
 
     // PUT--------------------------------------------------------------------------------------------------------

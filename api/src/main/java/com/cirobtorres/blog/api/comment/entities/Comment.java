@@ -1,6 +1,7 @@
 package com.cirobtorres.blog.api.comment.entities;
 
 import com.cirobtorres.blog.api.article.entities.Articles;
+import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity; // NOVO IMPORT
 import com.cirobtorres.blog.api.user.entities.User;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,9 +28,10 @@ public class Comment {
     @JoinColumn(name = "article_id", nullable = false)
     private Articles article;
 
+    // ALTERAÇÃO CRÍTICA: Aponta para UserIdentity e muda o nome da FK física no banco
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "identity_id", nullable = false)
+    private UserIdentity userIdentity;
 
     @Column(name = "like_count")
     private int likeCount = 0;
@@ -71,19 +73,19 @@ public class Comment {
     private Comment(Builder builder) {
         this.body = builder.body;
         this.article = builder.article;
-        this.user = builder.user;
+        this.userIdentity = builder.userIdentity; // Atualizado
         this.parent = builder.parent;
     }
 
     public static class Builder {
         private String body;
         private Articles article;
-        private User user;
+        private UserIdentity userIdentity; // Atualizado
         private Comment parent;
 
         public Builder body(String body) { this.body = body; return this; }
         public Builder article(Articles article) { this.article = article; return this; }
-        public Builder user(User user) { this.user = user; return this; }
+        public Builder userIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; return this; } // Atualizado
         public Builder parent(Comment parent) { this.parent = parent; return this; }
 
         public Comment build() { return new Comment(this); }
@@ -99,8 +101,13 @@ public class Comment {
     public Articles getArticle() { return article; }
     public void setArticle(Articles article) { this.article = article; }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    // GETTER / SETTER Atualizados
+    public UserIdentity getUserIdentity() { return userIdentity; }
+    public void setUserIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; }
+
+    public User getUser() {
+        return this.userIdentity != null ? this.userIdentity.getUser() : null;
+    }
 
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }

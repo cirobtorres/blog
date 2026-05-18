@@ -1,7 +1,7 @@
 import CommentThread from "./CommentThread";
 import CommentEditor from "./CommentEditor";
-import { Button } from "../Button";
 import getComments from "../../services/comment/getComments";
+import { Button } from "../Button";
 
 export default async function CommentsSection({
   articleId,
@@ -16,7 +16,7 @@ export default async function CommentsSection({
   });
 
   const { content, page } = comments.data;
-  const hasMore = page.number < page.totalPages;
+  const hasMore = page.number + 1 < page.totalPages;
 
   return (
     <section id="comments" className="w-full my-10 flex flex-col gap-8">
@@ -28,7 +28,7 @@ export default async function CommentsSection({
         <CommentEditor id="root-editor" articleId={articleId} />
       </div>
 
-      <div className="flex flex-col gap-8">
+      <div className="w-full max-w-comments mx-auto px-6 my-6 flex flex-col gap-8">
         {content.map((comment: Comments) => (
           <CommentThread
             key={comment.id}
@@ -39,8 +39,11 @@ export default async function CommentsSection({
         ))}
 
         {hasMore && (
-          <Button variant="ghost" className="w-full">
-            Carregar mais comentários raiz
+          <Button
+            variant="ghost"
+            className="w-full max-w-30 h-7.5 rounded-full mx-auto"
+          >
+            Carregar mais
           </Button>
         )}
       </div>

@@ -1,8 +1,13 @@
 package com.cirobtorres.blog.api.comment.services;
 
+import com.cirobtorres.blog.api.article.entities.Articles;
+import com.cirobtorres.blog.api.article.repositories.ArticlesRepository;
 import com.cirobtorres.blog.api.comment.dtos.CommentDTO;
+import com.cirobtorres.blog.api.comment.dtos.CommentPostDTO;
 import com.cirobtorres.blog.api.comment.entities.Comment;
 import com.cirobtorres.blog.api.comment.repositories.CommentRepository;
+import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
+import com.cirobtorres.blog.api.userIdentity.repositories.UserIdentityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +24,17 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final UserIdentityRepository userIdentityRepository;
+    private final ArticlesRepository articlesRepository;
 
     public CommentService(
-            CommentRepository commentRepository
+            CommentRepository commentRepository,
+            UserIdentityRepository userIdentityRepository,
+            ArticlesRepository articlesRepository
     ) {
         this.commentRepository = commentRepository;
+        this.userIdentityRepository = userIdentityRepository;
+        this.articlesRepository = articlesRepository;
     }
 
     @Transactional
@@ -70,5 +81,31 @@ public class CommentService {
         });
 
         return rootCommentsPage.map(CommentDTO::new);
+    }
+
+    @Transactional
+    public CommentDTO postComment(CommentPostDTO request) {
+        UserIdentity identity = userIdentityRepository.findById(request.identityId())
+                .orElseThrow(() -> new IllegalArgumentException("Identity not found: id=" + request.identityId()));
+
+        Articles article = articlesRepository.findById(request.articleId())
+                .orElseThrow(() -> new IllegalArgumentException("Article not found: id=" + request.articleId()));
+
+        Comment parentComment = null;
+        if (request.parentId() != null) {
+            parentComment = commentRepository.findById(request.parentId())
+                    .orElseThrow(() -> new IllegalArgumentException("Parent comment not found: id=" + request.parentId()));
+        }
+
+        Comment comment = new Comment.Builder()
+                .userIdentity(identity)
+                .article(article)
+                .parent(parentComment)
+                .body(request.body())
+                .build();
+
+        Comment savedComment = commentRepository.save(comment);
+
+        return new CommentDTO(savedComment);
     }
 }

@@ -76,6 +76,7 @@ public class UserService {
 
                     return new UserDTO(
                             user.getId(),
+                            activeIdentity.getId(),
                             activeIdentity.getName(),
                             activeIdentity.getProviderEmail(),
                             activeIdentity.getPictureUrl(),

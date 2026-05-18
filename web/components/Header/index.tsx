@@ -5,12 +5,9 @@ import { Link } from "../Links";
 import { ProgressBar } from "./ProgressBar";
 import { cn, linkVariants } from "../../utils/variants";
 import { externalUrls } from "../../routing/routes";
-import { Skeleton } from "../Skeleton";
-import UserSignedIn from "./UserSignedIn";
-import Spinner from "../Spinner";
-import UserSignedOff from "./UserSignedOff";
 import { useAuth } from "../../providers/AuthProvider";
 import { VariantProps } from "class-variance-authority";
+import UserAuthGate from "./UserSignedIn";
 
 interface ContentProps extends VariantProps<typeof linkVariants> {
   path: string;
@@ -87,14 +84,6 @@ export function Header({
     };
   }, [sticky]);
 
-  function renderAuthArea() {
-    if (user === null) return <UserSkeleton />;
-
-    if (user.ok) return <UserSignedIn user={user} />;
-
-    return <UserSignedOff />;
-  }
-
   return (
     <header
       id="main-header"
@@ -121,18 +110,10 @@ export function Header({
             </Link>
           ))}
         </nav>
-        {renderAuthArea()}
+        <UserAuthGate user={user} />
         <div />
       </div>
       {progress && <ProgressBar />}
     </header>
   );
 }
-
-const UserSkeleton = () => (
-  <div className="flex items-center gap-2 ml-auto mr-0">
-    <Skeleton className="flex justify-center items-center shrink-0 size-8 rounded-full">
-      <Spinner />
-    </Skeleton>
-  </div>
-);
