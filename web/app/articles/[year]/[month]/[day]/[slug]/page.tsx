@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Footer } from "../../../../../../components/Footer";
-import { Header } from "../../../../../../components/Header";
+import Header from "../../../../../../components/Header";
 import { serverFetch } from "../../../../../../services/auth-fetch-actions";
 import { apiServerUrls } from "../../../../../../routing/routes";
 import ArticleTitle from "../../../../../../components/Article/ArticleTitle";

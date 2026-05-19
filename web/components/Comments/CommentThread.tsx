@@ -14,7 +14,7 @@ export default function CommentThread({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4",
+        "flex flex-col gap-1",
         depth > 0 &&
           "ml-4 border-l pl-4 border-stone-200 dark:border-stone-800",
       )}

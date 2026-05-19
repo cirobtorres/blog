@@ -3,9 +3,10 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { buttonVariants, cn, focusRing } from "../../utils/variants";
 import { publicWebUrls } from "../../routing/routes";
-import { Avatar } from "../Avatar";
+import NextLink from "next/link";
 import { Link } from "../Links";
 import { characterLimit } from "./CommentEditor";
+import { UserSignedOffIcon } from "../Header/UserSignedOff";
 
 export default function CommentHere() {
   const pathname = usePathname();
@@ -13,15 +14,20 @@ export default function CommentHere() {
   const search = searchParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#create-comment";
-  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`;
+  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <Avatar
-        key="avatar-de-user-anônimo"
-        authorName="Anônimo"
-        authorPicUrl="https://placehold.co/32x32/000/fff/jpeg"
-      />
+      <NextLink
+        href={loginUrl}
+        className={cn(
+          "w-fit flex items-center gap-2 rounded border border-transparent transition-[border,box-shadow] duration-300",
+          focusRing,
+        )}
+      >
+        <UserSignedOffIcon />
+        Anônimo
+      </NextLink>
       <div className="w-full h-full text-left text-sm text-neutral-900 dark:text-neutral-100 **:outline-none border-b [scrollbar-width:none] [-ms-overflow-style:none] py-2">
         <Link
           href={loginUrl}

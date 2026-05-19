@@ -76,6 +76,7 @@ export default function SignInForm() {
           id="email"
           name="email"
           value={email}
+          autoFocus
           placeholder="johndoe@email.com"
           onChange={(e) => setEmail(e.target.value)}
           error={!!errors?.email?.errors}

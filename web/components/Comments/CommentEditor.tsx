@@ -11,7 +11,7 @@ import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
 import { cn, focusRing } from "../../utils/variants";
 import { useAuth } from "../../providers/AuthProvider";
-import { Avatar } from "../Avatar";
+import { AvatarName } from "../Avatar";
 import { Skeleton } from "../Skeleton";
 import CommentHere from "./CommentHere";
 import Spinner from "../Spinner";
@@ -211,13 +211,10 @@ export default function CommentEditor({
       action={action}
       className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
     >
-      <Avatar
+      <AvatarName
         key={user.data.id}
         authorName={user.data.name}
-        authorPicUrl={
-          user.data.pictureUrl ?? "/images/not-authenticated.png"
-          // user.data.pictureUrl ?? "https://placehold.co/32x32/000/fff/jpeg"
-        }
+        authorPicUrl={user.data.pictureUrl}
       />
       <EditorContent
         {...props}
@@ -238,8 +235,8 @@ export default function CommentEditor({
           <div className="flex justify-end items-center gap-1">
             <Button
               type="button"
-              disabled={isPending}
               variant="outline"
+              disabled={isPending}
               onClick={closeEditor}
               className={cn(
                 "w-full max-w-30 h-6 focus-visible:z-10",
@@ -250,7 +247,8 @@ export default function CommentEditor({
             </Button>
             <Button
               type="submit"
-              disabled={isPending}
+              variant="default"
+              disabled={isPending || editor.isEmpty}
               className={cn(
                 "w-full max-w-30 h-6 focus-visible:z-10",
                 focusRing,

@@ -28,7 +28,6 @@ public class Comment {
     @JoinColumn(name = "article_id", nullable = false)
     private Articles article;
 
-    // ALTERAÇÃO CRÍTICA: Aponta para UserIdentity e muda o nome da FK física no banco
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "identity_id", nullable = false)
     private UserIdentity userIdentity;
@@ -101,7 +100,6 @@ public class Comment {
     public Articles getArticle() { return article; }
     public void setArticle(Articles article) { this.article = article; }
 
-    // GETTER / SETTER Atualizados
     public UserIdentity getUserIdentity() { return userIdentity; }
     public void setUserIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; }
 

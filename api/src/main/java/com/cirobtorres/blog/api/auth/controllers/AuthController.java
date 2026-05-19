@@ -76,7 +76,9 @@ public class AuthController {
     }
 
     @GetMapping("me")
-    public ResponseEntity<UserDTO> me(Authentication auth) {
+    public ResponseEntity<UserDTO> me(
+            Authentication auth
+    ) {
         UserDTO user = authService.getUser(auth);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
     }

@@ -20,13 +20,9 @@ public record CommentDTO(
     public CommentDTO(Comment comment) {
         this(
                 comment.getId(),
-                comment.getBody(),
+                resolveBody(comment),
                 comment.getArticle() != null ? new ArticleSubGroup(comment.getArticle().getId()) : null,
-                comment.getUserIdentity() != null ? new UserSubGroup(
-                        comment.getUserIdentity().getUser() != null ? comment.getUserIdentity().getUser().getId() : null,
-                        comment.getUserIdentity().getName(),
-                        comment.getUserIdentity().getPictureUrl()
-                ) : null,
+                resolveUser(comment),
                 comment.getLikeCount(),
                 comment.isDeleted(),
                 comment.getDeletedAt(),
@@ -38,5 +34,33 @@ public record CommentDTO(
     }
 
     public record UserSubGroup(UUID id, String name, String pictureUrl) {}
+
     public record ArticleSubGroup(UUID id) {}
+
+    private static String resolveBody(Comment comment) {
+        if (comment.isBlocked()) {
+            return "[Comentário bloqueado]";
+        }
+        if (comment.isDeleted()) {
+            return "[Comentário excluído]";
+        }
+        return comment.getBody();
+    }
+    private static UserSubGroup resolveUser(Comment comment) {
+        if (comment.isDeleted() || comment.isBlocked()) {
+            return new UserSubGroup(null, "[Excluído]", null);
+        }
+        if (comment.getUserIdentity() != null) {
+            UUID userId = comment.getUserIdentity().getUser() != null
+                    ? comment.getUserIdentity().getUser().getId()
+                    : null;
+            return new UserSubGroup(
+                    userId,
+                    comment.getUserIdentity().getName(),
+                    comment.getUserIdentity().getPictureUrl()
+            );
+        }
+
+        return null;
+    }
 }

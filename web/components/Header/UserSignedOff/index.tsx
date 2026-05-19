@@ -10,25 +10,11 @@ export default function UserSignedOff() {
     <Popover>
       <PopoverTrigger
         className={cn(
-          "cursor-pointer flex justify-center items-center ml-auto mr-0 rounded-full border border-transparent transition-all duration-300",
+          "cursor-pointer flex justify-center items-center rounded-full border border-transparent transition-all duration-300",
           focusRing,
         )}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
-        >
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
+        <UserSignedOffIcon />
       </PopoverTrigger>
       <PopoverContent
         align="end"
@@ -54,5 +40,25 @@ export default function UserSignedOff() {
         </Link>
       </PopoverContent>
     </Popover>
+  );
+}
+
+export function UserSignedOffIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800"
+    >
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
   );
 }

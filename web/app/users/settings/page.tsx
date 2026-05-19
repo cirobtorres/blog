@@ -6,7 +6,7 @@ import {
   FieldsetLabel,
 } from "../../../components/Fieldset";
 import { Footer } from "../../../components/Footer";
-import { Header } from "../../../components/Header";
+import Header from "../../../components/Header";
 import UserSettingsPassForm from "../../../components/Users/Settings/UserSettingsPassForm";
 import { Alert } from "../../../components/Alert";
 import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";

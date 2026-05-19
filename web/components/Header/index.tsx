@@ -31,7 +31,7 @@ const content: ContentProps[] = [
   },
 ];
 
-export function Header({
+export default function Header({
   className,
   sticky = false,
   progress = false,

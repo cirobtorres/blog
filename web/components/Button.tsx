@@ -4,6 +4,7 @@ import { buttonVariants, cn } from "../utils/variants";
 export function Button({
   className,
   variant = "default",
+  disabled = false,
   asChild = false,
   ...props
 }: BlogButton) {
@@ -13,7 +14,7 @@ export function Button({
     <Comp
       data-slot="button"
       data-variant={variant}
-      className={cn(buttonVariants({ variant, className }))}
+      className={cn(buttonVariants({ variant, disabled, className }))}
       {...props}
     />
   );

@@ -1,7 +1,7 @@
 "use server";
 
 import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
+import Header from "../components/Header";
 import { convertToLargeDate, mountURL } from "../utils/date";
 import { serverFetch } from "../services/auth-fetch-actions";
 import { apiServerUrls } from "../routing/routes";

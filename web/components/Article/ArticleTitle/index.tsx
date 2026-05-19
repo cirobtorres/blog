@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Avatar } from "../../Avatar";
+import { AvatarName } from "../../Avatar";
 import { ArtBreadcrumb } from "./Breadcrumb";
 import { convertToLargeDate } from "../../../utils/date";
 import Link from "next/link";
@@ -92,7 +92,7 @@ export default function ArticleTitle({
       <div className="w-full bg-stone-200 dark:bg-stone-900 border-y py-2">
         <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
           <div className="flex items-center gap-3 lg:gap-6">
-            <Avatar {...{ authorName, authorPicUrl }} />
+            <AvatarName {...{ authorName, authorPicUrl }} />
           </div>
         </div>
       </div>

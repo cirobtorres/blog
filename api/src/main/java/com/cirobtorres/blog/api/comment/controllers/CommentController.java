@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -63,7 +65,15 @@ public class CommentController {
 
     // DELETE-----------------------------------------------------------------------------------------------------
     @DeleteMapping("id/{id}")
-    public ResponseEntity<Void> deleteComment() {
+    public ResponseEntity<CommentDTO> deleteComment(
+            @PathVariable UUID id,
+            Authentication auth
+    ) {
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.ok(null);
+        }
+        UUID userId = UUID.fromString(auth.getName());
+        commentService.deleteComment(id, userId);
         return ResponseEntity.noContent().build();
     }
 }

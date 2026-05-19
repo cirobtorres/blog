@@ -6,6 +6,9 @@ import com.cirobtorres.blog.api.comment.dtos.CommentDTO;
 import com.cirobtorres.blog.api.comment.dtos.CommentPostDTO;
 import com.cirobtorres.blog.api.comment.entities.Comment;
 import com.cirobtorres.blog.api.comment.repositories.CommentRepository;
+import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
+import com.cirobtorres.blog.api.user.entities.User;
+import com.cirobtorres.blog.api.user.repositories.UserRepository;
 import com.cirobtorres.blog.api.userIdentity.entities.UserIdentity;
 import com.cirobtorres.blog.api.userIdentity.repositories.UserIdentityRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,15 +28,18 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
     private final UserIdentityRepository userIdentityRepository;
     private final ArticlesRepository articlesRepository;
 
     public CommentService(
             CommentRepository commentRepository,
+            UserRepository userRepository,
             UserIdentityRepository userIdentityRepository,
             ArticlesRepository articlesRepository
     ) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
         this.userIdentityRepository = userIdentityRepository;
         this.articlesRepository = articlesRepository;
     }
@@ -107,5 +114,22 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return new CommentDTO(savedComment);
+    }
+
+    @Transactional
+    public void deleteComment(UUID id, UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: id=" + userId));
+
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found: id=" + id));
+
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new UserUnauthorizedException("You do not own permission to delete the comment");
+        }
+
+        comment.setDeleted(true);
+        comment.setDeletedAt(LocalDateTime.now());
+        Comment deletedComment = commentRepository.save(comment);
     }
 }
