@@ -1,9 +1,9 @@
 import CommentThread from "./CommentThread";
-import CommentEditor from "./CommentEditor";
 import getComments from "../../services/comment/getComments";
 import { Button } from "../Button";
+import CommentTopEditor from "./CommentTopEditor";
 
-export default async function CommentsSection({
+export default async function CommentSection({
   articleId,
 }: {
   articleId: string;
@@ -24,9 +24,7 @@ export default async function CommentsSection({
         <h2 className="text-3xl">Comentários {page.totalPages}</h2>
       </div>
 
-      <div className="w-full max-w-comments mx-auto px-6 my-6">
-        <CommentEditor id="root-editor" articleId={articleId} />
-      </div>
+      <CommentTopEditor articleId={articleId} />
 
       <div className="w-full max-w-comments mx-auto px-6 my-6 flex flex-col gap-8">
         {content.map((comment: Comments) => (

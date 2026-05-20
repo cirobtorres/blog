@@ -1,5 +1,5 @@
-import CommentsSection from "./CommentSection";
+import CommentSection from "./CommentSection";
 
 export default function Comments({ articleId }: { articleId: string }) {
-  return <CommentsSection articleId={articleId} />;
+  return <CommentSection articleId={articleId} />;
 }

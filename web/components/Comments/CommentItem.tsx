@@ -2,19 +2,29 @@
 
 import React from "react";
 import CommentEditor, { characterLimit } from "./CommentEditor";
-import { EditorContent, useEditor } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
-import { AvatarName } from "../Avatar";
 import CharacterCount from "@tiptap/extension-character-count";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import deleteComment from "../../services/comment/deleteComment";
+import Spinner from "../Spinner";
+import { usePathname } from "next/navigation";
+import { EditorContent, useEditor } from "@tiptap/react";
+import { AvatarName } from "../Avatar";
 import { useAuth } from "../../providers/AuthProvider";
 import { Button } from "../Button";
-import { sonnerPromise, sonnerToastPromise } from "../../utils/sonner";
-import deleteComment from "../../services/comment/deleteComment";
-import { usePathname } from "next/navigation";
 import { cn } from "../../utils/variants";
+import { sonnerPromise, sonnerToastPromise } from "../../utils/sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+} from "../AlertDialog";
 
 interface TiptapNode {
   type: string;
@@ -47,16 +57,23 @@ const defaultState = {
 };
 
 function ensureTiptapJson(body: string): Record<string, unknown> {
-  try {
-    const trimmed = body.trim();
-    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-      return JSON.parse(trimmed);
+  const trimmed = body ? body.trim() : "";
+
+  if (trimmed) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        parsed.type === "doc" &&
+        Array.isArray(parsed.content)
+      ) {
+        return parsed;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      // Plain text, usually sent from server
     }
-  } catch (e) {
-    console.error(
-      "Falha ao processar JSON do Tiptap, aplicando fallback de texto plano.",
-      e,
-    );
   }
   return {
     type: "doc",
@@ -85,13 +102,16 @@ export default function CommentItem({
 }) {
   const { user } = useAuth();
   const [isReplying, setIsReplying] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
   const articlePath = usePathname();
 
   const safeTiptapContent = React.useMemo(() => {
+    if (comment.isBlocked) return ensureTiptapJson("[Comentário bloqueado]");
+    if (comment.isDeleted) return ensureTiptapJson("[Comentário excluído]");
     return ensureTiptapJson(comment.body);
-  }, [comment.body]);
+  }, [comment.body, comment.isDeleted, comment.isBlocked]);
 
-  const [delState, delAction, isDelPending] = React.useActionState(async () => {
+  const [, delAction, isDelPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => (
       <p>{serverResponse.success ?? "Comentário excluído"}</p>
     );
@@ -127,19 +147,31 @@ export default function CommentItem({
     ],
   });
 
+  React.useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      editor.commands.setContent(safeTiptapContent);
+    }
+  }, [safeTiptapContent, editor]);
+
   const fullText = getTiptapText(safeTiptapContent as unknown as TiptapNode);
-  const isNameHidden = comment.user.name === "[Excluído]";
-  const isBodyHidden =
-    fullText === "[Comentário excluído]" ||
-    fullText === "[Comentário bloqueado]" ||
-    fullText === "[Comentário indisponível]";
-  const authorName = isNameHidden ? "[Excluído]" : comment.user.name;
-  const authorPicUrl = isNameHidden ? null : comment.user.pictureUrl;
-  const bodyClasses = isBodyHidden
-    ? "text-neutral-500 dark:text-neutral-500"
-    : "text-neutral-900 dark:text-neutral-100";
-  const characterCount = isBodyHidden ? 0 : fullText.length;
-  const wordCount = isBodyHidden ? 0 : countWords(fullText);
+  const isCommentDeleted = comment.isDeleted;
+  const isCommentBlocked = comment.isBlocked;
+  const authorName = isCommentDeleted
+    ? "[Excluído]"
+    : isCommentBlocked
+      ? "[Bloqueado]"
+      : comment.user.name;
+  const authorPicUrl =
+    isCommentDeleted || isCommentBlocked ? null : comment.user.pictureUrl;
+  const bodyClasses =
+    isCommentDeleted || isCommentBlocked
+      ? "text-neutral-500 dark:text-neutral-500"
+      : "text-neutral-900 dark:text-neutral-100";
+  const characterCount =
+    isCommentDeleted || isCommentBlocked ? 0 : fullText.length;
+  const wordCount =
+    isCommentDeleted || isCommentBlocked ? 0 : countWords(fullText);
+  const isCommentOwner = comment.user.id === user?.data?.id;
 
   return (
     <>
@@ -149,7 +181,7 @@ export default function CommentItem({
           authorName={authorName}
           authorPicUrl={authorPicUrl}
         />
-        {comment.user.id === user?.data?.id && !isNameHidden && (
+        {isCommentOwner && !isCommentDeleted && !isCommentBlocked && (
           <Popover>
             <PopoverTrigger asChild>
               <Button type="button" variant="ghost" className="size-8 px-0">
@@ -174,42 +206,65 @@ export default function CommentItem({
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => console.log("Editar")}
-                className="w-full max-w-20 h-6"
+                onClick={() => setIsEditing(true)}
+                className="w-20 h-8"
               >
                 Editar
               </Button>
-              <form action={delAction}>
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  disabled={isDelPending}
-                  className="w-full max-w-20 h-6"
-                >
-                  Excluir
-                </Button>
-              </form>
+              <DeleteCommentButton
+                action={delAction}
+                isPending={isDelPending}
+              />
             </PopoverContent>
           </Popover>
         )}
       </div>
-      <EditorContent
-        editor={editor}
-        className={cn(
-          "w-full h-full text-left text-sm **:outline-none border-b [scrollbar-width:none] [-ms-overflow-style:none] py-2 prose dark:prose-invert max-w-none",
-          bodyClasses,
-        )}
-      />
-      <div className="flex justify-between items-center gap-1">
-        <div className="flex items-center gap-1 h-6">
-          <span className="text-sm text-neutral-500">
-            Tamanho: {characterCount}/{characterLimit}
-          </span>
-          <span className="text-sm text-neutral-500">
-            Palavras: {wordCount}
-          </span>
-        </div>
-      </div>
+      {isEditing ? (
+        <CommentEditor
+          articleId={articleId}
+          initialContent={comment.body}
+          onSuccess={() => setIsEditing(false)}
+          initialCharacterCount={characterCount}
+          initialWordCount={wordCount}
+          autoFocus
+          onSave={async (newBody) => {
+            // TODO
+            console.log(
+              "Chamando backend Java para atualizar:",
+              comment.id,
+              newBody,
+            );
+            return {
+              ok: true,
+              success: "Comentário atualizado!",
+              data: null,
+              error: null,
+            };
+          }}
+        />
+      ) : (
+        <>
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "w-full h-full text-left text-sm **:outline-none border-b py-2 prose dark:prose-invert max-w-none",
+              bodyClasses,
+            )}
+          />
+          {/* {!isBodyHidden && (
+            <div className="flex justify-between items-center gap-1">
+              <div className="flex items-center gap-1 h-6">
+                <span className="text-sm text-neutral-500">
+                  Tamanho: {characterCount}/{characterLimit}
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Palavras: {wordCount}
+                </span>
+              </div>
+            </div>
+          )} */}
+        </>
+      )}
       {isReplying && (
         <div className="mt-4">
           <CommentEditor
@@ -223,3 +278,52 @@ export default function CommentItem({
     </>
   );
 }
+
+const DeleteCommentButton = ({
+  action,
+  isPending,
+}: {
+  action: () => void;
+  isPending: boolean;
+}) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger asChild>
+        <Button variant="ghost" disabled={isPending} className="w-20 h-8">
+          Excluir
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="max-w-xs">
+        <AlertDialogHeader>Excluir comentário</AlertDialogHeader>
+        <form action={action}>
+          <AlertDialogDescription className="p-4">
+            Confirmar?
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              variant="outline"
+              className="w-full max-w-30 h-8"
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <Button
+              type="button"
+              disabled={isPending}
+              variant="default"
+              className="w-full max-w-30 h-8"
+              onClick={() => {
+                React.startTransition(() => {
+                  action();
+                });
+              }}
+            >
+              {isPending && <Spinner />} Confirmar
+            </Button>
+          </AlertDialogFooter>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};

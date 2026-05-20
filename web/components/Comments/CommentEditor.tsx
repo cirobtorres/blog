@@ -30,15 +30,36 @@ export const characterLimit = 512;
 export default function CommentEditor({
   articleId,
   parentId,
+  initialContent,
+  initialCharacterCount = 0,
+  initialWordCount = 0,
+  onSave,
   onSuccess,
   ...props
 }: Omit<React.ComponentProps<typeof EditorContent>, "editor"> & {
   articleId: string;
   parentId?: string;
+  initialContent?: string;
+  initialCharacterCount?: number;
+  initialWordCount?: number;
+  onSave?: ({
+    identityId,
+    articleId,
+    articlePath,
+    parentId,
+    body,
+  }: {
+    identityId: string;
+    articleId: string;
+    articlePath: string;
+    parentId: string | undefined;
+    body: string;
+  }) => Promise<ActionState>;
   onSuccess?: () => void;
 }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = React.useState(() => {
+    if (initialContent) return true;
     if (typeof window !== "undefined") {
       return window.location.hash === "#create-comment";
     }
@@ -47,8 +68,19 @@ export default function CommentEditor({
   const formRef = React.useRef<HTMLFormElement>(null);
   const articlePath = usePathname();
 
+  const parsedInitialContent = React.useMemo(() => {
+    if (!initialContent) return null;
+    try {
+      return JSON.parse(initialContent);
+    } catch {
+      return initialContent; // Fallback 'plain text' from Java Spring's CommentDTO
+    }
+  }, [initialContent]);
+
   const editor = useEditor({
     immediatelyRender: false,
+    content: parsedInitialContent,
+    autofocus: initialContent ? "end" : false,
     extensions: [
       Document,
       Paragraph,
@@ -72,8 +104,8 @@ export default function CommentEditor({
     }),
   });
 
-  const characterCount = state?.characterCount ?? 0;
-  const wordCount = state?.wordCount ?? 0;
+  const characterCount = state?.characterCount ?? initialCharacterCount;
+  const wordCount = state?.wordCount ?? initialWordCount;
 
   const scrollToFormTop = React.useCallback(() => {
     requestAnimationFrame(() => {
@@ -96,10 +128,14 @@ export default function CommentEditor({
   }, [editor]);
 
   const closeEditor = React.useCallback(() => {
-    editor?.commands.clearContent();
-    editor?.commands.blur();
-    setIsOpen(false);
-  }, [editor]);
+    if (initialContent) {
+      onSuccess?.();
+    } else {
+      editor?.commands.clearContent();
+      editor?.commands.blur();
+      setIsOpen(false);
+    }
+  }, [editor, initialContent, onSuccess]);
 
   React.useEffect(() => {
     if (editor && window.location.hash === "#create-comment") {
@@ -159,25 +195,44 @@ export default function CommentEditor({
 
     // Rebuild cleaned JSON
     const cleanJson = { ...json, content: filteredContent };
+    const body = JSON.stringify(cleanJson);
     const identityId = user?.data?.identityId;
 
-    if (!identityId) return { ...defaultState, error: "Usuário deslogado" };
+    if (!identityId)
+      return { ...defaultState, error: "Usuário não autenticado" };
 
     const obj = {
       identityId,
       articleId,
       articlePath,
       parentId,
-      body: JSON.stringify(cleanJson),
+      body,
     };
 
-    const result = postComment(obj);
-    const promise = sonnerPromise(result);
-    sonnerToastPromise(promise, success, error, "Comentando...");
-    editor?.commands.clearContent();
-    setIsOpen(false);
+    let result;
+    if (onSave) {
+      result = onSave(obj);
+    } else {
+      const identityId = user?.data?.identityId;
+      if (!identityId) return { ...defaultState, error: "Usuário deslogado" };
 
-    return defaultState;
+      result = postComment(obj);
+    }
+
+    const promise = sonnerPromise(result);
+    sonnerToastPromise(
+      promise,
+      success,
+      error,
+      initialContent ? "Atualizando..." : "Comentando...",
+    );
+
+    if (!initialContent) {
+      editor?.commands.clearContent();
+      setIsOpen(false);
+    }
+
+    return result;
   }, defaultState);
 
   if (!editor)
@@ -211,11 +266,6 @@ export default function CommentEditor({
       action={action}
       className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
     >
-      <AvatarName
-        key={user.data.id}
-        authorName={user.data.name}
-        authorPicUrl={user.data.pictureUrl}
-      />
       <EditorContent
         {...props}
         editor={editor}
@@ -254,7 +304,7 @@ export default function CommentEditor({
                 focusRing,
               )}
             >
-              {isPending && <Spinner />} Salvar
+              {isPending && <Spinner className="size-4" />} Salvar
             </Button>
           </div>
         )}

@@ -12,6 +12,10 @@ type Comments = {
   createdAt: string;
   parentId: string | null;
   replies?: Comments[];
+  isBlocked: boolean;
+  blockedAt: string | null;
+  isDeleted: boolean;
+  deletedAt: string | null;
   _count?: {
     children: number;
   };
@@ -29,7 +33,7 @@ type CommentArticle = {
 };
 
 type UserComment = {
-  id: string;
+  id: string | null;
   name: string;
-  pictureUrl: string;
+  pictureUrl: string | null;
 };

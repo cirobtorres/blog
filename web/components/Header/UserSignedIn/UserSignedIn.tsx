@@ -93,7 +93,7 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
           </div>
           <form action={action} className={elStyleWrapper}>
             <button type="submit" disabled={isPending} className={elStyleItem}>
-              {isPending && <Spinner />} Sair
+              {isPending && <Spinner className="size-4" />} Sair
             </button>
           </form>
         </PopoverContent>

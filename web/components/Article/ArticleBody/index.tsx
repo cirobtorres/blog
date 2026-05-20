@@ -6,12 +6,9 @@ import parse, { DOMNode, domToReact, Element } from "html-react-parser";
 import * as Typography from "../../Typography";
 import { slugify } from "../../../utils/strings-transforms";
 import { alertVariants, cn, focusRing } from "../../../utils/variants";
-import { highlightCodeWithShiki } from "../../../utils/shiki";
 import { Alert } from "../../Alert";
-import CopyToClipBoard from "../../CopyToClipBoard";
 import BackToTopButton from "./BackToTopButton";
 import ScrollSummary from "./ScrollSummary";
-import Spinner from "../../Spinner";
 import {
   Accordion,
   AccordionContent,

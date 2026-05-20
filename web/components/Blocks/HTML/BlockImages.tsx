@@ -102,15 +102,15 @@ export default function BlockImages({
 export function ImageComponent({ id, url, alt, caption }: ImageEditor) {
   return (
     <figure className="w-full flex flex-col">
-      <div className="relative flex-1 aspect-video rounded-lg overflow-hidden">
+      <div className="relative w-full aspect-video rounded-lg overflow-hidden">
         <Image
           id={id}
           src={url}
           alt={alt}
           fill
-          className="object-contain"
           loading="lazy"
           sizes="(max-width: 1024px) 100vw, 1020px"
+          className="object-cover"
         />
       </div>
       {caption && (
