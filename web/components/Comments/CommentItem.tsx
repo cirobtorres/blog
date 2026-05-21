@@ -102,6 +102,7 @@ export default function CommentItem({
   depth: number;
 }) {
   const { user } = useAuth();
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const articlePath = usePathname();
@@ -171,6 +172,7 @@ export default function CommentItem({
 
     const result = await putComment({
       commentId: comment.id,
+      parentId: comment.parentId,
       ...editorData,
     });
 
@@ -221,9 +223,17 @@ export default function CommentItem({
           authorPicUrl={authorPicUrl}
         />
         {isCommentOwner && !isCommentDeleted && !isCommentBlocked && (
-          <Popover>
+          <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
-              <Button type="button" variant="ghost" className="size-8 px-0">
+              <Button
+                type="button"
+                variant="ghost"
+                className={cn(
+                  "size-8 px-0",
+                  isOpen &&
+                    "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-300 dark:bg-stone-800",
+                )}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -262,6 +272,7 @@ export default function CommentItem({
         <CommentEditor
           articleId={articleId}
           initialContent={comment.body}
+          parentId={comment.parentId}
           onSuccess={() => setIsEditing(false)}
           initialCharacterCount={characterCount}
           initialWordCount={wordCount}
@@ -272,17 +283,73 @@ export default function CommentItem({
         <EditorContent
           editor={editor}
           className={cn(
-            "w-full h-full text-left text-sm **:outline-none border-b py-2 prose dark:prose-invert max-w-none",
+            "w-full h-full text-left text-sm **:outline-none border-b py-2 prose dark:prose-invert max-w-none [&_.tiptap.ProseMirror_p]:not-only:mb-3 [&_.tiptap.ProseMirror_p]:last:mb-0 ",
             bodyClasses,
           )}
         />
       )}
+      {!isCommentDeleted && !isCommentBlocked && (
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
+            <Button
+              type="button"
+              variant="ghost"
+              className="rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />
+              </svg>
+            </Button>
+            5
+          </span>
+          <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+            </svg>
+            0
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => setIsReplying(!isReplying)}
+            className="h-8 text-neutral-900 dark:text-neutral-100 opacity-100"
+          >
+            Responder
+          </Button>
+        </div>
+      )}
       {isReplying && (
         <div className="mt-4">
+          <AvatarName
+            key={comment.user.id}
+            authorName={authorName}
+            authorPicUrl={authorPicUrl}
+          />
           <CommentEditor
             articleId={articleId}
-            parentId={comment.id}
+            parentId={comment.parentId}
             onSuccess={() => setIsReplying(false)}
+            onCancel={() => setIsReplying(false)}
             autoFocus
           />
         </div>

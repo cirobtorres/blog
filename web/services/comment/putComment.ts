@@ -13,9 +13,9 @@ const defaultState = {
 
 export default async function putComment({
   commentId,
+  parentId,
   identityId,
   articleId,
-  parentId,
   body,
   articlePath,
 }: CommentSave) {

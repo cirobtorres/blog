@@ -28,19 +28,21 @@ export const characterLimit = 512;
 
 export default function CommentEditor({
   articleId,
-  parentId,
   initialContent,
   initialCharacterCount = 0,
   initialWordCount = 0,
+  autoFocus,
+  parentId,
   onSave,
   onSuccess,
+  onCancel,
   ...props
 }: Omit<React.ComponentProps<typeof EditorContent>, "editor"> & {
   articleId: string;
-  parentId?: string;
   initialContent?: string;
   initialCharacterCount?: number;
   initialWordCount?: number;
+  parentId?: string;
   onSave?: ({
     commentId,
     identityId,
@@ -49,6 +51,7 @@ export default function CommentEditor({
     parentId,
     body,
   }: CommentSave) => Promise<ActionState>;
+  onCancel?: () => void;
   onSuccess?: () => void;
 }) {
   const { user } = useAuth();
@@ -75,7 +78,7 @@ export default function CommentEditor({
   const editor = useEditor({
     immediatelyRender: false,
     content: parsedInitialContent,
-    autofocus: initialContent ? "end" : false,
+    autofocus: autoFocus || initialContent ? "end" : false,
     extensions: [
       Document,
       Paragraph,
@@ -106,7 +109,7 @@ export default function CommentEditor({
   // OPEN-CLOSE-EDITOR-----------------------------------------------------------------------------------------
   const openEditor = React.useCallback(() => {
     setIsOpen(true);
-    const currentChars = editor?.storage.characterCount.characters() ?? 0;
+    const currentChars = editor?.state.doc.content.size ?? 0;
     editor
       ?.chain()
       .focus()
@@ -116,6 +119,7 @@ export default function CommentEditor({
   }, [editor]);
 
   const closeEditor = React.useCallback(() => {
+    onCancel?.();
     if (initialContent) {
       onSuccess?.();
     } else {
@@ -123,7 +127,7 @@ export default function CommentEditor({
       editor?.commands.blur();
       setIsOpen(false);
     }
-  }, [editor, initialContent, onSuccess]);
+  }, [editor, initialContent, onSuccess, onCancel]);
 
   // SCROLL-TOWARDS-EDITOR-------------------------------------------------------------------------------------
   const scrollToFormTop = React.useCallback(() => {
@@ -202,9 +206,9 @@ export default function CommentEditor({
       return { ...defaultState, error: "Usuário não autenticado" };
 
     const obj = {
+      parentId,
       identityId,
       articleId,
-      parentId,
       body,
       articlePath,
     };

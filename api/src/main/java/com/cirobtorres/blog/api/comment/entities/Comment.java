@@ -72,19 +72,19 @@ public class Comment {
     private Comment(Builder builder) {
         this.body = builder.body;
         this.article = builder.article;
-        this.userIdentity = builder.userIdentity; // Atualizado
+        this.userIdentity = builder.userIdentity;
         this.parent = builder.parent;
     }
 
     public static class Builder {
         private String body;
         private Articles article;
-        private UserIdentity userIdentity; // Atualizado
+        private UserIdentity userIdentity;
         private Comment parent;
 
         public Builder body(String body) { this.body = body; return this; }
         public Builder article(Articles article) { this.article = article; return this; }
-        public Builder userIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; return this; } // Atualizado
+        public Builder userIdentity(UserIdentity userIdentity) { this.userIdentity = userIdentity; return this; }
         public Builder parent(Comment parent) { this.parent = parent; return this; }
 
         public Comment build() { return new Comment(this); }
@@ -131,6 +131,11 @@ public class Comment {
     public Comment getParent() { return parent; }
     public void setParent(Comment parent) { this.parent = parent; }
 
-    public List<Comment> getChildren() { return children; }
+    public List<Comment> getChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        return this.children;
+    }
     public void setChildren(List<Comment> children) { this.children = children; }
 }

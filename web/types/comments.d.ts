@@ -10,7 +10,7 @@ type Comments = {
   user: UserComment;
   likeCount: number;
   createdAt: string;
-  parentId: string | null;
+  parentId?: string;
   replies?: Comments[];
   isBlocked: boolean;
   blockedAt: string | null;
@@ -40,9 +40,9 @@ type UserComment = {
 
 type CommentSave = {
   commentId?: string;
+  parentId?: string;
   identityId: string;
   articleId: string;
-  parentId: string | undefined;
   body: string;
   articlePath: string;
 };

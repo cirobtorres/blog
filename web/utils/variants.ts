@@ -64,13 +64,7 @@ const buttonVariants = cva(
         variant: "ghost",
         disabled: false,
         className: [
-          "hover:text-neutral-900 dark:hover:text-neutral-100",
-          "hover:border-stone-400 dark:hover:border-stone-600",
-          "hover:bg-stone-300 dark:hover:bg-stone-800",
-          "focus-visible:opacity-100 focus-visible:text-neutral-900",
-          "dark:focus-visible:text-neutral-100 focus-visible:border-primary",
-          "dark:focus-visible:border-primary focus-visible:bg-stone-300",
-          "dark:focus-visible:bg-stone-800",
+          "hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-300 dark:hover:bg-stone-800 focus-visible:opacity-100 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100 focus-visible:border-primary dark:focus-visible:border-primary focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800",
         ].join(" "),
       },
       {
