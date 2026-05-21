@@ -25,6 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "../AlertDialog";
+import putComment from "../../services/comment/putComment";
 
 interface TiptapNode {
   type: string;
@@ -153,6 +154,44 @@ export default function CommentItem({
     }
   }, [safeTiptapContent, editor]);
 
+  const handleSave = async (editorData: Omit<CommentSave, "commentId">) => {
+    // Saves for a possible rollback
+    const previousContent = comment.body;
+
+    // Otimistic update:
+    // Trusts that 'putComment' will successfully updates user comments
+    // Forces editor to update its internal state to the new comment
+    if (editor && !editor.isDestroyed && editorData.body) {
+      try {
+        editor.commands.setContent(JSON.parse(editorData.body));
+      } catch {
+        editor.commands.setContent(editorData.body);
+      }
+    }
+
+    const result = await putComment({
+      commentId: comment.id,
+      ...editorData,
+    });
+
+    // Rollback
+    if (!result || !result.ok) {
+      if (editor && !editor.isDestroyed) {
+        try {
+          editor.commands.setContent(JSON.parse(previousContent));
+        } catch {
+          editor.commands.setContent(previousContent);
+        }
+      }
+
+      // Optional:
+      // Reopens editor, so the user don't lose everything he has typed
+      setIsEditing(true);
+    }
+
+    return result;
+  };
+
   const fullText = getTiptapText(safeTiptapContent as unknown as TiptapNode);
   const isCommentDeleted = comment.isDeleted;
   const isCommentBlocked = comment.isBlocked;
@@ -227,43 +266,16 @@ export default function CommentItem({
           initialCharacterCount={characterCount}
           initialWordCount={wordCount}
           autoFocus
-          onSave={async (newBody) => {
-            // TODO
-            console.log(
-              "Chamando backend Java para atualizar:",
-              comment.id,
-              newBody,
-            );
-            return {
-              ok: true,
-              success: "Comentário atualizado!",
-              data: null,
-              error: null,
-            };
-          }}
+          onSave={handleSave}
         />
       ) : (
-        <>
-          <EditorContent
-            editor={editor}
-            className={cn(
-              "w-full h-full text-left text-sm **:outline-none border-b py-2 prose dark:prose-invert max-w-none",
-              bodyClasses,
-            )}
-          />
-          {/* {!isBodyHidden && (
-            <div className="flex justify-between items-center gap-1">
-              <div className="flex items-center gap-1 h-6">
-                <span className="text-sm text-neutral-500">
-                  Tamanho: {characterCount}/{characterLimit}
-                </span>
-                <span className="text-sm text-neutral-500">
-                  Palavras: {wordCount}
-                </span>
-              </div>
-            </div>
-          )} */}
-        </>
+        <EditorContent
+          editor={editor}
+          className={cn(
+            "w-full h-full text-left text-sm **:outline-none border-b py-2 prose dark:prose-invert max-w-none",
+            bodyClasses,
+          )}
+        />
       )}
       {isReplying && (
         <div className="mt-4">

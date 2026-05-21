@@ -37,3 +37,12 @@ type UserComment = {
   name: string;
   pictureUrl: string | null;
 };
+
+type CommentSave = {
+  commentId?: string;
+  identityId: string;
+  articleId: string;
+  parentId: string | undefined;
+  body: string;
+  articlePath: string;
+};

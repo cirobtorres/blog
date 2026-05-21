@@ -4,6 +4,7 @@ import com.cirobtorres.blog.api.article.entities.Articles;
 import com.cirobtorres.blog.api.article.repositories.ArticlesRepository;
 import com.cirobtorres.blog.api.comment.dtos.CommentDTO;
 import com.cirobtorres.blog.api.comment.dtos.CommentPostDTO;
+import com.cirobtorres.blog.api.comment.dtos.CommentPutDTO;
 import com.cirobtorres.blog.api.comment.entities.Comment;
 import com.cirobtorres.blog.api.comment.repositories.CommentRepository;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
@@ -93,15 +94,15 @@ public class CommentService {
     @Transactional
     public CommentDTO postComment(CommentPostDTO request) {
         UserIdentity identity = userIdentityRepository.findById(request.identityId())
-                .orElseThrow(() -> new IllegalArgumentException("Identity not found: id=" + request.identityId()));
+                .orElseThrow(() -> new IllegalArgumentException("Identity not found"));
 
         Articles article = articlesRepository.findById(request.articleId())
-                .orElseThrow(() -> new IllegalArgumentException("Article not found: id=" + request.articleId()));
+                .orElseThrow(() -> new IllegalArgumentException("Article not found"));
 
         Comment parentComment = null;
         if (request.parentId() != null) {
             parentComment = commentRepository.findById(request.parentId())
-                    .orElseThrow(() -> new IllegalArgumentException("Parent comment not found: id=" + request.parentId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Parent comment not found"));
         }
 
         Comment comment = new Comment.Builder()
@@ -119,10 +120,10 @@ public class CommentService {
     @Transactional
     public void deleteComment(UUID id, UUID userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: id=" + userId));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found: id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new UserUnauthorizedException("You do not own permission to delete the comment");
@@ -130,6 +131,40 @@ public class CommentService {
 
         comment.setDeleted(true);
         comment.setDeletedAt(LocalDateTime.now());
-        Comment deletedComment = commentRepository.save(comment);
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public CommentDTO putComment(UUID commentId, CommentPutDTO request) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+
+        if (comment.getUserIdentity() == null ||
+                !comment.getUserIdentity().getId().equals(request.identityId())) {
+            throw new UserUnauthorizedException("Unauthorized");
+        }
+
+        if (comment.getArticle() == null ||
+                !comment.getArticle().getId().equals(request.articleId())) {
+            throw new UserUnauthorizedException("Unauthorized");
+        }
+
+        if (!isSameParent(comment.getParent(), request.parentId())) {
+            throw new UserUnauthorizedException("Unauthorized");
+        }
+
+        comment.setBody(request.body());
+        Comment savedComment = commentRepository.save(comment);
+        return new CommentDTO(savedComment);
+    }
+
+    private boolean isSameParent(Comment parentEntity, UUID requestParentId) {
+        if (parentEntity == null && requestParentId == null) {
+            return true;
+        }
+        if (parentEntity != null && requestParentId != null) {
+            return parentEntity.getId().equals(requestParentId);
+        }
+        return false;
     }
 }

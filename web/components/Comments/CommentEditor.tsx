@@ -2,21 +2,20 @@
 
 import React from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
+import { Button } from "../Button";
+import { cn, focusRing } from "../../utils/variants";
+import { useAuth } from "../../providers/AuthProvider";
+import { Skeleton } from "../Skeleton";
+import { usePathname } from "next/navigation";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
-import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
-import { Button } from "../Button";
-import { cn, focusRing } from "../../utils/variants";
-import { useAuth } from "../../providers/AuthProvider";
-import { AvatarName } from "../Avatar";
-import { Skeleton } from "../Skeleton";
 import CommentHere from "./CommentHere";
-import Spinner from "../Spinner";
 import postComment from "../../services/comment/postComment";
-import { usePathname } from "next/navigation";
+import Spinner from "../Spinner";
 
 const defaultState: ActionState = {
   ok: false,
@@ -43,18 +42,13 @@ export default function CommentEditor({
   initialCharacterCount?: number;
   initialWordCount?: number;
   onSave?: ({
+    commentId,
     identityId,
     articleId,
     articlePath,
     parentId,
     body,
-  }: {
-    identityId: string;
-    articleId: string;
-    articlePath: string;
-    parentId: string | undefined;
-    body: string;
-  }) => Promise<ActionState>;
+  }: CommentSave) => Promise<ActionState>;
   onSuccess?: () => void;
 }) {
   const { user } = useAuth();
@@ -77,6 +71,7 @@ export default function CommentEditor({
     }
   }, [initialContent]);
 
+  // EDITOR----------------------------------------------------------------------------------------------------
   const editor = useEditor({
     immediatelyRender: false,
     content: parsedInitialContent,
@@ -96,6 +91,7 @@ export default function CommentEditor({
     ],
   });
 
+  // USE-EDITOR-STATE------------------------------------------------------------------------------------------
   const state = useEditorState({
     editor,
     selector: ({ editor }) => ({
@@ -107,15 +103,7 @@ export default function CommentEditor({
   const characterCount = state?.characterCount ?? initialCharacterCount;
   const wordCount = state?.wordCount ?? initialWordCount;
 
-  const scrollToFormTop = React.useCallback(() => {
-    requestAnimationFrame(() => {
-      formRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    });
-  }, []);
-
+  // OPEN-CLOSE-EDITOR-----------------------------------------------------------------------------------------
   const openEditor = React.useCallback(() => {
     setIsOpen(true);
     const currentChars = editor?.storage.characterCount.characters() ?? 0;
@@ -137,6 +125,16 @@ export default function CommentEditor({
     }
   }, [editor, initialContent, onSuccess]);
 
+  // SCROLL-TOWARDS-EDITOR-------------------------------------------------------------------------------------
+  const scrollToFormTop = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      formRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, []);
+
   React.useEffect(() => {
     if (editor && window.location.hash === "#create-comment") {
       queueMicrotask(() => {
@@ -146,6 +144,7 @@ export default function CommentEditor({
     }
   }, [editor, scrollToFormTop]);
 
+  // Clear URL
   const handleSuccess = () => {
     onSuccess?.();
 
@@ -158,6 +157,7 @@ export default function CommentEditor({
     }
   };
 
+  // SAVE-ACTION-----------------------------------------------------------------------------------------------
   const [, action, isPending] = React.useActionState(async () => {
     const success = (serverResponse: ActionState) => {
       handleSuccess();
@@ -204,9 +204,9 @@ export default function CommentEditor({
     const obj = {
       identityId,
       articleId,
-      articlePath,
       parentId,
       body,
+      articlePath,
     };
 
     let result;

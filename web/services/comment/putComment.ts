@@ -11,7 +11,8 @@ const defaultState = {
   data: null,
 };
 
-export default async function postComment({
+export default async function putComment({
+  commentId,
   identityId,
   articleId,
   parentId,
@@ -19,18 +20,21 @@ export default async function postComment({
   articlePath,
 }: CommentSave) {
   const options: RequestInit = {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ identityId, articleId, parentId, body }),
   };
 
-  const response = await serverFetch(apiServerUrls.comment.root, options);
+  const response = await serverFetch(
+    apiServerUrls.comment.root + "/id/" + commentId,
+    options,
+  );
 
   if (!response.ok) {
     throw new Error(
-      `postComment error: ${response.status} ${response.statusText}`,
+      `putComment error: ${response.status} ${response.statusText}`,
     );
   }
 

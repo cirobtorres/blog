@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api.comment.controllers;
 
 import com.cirobtorres.blog.api.comment.dtos.CommentDTO;
 import com.cirobtorres.blog.api.comment.dtos.CommentPostDTO;
+import com.cirobtorres.blog.api.comment.dtos.CommentPutDTO;
 import com.cirobtorres.blog.api.comment.services.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,8 +60,13 @@ public class CommentController {
 
     // PUT--------------------------------------------------------------------------------------------------------
     @PutMapping("id/{id}")
-    public ResponseEntity<Void> putComment() {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CommentDTO> putComment(
+            @PathVariable UUID id,
+            @RequestBody CommentPutDTO request
+    ) {
+        CommentDTO comment = commentService
+                .putComment(id, request);
+        return ResponseEntity.ok(comment);
     }
 
     // DELETE-----------------------------------------------------------------------------------------------------

@@ -42,7 +42,7 @@ export default function CodeRenderer({ filename, code, language }: CodeEditor) {
       </div>
       <div className="w-full flex-1 flex items-center min-h-11">
         {loading ? (
-          <Spinner />
+          <Spinner className="mx-auto" />
         ) : (
           <div
             dangerouslySetInnerHTML={{ __html: shikiCode }}

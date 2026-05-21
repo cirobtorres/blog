@@ -46,6 +46,7 @@ public record CommentDTO(
         }
         return comment.getBody();
     }
+
     private static UserSubGroup resolveUser(Comment comment) {
         if (comment.isDeleted() || comment.isBlocked()) {
             return new UserSubGroup(null, "[Excluído]", null);
@@ -60,7 +61,6 @@ public record CommentDTO(
                     comment.getUserIdentity().getPictureUrl()
             );
         }
-
         return null;
     }
 }
