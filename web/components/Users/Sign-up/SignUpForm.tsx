@@ -27,12 +27,20 @@ import { cn, focusRing } from "../../../utils/variants";
 import { Button } from "../../Button";
 import { P } from "../../Typography";
 import * as z from "zod";
+import { isForbiddenName } from "../../../utils/forbidden-words";
 
 const signUpSchema = z.object({
   name: z
     .string()
     .min(3, "Pelo menos 3 caracteres")
-    .max(65, "Nome muito longo"),
+    .max(65, "Nome muito longo")
+    .regex(
+      /^[A-Za-zÀ-ÖØ-öø-ÿÇç\s]+$/,
+      "O nome não pode conter números ou símbolos especiais",
+    )
+    .refine((val) => !isForbiddenName(val), {
+      message: "Este nome contém palavras não permitidas",
+    }),
   email: z.email("E-mail inválido").trim().toLowerCase(),
   password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
   strength: z.number().min(4, "Senha muito fraca"),
@@ -228,113 +236,20 @@ const Dialog = ({
   </AlertDialog>
 );
 
+// TODO: linhas gerais (esboço)
+// Responsabilidade sobre o nome de cadastro, passível de moderação
+// Dados de email, nome e foto são salvas no banco de dados
+// Não serão enviados emails de newsletters, promocionais ou notificações aos usuários. Os emails são usados apenas como forma de recuperação/autenticação de conta
+// Os dados excluídos dos usuários são mantidos no servidor como forma de auditoria, ficando a exclusão permanente desses dados a pedido do usuário ou a critério da administração
+// O nome, email e foto dos usuários não são compartilhados externamente, sob nenhuma hipótese
+// O site não coleta/usa dados para fins de marketing ou publicidade de nenhum tipo, muito menos para uso político
+// O código deste site é público e pode ser acessado e fiscalizado por qualquer pessoa, aqui: ******
+// Este blog trata principalmente de computação/programação, além de outros temas que eu queira tratar. A opinião expressa aqui é apenas minha, não representando a opinião de qualquer empresa/pessoa a que eu tenha relação de qualquer tipo
 const Terms = () => (
   <>
     <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis,{" "}
-      <b className="text-primary/75">
-        saepe a atque maxime corrupti! Quidem soluta modi dolorem perspiciatis
-        officiis corrupti est maxime
-      </b>
-      , facilis amet adipisci voluptatum, sapiente expedita. Nisi rerum
-      voluptatum ullam aut consequuntur sequi minus tempore recusandae culpa sed
-      facere saepe voluptates cumque doloribus, minima reiciendis maxime.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
-    </P>
-    <P>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ducimus
-      veritatis soluta dolorum quae nisi laborum nobis voluptates veniam
-      consectetur itaque ex, temporibus, error repudiandae quidem doloribus
-      dolorem eligendi delectus omnis, saepe a atque maxime corrupti! Quidem
-      soluta modi dolorem perspiciatis officiis corrupti est maxime, facilis
-      amet adipisci voluptatum, sapiente expedita. Nisi rerum voluptatum ullam
-      aut consequuntur sequi minus tempore recusandae culpa sed facere saepe
-      voluptates cumque doloribus, minima reiciendis maxime. Illo, alias cum?
-      Aliquid.
+      Incompleto. O site está em construção. Contas criadas aqui poderão ser
+      apagadas num futuro próximo.
     </P>
   </>
 );

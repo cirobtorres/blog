@@ -59,7 +59,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-4 ring-stone-700 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-4 outline-none border-4 border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-900 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95",
+          "overflow-hidden grid max-w-[calc(100%-2rem)] gap-4 rounded-xl text-sm ring-4 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-4 outline-none border-4 bg-stone-100 dark:bg-stone-925 ring-stone-100/10 data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95",
           className,
         )}
         {...props}
@@ -98,7 +98,10 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("gap-2 flex flex-col", className)}
+      className={cn(
+        "gap-2 flex flex-col border-b p-4 dark:bg-stone-900",
+        className,
+      )}
       {...props}
     />
   );

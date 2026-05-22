@@ -7,8 +7,10 @@ import "../styles/globals.css";
 
 export default async function RootLayout({
   children,
+  signInModal,
 }: Readonly<{
   children: React.ReactNode;
+  signInModal: React.ReactNode;
 }>) {
   const user = await getUser();
   return (
@@ -18,6 +20,7 @@ export default async function RootLayout({
       >
         <AuthProvider key={user.data?.id ?? "guest"} initialUser={user}>
           {children}
+          {signInModal}
           <Toaster position="top-center" />
         </AuthProvider>
       </body>

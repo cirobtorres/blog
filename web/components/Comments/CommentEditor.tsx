@@ -16,6 +16,7 @@ import CharacterCount from "@tiptap/extension-character-count";
 import CommentHere from "./CommentHere";
 import postComment from "../../services/comment/postComment";
 import Spinner from "../Spinner";
+import { AvatarName } from "../Avatar";
 
 const defaultState: ActionState = {
   ok: false,
@@ -270,6 +271,11 @@ export default function CommentEditor({
       action={action}
       className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
     >
+      <AvatarName
+        key={user?.data?.id}
+        authorName={user?.data?.name}
+        authorPicUrl={user?.data?.pictureUrl}
+      />
       <EditorContent
         {...props}
         editor={editor}

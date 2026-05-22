@@ -8,12 +8,13 @@ import Text from "@tiptap/extension-text";
 import CharacterCount from "@tiptap/extension-character-count";
 import deleteComment from "../../services/comment/deleteComment";
 import Spinner from "../Spinner";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { AvatarName } from "../Avatar";
 import { useAuth } from "../../providers/AuthProvider";
 import { Button } from "../Button";
 import { cn } from "../../utils/variants";
+import { publicWebUrls } from "../../routing/routes";
 import { sonnerPromise, sonnerToastPromise } from "../../utils/sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import {
@@ -102,10 +103,11 @@ export default function CommentItem({
   depth: number;
 }) {
   const { user } = useAuth();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const articlePath = usePathname();
+  const currentPath = usePathname();
+  const router = useRouter();
 
   const safeTiptapContent = React.useMemo(() => {
     if (comment.isBlocked) return ensureTiptapJson("[Comentário bloqueado]");
@@ -126,7 +128,7 @@ export default function CommentItem({
     const data = {
       commentId: comment.id,
       userId: user?.data.id,
-      articlePath,
+      articlePath: currentPath,
     };
     const promise = deleteComment(data);
     const result = sonnerPromise(promise);
@@ -194,6 +196,17 @@ export default function CommentItem({
     return result;
   };
 
+  const handleReplyClick = () => {
+    if (user?.ok && user?.data?.id) {
+      setIsReplying(!isReplying);
+    } else {
+      router.push(
+        `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(currentPath)}&replyTo=${comment.id}`,
+        { scroll: false },
+      );
+    }
+  };
+
   const fullText = getTiptapText(safeTiptapContent as unknown as TiptapNode);
   const isCommentDeleted = comment.isDeleted;
   const isCommentBlocked = comment.isBlocked;
@@ -223,14 +236,14 @@ export default function CommentItem({
           authorPicUrl={authorPicUrl}
         />
         {isCommentOwner && !isCommentDeleted && !isCommentBlocked && (
-          <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <PopoverTrigger asChild>
               <Button
                 type="button"
                 variant="ghost"
                 className={cn(
                   "size-8 px-0",
-                  isOpen &&
+                  isMenuOpen &&
                     "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-300 dark:bg-stone-800",
                 )}
               >
@@ -310,7 +323,7 @@ export default function CommentItem({
                 <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />
               </svg>
             </Button>
-            5
+            0
           </span>
           <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
             <svg
@@ -331,7 +344,7 @@ export default function CommentItem({
           <Button
             type="button"
             variant="ghost"
-            onClick={() => setIsReplying(!isReplying)}
+            onClick={handleReplyClick}
             className="h-8 text-neutral-900 dark:text-neutral-100 opacity-100"
           >
             Responder
@@ -340,14 +353,9 @@ export default function CommentItem({
       )}
       {isReplying && (
         <div className="mt-4">
-          <AvatarName
-            key={comment.user.id}
-            authorName={authorName}
-            authorPicUrl={authorPicUrl}
-          />
           <CommentEditor
             articleId={articleId}
-            parentId={comment.parentId}
+            parentId={comment.id}
             onSuccess={() => setIsReplying(false)}
             onCancel={() => setIsReplying(false)}
             autoFocus
