@@ -1,6 +1,6 @@
 import { slugify } from "./strings-transforms";
 
-export const convertToLargeDate = (ISOdate: Date) => {
+export const convertToLargeDate = (ISOdate: Date | string) => {
   const date = new Date(ISOdate);
 
   const months = [

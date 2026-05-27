@@ -1,7 +1,5 @@
-"use server";
-
-import { Footer } from "../components/Footer";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { convertToLargeDate, mountURL } from "../utils/date";
 import { serverFetch } from "../services/auth-fetch-actions";
 import { apiServerUrls } from "../routing/routes";
@@ -17,6 +15,22 @@ import {
 } from "../components/Article/ArticleCards";
 import Link from "next/link";
 import Image from "next/image";
+import React from "react";
+import { Skeleton } from "../components/Skeleton";
+
+const ArticlePaginationFallback = () => (
+  <div className="mx-auto flex w-full justify-center">
+    <div className="flex items-center my-6 gap-1">
+      <Skeleton className="w-24 h-8 rounded-lg" />
+      <Skeleton className="size-8 rounded-lg" />
+      <Skeleton className="size-8 rounded-lg" />
+      <Skeleton className="size-8 rounded-lg" />
+      <Skeleton className="w-24 h-8 rounded-lg" />
+    </div>
+  </div>
+);
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage({
   searchParams,
@@ -59,7 +73,9 @@ export default async function HomePage({
             </span>
           </section>
         )}
-        <ArticlePagination {...page} />
+        <React.Suspense fallback={<ArticlePaginationFallback />}>
+          <ArticlePagination {...page} />
+        </React.Suspense>
       </main>
       <Footer />
     </div>
@@ -124,7 +140,9 @@ const LoopCards = ({ articles }: { articles: Article[] }) => (
               alt={article.media.alt}
               fill
             />
-            <ArticleCardDate>{convertToLargeDate(new Date())}</ArticleCardDate>
+            <ArticleCardDate>
+              {convertToLargeDate(article.createdAt)}
+            </ArticleCardDate>
             <ArticleCardTitle>{article.title}</ArticleCardTitle>
             <ArticleCardSubtitle>{article.subtitle}</ArticleCardSubtitle>
           </ArticleCard>

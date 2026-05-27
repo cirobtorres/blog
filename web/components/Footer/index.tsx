@@ -1,7 +1,7 @@
 import { externalUrls } from "../../routing/routes";
 import { Link } from "../Links";
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="h-footer flex items-center justify-center px-6 text-center border-t bg-stone-200 dark:bg-stone-900">
       <div className="max-w-300 mx-auto flex flex-col items-center justify-center">

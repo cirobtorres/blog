@@ -353,6 +353,11 @@ export default function CommentItem({
       )}
       {isReplying && (
         <div className="mt-4">
+          <AvatarName
+            key={user?.data?.id}
+            authorName={user?.data?.name}
+            authorPicUrl={user?.data?.pictureUrl}
+          />
           <CommentEditor
             articleId={articleId}
             parentId={comment.id}

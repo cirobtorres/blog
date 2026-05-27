@@ -36,7 +36,7 @@ export default async function SignInPage({
               )}
 
               {login === "comment" && (
-                <Alert title="Autenticação necessária" variant="alert">
+                <Alert title="Autenticação necessária" variant="warn">
                   Faça login para comentar.
                 </Alert>
               )}

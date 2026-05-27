@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { Footer } from "../../../../../../components/Footer";
-import Header from "../../../../../../components/Header";
-import { serverFetch } from "../../../../../../services/auth-fetch-actions";
+import { notFound } from "next/navigation";
 import { apiServerUrls } from "../../../../../../routing/routes";
 import ArticleTitle from "../../../../../../components/Article/ArticleTitle";
 import ArticleBody from "../../../../../../components/Article/ArticleBody";
 import Comments from "../../../../../../components/Comments";
+import Header from "../../../../../../components/Header";
+import Footer from "../../../../../../components/Footer";
 
 export const dynamicParams = true;
 
@@ -35,7 +35,19 @@ export default async function ArticlePageId({
   const getUrl =
     apiServerUrls.article.root + `/${year}/${month}/${day}/${slug}`;
 
-  const response = await serverFetch(getUrl);
+  const response = await fetch(getUrl, {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    console.error(
+      `API error: status ${response.status} searching for ${getUrl}`,
+    );
+    if (response.status === 404) {
+      notFound();
+    }
+    throw new Error(`Article search error: ${response.status}`);
+  }
 
   const article: Article = await response.json();
 

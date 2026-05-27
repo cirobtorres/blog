@@ -13,10 +13,8 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
-import CommentHere from "./CommentHere";
 import postComment from "../../services/comment/postComment";
 import Spinner from "../Spinner";
-import { AvatarName } from "../Avatar";
 
 const defaultState: ActionState = {
   ok: false,
@@ -153,6 +151,11 @@ export default function CommentEditor({
   const handleSuccess = () => {
     onSuccess?.();
 
+    if (!initialContent) {
+      editor?.commands.clearContent();
+      setIsOpen(false);
+    }
+
     if (window.location.hash === "#create-comment") {
       window.history.replaceState(
         null,
@@ -232,11 +235,6 @@ export default function CommentEditor({
       initialContent ? "Atualizando..." : "Comentando...",
     );
 
-    if (!initialContent) {
-      editor?.commands.clearContent();
-      setIsOpen(false);
-    }
-
     return result;
   }, defaultState);
 
@@ -261,9 +259,9 @@ export default function CommentEditor({
       </div>
     );
 
-  if (!user?.ok) {
-    return <CommentHere />;
-  }
+  // if (!user?.ok) {
+  //   return ;
+  // }
 
   return (
     <form
@@ -271,11 +269,6 @@ export default function CommentEditor({
       action={action}
       className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
     >
-      <AvatarName
-        key={user?.data?.id}
-        authorName={user?.data?.name}
-        authorPicUrl={user?.data?.pictureUrl}
-      />
       <EditorContent
         {...props}
         editor={editor}
