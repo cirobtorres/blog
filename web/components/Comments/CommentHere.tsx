@@ -19,7 +19,7 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   const search = searchParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#create-comment";
-  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
+  const loginUrl = `${publicWebUrls.signInModal}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   if (isSignedIn) {
     return (

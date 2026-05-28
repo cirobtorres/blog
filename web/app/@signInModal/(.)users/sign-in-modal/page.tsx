@@ -1,6 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import SignInForm from "../../../../components/Users/Sign-in/SignInForm";
+import { publicWebUrls } from "../../../../routing/routes";
+import { Separation } from "../../../../components/utils";
+import { Link, LoginProviders } from "../../../../components/Links";
 import {
   Dialog,
   DialogContent,
@@ -8,10 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../../components/Dialog";
-import SignInForm from "../../../../components/Users/Sign-in/SignInForm";
-import { publicWebUrls } from "../../../../routing/routes";
-import { Separation } from "../../../../components/utils";
-import { Link, LoginProviders } from "../../../../components/Links";
 
 export default function AuthModalPage() {
   const router = useRouter();

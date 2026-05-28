@@ -30,6 +30,13 @@ const ArticlePaginationFallback = () => (
   </div>
 );
 
+const HeaderFallback = () => (
+  <div
+    className="fixed top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900"
+    aria-hidden
+  />
+);
+
 export const dynamic = "force-dynamic";
 
 export default async function HomePage({
@@ -56,7 +63,9 @@ export default async function HomePage({
 
   return (
     <div className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]">
-      <Header className="fixed" />
+      <React.Suspense fallback={<HeaderFallback />}>
+        <Header className="fixed" />
+      </React.Suspense>
       <main className="mt-height-header">
         {hasArticles &&
           (!(params?.page || params?.page === "0") ? (

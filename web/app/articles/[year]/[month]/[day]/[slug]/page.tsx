@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { apiServerUrls } from "../../../../../../routing/routes";
 import ArticleTitle from "../../../../../../components/Article/ArticleTitle";
@@ -8,14 +8,30 @@ import Header from "../../../../../../components/Header";
 import Footer from "../../../../../../components/Footer";
 
 export const dynamicParams = true;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   try {
     const response = await fetch(apiServerUrls.article.slug);
+    if (!response.ok) {
+      return [];
+    }
+
     const slugs: string[] = await response.json();
-    return slugs.map((slug) => ({
-      slug: slug,
-    }));
+
+    return slugs
+      .map((slugPath) => {
+        const [year, month, day, slug] = slugPath.split("/");
+        if (!year || !month || !day || !slug) return null;
+        return { year, month, day, slug };
+      })
+      .filter(
+        (
+          item,
+        ): item is { year: string; month: string; day: string; slug: string } =>
+          item !== null,
+      );
   } catch (e) {
     console.error(
       "Error during build: generateStaticParams function couldn't connect to the server",
@@ -40,16 +56,17 @@ export default async function ArticlePageId({
   });
 
   if (!response.ok) {
-    console.error(
-      `API error: status ${response.status} searching for ${getUrl}`,
+    const responseBody = await response.text().catch(() => "");
+    throw new Error(
+      `API Error. Status: (${response.status}). Route: ${getUrl}. Body: ${responseBody.slice(0, 200)}`,
     );
-    if (response.status === 404) {
-      notFound();
-    }
-    throw new Error(`Article search error: ${response.status}`);
   }
 
   const article: Article = await response.json();
+
+  if (!article?.id) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">

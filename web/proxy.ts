@@ -1,61 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hasAutorities } from "./routing/protected/hasAutorities";
-import {
-  applySpringCookies,
-  extractPayload,
-  extractTokenFromHeader,
-} from "./services/helpers/server";
+import { extractPayload } from "./services/helpers/server";
 import { publicWebUrls } from "./routing/routes";
-import { coordinatedRefresh } from "./services/helpers/refresh";
 
+/**
+ * Edge Proxy (Next 16+).
+ *
+ * IMPORTANT: runs on the Edge Runtime.
+ * - Do not import Node-only modules (e.g. `crypto`).
+ * - Do not do coordinated refresh here; keep refresh in route handlers/server actions.
+ *
+ * If this function throws, Next returns a plain 500 *before* App Router `error.tsx`.
+ */
 export async function proxy(request: NextRequest) {
+  const requestId = globalThis.crypto?.randomUUID?.() ?? "no-uuid";
   const { pathname } = request.nextUrl;
-  const accessToken = request.cookies.get("access_token")?.value;
-  const refreshToken = request.cookies.get("refresh_token")?.value;
 
-  // EXPIRATION
-  let isExpired = true;
+  // Always allow public article pages.
+  if (pathname.startsWith("/articles")) {
+    const res = NextResponse.next();
+    res.headers.set("x-debug-request-id", requestId);
+    return res;
+  }
+
   try {
-    if (accessToken) {
-      const payload = extractPayload(accessToken);
-      isExpired = payload.exp < Math.floor(Date.now() / 1000);
+    const accessToken = request.cookies.get("access_token")?.value;
+
+    // ROUTING PROTECTION
+    if (!hasAccessFromToken(pathname, accessToken)) {
+      return redirectToLogin(request, pathname);
     }
-  } catch {
-    isExpired = true;
+
+    const res = NextResponse.next();
+    res.headers.set("x-debug-request-id", requestId);
+    return res;
+  } catch (e) {
+    // Fail-open: never take the whole app down from Edge Proxy.
+    console.error("[proxy] UNHANDLED ERROR", { requestId, pathname, e });
+    const res = NextResponse.next();
+    res.headers.set("x-debug-request-id", requestId);
+    res.headers.set("x-proxy-error", "1");
+    return res;
   }
-
-  // REFRESH — same Node authority as POST /local/auth/refresh and server actions
-  if (isExpired && refreshToken && !pathname.includes(".")) {
-    const { ok, setCookieHeader } = await coordinatedRefresh(refreshToken);
-
-    if (ok && setCookieHeader) {
-      const response = NextResponse.next();
-
-      applySpringCookies(response, setCookieHeader);
-
-      const newAccessToken = extractTokenFromHeader(
-        setCookieHeader,
-        "access_token",
-      );
-
-      if (newAccessToken) {
-        response.headers.set("Authorization", `Bearer ${newAccessToken}`);
-      }
-
-      if (!hasAccessFromToken(pathname, newAccessToken ?? undefined)) {
-        return redirectToLogin(request, pathname);
-      }
-
-      return response;
-    }
-  }
-
-  // ROUTING PROTECTION
-  if (!hasAccessFromToken(pathname, accessToken)) {
-    return redirectToLogin(request, pathname);
-  }
-
-  return NextResponse.next();
 }
 
 function hasAccessFromToken(pathname: string, token?: string): boolean {
@@ -70,6 +56,9 @@ function hasAccessFromToken(pathname: string, token?: string): boolean {
   // PROTECTED
   try {
     const payload = extractPayload(token);
+    const isExpired = payload.exp < Math.floor(Date.now() / 1000);
+    if (isExpired) return false;
+
     // HAS ALL AUTHORITIES?
     return required.every((role) => payload.authorities?.includes(role));
   } catch {
@@ -84,12 +73,10 @@ function redirectToLogin(request: NextRequest, callbackUrl: string) {
   return NextResponse.redirect(loginUrl);
 }
 
-// Helper: extract cookie value based on URL match
 export const config = {
   matcher: [
-    // authors & childs
     "/authors/:path*",
-    // Statics
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+

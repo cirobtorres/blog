@@ -201,7 +201,7 @@ export default function CommentItem({
       setIsReplying(!isReplying);
     } else {
       router.push(
-        `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(currentPath)}&replyTo=${comment.id}`,
+        `${publicWebUrls.signInModal}?redirect_url=${encodeURIComponent(currentPath)}&replyTo=${comment.id}`,
         { scroll: false },
       );
     }

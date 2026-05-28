@@ -10,6 +10,7 @@ const BLOG_GIT = "https://github.com/cirobtorres/blog";
 const publicWebUrls = {
   home: "/",
   signIn: "/users/sign-in",
+  signInModal: "/users/sign-in-modal",
   forget: "/users/sign-in/forgot-password",
   signUp: "/users/sign-up",
   validateEmail: "/users/sign-up/validate-email",
