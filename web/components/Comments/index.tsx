@@ -1,5 +1,13 @@
 import CommentSection from "./CommentSection";
 
-export default function Comments({ articleId }: { articleId: string }) {
-  return <CommentSection articleId={articleId} />;
+export default function Comments({
+  articleId,
+  resolvedParams,
+}: {
+  articleId: string;
+  resolvedParams?: { threadId?: string | undefined };
+}) {
+  return (
+    <CommentSection articleId={articleId} resolvedParams={resolvedParams} />
+  );
 }

@@ -2,24 +2,30 @@
 
 import React from "react";
 import NextLink from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 import CommentEditor, { characterLimit } from "./CommentEditor";
 import { buttonVariants, cn, focusRing } from "../../utils/variants";
-import { publicWebUrls } from "../../routing/routes";
 import { UserSignedOffIcon } from "../Header/UserSignedOff";
 import { useAuth } from "../../providers/AuthProvider";
 import { AvatarName } from "../Avatar";
 import { Link } from "../Links";
+import { usePathname, useSearchParams } from "next/navigation";
+import { publicWebUrls } from "../../routing/routes";
 
 export default function CommentHere({ articleId }: { articleId: string }) {
   const { user } = useAuth();
   const isSignedIn = user?.ok;
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const search = searchParams.toString();
+  const returnParams = new URLSearchParams(searchParams.toString());
+  returnParams.delete("redirect_url");
+  returnParams.delete("login");
+  returnParams.delete("callbackUrl");
+  returnParams.delete("callback");
+  returnParams.delete("replyTo");
+  const search = returnParams.toString();
   const fullPath =
-    (search ? `${pathname}?${search}` : pathname) + "#create-comment";
-  const loginUrl = `${publicWebUrls.signInModal}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
+    (search ? `${pathname}?${search}` : pathname) + "#comment-root";
+  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   if (isSignedIn) {
     return (

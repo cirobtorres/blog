@@ -8,7 +8,7 @@ import Text from "@tiptap/extension-text";
 import CharacterCount from "@tiptap/extension-character-count";
 import deleteComment from "../../services/comment/deleteComment";
 import Spinner from "../Spinner";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { AvatarName } from "../Avatar";
 import { useAuth } from "../../providers/AuthProvider";
@@ -93,6 +93,22 @@ function ensureTiptapJson(body: string): Record<string, unknown> {
   };
 }
 
+function clearHash() {
+  window.history.replaceState(
+    null,
+    document.title,
+    window.location.pathname + window.location.search,
+  );
+}
+
+export function replaceHash(hash: string) {
+  window.history.replaceState(
+    null,
+    document.title,
+    `${window.location.pathname}${window.location.search}${hash}`,
+  );
+}
+
 export default function CommentItem({
   articleId,
   comment,
@@ -103,11 +119,23 @@ export default function CommentItem({
   depth: number;
 }) {
   const { user } = useAuth();
+  const replyHash = `#comment-${comment.id}`;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const currentPath = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const returnParams = new URLSearchParams(searchParams.toString());
+  returnParams.delete("redirect_url");
+  returnParams.delete("login");
+  returnParams.delete("callbackUrl");
+  returnParams.delete("callback");
+  returnParams.delete("replyTo");
+  const search = returnParams.toString();
+  const fullPath =
+    (search ? `${currentPath}?${search}` : currentPath) + replyHash;
+  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=reply_comment`;
 
   const safeTiptapContent = React.useMemo(() => {
     if (comment.isBlocked) return ensureTiptapJson("[Comentário bloqueado]");
@@ -150,6 +178,16 @@ export default function CommentItem({
       }),
     ],
   });
+
+  React.useEffect(() => {
+    if (window.location.hash !== replyHash) {
+      return;
+    }
+
+    React.startTransition(() => {
+      setIsReplying(true);
+    });
+  }, [comment.id, replyHash]);
 
   React.useEffect(() => {
     if (editor && !editor.isDestroyed) {
@@ -197,14 +235,22 @@ export default function CommentItem({
   };
 
   const handleReplyClick = () => {
-    if (user?.ok && user?.data?.id) {
-      setIsReplying(!isReplying);
-    } else {
-      router.push(
-        `${publicWebUrls.signInModal}?redirect_url=${encodeURIComponent(currentPath)}&replyTo=${comment.id}`,
-        { scroll: false },
-      );
+    if (!user?.ok) {
+      router.push(loginUrl, { scroll: false });
+      return;
     }
+    const isOpening = !isReplying;
+    setIsReplying(isOpening);
+    if (isOpening) {
+      replaceHash(replyHash);
+    } else {
+      clearHash();
+    }
+  };
+
+  const closeEditor = () => {
+    setIsReplying(false);
+    clearHash();
   };
 
   const fullText = getTiptapText(safeTiptapContent as unknown as TiptapNode);
@@ -302,7 +348,7 @@ export default function CommentItem({
         />
       )}
       {!isCommentDeleted && !isCommentBlocked && (
-        <div className="flex items-center gap-4">
+        <div className="scroll-mt-24 flex items-center gap-4">
           <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
             <Button
               type="button"
@@ -345,14 +391,18 @@ export default function CommentItem({
             type="button"
             variant="ghost"
             onClick={handleReplyClick}
-            className="h-8 text-neutral-900 dark:text-neutral-100 opacity-100"
+            className={cn(
+              "h-8 text-neutral-900 dark:text-neutral-100 opacity-100",
+              isReplying &&
+                "border-primary/50 bg-primary/25 dark:hover:border-primary/75 dark:hover:bg-primary/35",
+            )}
           >
             Responder
           </Button>
         </div>
       )}
       {isReplying && (
-        <div className="mt-4">
+        <div className="p-2 rounded-lg border border-primary/50 bg-primary/10">
           <AvatarName
             key={user?.data?.id}
             authorName={user?.data?.name}
@@ -361,8 +411,9 @@ export default function CommentItem({
           <CommentEditor
             articleId={articleId}
             parentId={comment.id}
-            onSuccess={() => setIsReplying(false)}
-            onCancel={() => setIsReplying(false)}
+            anchor={replyHash}
+            onSuccess={closeEditor}
+            onCancel={closeEditor}
             autoFocus
           />
         </div>

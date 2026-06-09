@@ -19,12 +19,40 @@ const defaultState = {
   data: null,
 };
 
+function resolveRedirectUrl(
+  redirectUrlFromForm: string | null,
+  referer: string | null,
+  userData: User,
+): string {
+  const callbackPath =
+    redirectUrlFromForm ||
+    (referer
+      ? new URL(referer).searchParams.get("redirect_url") ||
+        new URL(referer).searchParams.get("callback")
+      : null);
+
+  if (callbackPath) {
+    const decoded = decodeURIComponent(callbackPath);
+    if (decoded.startsWith("/")) {
+      return decoded;
+    }
+  }
+
+  if (userData.authorities.includes("AUTHOR")) {
+    return protectedWebUrls.authors;
+  }
+
+  return "/";
+}
+
 const signIn = async (
   prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
-  const { email, password } = Object.fromEntries(formData.entries());
+  const { email, password, modal, redirect_url: redirectUrlFromForm } =
+    Object.fromEntries(formData.entries());
+  const isModal = modal === "true";
 
   const options: RequestInit = {
     method: "POST",
@@ -78,29 +106,30 @@ const signIn = async (
 
     if (userResponse.ok) {
       const userData: User = await userResponse.json();
-      revalidatePath("/", "layout");
       if (!userData.isProviderEmailVerified) {
         return redirect(publicWebUrls.validateEmail);
       }
       const headersList = await headers();
-      let redirectUrl = "/";
       const referer = headersList.get("referer");
-      if (referer) {
-        const refererUrl = new URL(referer);
-        const callbackPath =
-          refererUrl.searchParams.get("redirect_url") ||
-          refererUrl.searchParams.get("callback");
+      const redirectUrl = resolveRedirectUrl(
+        typeof redirectUrlFromForm === "string" ? redirectUrlFromForm : null,
+        referer,
+        userData,
+      );
 
-        if (callbackPath) {
-          redirectUrl = callbackPath.startsWith("/")
-            ? decodeURIComponent(callbackPath)
-            : "/";
-        } else {
-          if (userData.authorities.includes("AUTHOR")) {
-            return redirect(protectedWebUrls.authors);
-          }
-        }
+      if (isModal) {
+        // Skip revalidatePath: it refetches the layout while the intercepted
+        // sign-in URL is still active and remounts @signInModal before the
+        // client hard-navigation runs. The full page load refreshes auth state.
+        return {
+          ok: true,
+          success: "signed-in",
+          error: null,
+          data: { redirectUrl },
+        };
       }
+
+      revalidatePath("/", "layout");
       return redirect(redirectUrl);
     }
   }

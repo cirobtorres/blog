@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState, useRef } from "react";
+import React from "react";
 import {
   Fieldset,
   FieldsetInput,
@@ -30,21 +30,44 @@ const defaultState = {
   data: null,
 };
 
-export default function SignInForm() {
+type SignInFormProps = {
+  mode?: "page" | "modal";
+  redirectUrl?: string;
+};
+
+export default function SignInForm({
+  mode = "page",
+  redirectUrl = "",
+}: SignInFormProps) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errors, setErrors] = React.useState<ZodReturnError | undefined>(
     undefined,
   );
-  const passRef = useRef(null);
+  const passRef = React.useRef(null);
 
-  const [state, action, isPending] = useActionState(
+  const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      const promise = await signIn(prevState, formData);
-      if (!promise.ok && promise.error) {
-        setErrors(promise.error);
+      const result = await signIn(prevState, formData);
+
+      if (
+        mode === "modal" &&
+        result.ok &&
+        result.data &&
+        "redirectUrl" in result.data
+      ) {
+        const nextUrl = (result.data as Record<string, string>).redirectUrl;
+        if (nextUrl.startsWith("/")) {
+          // Navigate synchronously before any re-render can remount @signInModal.
+          window.location.replace(nextUrl);
+          return result;
+        }
       }
-      return promise;
+
+      if (!result.ok && result.error) {
+        setErrors(result.error);
+      }
+      return result;
     },
     defaultState,
   );
@@ -71,6 +94,16 @@ export default function SignInForm() {
       onSubmit={onSubmit}
       className="w-full flex flex-col justify-center gap-2"
     >
+      {mode === "modal" && (
+        <>
+          <input type="hidden" name="modal" value="true" />
+          <input
+            type="hidden"
+            name="redirect_url"
+            value={redirectUrl ? encodeURIComponent(redirectUrl) : ""}
+          />
+        </>
+      )}
       <Fieldset error={!!errors?.email?.errors}>
         <FieldsetInput
           id="email"

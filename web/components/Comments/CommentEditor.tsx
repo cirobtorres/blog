@@ -32,6 +32,7 @@ export default function CommentEditor({
   initialWordCount = 0,
   autoFocus,
   parentId,
+  anchor,
   onSave,
   onSuccess,
   onCancel,
@@ -42,6 +43,7 @@ export default function CommentEditor({
   initialCharacterCount?: number;
   initialWordCount?: number;
   parentId?: string;
+  anchor?: string;
   onSave?: ({
     commentId,
     identityId,
@@ -54,10 +56,11 @@ export default function CommentEditor({
   onSuccess?: () => void;
 }) {
   const { user } = useAuth();
+  const expectedHash = anchor ? `#${anchor}` : "#comment-root";
   const [isOpen, setIsOpen] = React.useState(() => {
     if (initialContent) return true;
     if (typeof window !== "undefined") {
-      return window.location.hash === "#create-comment";
+      return window.location.hash === expectedHash;
     }
     return false;
   });
@@ -139,13 +142,13 @@ export default function CommentEditor({
   }, []);
 
   React.useEffect(() => {
-    if (editor && window.location.hash === "#create-comment") {
+    if (editor && window.location.hash === expectedHash) {
       queueMicrotask(() => {
         editor.commands.focus();
         scrollToFormTop();
       });
     }
-  }, [editor, scrollToFormTop]);
+  }, [editor, expectedHash, scrollToFormTop]);
 
   // Clear URL
   const handleSuccess = () => {
@@ -156,7 +159,7 @@ export default function CommentEditor({
       setIsOpen(false);
     }
 
-    if (window.location.hash === "#create-comment") {
+    if (window.location.hash === expectedHash) {
       window.history.replaceState(
         null,
         document.title,
@@ -267,7 +270,7 @@ export default function CommentEditor({
     <form
       ref={formRef}
       action={action}
-      className="w-full flex flex-col gap-1 scroll-mt-24 transition-transform"
+      className="scroll-mt-24 transition-transform w-full flex flex-col gap-1"
     >
       <EditorContent
         {...props}

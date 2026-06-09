@@ -43,6 +43,8 @@ HELP.md
 # --- Frontend (Next.js / Node) ---
 **/node_modules/
 **/.next/
+**/.next*
+**/.next**
 **/out/
 **/dist/
 **/coverage/

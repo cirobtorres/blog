@@ -1,16 +1,31 @@
 import NextLink from "next/link";
+import { redirect } from "next/navigation";
 import { Link, LoginProviders } from "../../../components/Links";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
 import SignInForm from "../../../components/Users/Sign-in/SignInForm";
+import getUser from "../../../services/auth/session/server/getUser";
 
 export default async function SignInPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { login } = await searchParams;
+  const params = await searchParams;
+  const { login, redirect_url, callbackUrl, callback } = params;
+  const user = await getUser();
+
+  if (user.ok) {
+    const callbackPath = [redirect_url, callbackUrl, callback].find(
+      (value): value is string =>
+        typeof value === "string" && value.startsWith("/"),
+    );
+
+    redirect(
+      callbackPath ? decodeURIComponent(callbackPath) : publicWebUrls.home,
+    );
+  }
   return (
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
       <LeftBanner />

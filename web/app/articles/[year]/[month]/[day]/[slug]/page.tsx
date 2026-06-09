@@ -43,10 +43,13 @@ export async function generateStaticParams() {
 
 export default async function ArticlePageId({
   params,
+  searchParams,
 }: {
   params: Promise<{ year: string; month: string; day: string; slug: string }>;
+  searchParams: Promise<{ threadId?: string }>;
 }) {
   const { year, month, day, slug } = await params;
+  const resolvedParams = await searchParams;
 
   const getUrl =
     apiServerUrls.article.root + `/${year}/${month}/${day}/${slug}`;
@@ -76,7 +79,7 @@ export default async function ArticlePageId({
           <ArticleTitle {...article} />
         </Suspense>
         <ArticleBody {...article} />
-        <Comments articleId={article.id} />
+        <Comments articleId={article.id} resolvedParams={resolvedParams} />
       </main>
       <Footer />
     </div>

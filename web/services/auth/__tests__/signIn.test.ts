@@ -12,8 +12,11 @@ jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
 }));
 
+const mockHeaders = jest.fn();
+
 jest.mock("next/headers", () => ({
   cookies: () => mockCookies(),
+  headers: () => mockHeaders(),
 }));
 
 jest.mock("next/navigation", () => ({
@@ -38,8 +41,10 @@ const originalNodeEnv = process.env.NODE_ENV;
 
 beforeEach(() => {
   mockCookies.mockReset();
+  mockHeaders.mockReset();
   mockRedirect.mockReset();
   mockFetch.mockReset();
+  mockHeaders.mockResolvedValue(new Headers());
   process.env = { ...process.env, NODE_ENV: "test" };
 });
 
@@ -157,6 +162,43 @@ describe("signIn", () => {
         ),
       ).rejects.toThrow("NEXT_REDIRECT");
       expect(mockRedirect).toHaveBeenCalledWith(publicWebUrls.validateEmail);
+    });
+
+    it("on success in modal mode returns redirectUrl without server redirect", async () => {
+      const formData = new FormData();
+      formData.set("email", "user@example.com");
+      formData.set("password", "password");
+      formData.set("modal", "true");
+      formData.set("redirect_url", "/articles/2024/01/01/post#comment-root");
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          headers: new Headers({
+            "set-cookie": "access_token=at; Path=/; HttpOnly",
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              id: "1",
+              name: "User",
+              email: "user@example.com",
+              isProviderEmailVerified: true,
+              authorities: ["USER"],
+            }),
+        });
+
+      mockCookies.mockResolvedValue({ set: jest.fn() });
+
+      const result = await signIn(initialState, formData);
+
+      expect(result.ok).toBe(true);
+      expect(result.data).toEqual({
+        redirectUrl: "/articles/2024/01/01/post#comment-root",
+      });
+      expect(mockRedirect).not.toHaveBeenCalled();
     });
 
     it("on success with verified email redirects to home", async () => {
