@@ -30,11 +30,11 @@ export default async function SignInPage({
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
       <LeftBanner />
       <div className="relative w-full h-full not-dark:shadow min-[700px]:border-l">
-        <NextLink
+        {/* <NextLink
           href={publicWebUrls.home}
           aria-label="Retornar para home page"
           className="z-10 hidden min-[700px]:block absolute top-1/2 -translate-y-1/2 size-14 rounded-full -left-7 border bg-stone-200 dark:bg-stone-900"
-        />
+        /> */}
         <div className="h-screen p-1">
           <div className="h-full p-8 overflow-y-auto scrollbar">
             <div className="max-w-125 mx-auto flex flex-col justify-center gap-2">
