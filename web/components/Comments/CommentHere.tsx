@@ -67,7 +67,7 @@ export default function CommentHere({ articleId }: { articleId: string }) {
 
 const MainWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-full max-w-comments mx-auto px-6 my-6">{children}</div>
+    <div className="w-full max-w-comments mx-auto px-3 my-6">{children}</div>
   );
 };
 
@@ -119,12 +119,14 @@ const LinkToSignInBody = ({
 
 // Footer----------------------------------------------------------------------------------------------
 const BottomWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex justify-between items-center gap-1">{children}</div>
+  <div className="w-full flex flex-col min-[500px]:flex-row justify-between items-center gap-1">
+    {children}
+  </div>
 );
 
 // ---
 const FakeCountersWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex items-center gap-1 h-6">{children}</div>
+  <div className="w-full flex items-center gap-1 h-6">{children}</div>
 );
 
 const FakeCaracterCount = ({ count = 0 }: { count?: number }) => (
@@ -139,7 +141,9 @@ const FakeWordCount = ({ count = 0 }: { count?: number }) => (
 
 // ---
 const FakeBtnWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex justify-end items-center gap-1">{children}</div>
+  <div className="max-[500px]:justify-start w-full flex justify-end items-center gap-1">
+    {children}
+  </div>
 );
 
 const FakeCancelBtn = () => (

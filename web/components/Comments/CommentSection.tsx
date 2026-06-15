@@ -64,7 +64,7 @@ export default async function CommentSection({
       </div>
 
       {activeThreadId && (
-        <div className="w-full max-w-comments mx-auto px-6 flex justify-between items-center gap-2 text-sm max-[550px]:flex-col">
+        <div className="w-full max-w-comments mx-auto px-3 flex justify-between items-center gap-2 text-sm max-[550px]:flex-col">
           <Link
             href={getParentThreadUrl()}
             variant="button"
@@ -84,7 +84,7 @@ export default async function CommentSection({
 
       {!activeThreadId && <CommentHere articleId={articleId} />}
 
-      <div className="w-full max-w-comments mx-auto px-6 my-6 flex flex-col gap-8">
+      <div className="w-full max-w-comments mx-auto px-3 my-6 flex flex-col gap-8">
         {displayComments.length > 0
           ? displayComments.map((comment: Comments) => (
               <CommentThread

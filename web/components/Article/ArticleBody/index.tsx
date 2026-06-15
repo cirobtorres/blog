@@ -40,7 +40,7 @@ export default function ArticleBody({ body }: Article) {
   }, [body]);
 
   return (
-    <div className="w-full max-w-article-body mx-auto px-6 my-8">
+    <div className="w-full max-w-article-body mx-auto px-3 my-8">
       <section className="relative grid grid-cols-1 lg:grid-cols-[300px_1fr_minmax(0,300px)] gap-4">
         <ScrollSummary anchors={anchors} />
         <article className="w-full max-w-article-body overflow-hidden">

@@ -24,9 +24,9 @@ export default function ArticleTitle({
         alt={artBannerAlt}
         width={1920}
         height={1080}
-        className="lg:col-start-1 lg:row-start-1 lg:h-150 lg:object-cover w-full border-b dark:border-stone-800"
+        className="col-start-1 row-start-1 h-full max-h-180 min-h-75 object-cover w-full border-b dark:border-stone-800"
       />
-      <div className="bg-[radial-gradient(circle,rgba(0,0,0,0.10),rgba(0,0,0,1))] lg:col-start-1 lg:row-start-1 lg:h-180 w-full border-b dark:border-stone-800 aspect-video bg-cover" />
+      <div className="col-start-1 row-start-1 h-full max-h-180 min-h-75 w-full border-b dark:border-stone-800 bg-cover bg-[radial-gradient(circle,rgba(0,0,0,0.10),rgba(0,0,0,1))]" />
       <div className="lg:col-start-1 lg:row-start-1 lg:px-10 lg:mt-auto lg:mb-0 lg:pt-10 border-t lg:backdrop-blur-xl lg:bg-linear-to-t dark:lg:from-25% not-dark:lg:from-stone-100 not-dark:lg:via-white/75 not-dark:lg:to-white/50 dark:lg:from-stone-925 dark:lg:to-stone-925/25">
         <div className="w-full max-w-article-title p-6 pb-0 lg:mx-auto lg:px-10">
           <section className="col-start-2">

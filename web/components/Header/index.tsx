@@ -89,13 +89,13 @@ export default function Header({
       id="main-header"
       ref={headerRef}
       className={cn(
-        "z-50 sticky top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900",
+        "z-50 sticky top-0 left-0 right-0 h-header flex items-center border-b px-3 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900",
         sticky ? "" : "static",
         className,
       )}
     >
       <div className="w-full flex items-center justify-between max-w-300 mx-auto">
-        <Link href="/" className="border border-transparent mr-6">
+        <Link href="/" className="border border-transparent md:mr-6">
           <div className="size-8 rounded-full bg-neutral-900 dark:bg-neutral-100" />
         </Link>
         <nav className="md:flex flex-1 hidden gap-6">
@@ -111,7 +111,6 @@ export default function Header({
           ))}
         </nav>
         <UserAuthGate user={user} />
-        <div />
       </div>
       {progress && <ProgressBar />}
     </header>
