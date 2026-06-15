@@ -119,13 +119,14 @@ export default function CommentItem({
   depth: number;
 }) {
   const { user } = useAuth();
-  const replyHash = `#comment-${comment.id}`;
+  const replyHash = `comment-${comment.id}`;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const currentPath = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const replyTo = searchParams.get("replyTo");
   const returnParams = new URLSearchParams(searchParams.toString());
   returnParams.delete("redirect_url");
   returnParams.delete("login");
@@ -133,8 +134,11 @@ export default function CommentItem({
   returnParams.delete("callback");
   returnParams.delete("replyTo");
   const search = returnParams.toString();
-  const fullPath =
-    (search ? `${currentPath}?${search}` : currentPath) + replyHash;
+  const redirectParams = new URLSearchParams(search);
+  redirectParams.set("replyTo", comment.id);
+  const redirectSearch = redirectParams.toString();
+  // const fullPath = (search ? `${currentPath}?${search}` : currentPath) + "#" + replyHash;
+  const fullPath = `${currentPath}?${redirectSearch}#${replyHash}`;
   const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=reply_comment`;
 
   const safeTiptapContent = React.useMemo(() => {
@@ -180,14 +184,20 @@ export default function CommentItem({
   });
 
   React.useEffect(() => {
-    if (window.location.hash !== replyHash) {
-      return;
-    }
-
+    if (!user?.ok) return;
+    if (replyTo !== comment.id) return;
     React.startTransition(() => {
       setIsReplying(true);
     });
-  }, [comment.id, replyHash]);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("replyTo");
+    const query = params.toString();
+    window.history.replaceState(
+      null,
+      document.title,
+      `${window.location.pathname}${query ? `?${query}` : ""}#comment-${comment.id}`,
+    );
+  }, [user?.ok, replyTo, comment.id, searchParams]);
 
   React.useEffect(() => {
     if (editor && !editor.isDestroyed) {
@@ -239,12 +249,16 @@ export default function CommentItem({
       router.push(loginUrl, { scroll: false });
       return;
     }
-    const isOpening = !isReplying;
-    setIsReplying(isOpening);
-    if (isOpening) {
-      replaceHash(replyHash);
+    const next = !isReplying;
+    setIsReplying(next);
+    if (next) {
+      queueMicrotask(() => {
+        replaceHash("#" + replyHash);
+      });
     } else {
-      clearHash();
+      queueMicrotask(() => {
+        clearHash();
+      });
     }
   };
 
@@ -401,7 +415,7 @@ export default function CommentItem({
           </Button>
         </div>
       )}
-      {isReplying && (
+      {isReplying && user?.ok && (
         <div className="p-2 rounded-lg border border-primary/50 bg-primary/10">
           <AvatarName
             key={user?.data?.id}
