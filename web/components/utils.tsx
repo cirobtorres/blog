@@ -1,6 +1,6 @@
-import { externalUrls } from "../routing/routes";
 import { cn } from "../utils/variants";
 import { Link } from "./Links";
+import { externalUrls } from "../routing/routes";
 
 const Separation = () => (
   <div className="w-full flex items-center">

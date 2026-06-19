@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import { Suspense } from "react";
 import { Link, LoginProviders } from "../../../components/Links";
 import { Skeleton } from "../../../components/Skeleton";

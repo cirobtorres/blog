@@ -13,12 +13,13 @@ export default async function RootLayout({
   signInModal: React.ReactNode;
 }>) {
   const user = await getUser();
+  const providerKey = user.data?.id ?? "guest";
   return (
     <html lang="pt">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider key={user.data?.id ?? "guest"} initialUser={user}>
+        <AuthProvider key={providerKey} initialUser={user}>
           {children}
           {signInModal}
           <Toaster position="top-center" />

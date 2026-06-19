@@ -56,7 +56,10 @@ export function coordinatedRefresh(
       try {
         const refreshRes = await fetch(apiServerUrls.refresh, {
           method: "POST",
-          headers: { Cookie: `refresh_token=${refreshToken}` },
+          headers: {
+            Cookie: `refresh_token=${refreshToken}`,
+            "Content-Type": "application/json",
+          },
         });
         const setCookieHeader = joinSetCookieHeaders(refreshRes.headers);
         return {

@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import { redirect } from "next/navigation";
 import { Link, LoginProviders } from "../../../components/Links";
 import { publicWebUrls } from "../../../routing/routes";
@@ -21,11 +20,11 @@ export default async function SignInPage({
       (value): value is string =>
         typeof value === "string" && value.startsWith("/"),
     );
-
     redirect(
       callbackPath ? decodeURIComponent(callbackPath) : publicWebUrls.home,
     );
   }
+
   return (
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
       <LeftBanner />

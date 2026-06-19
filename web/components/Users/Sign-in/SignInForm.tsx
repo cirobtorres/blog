@@ -8,9 +8,9 @@ import {
   FieldsetError,
 } from "../../Fieldset";
 import { signIn } from "../../../services/auth/signIn";
-import Spinner from "../../Spinner";
 import { FieldsetPassword } from "../../Fieldset/FieldsetPassword";
 import { Button } from "../../Button";
+import Spinner from "../../Spinner";
 import * as z from "zod";
 
 const signInSchema = z.object({

@@ -1,39 +1,33 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { applySpringCookies } from "@/services/helpers/server";
-import { coordinatedRefresh } from "../../../../services/helpers/refresh";
+import { apiServerUrls } from "../../../../routing/routes";
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh_token")?.value;
 
   if (!refreshToken) {
-    return NextResponse.json(
-      { error: "No refresh token found" },
-      { status: 401 },
-    );
+    return NextResponse.json({ ok: false }, { status: 401 });
   }
 
-  try {
-    const { ok, setCookieHeader } = await coordinatedRefresh(refreshToken);
+  const refreshRes = await fetch(apiServerUrls.refresh, {
+    method: "POST",
+    headers: {
+      Cookie: `refresh_token=${refreshToken}`,
+    },
+  });
 
-    if (ok) {
-      const response = NextResponse.json({ ok: true });
-      if (setCookieHeader) {
-        applySpringCookies(response, setCookieHeader);
-      }
-      return response;
+  const response = NextResponse.json({
+    ok: refreshRes.ok,
+  });
+
+  if (refreshRes.ok) {
+    const cookies = refreshRes.headers.getSetCookie();
+
+    for (const cookie of cookies) {
+      response.headers.append("Set-Cookie", cookie);
     }
-
-    return NextResponse.json(
-      { error: "Session expired on server" },
-      { status: 401 },
-    );
-  } catch (error) {
-    console.error("Refresh Route Error:", error);
-    return NextResponse.json(
-      { error: "Internal server error during refresh" },
-      { status: 500 },
-    );
   }
+
+  return response;
 }

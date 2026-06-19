@@ -1,53 +1,38 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
 import { serverFetch } from "../../../auth-fetch-actions";
 
-// const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
-
 const getUser = async (): Promise<SessionUser> => {
   const cookieStore = await cookies();
-  const headerList = await headers();
-  const authHeader = headerList.get("authorization");
-  const accessToken = authHeader
-    ? authHeader.split(" ")[1]
-    : cookieStore.get("access_token")?.value;
+  const accessToken = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
-  if (!accessToken) return { ok: false, data: null };
+  console.log("=== DEBUG GETUSER ===");
+  console.log("Tem Access?", !!accessToken);
+  console.log("Tem Refresh?", !!refreshToken);
+
+  if (!accessToken && !refreshToken) return { ok: false, data: null };
 
   try {
     const response = await serverFetch(apiServerUrls.me, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      // next: {
-      //   tags: ["user"],
-      //   revalidate: TAG_REVALIDATE_TIME,
-      // },
-      // cache: "force-cache",
       cache: "no-store",
     });
 
-    if (response.status === 204 || response.status === 401) {
-      // No content || Unauthorized
+    if (!response.ok || response.status === 204) {
       return { ok: false, data: null };
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        `getUser error: status -> ${response.status}, message -> ${response.statusText}`,
-      );
     }
 
     const text = await response.text();
     const data = text ? JSON.parse(text) : null;
 
+    console.log(data);
+
     return { ok: true, data };
   } catch (e) {
-    console.error("getUser:", e);
+    console.error("Erro em getUser:", e);
     return { ok: false, data: null };
   }
 };

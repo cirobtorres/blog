@@ -32,6 +32,7 @@ import org.jboss.logging.MDC;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
@@ -165,6 +166,9 @@ public class AuthService {
 
     @Transactional
     public UserDTO getUser(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            throw new UserUnauthorizedException("Invalid authentication");
+        }
         return userService.getAuthenticatedUserDTO(auth);
     }
 

@@ -27,7 +27,7 @@ const protectedWebUrls = {
 };
 
 const routeHandlers = {
-  refresh: "/local/auth/refresh",
+  refresh: WEB_URL + "/local/auth/refresh",
 };
 
 const apiServerUrls = {

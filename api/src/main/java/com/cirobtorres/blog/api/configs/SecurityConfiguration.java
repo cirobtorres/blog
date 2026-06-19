@@ -207,19 +207,15 @@ public class SecurityConfiguration {
     @Bean
     public BearerTokenResolver bearerTokenResolver() {
         return request -> {
+            String path = request.getRequestURI();
+            if (path.endsWith("/auth/refresh")) {
+                return null;
+            }
+
             if (request.getCookies() == null) return null;
-            // Tries access_token first
-            String accessToken = Arrays.stream(request.getCookies())
-                    .filter(cookie -> "access_token".equals(cookie.getName()))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElse(null);
 
-            if (accessToken != null) return accessToken;
-
-            // If none, tries reset_token
             return Arrays.stream(request.getCookies())
-                    .filter(cookie -> "reset_password_token".equals(cookie.getName()))
+                    .filter(cookie -> "access_token".equals(cookie.getName()))
                     .map(Cookie::getValue)
                     .findFirst()
                     .orElse(null);

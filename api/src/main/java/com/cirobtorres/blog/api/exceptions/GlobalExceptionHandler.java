@@ -11,30 +11,20 @@ import java.io.IOException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserUnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleBadLoginCredentials(
-            UserUnauthorizedException ex,
+    @ExceptionHandler({
+            RefreshTokenAlreadyRotatedException.class,
+            UserUnauthorizedException.class
+    })
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            RuntimeException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse errorBody = new ErrorResponse(
+        ErrorResponse error = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorBody);
-    }
-
-    @ExceptionHandler(RefreshTokenAlreadyRotatedException.class)
-    public ResponseEntity<ErrorResponse> handleRefreshAlreadyRotated(
-            RefreshTokenAlreadyRotatedException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -108,11 +98,11 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     @ExceptionHandler({IOException.class, Exception.class})

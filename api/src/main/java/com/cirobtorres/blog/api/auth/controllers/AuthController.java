@@ -79,8 +79,7 @@ public class AuthController {
     public ResponseEntity<UserDTO> me(
             Authentication auth
     ) {
-        UserDTO user = authService.getUser(auth);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
+        return ResponseEntity.ok(authService.getUser(auth));
     }
 
     @PostMapping("refresh")

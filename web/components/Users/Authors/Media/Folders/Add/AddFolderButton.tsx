@@ -25,7 +25,6 @@ import {
 } from "../../../../../../utils/sonner";
 import FolderPopover from "../../FolderPopover";
 import { useCreateFolder } from "../../../../../../services/hooks/folders/hook-folders";
-import { Skeleton } from "../../../../../Skeleton";
 
 const defaultState: ActionState = {
   ok: false,
@@ -112,11 +111,7 @@ export default function AddFolderButton() {
                   error={state.error?.folderName?.errors}
                   onChange={(e) => setFolderName(e.currentTarget.value)}
                 />
-                <FieldsetLabel
-                  htmlFor="folderName"
-                  label="Diretório"
-                  // error={state.error?.folderName?.errors}
-                />
+                <FieldsetLabel htmlFor="folderName" label="Diretório" />
               </Fieldset>
               <FieldsetError
                 error={state.error?.folderName?.errors}
