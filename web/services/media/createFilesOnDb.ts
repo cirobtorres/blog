@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({

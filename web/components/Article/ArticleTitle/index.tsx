@@ -35,10 +35,10 @@ export default function ArticleTitle({
           </section>
         </div>
       </div>
-      <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
+      <div className="w-full max-w-article-title px-3 lg:mx-auto lg:px-10">
         <Subtitle subtitle={subtitle} />
       </div>
-      <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10 mb-6">
+      <div className="w-full max-w-article-title px-3 lg:mx-auto lg:px-10 mb-6">
         <div className="flex items-center gap-8">
           <span className="text-sm flex items-center gap-2">
             <LikeButton />

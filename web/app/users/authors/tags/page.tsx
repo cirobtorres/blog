@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Skeleton } from "../../../../components/Skeleton";
-import { serverFetch } from "../../../../services/auth-fetch-actions";
+import { serverFetch } from "../../../../services/serverFetch";
 import { apiServerUrls } from "../../../../routing/routes";
 import { Hr } from "../../../../components/utils";
 import TagCreate from "../../../../components/Users/Authors/Tags/TagCreate";

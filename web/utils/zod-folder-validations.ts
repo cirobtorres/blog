@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import * as z from "zod";
 import { apiServerUrls } from "../routing/routes";
-import { serverFetch } from "../services/auth-fetch-actions";
+import { serverFetch } from "../services/serverFetch";
 
 const folderValidationSchema = z.object({
   folderName: z.string().min(1, "O diretório requer um nome"),

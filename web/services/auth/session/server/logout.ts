@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { apiClientUrls, publicWebUrls } from "../../../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { hasAutorities } from "../../../../routing/protected/hasAutorities";
-import { serverFetch } from "../../../auth-fetch-actions";
+import { serverFetch } from "../../../serverFetch";
 
 export async function serverLogout() {
   const headersList = await headers();

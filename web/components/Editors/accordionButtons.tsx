@@ -263,7 +263,6 @@ const Drag = ({ locked }: { locked: boolean }) => {
       )}
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        console.log("Move");
       }}
     >
       <svg

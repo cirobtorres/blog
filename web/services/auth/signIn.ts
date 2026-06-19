@@ -10,7 +10,7 @@ import {
   publicWebUrls,
 } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 const defaultState = {
   ok: false,
@@ -50,8 +50,12 @@ const signIn = async (
   formData: FormData,
 ): Promise<ActionState> => {
   const isProd = process.env.NODE_ENV === "production";
-  const { email, password, modal, redirect_url: redirectUrlFromForm } =
-    Object.fromEntries(formData.entries());
+  const {
+    email,
+    password,
+    modal,
+    redirect_url: redirectUrlFromForm,
+  } = Object.fromEntries(formData.entries());
   const isModal = modal === "true";
 
   const options: RequestInit = {

@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { serverFetch } from "./serverFetch";
 
 const defaultState: ActionState = {
   ok: false,
@@ -8,27 +8,6 @@ const defaultState: ActionState = {
   error: null,
   data: null,
 };
-
-function buildHeaders(options: RequestInit, token?: string) {
-  const headers = new Headers(options.headers);
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-  return headers;
-}
-
-export async function serverFetch(url: string, options: RequestInit = {}) {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
-
-  const response = await fetch(url, {
-    ...options,
-    headers: buildHeaders(options, accessToken),
-    cache: "no-store",
-  });
-
-  return response;
-}
 
 export async function fetchAction(url: string, options: RequestInit = {}) {
   try {

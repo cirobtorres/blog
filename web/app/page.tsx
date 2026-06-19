@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { convertToLargeDate, mountURL } from "../utils/date";
-import { serverFetch } from "../services/auth-fetch-actions";
+import { serverFetch } from "../services/serverFetch";
 import { apiServerUrls } from "../routing/routes";
 import ArticlePagination from "../components/Article/ArticlePagination";
 import {

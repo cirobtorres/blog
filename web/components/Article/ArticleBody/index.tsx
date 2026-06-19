@@ -41,14 +41,14 @@ export default function ArticleBody({ body }: Article) {
 
   return (
     <div className="w-full max-w-article-body mx-auto px-3 my-8">
-      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_1fr_minmax(0,300px)] gap-4">
+      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_auto_1fr] gap-4">
         <ScrollSummary anchors={anchors} />
-        <article className="w-full overflow-hidden">
+        <article className="w-full max-w-article-title overflow-hidden">
           {processedNodes.map((node, index) => (
             <React.Fragment key={index}>{node}</React.Fragment>
           ))}
         </article>
-        <div className="sticky size-fit hidden lg:block top-[calc(50%-var(--height-header))] ml-0 mr-auto">
+        <div className="sticky size-fit max-w-75 hidden lg:block top-[calc(50%-var(--height-header))] ml-0 mr-auto">
           <BackToTopButton />
         </div>
       </section>

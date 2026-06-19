@@ -2,7 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 export default async function editFolder(
   prevState: ActionState,

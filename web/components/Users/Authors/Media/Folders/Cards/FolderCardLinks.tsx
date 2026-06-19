@@ -1,7 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "../../../../../../routing/routes";
-import { serverFetch } from "../../../../../../services/auth-fetch-actions";
+import { serverFetch } from "../../../../../../services/serverFetch";
 import { cn } from "../../../../../../utils/variants";
 import FolderCheckbox from "../Header/FolderCheckbox";
 import FolderCardLink from "./FolderCardLink";

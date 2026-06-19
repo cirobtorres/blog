@@ -1,7 +1,7 @@
 "use server";
 
 import { apiBrowserUrls } from "../../../routing/routes";
-import { serverFetch } from "../../auth-fetch-actions";
+import { serverFetch } from "../../serverFetch";
 
 export async function getFoldersAction(folder: string) {
   const getUrl = `${apiBrowserUrls.mediaFolders.root}?folder=${folder}`;

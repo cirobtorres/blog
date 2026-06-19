@@ -6,10 +6,10 @@ import { motion, useAnimation } from "motion/react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn, focusRing } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
-import { fetchAction } from "../../../services/auth-fetch-actions";
 import { apiServerUrls } from "../../../routing/routes";
 import { slugify } from "../../../utils/strings-transforms";
 import Spinner from "../../Spinner";
+import { fetchAction } from "../../../services/fetchAction";
 
 export default function ArticleEditorSlug({
   articleId,

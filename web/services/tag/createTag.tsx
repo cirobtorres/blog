@@ -1,7 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "../../routing/routes";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 const defaultState: ActionState = {

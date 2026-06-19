@@ -1,5 +1,5 @@
 import { apiServerUrls } from "../../../../routing/routes";
-import { serverFetch } from "../../../../services/auth-fetch-actions";
+import { serverFetch } from "../../../../services/serverFetch";
 import { getOptimizedMediaUrl } from "../../../../utils/media-file-utils";
 import {
   ArticleCard,

@@ -2,16 +2,12 @@
 
 import { cookies } from "next/headers";
 import { apiServerUrls } from "../../../../routing/routes";
-import { serverFetch } from "../../../auth-fetch-actions";
+import { serverFetch } from "../../../serverFetch";
 
 const getUser = async (): Promise<SessionUser> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
   const refreshToken = cookieStore.get("refresh_token")?.value;
-
-  console.log("=== DEBUG GETUSER ===");
-  console.log("Tem Access?", !!accessToken);
-  console.log("Tem Refresh?", !!refreshToken);
 
   if (!accessToken && !refreshToken) return { ok: false, data: null };
 
@@ -27,8 +23,6 @@ const getUser = async (): Promise<SessionUser> => {
 
     const text = await response.text();
     const data = text ? JSON.parse(text) : null;
-
-    console.log(data);
 
     return { ok: true, data };
   } catch (e) {

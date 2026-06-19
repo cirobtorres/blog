@@ -1,7 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "../../routing/routes";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 

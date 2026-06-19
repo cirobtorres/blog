@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 const defaultState = {
   ok: false,

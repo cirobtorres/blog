@@ -1,7 +1,7 @@
 "use server";
 
 import { apiServerUrls } from "@/routing/routes";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 export default async function listFolders() {
   const response = await serverFetch(`${apiServerUrls.mediaFolders.root}/all`);

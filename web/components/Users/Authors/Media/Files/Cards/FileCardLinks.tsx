@@ -5,7 +5,7 @@ import MediaFilesSorting from "../Header/MediaFilesSorting";
 import FilePaginationURL from "../Pagination/FilePaginationURL";
 import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
 import FileCardLink from "./FileCardLink";
-import { serverFetch } from "../../../../../../services/auth-fetch-actions";
+import { serverFetch } from "../../../../../../services/serverFetch";
 
 const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 

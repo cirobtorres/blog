@@ -1,6 +1,6 @@
 import ArticleUpdate from "../../../../../../components/Users/Authors/Article/ArticleUpdate";
 import { apiServerUrls } from "../../../../../../routing/routes";
-import { serverFetch } from "../../../../../../services/auth-fetch-actions";
+import { serverFetch } from "../../../../../../services/serverFetch";
 
 export default async function AuthorsArticlesEditPage({
   params,

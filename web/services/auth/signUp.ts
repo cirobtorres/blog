@@ -5,7 +5,7 @@ import { apiServerUrls, publicWebUrls } from "../../routing/routes";
 import { cookies } from "next/headers";
 import { parseSetCookie } from "../helpers/server";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { serverFetch } from "../auth-fetch-actions";
+import { serverFetch } from "../serverFetch";
 
 const signUp = async (
   prevState: ActionState,

@@ -1,4 +1,4 @@
-import { serverFetch } from "../services/auth-fetch-actions";
+import { serverFetch } from "../services/serverFetch";
 
 export function VideoThumbnail(file: File): Promise<string> {
   return new Promise((resolve) => {
