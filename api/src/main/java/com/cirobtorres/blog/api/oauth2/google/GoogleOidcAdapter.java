@@ -1,8 +1,8 @@
 package com.cirobtorres.blog.api.oauth2.google;
 
 import com.cirobtorres.blog.api.oauth2.interfaces.OAuth2ProviderAdapter;
-import com.cirobtorres.blog.api.oauth2.records.OAuth2Context;
-import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
+import com.cirobtorres.blog.api.records.OAuth2Context;
+import com.cirobtorres.blog.api.enums.UserIdentityProvider;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 

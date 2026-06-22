@@ -1,7 +1,7 @@
 package com.cirobtorres.blog.api.oauth2.interfaces;
 
-import com.cirobtorres.blog.api.oauth2.records.OAuth2Context;
-import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
+import com.cirobtorres.blog.api.records.OAuth2Context;
+import com.cirobtorres.blog.api.enums.UserIdentityProvider;
 
 import java.util.Optional;
 

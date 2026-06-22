@@ -4,7 +4,7 @@ import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.oauth2.BlogOAuth2UserService;
 import com.cirobtorres.blog.api.oauth2.BlogOidcUserService;
 import com.cirobtorres.blog.api.oauth2.OAuth2SuccessHandler;
-import com.cirobtorres.blog.api.jwt.JwtAuthenticationFilter;
+import com.cirobtorres.blog.api.JwtAuthenticationFilter;
 import jakarta.servlet.http.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

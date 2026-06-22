@@ -2,10 +2,10 @@ package com.cirobtorres.blog.api.oauth2;
 
 import com.cirobtorres.blog.api.oauth2.interfaces.OAuth2ProviderAdapter;
 import com.cirobtorres.blog.api.oauth2.providers.OAuth2ProviderRegistry;
-import com.cirobtorres.blog.api.oauth2.records.OAuth2Context;
-import com.cirobtorres.blog.api.user.entities.User;
-import com.cirobtorres.blog.api.userIdentity.enums.UserIdentityProvider;
-import com.cirobtorres.blog.api.userIdentity.services.UserIdentityService;
+import com.cirobtorres.blog.api.records.OAuth2Context;
+import com.cirobtorres.blog.api.entities.User;
+import com.cirobtorres.blog.api.enums.UserIdentityProvider;
+import com.cirobtorres.blog.api.services.UserIdentityService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;

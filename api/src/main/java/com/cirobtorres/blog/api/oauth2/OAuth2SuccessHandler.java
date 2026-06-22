@@ -1,8 +1,8 @@
 package com.cirobtorres.blog.api.oauth2;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.jwt.dtos.TokensDTO;
-import com.cirobtorres.blog.api.jwt.services.JwtService;
+import com.cirobtorres.blog.api.dtos.TokensDTO;
+import com.cirobtorres.blog.api.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;

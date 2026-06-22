@@ -59,7 +59,7 @@ api-properties:
     mediaUpServSecret: ${CLOUDINARY_API_SECRET}
   jwt:
     issuer: ${API_URL}
-    expAccToken: 1200000 # 900000 = 15 min; 1200000 = 20 min
+    expAccToken: 30000 # 900000 = 15 min; 1200000 = 20 min
     expRefToken: 604800000 # 7 days
     accTokenPath: "/"
     refTokenPath: "/"
