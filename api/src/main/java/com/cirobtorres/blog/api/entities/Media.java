@@ -48,7 +48,7 @@ public class Media {
     @Column(name = "caption", columnDefinition = "TEXT")
     private String caption;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

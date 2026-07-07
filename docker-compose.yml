@@ -8,9 +8,6 @@ services:
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
       - API_URL=${API_URL}
-      - TESTER_UUID_REFRESH_TRACKER=${TESTER_UUID_REFRESH_TRACKER}
-      - RSA_PRIVATE_CONTENT=${RSA_PRIVATE_CONTENT}
-      - RSA_PUBLIC_CONTENT=${RSA_PUBLIC_CONTENT}
       - POSTGRES_HOST=database
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -23,10 +20,11 @@ services:
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+      - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
+      - KEYCLOAK_BLOG_API_CLIENT_ID=${KEYCLOAK_BLOG_API_CLIENT_ID}
+      - KEYCLOAK_BLOG_API_CLIENT_SECRET=${KEYCLOAK_BLOG_API_CLIENT_SECRET}
     depends_on:
       - database
     networks:
@@ -39,9 +37,12 @@ services:
         - WEB_URL=${WEB_URL}
         - API_URL=${API_URL}
         - API_URL_SERVER=${API_URL_SERVER}
-        - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
         - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
         - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+        - KEYCLOAK_URL=${KEYCLOAK_URL}
+        - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+        - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
+        - KEYCLOAK_BLOG_WEB_CLIENT_SECRET=${KEYCLOAK_BLOG_WEB_CLIENT_SECRET}
     container_name: web
     expose:
       - "3000"
@@ -62,20 +63,27 @@ services:
     networks:
       - local-network
 
-  # admin:
-  #   image: dpage/pgadmin4:latest
-  #   container_name: admin
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-  #     - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-  #     - PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=False
-  #     - PGADMIN_LISTEN_PORT=80
-  #   ports:
-  #     - "5050:80"
-  #   depends_on:
-  #     - database
-  #   networks:
-  #     - local-network
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    container_name: keycloak
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://database:5432/${POSTGRES_DB}
+      - KC_DB_USERNAME=${POSTGRES_USER}
+      - KC_DB_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - "8080"
+    ports:
+      - "8085:8080"
+    depends_on:
+      - database
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - local-network
 
 networks:
   local-network:

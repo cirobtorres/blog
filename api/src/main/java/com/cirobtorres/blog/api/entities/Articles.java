@@ -49,7 +49,7 @@ public class Articles {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Revisions> revisions = new ArrayList<>();
 
-    @Column(nullable = false, updatable = false, name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

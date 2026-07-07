@@ -1,5 +1,6 @@
 package com.cirobtorres.blog.api.services;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.entities.Articles;
 import com.cirobtorres.blog.api.repositories.ArticlesRepository;
 import com.cirobtorres.blog.api.dtos.CommentDTO;
@@ -10,9 +11,9 @@ import com.cirobtorres.blog.api.repositories.CommentRepository;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import com.cirobtorres.blog.api.entities.User;
 import com.cirobtorres.blog.api.repositories.UserRepository;
-import com.cirobtorres.blog.api.entities.UserIdentity;
-import com.cirobtorres.blog.api.repositories.UserIdentityRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,19 +31,20 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final UserIdentityRepository userIdentityRepository;
     private final ArticlesRepository articlesRepository;
+    private final boolean isProd;
+    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public CommentService(
             CommentRepository commentRepository,
             UserRepository userRepository,
-            UserIdentityRepository userIdentityRepository,
-            ArticlesRepository articlesRepository
+            ArticlesRepository articlesRepository,
+            ApiApplicationProperties apiApplicationProperties
     ) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
-        this.userIdentityRepository = userIdentityRepository;
         this.articlesRepository = articlesRepository;
+        this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Transactional
@@ -93,8 +95,9 @@ public class CommentService {
 
     @Transactional
     public CommentDTO postComment(CommentPostDTO request) {
-        UserIdentity identity = userIdentityRepository.findById(request.identityId())
-                .orElseThrow(() -> new IllegalArgumentException("Identity not found"));
+        // CORREÇÃO: Busca direta na tabela users usando o ID enviado (que veio do token do usuário logado)
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Articles article = articlesRepository.findById(request.articleId())
                 .orElseThrow(() -> new IllegalArgumentException("Article not found"));
@@ -106,27 +109,23 @@ public class CommentService {
         }
 
         Comment comment = new Comment.Builder()
-                .userIdentity(identity)
+                .user(user)
                 .article(article)
                 .parent(parentComment)
                 .body(request.body())
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
-
         return new CommentDTO(savedComment);
     }
 
     @Transactional
     public void deleteComment(UUID id, UUID userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new UserUnauthorizedException("You do not own permission to delete the comment");
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new UserUnauthorizedException("You do not have permission to delete this comment");
         }
 
         comment.setDeleted(true);
@@ -139,13 +138,12 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
-        if (comment.getUserIdentity() == null ||
-                !comment.getUserIdentity().getId().equals(request.identityId())) {
+        // CORREÇÃO: Validação simplificada direto no User
+        if (comment.getUser() == null || !comment.getUser().getId().equals(request.userId())) {
             throw new UserUnauthorizedException("Unauthorized");
         }
 
-        if (comment.getArticle() == null ||
-                !comment.getArticle().getId().equals(request.articleId())) {
+        if (comment.getArticle() == null || !comment.getArticle().getId().equals(request.articleId())) {
             throw new UserUnauthorizedException("Unauthorized");
         }
 
@@ -159,9 +157,7 @@ public class CommentService {
     }
 
     private boolean isSameParent(Comment parentEntity, UUID requestParentId) {
-        if (parentEntity == null && requestParentId == null) {
-            return true;
-        }
+        if (parentEntity == null && requestParentId == null) return true;
         if (parentEntity != null && requestParentId != null) {
             return parentEntity.getId().equals(requestParentId);
         }

@@ -22,7 +22,7 @@ public class Tag {
     @Column(unique = true)
     private String slug;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

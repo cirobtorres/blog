@@ -17,7 +17,7 @@ export default async function UserSettingsPage() {
 
   const { data: user } = userData;
 
-  const isEmailUnverified = !user?.isProviderEmailVerified;
+  const isEmailUnverified = !user?.isEmailVerified;
 
   return (
     <div
@@ -32,7 +32,7 @@ export default async function UserSettingsPage() {
           {isEmailUnverified && (
             <Alert title="Autenticação de email necessária" variant="warn">
               Você ainda não validou este email:{" "}
-              <strong className="text-yellow-500">{user?.providerEmail}</strong>
+              <strong className="text-yellow-500">{user?.email}</strong>
             </Alert>
           )}
           <div className="grid grid-cols-1 gap-2">
@@ -76,13 +76,13 @@ const UserCard = ({
   isEmailUnverified,
 }: { user: User | null } & { isEmailUnverified?: boolean }) => (
   <div className="w-full flex items-center border rounded-lg p-4 gap-4 bg-stone-900">
-    <Image
+    {/* <Image
       src={user?.pictureUrl ?? "https://placehold.co/160x160/000/fff/jpeg"}
       alt={"Avatar " + !!user ? "de " + user?.name : "anônimo"}
       width={160}
       height={160}
       className="rounded-full"
-    />
+    /> */}
     <div className="flex flex-col gap-2">
       <p className="text-xs font-bold text-neutral-500">
         Nome: <span className="text-neutral-300">{user?.name}</span>
@@ -94,7 +94,7 @@ const UserCard = ({
             <div className="absolute size-2 -top-1 -left-2 rounded-full animate-pulse-yellow bg-yellow-500" />
           )}
         </span>
-        : <strong className="text-neutral-300">{user?.providerEmail} </strong>
+        : <strong className="text-neutral-300">{user?.email} </strong>
       </div>
       {user && (
         <div className="flex items-center gap-1">

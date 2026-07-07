@@ -12,7 +12,7 @@ export default async function SignInPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const params = await searchParams;
-  const { login, redirect_url, callbackUrl, callback } = params;
+  const { login, redirect_url, callbackUrl, callback, verified } = params;
   const user = await getUser();
 
   if (user.ok) {
@@ -28,12 +28,7 @@ export default async function SignInPage({
   return (
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[1fr_700px]">
       <LeftBanner />
-      <div className="relative w-full h-full not-dark:shadow min-[700px]:border-l">
-        {/* <NextLink
-          href={publicWebUrls.home}
-          aria-label="Retornar para home page"
-          className="z-10 hidden min-[700px]:block absolute top-1/2 -translate-y-1/2 size-14 rounded-full -left-7 border bg-stone-200 dark:bg-stone-900"
-        /> */}
+      <div className="w-full h-full not-dark:shadow min-[700px]:border-l">
         <div className="h-screen p-1">
           <div className="h-full p-8 overflow-y-auto scrollbar">
             <div className="max-w-125 mx-auto flex flex-col justify-center gap-2">
@@ -42,6 +37,17 @@ export default async function SignInPage({
               </Link>
 
               <h1 className="text-3xl font-bold mb-8">Login</h1>
+
+              {verified === "true" && (
+                <Alert
+                  title="E-mail verificado com sucesso!"
+                  variant="success"
+                  className="mb-4"
+                >
+                  Sua conta foi ativada. Insira suas credenciais abaixo para
+                  entrar no blog.
+                </Alert>
+              )}
 
               {login === "required" && (
                 <Alert title="Negado" variant="alert">

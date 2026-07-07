@@ -4,11 +4,9 @@ type AuthSession = { ok: true; data: User } | { ok: false; data: null };
 
 type User = {
   id: string;
-  identityId: string;
   name: string;
-  providerEmail: string;
-  isProviderEmailVerified: boolean;
-  pictureUrl?: string;
+  email: string;
+  isEmailVerified: boolean;
   authorities: string[];
   createdAt: Date;
   updatedAt: Date;

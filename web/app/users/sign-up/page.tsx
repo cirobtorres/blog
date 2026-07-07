@@ -4,8 +4,8 @@ import { Skeleton } from "../../../components/Skeleton";
 import { publicWebUrls } from "../../../routing/routes";
 import { Hr, Separation, SignUpInfo } from "../../../components/utils";
 import { Alert } from "../../../components/Alert";
-import SignUpForm from "../../../components/Users/Sign-up/SignUpForm";
 import { cn, linkVariants } from "../../../utils/variants";
+import SignUpForm from "../../../components/Users/Sign-up/SignUpForm";
 
 const SignUpFormLoad = () => (
   <div className="w-full flex flex-col justify-center gap-2">
@@ -27,12 +27,7 @@ const SignUpFormLoad = () => (
 export default function SignUpPage() {
   return (
     <main className="h-full min-h-screen grid min-[700px]:grid-cols-[700px_1fr]">
-      <div className="relative w-full h-full min-h-screen not-dark:shadow min-[700px]:border-r">
-        {/* <NextLink
-          href={publicWebUrls.home}
-          aria-label="Retornar para home page"
-          className="z-10 hidden min-[700px]:block absolute top-1/2 -translate-y-1/2 size-14 rounded-full -right-7 border bg-stone-200 dark:bg-stone-900"
-        /> */}
+      <div className="w-full h-full min-h-screen not-dark:shadow min-[700px]:border-r">
         <div className="h-screen p-1">
           <div className="h-full p-8 overflow-y-auto scrollbar">
             <div className="max-w-125 mx-auto flex flex-col justify-center gap-2">

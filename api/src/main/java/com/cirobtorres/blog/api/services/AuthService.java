@@ -1,162 +1,116 @@
 package com.cirobtorres.blog.api.services;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.dtos.AuditTokenDTO;
-import com.cirobtorres.blog.api.entities.AuditToken;
-import com.cirobtorres.blog.api.enums.AuditTokenType;
-import com.cirobtorres.blog.api.repositories.AuditTokenRepository;
-import com.cirobtorres.blog.api.dtos.*;
-import com.cirobtorres.blog.api.exceptions.*;
-import com.cirobtorres.blog.api.dtos.PassResTokenDTO;
-import com.cirobtorres.blog.api.dtos.TokensDTO;
-import com.cirobtorres.blog.api.entities.RefreshToken;
-import com.cirobtorres.blog.api.enums.RefreshTokenClaims;
-import com.cirobtorres.blog.api.enums.TokenType;
-import com.cirobtorres.blog.api.repositories.AuthorityExtractorRepository;
-import com.cirobtorres.blog.api.repositories.RefreshTokenRepository;
+import com.cirobtorres.blog.api.dtos.LoginRequest;
+import com.cirobtorres.blog.api.dtos.RegisterRequest;
+import com.cirobtorres.blog.api.dtos.UserDTO;
 import com.cirobtorres.blog.api.entities.User;
-import com.cirobtorres.blog.api.repositories.UserRepository;
-import com.cirobtorres.blog.api.entities.UserIdentity;
-import com.cirobtorres.blog.api.enums.UserIdentityProvider;
-import com.cirobtorres.blog.api.repositories.UserIdentityRepository;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import jakarta.mail.MessagingException;
+import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import jakarta.transaction.Transactional;
-import org.jboss.logging.MDC;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.core.Response;
 import org.jspecify.annotations.NonNull;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.representations.AccessTokenResponse;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class AuthService {
-    private final MeterRegistry meterRegistry;
-    private final UserRepository userRepository;
-    private final UserIdentityRepository userIdentityRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
-    private final JwtService jwtService;
-    private final AuditTokenService auditTokenService;
-    private final AuditTokenRepository auditTokenRepository;
     private final UserService userService;
-    private final UserIdentityService userIdentityService;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final AuthorityExtractorRepository authorityExtractor;
-    private final String testerUUID;
+    private final String keycloakUrl;
+    private final String realm;
+    private final String webClientId;
+    private final String apiClientId;
+    private final String apiClientSecret;
     private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public AuthService(
-            MeterRegistry meterRegistry,
-            ApiApplicationProperties apiApplicationProperties,
-            UserRepository userRepository,
-            UserIdentityRepository userIdentityRepository,
-            PasswordEncoder passwordEncoder,
-            MailService mailService,
-            JwtService jwtService,
-            AuditTokenService auditTokenService,
-            AuditTokenRepository auditTokenRepository,
             UserService userService,
-            UserIdentityService userIdentityService,
-            RefreshTokenRepository refreshTokenRepository,
-            AuthorityExtractorRepository authorityExtractor
+            ApiApplicationProperties apiApplicationProperties
     ) {
-        this.meterRegistry = meterRegistry;
-        this.userRepository = userRepository;
-        this.userIdentityRepository = userIdentityRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-        this.jwtService = jwtService;
-        this.auditTokenService = auditTokenService;
-        this.auditTokenRepository = auditTokenRepository;
         this.userService = userService;
-        this.userIdentityService = userIdentityService;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.authorityExtractor = authorityExtractor;
         this.isProd = apiApplicationProperties.getApplication().isProduction();
-        this.testerUUID = apiApplicationProperties.getDebug().getTrackUserId();
+        this.keycloakUrl = apiApplicationProperties.getKeycloak().getKeycloakUrl();
+        this.realm = apiApplicationProperties.getKeycloak().getRealm();
+        this.webClientId = apiApplicationProperties.getKeycloak().getWebClientId();
+        this.apiClientId = apiApplicationProperties.getKeycloak().getApiClientId();
+        this.apiClientSecret = apiApplicationProperties.getKeycloak().getApiClientSecret();
     }
 
     @Transactional
-    public void logout(String rawRefreshToken) throws NoSuchAlgorithmException {
-        String hash = jwtService.hashToken(rawRefreshToken);
-        refreshTokenRepository.findByTokenHash(hash)
-                .ifPresent(token -> {
-                    token.setRevoked(true);
-                    token.setRevokedAt(Instant.now());
-                    refreshTokenRepository.save(token);
-                });
-    }
+    public UserDTO saveLocalUser(RegisterRequest request) {
+        Keycloak keycloak = KeycloakBuilder.builder()
+                .serverUrl(keycloakUrl)
+                .realm(realm)
+                .grantType("client_credentials")
+                .clientId(apiClientId)
+                .clientSecret(apiClientSecret)
+                .build();
 
-    @Transactional
-    public TokensDTO login(@NonNull UserLoginDTO userLoginDTO) throws NoSuchAlgorithmException {
-        // Locate
-        UserIdentity userIdentity = userIdentityRepository.findByProviderAndProviderUserId(
-                UserIdentityProvider.LOCAL,
-                userLoginDTO.email()
-        ).orElseThrow(
-                () -> new UserUnauthorizedException("Email or password incorrect.")
-        );
+        UserRepresentation kcUser = getUserRepresentation(request);
+        Response response = keycloak.realm(realm).users().create(kcUser);
 
-        // Validation
-        boolean passwordsMatch = passwordEncoder.matches(
-                userLoginDTO.password(),
-                userIdentity.getPasswordHash()
-        );
-
-        if (!passwordsMatch) {
-            throw new UserUnauthorizedException("Email or password incorrect.");
+        if (response.getStatus() == 409) {
+            throw new RuntimeException("Email already taken.");
+        } else if (response.getStatus() != 201) {
+            throw new RuntimeException("User creation failed.");
         }
 
-        // User
-        User user = isUserEnabled(userIdentity);
+        String locationHeader = response.getHeaderString("Location");
+        String keycloakIdStr = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
+        UUID keycloakId = UUID.fromString(keycloakIdStr);
 
-        // Login
-        return loginTokens(user);
+        User savedUser = userService.createLocalUser(keycloakId, request.name(), request.email());
+        keycloak.realm(realm).users().get(keycloakIdStr).executeActionsEmail(List.of("VERIFY_EMAIL"));
+
+        return new UserDTO(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail(),
+                savedUser.isEmailVerified(),
+                List.of(),
+                savedUser.getCreatedAt(),
+                savedUser.getUpdatedAt()
+        );
     }
 
     @Transactional
-    public TokensDTO register(UserRegisterDTO userRegisterDTO) throws NoSuchAlgorithmException, MessagingException {
-        // Validation
-        userExistsLocally(userRegisterDTO.email());
+    public AccessTokenResponse login(LoginRequest request) {
+        try {
+            Keycloak userClient = KeycloakBuilder.builder()
+                    .serverUrl(keycloakUrl)
+                    .realm(realm)
+                    .grantType("password")
+                    .clientId(webClientId)
+                    .username(request.email())
+                    .password(request.password())
+                    .build();
 
-        // User
-        User user = userIdentityService.createLocalUser(
-                userRegisterDTO.name(),
-                userRegisterDTO.email(),
-                null,
-                userRegisterDTO.password()
-        );
+            AccessTokenResponse tokenResponse = userClient.tokenManager().getAccessToken();
+            userClient.close();
 
-        UserIdentity userIdentity = user
-                .getIdentities()
-                .stream()
-                .filter(i -> i.getProvider() == UserIdentityProvider.LOCAL)
-                .findFirst()
-                .orElseThrow();
-
-        // Email code
-        String token = auditTokenService.createEmailCode(userIdentity, AuditTokenType.EMAIL_VALIDATION);
-        mailService.sendValidationEmail(userIdentity.getProviderEmail(), userIdentity.getName(), token);
-
-        // Login
-        return loginTokens(user);
+            return tokenResponse;
+        } catch (NotAuthorizedException e) {
+            log.warn("Authentication failed for user: {}", request.email());
+            throw new RuntimeException("Email or password is incorrect");
+        } catch (Exception e) {
+            log.error("Unexpected error from Keycloak authentication:", e);
+            throw new RuntimeException("Internal server error");
+        }
     }
 
     @Transactional
@@ -164,377 +118,51 @@ public class AuthService {
         if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
             throw new UserUnauthorizedException("Invalid authentication");
         }
-        return userService.getAuthenticatedUserDTO(auth);
-    }
 
-    @Transactional
-    public void renewCode(UUID userId) throws MessagingException, NoSuchAlgorithmException {
-        // Locate user
-        UserIdentity userIdentity = userIdentityRepository
-                .findLocalIdentityByUserId(userId)
-                .orElseThrow(
-                        () -> new UserUnauthorizedException("User not found.")
-                );
-
-        // TODO: feedback user that his email is verified already
-        // User is verified. Does nothing (prevent sending more emails)
-        if (Boolean.TRUE.equals(userIdentity.isProviderEmailVerified())) return;
-
-        // Locate old code (if exists)
-        Optional<AuditToken> existingToken = auditTokenRepository.findByUserIdentityAndTokenType(
-                userIdentity,
-                AuditTokenType.EMAIL_VALIDATION
-        );
-
-        // Create code
-        String token = auditTokenService.createEmailCode(
-                userIdentity,
-                AuditTokenType.EMAIL_VALIDATION
-        );
-
-        // Send email
-        mailService.sendValidationEmail(
-                userIdentity.getProviderEmail(),
-                userIdentity.getName(),
-                token
-        );
-    }
-
-    @Transactional
-    public TokensDTO refresh(String oldRefreshToken) throws NoSuchAlgorithmException {
-        Jwt jwt = jwtService.decodeToken(oldRefreshToken);
-        MDC.put("user_id", jwt.getSubject());
-        trackRefresh(jwt.getSubject());
-
-        String type = jwtService.getTokenClaim(jwt, RefreshTokenClaims.TYPE);
-
-        if (!TokenType.REFRESH.getType().toUpperCase().equals(type)) {
-            throw new RuntimeException("Invalid token.");
+        if (!(auth.getPrincipal() instanceof Jwt jwt)) {
+            return null;
         }
 
-        String oldHash = jwtService.hashToken(oldRefreshToken);
-        Instant now = Instant.now();
+        UUID keycloakId = UUID.fromString(jwt.getSubject());
+        String email = jwt.getClaimAsString("email");
+        String name = jwt.getClaimAsString("name");
 
-        Optional<RefreshToken> storedOpt = refreshTokenRepository.findByTokenHashForRefresh(oldHash);
-        if (storedOpt.isEmpty()) {
-            throw new RuntimeException("Token NOT FOUND.");
-        }
+        boolean verifiedInToken =
+                jwt.getClaimAsBoolean("email_verified") != null
+                && jwt.getClaimAsBoolean("email_verified");
 
-        RefreshToken stored = storedOpt.get();
-        UUID userId = stored.getUserId();
+        User user = userService.provisionOrUpdateUser(keycloakId, name, email, verifiedInToken);
 
-        if (stored.isRevoked()) {
-            return consumeViaRotationChainOrReject(stored, now, 0);
-        }
+        List<String> authorities = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).filter(Objects::nonNull)
+                .map(role -> role.replace("ROLE_", ""))
+                .toList();
 
-        if (stored.getExpiresAt().isBefore(now)) {
-            throw new RuntimeException("Token is EXPIRED.");
-        }
-
-        int updated = refreshTokenRepository.revokeIfNotRevoked(oldHash, now);
-        if (updated == 0) {
-            Optional<RefreshToken> rowAgain = refreshTokenRepository.findByTokenHash(oldHash);
-            if (rowAgain.isPresent() && rowAgain.get().isRevoked()) {
-                return consumeViaRotationChainOrReject(rowAgain.get(), now, 0);
-            }
-            throw new RuntimeException("Invalid token.");
-        }
-
-        return issueRotatedTokens(userId, oldHash);
-    }
-
-    // Issues new tokens after {@code consumedRefreshHash} was revoked, and links that row to the new refresh hash ({@code replacedByTokenHash}).
-    private TokensDTO issueRotatedTokens(UUID userId, String consumedRefreshHash) throws NoSuchAlgorithmException {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new RuntimeException("User not found.")
-        );
-        TokensDTO tokens = loginTokens(user);
-        int linked = refreshTokenRepository.setReplacedByTokenHash(
-                consumedRefreshHash,
-                jwtService.hashToken(tokens.refreshToken())
-        );
-        if (linked == 0) {
-            log.warn("issueRotatedTokens: setReplacedByTokenHash matched no row (consumedHash may be stale)");
-        }
-        return tokens;
-    }
-
-    // Revoked row: follow {@code replacedByTokenHash} to the current valid child, consume it, and rotate; or detect reuse.
-    private TokensDTO consumeViaRotationChainOrReject(RefreshToken stored, Instant now, int depth) throws NoSuchAlgorithmException {
-        if (depth > 10) {
-            throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
-        }
-
-        String replacedBy = stored.getReplacedByTokenHash();
-        if (replacedBy != null) {
-            Optional<RefreshToken> childOpt = refreshTokenRepository.findByTokenHashForRefresh(replacedBy);
-            if (childOpt.isPresent()) {
-                RefreshToken child = childOpt.get();
-                if (!child.isRevoked() && !child.getExpiresAt().isBefore(now)) {
-                    int u = refreshTokenRepository.revokeIfNotRevoked(replacedBy, now);
-                    if (u == 0) {
-                        Optional<RefreshToken> peer = refreshTokenRepository.findByTokenHash(replacedBy);
-                        if (peer.isPresent() && peer.get().isRevoked()) {
-                            return consumeViaRotationChainOrReject(peer.get(), now, depth + 1);
-                        }
-                        throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
-                    }
-                    return issueRotatedTokens(child.getUserId(), replacedBy);
-                }
-            }
-        }
-
-        Instant revokedAt = stored.getRevokedAt();
-        boolean recentRace = revokedAt != null && ChronoUnit.SECONDS.between(revokedAt, now) < 30;
-        if (recentRace) {
-            throw new RefreshTokenAlreadyRotatedException("Refresh token already rotated.");
-        }
-
-        refreshTokenRepository.revokeAllByUserId(stored.getUserId(), now);
-        throw new UserUnauthorizedException("Token is REVOKED.");
-    }
-
-    @Transactional
-    public TokensDTO validateEmail(String vToken, UUID userId) throws NoSuchAlgorithmException {
-        // Validation
-        String hashedTokenValue = jwtService.hashToken(vToken);
-
-        AuditToken auditToken = auditTokenRepository
-                .findByTokenHash(hashedTokenValue)
-                .orElseThrow(
-                () -> new TokenNotFoundException("Invalid token.")
-        );
-
-        if (auditToken.getTokenType() != AuditTokenType.EMAIL_VALIDATION) {
-            throw new UserUnauthorizedException("Invalid token.");
-        }
-
-        UserIdentity userIdentity = auditToken.getUserIdentity();
-
-        if (!userIdentity.getUser().getId().equals(userId)) {
-            throw new UserUnauthorizedException("Invalid token.");
-        }
-
-        if (auditToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException("Invalid token.");
-        }
-
-        auditToken.setRevoked(true);
-        auditToken.setRevokedAt(LocalDateTime.now());
-        // auditTokenRepository.save(auditToken); @Transational saves automatically at the end of the method
-
-        userIdentity.setIsProviderEmailVerified(true);
-        userIdentity.setLastAuthenticatedAt(LocalDateTime.now());
-        userIdentity.setIsProviderEmailVerifiedAt(LocalDateTime.now());
-
-        User user = isUserEnabled(userIdentity);
-
-        // Login
-        return loginTokens(user);
-    }
-
-    @Transactional
-    public void passwordResetEmailCodeRequest(UserEmailDTO userEmailDTO) throws NoSuchAlgorithmException, MessagingException {
-        List<UserIdentity> identities = userIdentityRepository.findAllByProviderEmail(userEmailDTO.email());
-
-        if (identities.isEmpty()) {
-            // Return true to frontend, instead revealing that this email does not exist
-            return;
-        }
-
-        Optional<UserIdentity> localIdentity = identities
-                .stream()
-                .filter(i -> i.getProvider() == UserIdentityProvider.LOCAL)
-                .findFirst();
-
-        if (localIdentity.isPresent()) {
-            // Local user exists: send code
-            UserIdentity userIdentity = localIdentity.get();
-            String token = auditTokenService.createEmailCode(
-                    userIdentity,
-                    AuditTokenType.PASSWORD_RESET
-            );
-            mailService.sendResetPasswordEmail(
-                    userIdentity.getProviderEmail(),
-                    userIdentity.getName(),
-                    token
-            );
-        } else {
-            // No LOCAL account. Instead, user might have one or more provider identities
-            String userName = identities.getFirst().getName();
-
-            List<String> providerNames = identities
-                    .stream()
-                    .map(UserIdentity::getProvider)
-                    .map(this::formatProviderName)
-                    .toList();
-
-            mailService.sendResetPasswordInfoForProviderUsers(
-                    userEmailDTO.email(),
-                    userName,
-                    providerNames
-            );
-        }
-    }
-
-    @Transactional
-    public PassResTokenDTO passwordResetCodeConfirmation(AuditTokenDTO auditTokenDTO) throws NoSuchAlgorithmException {
-        // Query
-        String hash = jwtService.hashToken(auditTokenDTO.token());
-
-        AuditToken auditToken = auditTokenRepository.findByTokenHash(hash)
-                .orElseThrow(() -> new RuntimeException("Token is invalid."));
-
-        // Validations
-        if (!auditToken.isValid()) {
-            throw new RuntimeException("Token is invalid.");
-        }
-
-        if (auditToken.getTokenType() != AuditTokenType.PASSWORD_RESET) {
-            throw new RuntimeException("Token is invalid.");
-        }
-
-        // Revokes the token
-        auditToken.setRevoked(true);
-        auditToken.setRevokedAt(LocalDateTime.now());
-
-        // Verify user email, since he seems to own that email where the code was sent
-        UserIdentity userIdentity = auditToken.getUserIdentity();
-        if (!Boolean.TRUE.equals(userIdentity.isProviderEmailVerified())) {
-            userIdentity.setIsProviderEmailVerified(true);
-            userIdentity.setIsProviderEmailVerifiedAt(LocalDateTime.now());
-        }
-
-        auditTokenRepository.save(auditToken);
-
-        return passResetToken(userIdentity.getUser());
-    }
-
-    @Transactional
-    public void passwordReset(UserPasswordDTO passwordDTO) {
-        // Get userId from JWT subject
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userIdString = authentication.getName();
-        UUID userId = UUID.fromString(userIdString);
-
-        // Locate user
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
-
-        UserIdentity userIdentity = user.getIdentities().stream()
-                .filter(id -> id.getProvider() == UserIdentityProvider.LOCAL)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("This user is not a LOCAL user."));
-
-        // New passwordHash
-        String newPasswordHash = passwordEncoder.encode(passwordDTO.password());
-        userIdentity.setPasswordHash(newPasswordHash);
-        // userIdentity.setLastAuthenticatedAt(LocalDateTime.now());
-        userIdentityRepository.save(userIdentity); // User CASCADE is enough to save userIdentity.passwordHash
-    }
-
-    // Helpers----------------------------------------------------------------------------------------------------
-    public static @NonNull User getTrusedUser(@NonNull UserIdentity userIdentity) {
-        User user = userIdentity.getUser();
-
-        if (!Boolean.TRUE.equals(userIdentity.isProviderEmailVerified())) {
-            throw new SecurityException("User identity email is unvalidated or was not verified.");
-        }
-
-        return user;
-    }
-
-    public static @NonNull User isUserEnabled(@NonNull UserIdentity userIdentity) {
-        User user = userIdentity.getUser();
-
-        if (!userIdentity.isEnabled()) {
-            throw new DisabledException("User enabled = false.");
-        }
-
-        if (user.isBanned()) {
-            throw new LockedException("User banned = true.");
-        }
-
-        return user;
-    }
-
-    private TokensDTO loginTokens(User user) throws NoSuchAlgorithmException {
-        List<String> authorities = authorityExtractor.fromUser(user);
-        String subject = user.getId().toString();
-
-        String accessToken = jwtService.createAccessToken(subject, authorities, "LOCAL");
-        String refreshToken = jwtService.createRefreshToken(subject);
-
-        RefreshToken refreshTokenEntity = RefreshToken
-                .builder()
-                .userId(user.getId())
-                .tokenHash(jwtService.hashToken(refreshToken))
-                .expiresAt(Instant.now().plus(7, ChronoUnit.DAYS))
-                .revoked(false)
-                .build();
-
-        refreshTokenRepository.save(refreshTokenEntity);
-
-        return new TokensDTO(accessToken, refreshToken);
-    }
-
-    private PassResTokenDTO passResetToken(User user) {
-        List<String> authorities = authorityExtractor.fromUser(user);
-        String subject = user.getId().toString();
-        Instant issuedAt = Instant.now();
-        Instant expiresAt = issuedAt.plus(15, ChronoUnit.MINUTES);
-
-        String passResetToken = jwtService.createToken(
-                subject,
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.isEmailVerified(),
                 authorities,
-                AuditTokenType.PASSWORD_RESET.name(),
-                issuedAt,
-                expiresAt,
-                null
+                user.getCreatedAt(),
+                user.getUpdatedAt()
         );
-
-        PassResTokenDTO passResTokenDTO = new PassResTokenDTO(passResetToken);
-
-        return passResTokenDTO;
     }
 
-    private void userExistsLocally(String email) {
-        userRepository.findByEmail(email).ifPresent(user -> {
-            boolean hasLocalIdentity = user
-                    .getIdentities()
-                    .stream()
-                    .anyMatch(i ->
-                            i.getProvider() == UserIdentityProvider.LOCAL
-                    );
-            if (hasLocalIdentity) {
-                throw new UserAlreadyExistsException("Este e-mail já está em uso.");
-            }
-        });
-    }
+    private static @NonNull UserRepresentation getUserRepresentation(RegisterRequest request) {
+        UserRepresentation kcUser = new UserRepresentation();
+        kcUser.setUsername(request.email());
+        kcUser.setEmail(request.email());
+        kcUser.setFirstName(request.name());
+        kcUser.setEnabled(true);
+        kcUser.setEmailVerified(false);
+        kcUser.setRequiredActions(List.of("VERIFY_EMAIL"));
 
-    private String formatProviderName(UserIdentityProvider provider) {
-        return switch (provider) {
-            case GOOGLE -> "ao Google";
-            case GITHUB -> "ao GitHub";
-            case MICROSOFT -> "à Microsoft";
-            case LINKEDIN -> "ao LinkedIn";
-            case APPLE -> "à Apple";
-            case LOCAL -> "diretamente com nosso sistema";
-        };
-    }
-
-    // Actuator----------------------------------------------------------------------------------------------------
-    private void trackRefresh(String userId) {
-        String userTag = "ignore";
-
-        if (userId.equals(testerUUID)) {
-            userTag = userId;
-        }
-
-        Counter.builder("auth.refresh.requests")
-                .tag("user", userTag)
-                .description("Refresh requests tracked by specific user or group")
-                .register(meterRegistry)
-                .increment();
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(request.password());
+        credential.setTemporary(false);
+        kcUser.setCredentials(List.of(credential));
+        return kcUser;
     }
 }

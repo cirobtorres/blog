@@ -2,17 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
-import { extractTokenFromHeader, parseSetCookie } from "../helpers/server";
+import { parseSetCookie } from "../helpers/server";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import {
-  apiServerUrls,
-  protectedWebUrls,
-  publicWebUrls,
-} from "../../routing/routes";
+import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
 import { revalidatePath } from "next/cache";
 import { serverFetch } from "../serverFetch";
 
-const defaultState = {
+const defaultState: ActionState = {
   ok: false,
   success: null,
   error: null,
@@ -64,25 +60,21 @@ const signIn = async (
     body: JSON.stringify({ email, password }),
     cache: "no-store",
   };
+
   const response = await serverFetch(apiServerUrls.login, options);
 
   if (response.ok) {
     const cookieStore = await cookies();
     const setCookieHeader = response.headers.get("set-cookie");
-    let accessToken = "";
 
     if (setCookieHeader) {
-      accessToken =
-        extractTokenFromHeader(setCookieHeader, "access_token") || "";
       const rawCookies = parseSetCookie(setCookieHeader);
       rawCookies.forEach((cookieStr) => {
-        // Splits name/value of properties (Path, HttpOnly, etc)
         const [nameValue, ...attributes] = cookieStr
           .split(";")
           .map((s) => s.trim());
         const [name, value] = nameValue.split("=");
 
-        // Maps attributes to Next.js format
         const options: Partial<ResponseCookie> = {
           httpOnly: true,
           secure: isProd,
@@ -101,20 +93,16 @@ const signIn = async (
       });
     }
 
-    const userResponse = await fetch(apiServerUrls.me, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    const userResponse = await serverFetch(apiServerUrls.me, {
       cache: "no-store",
     });
 
     if (userResponse.ok) {
       const userData: User = await userResponse.json();
-      if (!userData.isProviderEmailVerified) {
-        return redirect(publicWebUrls.validateEmail);
-      }
+
       const headersList = await headers();
       const referer = headersList.get("referer");
+
       const redirectUrl = resolveRedirectUrl(
         typeof redirectUrlFromForm === "string" ? redirectUrlFromForm : null,
         referer,
@@ -122,9 +110,6 @@ const signIn = async (
       );
 
       if (isModal) {
-        // Skip revalidatePath: it refetches the layout while the intercepted
-        // sign-in URL is still active and remounts @signInModal before the
-        // client hard-navigation runs. The full page load refreshes auth state.
         return {
           ok: true,
           success: "signed-in",
@@ -138,32 +123,22 @@ const signIn = async (
     }
   }
 
-  if (
-    response.status === 400 ||
-    response.status === 404 ||
-    response.status === 401 || // Ex: Invalid email type format
-    response.status === 409 // Ex: Wrong email/password
-  ) {
+  if ([400, 401, 404, 409].includes(response.status)) {
     return {
       ...defaultState,
       error: {
-        email: {
-          errors: ["Email ou senha incorretos"],
-        },
-        password: {
-          errors: ["Email ou senha incorretos"],
-        },
+        email: { errors: ["E-mail ou senha incorretos"] },
+        password: { errors: ["E-mail ou senha incorretos"] },
       },
     };
-  } else
-    return {
-      ...defaultState,
-      error: {
-        form: {
-          errors: ["Ocorreu um erro inesperado. Tente mais tarde"],
-        },
-      },
-    };
+  }
+
+  return {
+    ...defaultState,
+    error: {
+      form: { errors: ["Ocorreu um erro inesperado. Tente mais tarde"] },
+    },
+  };
 };
 
 export { signIn };

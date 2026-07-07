@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { cn, focusRing } from "../../../utils/variants";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { Link } from "../../Links";
@@ -38,28 +37,18 @@ export function UserButton() {
             focusRing,
           )}
         >
-          {user.pictureUrl ? (
-            <Image
-              src={user.pictureUrl as string}
-              alt={"Avatar de " + user.name}
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-          ) : (
-            <span
-              className={cn(
-                "size-full p-1 shrink-0 flex justify-center items-center rounded-full bg-primary",
-              )}
-            >
-              {user.name
-                .toUpperCase()
-                .split(" ")
-                .map((i) => i[0])
-                .splice(0, 2)
-                .join("")}
-            </span>
-          )}
+          <span
+            className={cn(
+              "size-full p-1 shrink-0 flex justify-center items-center rounded-full bg-primary",
+            )}
+          >
+            {user.name
+              .toUpperCase()
+              .split(" ")
+              .map((i) => i[0])
+              .splice(0, 2)
+              .join("")}
+          </span>
         </button>
       </PopoverTrigger>
       <PopoverContent id={popoverId} className="flex flex-col gap-0 p-0">
@@ -67,10 +56,10 @@ export function UserButton() {
           <div className="flex flex-col">
             <span className="font-bold">{user.name}</span>
             <span className="text-xs text-neutral-600 dark:text-neutral-500">
-              {user.providerEmail}
+              {user.email}
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {user.authorities.map((authority) => (
               <span
                 key={authority}

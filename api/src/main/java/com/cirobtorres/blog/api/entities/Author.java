@@ -42,7 +42,7 @@ public class Author {
     @OneToMany(mappedBy = "author")
     private List<Articles> articles;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

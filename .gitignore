@@ -73,3 +73,5 @@ keys/
 certs/
 run-proj.ps1
 /api-dev.ps1
+keycloak/*
+!keycloak/themes/

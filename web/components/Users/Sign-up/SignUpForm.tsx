@@ -25,9 +25,11 @@ import {
 } from "../../AlertDialog";
 import { cn, focusRing } from "../../../utils/variants";
 import { Button } from "../../Button";
+import { isForbiddenName } from "../../../utils/forbidden-words";
 import { P } from "../../Typography";
 import * as z from "zod";
-import { isForbiddenName } from "../../../utils/forbidden-words";
+import { publicWebUrls } from "../../../routing/routes";
+import { redirect } from "next/navigation";
 
 const signUpSchema = z.object({
   name: z
@@ -86,8 +88,10 @@ export default function SignUpForm() {
       const promise = await signUp(prevState, formData);
       if (!promise.ok && promise.error) {
         setErrors(promise.error);
+        return promise;
       }
-      return promise;
+      redirect(publicWebUrls.validateEmail);
+      // return promise;
     },
     defaultState,
   );

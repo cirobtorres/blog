@@ -20,19 +20,12 @@ spring:
 
   security:
     oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-          github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope:
-              - read:user
-              - user:email
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER}
+          audiences:
+            - ${KEYCLOAK_BLOG_WEB_CLIENT_ID}
+            - ${KEYCLOAK_BLOG_API_CLIENT_ID}
 
   mail:
     host: ${MAILER_HOST}
@@ -51,18 +44,17 @@ api-properties:
   frontend:
     url: ${WEB_URL}
   application:
-    privateKey: ${RSA_PRIVATE_CONTENT}
-    publicKey: ${RSA_PUBLIC_CONTENT}
     mailerFrom: ${MAILER_FROM}
     mediaUpServName: ${CLOUDINARY_CLOUD_NAME}
     mediaUpServKey: ${CLOUDINARY_API_KEY}
     mediaUpServSecret: ${CLOUDINARY_API_SECRET}
-  jwt:
-    issuer: ${API_URL}
-    expAccToken: 30000 # 900000 = 15 min; 1200000 = 20 min
-    expRefToken: 604800000 # 7 days
-    accTokenPath: "/"
-    refTokenPath: "/"
+  keycloak:
+    issuerUri: ${KEYCLOAK_ISSUER}
+    keycloakUrl: ${KEYCLOAK_URL:http://localhost:8085}
+    realm: ${KEYCLOAK_REALM}
+    webClientId: ${KEYCLOAK_BLOG_WEB_CLIENT_ID}
+    apiClientId: ${KEYCLOAK_BLOG_API_CLIENT_ID}
+    apiClientSecret: ${KEYCLOAK_BLOG_API_CLIENT_SECRET}
   debug:
     trackUserId: ${TESTER_UUID_REFRESH_TRACKER}
 

@@ -1,46 +1,28 @@
 package com.cirobtorres.blog.api;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @ConfigurationProperties(prefix = "api-properties")
 public class ApiApplicationProperties {
     private final Application application = new Application();
     private final Frontend frontend = new Frontend();
-    private final Jwt jwt = new Jwt();
     private final Debug debug = new Debug();
+    private final Keycloak keycloak = new Keycloak();
 
     public Frontend getFrontend() { return frontend; }
     public Application getApplication() {
         return application;
     }
-    public Jwt getJwt() { return jwt; }
     public Debug getDebug() { return debug; }
+    public Keycloak getKeycloak() { return keycloak; }
 
     public static class Application {
-        private String privateKey;
-        private String publicKey;
         private String url;
         private String mailerFrom;
         private String mediaUpServName;
         private String mediaUpServKey;
         private String mediaUpServSecret;
         private boolean production;
-
-        public String getPrivateKey() {
-            return privateKey;
-        }
-        public void setPrivateKey(String privateKey) {
-            this.privateKey = privateKey;
-        }
-
-        public String getPublicKey() {
-            return publicKey;
-        }
-        public void setPublicKey(String publicKey) {
-            this.publicKey = publicKey;
-        }
 
         public String getUrl() {
             return url;
@@ -73,6 +55,33 @@ public class ApiApplicationProperties {
         }
     }
 
+    public static class Keycloak {
+        private String keycloakUrl;
+        private String issuerUri;
+        private String realm;
+        private String webClientId;
+        private String apiClientId;
+        private String apiClientSecret;
+
+        public String getKeycloakUrl() { return keycloakUrl; }
+        public void setKeycloakUrl(String keycloakUrl) { this.keycloakUrl = keycloakUrl; }
+
+        public String getIssuerUri() { return issuerUri; }
+        public void setIssuerUri(String issuerUri) { this.issuerUri = issuerUri; }
+
+        public String getRealm() { return realm; }
+        public void setRealm(String realm) { this.realm = realm; }
+
+        public String getWebClientId() { return webClientId; }
+        public void setWebClientId(String webClientId) { this.webClientId = webClientId; }
+
+        public String getApiClientId() { return apiClientId; }
+        public void setApiClientId(String apiClientId) { this.apiClientId = apiClientId; }
+
+        public String getApiClientSecret() { return apiClientSecret; }
+        public void setApiClientSecret(String apiClientSecret) { this.apiClientSecret = apiClientSecret; }
+    }
+
     public static class Frontend {
         private String url;
 
@@ -81,49 +90,6 @@ public class ApiApplicationProperties {
         }
         public void setUrl(String url) {
             this.url = url;
-        }
-    }
-
-    public static class Jwt {
-        private String issuer;
-        private long expAccToken;
-        private long expRefToken;
-        private String accTokenPath;
-        private String refTokenPath;
-
-        public String getIssuer() {
-            return issuer;
-        }
-        public void setIssuer(String issuer) {
-            this.issuer = issuer;
-        }
-
-        public long getExpAccToken() {
-            return expAccToken;
-        }
-        public void setExpAccToken(long expAccToken) {
-            this.expAccToken = expAccToken;
-        }
-
-        public long getExpRefToken() {
-            return expRefToken;
-        }
-        public void setExpRefToken(long expRefToken) {
-            this.expRefToken = expRefToken;
-        }
-
-        public String getAccTokenPath() {
-            return accTokenPath;
-        }
-        public void setAccTokenPath(String accTokenPath) {
-            this.accTokenPath = accTokenPath;
-        }
-
-        public String getRefTokenPath() {
-            return refTokenPath;
-        }
-        public void setRefTokenPath(String refTokenPath) {
-            this.refTokenPath = refTokenPath;
         }
     }
 

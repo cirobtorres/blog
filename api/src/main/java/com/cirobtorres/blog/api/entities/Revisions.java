@@ -47,7 +47,7 @@ public class Revisions {
     @JoinColumn(name = "article_id", nullable = false)
     private Articles article;
 
-    @Column(nullable = false, updatable = false, name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

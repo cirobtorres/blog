@@ -6,11 +6,11 @@ import { cn, linkVariants } from "../../../../../utils/variants";
 import { Link } from "../../../../Links";
 import { FieldsetError } from "../../../../Fieldset";
 import { renewVCode } from "../../../../../services/auth/renewVCode";
-import Spinner from "../../../../Spinner";
-import FieldsetOTPCode from "../../../../Fieldset/FieldsetOTPCode";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import RenewCodeButton from "./RenewCodeButton";
 import { Button } from "../../../../Button";
+import FieldsetOTPCode from "../../../../Fieldset/FieldsetOTPCode";
+import RenewCodeButton from "./RenewCodeButton";
+import Spinner from "../../../../Spinner";
 
 interface ValidateEmailFormProps {
   email: string;

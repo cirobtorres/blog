@@ -6,8 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -15,21 +13,20 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private final Set<UserIdentity> identities = new HashSet<>();
+    @Column(nullable = false)
+    private String name;
 
     @Column(unique = true) // NULLABLE
     private String email;
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLogin;
+
+    @Column(name = "is_email_verified")
+    private boolean isEmailVerified;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -46,21 +43,13 @@ public class User {
     @Column(name = "banned_until")
     private LocalDateTime bannedUntil;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_authorities",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id")
-    )
-    private Set<Authority> authorities = new HashSet<>();
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -71,24 +60,24 @@ public class User {
 
     // BUILDER----------------------------------------------------------------------------------------------------
     private User(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
         this.email = builder.email;
-        this.authorities = builder.authorities;
-        this.authorities.addAll(builder.authorities); // ManyToMany (Unidirectional or Bidirectional)
     }
 
     public static Builder builder() { return new Builder(); }
 
     public static class Builder {
+        private UUID id;
+        private String name;
         private String email;
-        private Set<Authority> authorities = new HashSet<>();
+
+        public Builder id(UUID id) { this.id = id; return this; }
+
+        public Builder name(String name) { this.name = name; return this; }
 
         public Builder email(String email) {
             this.email = email;
-            return this;
-        }
-
-        public Builder authorities(Set<Authority> authorities) {
-            this.authorities = authorities;
             return this;
         }
 
@@ -105,22 +94,14 @@ public class User {
         this.id = id;
     }
 
-    public Set<UserIdentity> getIdentities() {
-        return identities;
-    }
-
-    public void addIdentity(UserIdentity identity) {
-        identities.add(identity);
-        identity.setUser(this);
-    }
-
-    public void removeIdentity(UserIdentity identity) {
-        identities.remove(identity);
-        identity.setUser(null);
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public boolean isEmailVerified() { return isEmailVerified; }
+    public void setEmailVerified(boolean emailVerified) { isEmailVerified = emailVerified; }
 
     public LocalDateTime getLastLogin() { return lastLogin; }
     public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
@@ -145,9 +126,6 @@ public class User {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public Set<Authority> getAuthorities() { return authorities; }
-    public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }

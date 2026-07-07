@@ -12,7 +12,7 @@ const publicWebUrls = {
   signIn: "/users/sign-in",
   forget: "/users/sign-in/forgot-password",
   signUp: "/users/sign-up",
-  validateEmail: "/users/sign-up/validate-email",
+  validateEmail: "/users/sign-in/validate-email",
 };
 
 const pubWebUrlsAbsPath = {
@@ -28,10 +28,10 @@ const protectedWebUrls = {
 
 const routeHandlers = {
   refresh: WEB_URL + "/local/auth/refresh",
+  callback: WEB_URL + "/local/auth/callback",
 };
 
 const apiServerUrls = {
-  // Authentication
   login: API_SERVER + "/auth/login",
   register: API_SERVER + "/auth/register",
   emailCode: API_SERVER + "/auth/validation",
@@ -41,7 +41,6 @@ const apiServerUrls = {
   passResetCode: API_SERVER + "/auth/password-reset-code",
   passwordReset: API_SERVER + "/auth/password-reset",
   me: API_SERVER + "/auth/me",
-  // Articles
   article: {
     root: API_SERVER + "/articles",
     id: API_SERVER + "/articles/id",
@@ -68,11 +67,8 @@ const apiServerUrls = {
 };
 
 const apiClientUrls = {
-  google: API_CLIENT + "/oauth2/authorization/google",
-  github: API_CLIENT + "/oauth2/authorization/github",
-  microsoft: "/", // TODO
-  linkedin: "/", // TODO
-  me: API_CLIENT + "/auth/me",
+  google: "/local/auth/google",
+  github: "/local/auth/github",
   logout: API_CLIENT + "/auth/logout",
 };
 

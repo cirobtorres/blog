@@ -4,27 +4,40 @@ import { extractPayload } from "./services/helpers/server";
 import { publicWebUrls, apiServerUrls } from "./routing/routes";
 
 export async function proxy(request: NextRequest) {
+  console.log("proxy");
   const requestId = globalThis.crypto?.randomUUID?.() ?? "no-uuid";
+  console.log("proxy requestId:", requestId);
   const { pathname } = request.nextUrl;
+  console.log("proxy pathname:", pathname);
 
-  if (pathname.startsWith("/articles")) {
-    const res = NextResponse.next();
-    res.headers.set("x-debug-request-id", requestId);
-    return res;
-  }
-
-  if (pathname.startsWith("/auth") || pathname.includes("/local/auth")) {
+  if (pathname.startsWith("/articles") || pathname.includes("/local/auth")) {
+    console.log("proxy NextResponse.next():", true);
     return NextResponse.next();
   }
 
+  const requiredAuthorities = hasAutorities(pathname);
+  console.log("proxy requiredAuthorities:", requiredAuthorities);
+
   try {
     let accessToken = request.cookies.get("access_token")?.value;
+    console.log(
+      "proxy accessToken:",
+      accessToken ? accessToken.slice(0, 20) + "..." : accessToken,
+    );
     const refreshToken = request.cookies.get("refresh_token")?.value;
-
+    console.log(
+      "proxy refreshToken:",
+      refreshToken ? refreshToken.slice(0, 20) + "..." : refreshToken,
+    );
     let responseModifier: NextResponse | null = null;
 
     const isAccessExpired = accessToken ? checkIfExpired(accessToken) : true;
+    console.log("proxy isAccessExpired:", isAccessExpired);
 
+    console.log(
+      "Proxy isAccessExpired && refreshToken:",
+      isAccessExpired && refreshToken,
+    );
     if (isAccessExpired && refreshToken) {
       try {
         const refreshRes = await fetch(apiServerUrls.refresh, {
@@ -35,12 +48,19 @@ export async function proxy(request: NextRequest) {
           },
         });
 
+        console.log(
+          "Proxy refreshRes:",
+          refreshRes.ok,
+          refreshRes.status,
+          refreshRes.statusText,
+        );
+
         if (refreshRes.ok) {
           const setCookieHeaders = refreshRes.headers.getSetCookie();
           const requestHeaders = new Headers(request.headers);
+
           for (const cookieStr of setCookieHeaders) {
             const parts = cookieStr.split(";").map((s) => s.trim());
-
             const [nameValue] = parts;
             const [name, value] = nameValue.split("=");
 
@@ -51,31 +71,53 @@ export async function proxy(request: NextRequest) {
           }
 
           responseModifier = NextResponse.next({
-            request: {
-              headers: requestHeaders,
-            },
+            request: { headers: requestHeaders },
           });
 
           for (const cookieStr of setCookieHeaders) {
             responseModifier.headers.append("Set-Cookie", cookieStr);
           }
         } else {
-          console.warn("[proxy] refreshRes.ok = false");
-          const res = redirectToLogin(request, pathname);
-          res.cookies.delete("access_token");
-          res.cookies.delete("refresh_token");
-          return res;
+          if (requiredAuthorities) {
+            const res = redirectToLogin(request, pathname);
+            res.cookies.delete("access_token");
+            res.cookies.delete("refresh_token");
+            return res;
+          }
         }
       } catch (refreshError) {
-        console.error(
-          "[proxy] Falha crítica de rede ao tentar refresh no Spring Boot",
-          refreshError,
-        );
+        console.error("[proxy] Refresh failed:", refreshError);
       }
     }
 
-    if (!hasAccessFromToken(pathname, accessToken)) {
-      return redirectToLogin(request, pathname);
+    // 3. VALIDAÇÃO DE ACESSO (ROTA PROTEGIDA)
+    // Se a rota NÃO exige permissões (requiredAuthorities === null), deixa passar direto!
+    if (requiredAuthorities) {
+      if (!accessToken || checkIfExpired(accessToken)) {
+        return redirectToLogin(request, pathname);
+      }
+
+      const payload = extractPayload(accessToken);
+
+      // CORREÇÃO AQUI: Extrai as roles da estrutura oficial do Keycloak (realm_access.roles)
+      const userAuthorities: string[] = payload.realm_access?.roles || [];
+
+      // Transforma tudo para maiúsculo para evitar problemas de case-sensitive ("author" vs "AUTHOR")
+      const normalizedUserAuthorities = userAuthorities.map((role: string) =>
+        role.toUpperCase(),
+      );
+
+      const hasPermission = requiredAuthorities.every((role) =>
+        normalizedUserAuthorities.includes(role.toUpperCase()),
+      );
+
+      if (!hasPermission) {
+        console.log(
+          `[proxy] Access denied to "${pathname}". Lacking permissions.`,
+        );
+        // Redireciona para a Home ou página de Não Autorizado se ele já está logado mas sem nível de acesso
+        return NextResponse.redirect(new URL("/", request.url));
+      }
     }
 
     const res = responseModifier ?? NextResponse.next();
@@ -83,10 +125,7 @@ export async function proxy(request: NextRequest) {
     return res;
   } catch (e) {
     console.error("[proxy] UNHANDLED ERROR", { requestId, pathname, e });
-    const res = NextResponse.next();
-    res.headers.set("x-debug-request-id", requestId);
-    res.headers.set("x-proxy-error", "1");
-    return res;
+    return NextResponse.next();
   }
 }
 
@@ -99,33 +138,15 @@ function checkIfExpired(token: string): boolean {
   }
 }
 
-function hasAccessFromToken(pathname: string, token?: string): boolean {
-  const required = hasAutorities(pathname);
-
-  if (!required) return true;
-
-  if (!token) return false;
-
-  try {
-    if (checkIfExpired(token)) return false;
-
-    const payload = extractPayload(token);
-    return required.every((role) => payload.authorities?.includes(role));
-  } catch {
-    return false;
-  }
-}
-
 function redirectToLogin(request: NextRequest, callbackUrl: string) {
   const loginUrl = new URL(publicWebUrls.signIn, request.url);
-  loginUrl.searchParams.set("login", "required");
   loginUrl.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
   matcher: [
-    "/authors/:path*",
+    "/users/authors/:path*",
     "/users/:path*",
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],

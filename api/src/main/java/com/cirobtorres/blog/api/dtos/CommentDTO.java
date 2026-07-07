@@ -24,7 +24,7 @@ public record CommentDTO(
     public CommentDTO(Comment comment) {
         this(
                 comment.getId(),
-                resolveParentId(comment),
+                comment.getParent() != null ? comment.getParent().getId() : null,
                 resolveBody(comment),
                 comment.getArticle() != null ? new ArticleSubGroup(comment.getArticle().getId()) : null,
                 resolveUser(comment),
@@ -41,16 +41,9 @@ public record CommentDTO(
         );
     }
 
-    public record UserSubGroup(UUID id, String name, String pictureUrl) {}
+    public record UserSubGroup(UUID id, String name) {}
 
     public record ArticleSubGroup(UUID id) {}
-
-    private static UUID resolveParentId(Comment comment) {
-        if (comment.getParent() != null) {
-            return comment.getParent().getId();
-        }
-        return null;
-    }
 
     private static String resolveBody(Comment comment) {
         if (comment.isBlocked()) return "[Comentário bloqueado]";
@@ -60,16 +53,12 @@ public record CommentDTO(
 
     private static UserSubGroup resolveUser(Comment comment) {
         if (comment.isDeleted() || comment.isBlocked()) {
-            return new UserSubGroup(null, "[Excluído]", null);
+            return new UserSubGroup(null, "[Excluído]");
         }
-        if (comment.getUserIdentity() != null) {
-            UUID userId = comment.getUserIdentity().getUser() != null
-                    ? comment.getUserIdentity().getUser().getId()
-                    : null;
+        if (comment.getUser() != null) {
             return new UserSubGroup(
-                    userId,
-                    comment.getUserIdentity().getName(),
-                    comment.getUserIdentity().getPictureUrl()
+                    comment.getUser().getId(),
+                    comment.getUser().getName()
             );
         }
         return null;

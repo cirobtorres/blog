@@ -2,6 +2,7 @@ package com.cirobtorres.blog.api;
 
 import com.cirobtorres.blog.api.entities.MediaFolder;
 import com.cirobtorres.blog.api.repositories.MediaFolderRepository;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +18,7 @@ public class MediaFolderInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String @NonNull ... args) throws Exception {
         if (!folderRepository.existsByPath("/")) {
             MediaFolder home = MediaFolder.builder()
                     .name("Home")
