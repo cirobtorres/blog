@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import AuthProvider from "../providers/AuthProvider";
-import getUser from "../services/auth/session/server/getUser";
 import "../styles/globals.css";
+import getUser from "../services/auth/getUser";
 
 export default async function RootLayout({
   children,

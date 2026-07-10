@@ -1,7 +1,6 @@
 "use server";
 
 import { notFound } from "next/navigation";
-// import getUser from "../../../../../services/auth/session/server/getUser";
 import ValidateEmailFormClient from "../client";
 import { cookies } from "next/headers";
 

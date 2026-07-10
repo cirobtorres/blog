@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@source "../../../../../**/*.ftl";
+
+@theme {
+  --color-primary: oklch(0.541 0.281 293.009);
+  --color-primary-hover: oklch(60.6% 0.25 292.717);
+}

@@ -44,6 +44,7 @@ public class Articles {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_published_revision_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Revisions currentPublishedRevision;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)

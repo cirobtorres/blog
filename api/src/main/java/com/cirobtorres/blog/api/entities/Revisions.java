@@ -45,6 +45,7 @@ public class Revisions {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Articles article;
 
     @Column(name = "created_at", updatable = false, nullable = false)

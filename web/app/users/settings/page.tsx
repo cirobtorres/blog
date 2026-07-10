@@ -10,7 +10,7 @@ import Header from "../../../components/Header";
 import UserSettingsPassForm from "../../../components/Users/Settings/UserSettingsPassForm";
 import { Alert } from "../../../components/Alert";
 import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";
-import getUser from "../../../services/auth/session/server/getUser";
+import getUser from "../../../services/auth/getUser";
 
 export default async function UserSettingsPage() {
   const userData = await getUser();

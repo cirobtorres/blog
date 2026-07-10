@@ -1,6 +1,6 @@
 package com.cirobtorres.blog.api.dtos;
 
-public record RegisterRequest(
+public record UserSignUpDTO(
         String name,
         String email,
         String password

@@ -7,6 +7,7 @@ const KEYCLOAK_CLIENT_ID =
 const KEYCLOAK_CLIENT_SECRET =
   process.env.KEYCLOAK_BLOG_WEB_CLIENT_SECRET || "";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 type TokenResponse = {
   access_token: string;
@@ -43,7 +44,6 @@ export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
   const error = request.nextUrl.searchParams.get("error");
   const state = request.nextUrl.searchParams.get("state");
-
   const savedState = request.cookies.get("oauth_state")?.value;
 
   if (error) {
@@ -93,11 +93,9 @@ export async function GET(request: NextRequest) {
   );
 
   if (!tokenResponse.ok) {
-    const text = await tokenResponse.text();
-
     console.error("Keycloak token exchange failed:", {
       status: tokenResponse.status,
-      body: text,
+      body: await tokenResponse.text(),
     });
 
     return NextResponse.redirect(
@@ -107,36 +105,35 @@ export async function GET(request: NextRequest) {
 
   const tokens = (await tokenResponse.json()) as TokenResponse;
 
+  const springResponse = await fetch(`${API_URL}/auth/social/session`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokens.access_token}`,
+    },
+    body: JSON.stringify(tokens),
+    cache: "no-store",
+  });
+
+  if (!springResponse.ok) {
+    console.error("Spring social session failed:", {
+      status: springResponse.status,
+      body: await springResponse.text(),
+    });
+
+    return NextResponse.redirect(
+      new URL("/users/sign-in?error=spring_session_failed", request.url),
+    );
+  }
+
   const response = NextResponse.redirect(new URL(returnTo, request.url));
 
   response.cookies.delete("oauth_state");
 
-  response.cookies.set("access_token", tokens.access_token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: tokens.expires_in ?? 60 * 5,
-  });
+  const setCookieHeaders = springResponse.headers.getSetCookie();
 
-  if (tokens.refresh_token) {
-    response.cookies.set("refresh_token", tokens.refresh_token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: tokens.refresh_expires_in ?? 60 * 60 * 24 * 30,
-    });
-  }
-
-  if (tokens.id_token) {
-    response.cookies.set("id_token", tokens.id_token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: tokens.expires_in ?? 60 * 5,
-    });
+  for (const cookie of setCookieHeaders) {
+    response.headers.append("Set-Cookie", cookie);
   }
 
   return response;

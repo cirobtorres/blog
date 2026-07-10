@@ -2,11 +2,15 @@ package com.cirobtorres.blog.api.services;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.dtos.LoginRequest;
-import com.cirobtorres.blog.api.dtos.RegisterRequest;
+import com.cirobtorres.blog.api.dtos.UserSignUpDTO;
 import com.cirobtorres.blog.api.dtos.UserDTO;
 import com.cirobtorres.blog.api.entities.User;
+import com.cirobtorres.blog.api.exceptions.InvalidPasswordPolicyException;
+import com.cirobtorres.blog.api.exceptions.UserAlreadyExistsException;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import org.jspecify.annotations.NonNull;
@@ -30,6 +34,7 @@ import java.util.UUID;
 @Service
 public class AuthService {
     private final UserService userService;
+    private final String frontendUrl;
     private final String keycloakUrl;
     private final String realm;
     private final String webClientId;
@@ -43,6 +48,7 @@ public class AuthService {
             ApiApplicationProperties apiApplicationProperties
     ) {
         this.userService = userService;
+        this.frontendUrl = apiApplicationProperties.getFrontend().getUrl();
         this.isProd = apiApplicationProperties.getApplication().isProduction();
         this.keycloakUrl = apiApplicationProperties.getKeycloak().getKeycloakUrl();
         this.realm = apiApplicationProperties.getKeycloak().getRealm();
@@ -52,7 +58,9 @@ public class AuthService {
     }
 
     @Transactional
-    public UserDTO saveLocalUser(RegisterRequest request) {
+    public UserDTO saveLocalUser(UserSignUpDTO request) {
+        validatePasswordPolicy(request);
+
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(keycloakUrl)
                 .realm(realm)
@@ -65,8 +73,14 @@ public class AuthService {
         Response response = keycloak.realm(realm).users().create(kcUser);
 
         if (response.getStatus() == 409) {
-            throw new RuntimeException("Email already taken.");
-        } else if (response.getStatus() != 201) {
+            throw new UserAlreadyExistsException("Este e-mail já está em uso.");
+        }
+
+        if (response.getStatus() == 400) {
+            throw new InvalidPasswordPolicyException("A senha não atende à política de segurança configurada.");
+        }
+
+        if (response.getStatus() != 201) {
             throw new RuntimeException("User creation failed.");
         }
 
@@ -105,8 +119,11 @@ public class AuthService {
 
             return tokenResponse;
         } catch (NotAuthorizedException e) {
-            log.warn("Authentication failed for user: {}", request.email());
-            throw new RuntimeException("Email or password is incorrect");
+            throw new NotAuthorizedException("Email or password is incorrect");
+        } catch (BadRequestException e) {
+            throw new BadRequestException("Email or password is incorrect");
+        } catch (ForbiddenException e) {
+            throw new ForbiddenException("Email or password is incorrect");
         } catch (Exception e) {
             log.error("Unexpected error from Keycloak authentication:", e);
             throw new RuntimeException("Internal server error");
@@ -149,7 +166,7 @@ public class AuthService {
         );
     }
 
-    private static @NonNull UserRepresentation getUserRepresentation(RegisterRequest request) {
+    private static @NonNull UserRepresentation getUserRepresentation(UserSignUpDTO request) {
         UserRepresentation kcUser = new UserRepresentation();
         kcUser.setUsername(request.email());
         kcUser.setEmail(request.email());
@@ -164,5 +181,55 @@ public class AuthService {
         credential.setTemporary(false);
         kcUser.setCredentials(List.of(credential));
         return kcUser;
+    }
+
+    @Transactional
+    public void sendPasswordResetEmail(String rawEmail) {
+        String email = rawEmail.trim().toLowerCase();
+
+        try (Keycloak keycloak = KeycloakBuilder.builder()
+                .serverUrl(keycloakUrl)
+                .realm(realm)
+                .grantType("client_credentials")
+                .clientId(apiClientId)
+                .clientSecret(apiClientSecret)
+                .build()) {
+            List<UserRepresentation> users =
+                    keycloak.realm(realm).users().searchByEmail(email, true);
+
+            if (users == null || users.isEmpty()) {
+                // Do not reveal to the user if that email in fact doesn't exist
+                return;
+            }
+
+            UserRepresentation user = users.getFirst();
+
+            String redirectUri = frontendUrl + "/users/sign-in";
+            int lifespanSeconds = 60 * 60;
+
+            keycloak.realm(realm)
+                    .users()
+                    .get(user.getId())
+                    .executeActionsEmail(
+                            webClientId,
+                            redirectUri,
+                            lifespanSeconds,
+                            List.of("UPDATE_PASSWORD")
+                    );
+        }
+    }
+
+    private void validatePasswordPolicy(UserSignUpDTO request) {
+        String email = request.email().trim().toLowerCase();
+        String password = request.password();
+        if (password.length() < 8) {
+            throw new InvalidPasswordPolicyException("A senha deve ter pelo menos 8 caracteres.");
+        }
+        if (password.length() > 32) {
+            throw new InvalidPasswordPolicyException("A senha deve ter no máximo 32 caracteres.");
+        }
+        if (password.equalsIgnoreCase(email)) {
+            throw new InvalidPasswordPolicyException("A senha não pode ser igual ao e-mail.");
+        }
     }
 }

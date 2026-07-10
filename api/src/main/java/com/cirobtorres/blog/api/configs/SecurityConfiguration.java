@@ -56,7 +56,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // PUBLIC
-                        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/auth/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/auth/refresh", "/auth/password-reset-email-request").permitAll()
                         .requestMatchers(HttpMethod.GET, "/articles/**", "/comments/**", "/tags/**").permitAll()
 
                         // ARTICLE

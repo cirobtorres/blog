@@ -39,6 +39,7 @@ export function FieldsetPassword({
           id="password"
           name="password"
           type={type}
+          minLength={8}
           maxLength={32}
           value={value}
           onChange={(e) => onChange(e.target.value)}

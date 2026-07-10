@@ -2,10 +2,10 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { apiClientUrls, publicWebUrls } from "../../../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { hasAutorities } from "../../../../routing/protected/hasAutorities";
-import { serverFetch } from "../../../serverFetch";
+import { apiClientUrls, publicWebUrls } from "../../routing/routes";
+import { serverFetch } from "../serverFetch";
+import { hasAutorities } from "../../routing/protected/hasAutorities";
 
 export async function serverLogout() {
   const headersList = await headers();

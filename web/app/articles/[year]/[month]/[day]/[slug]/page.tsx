@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { notFound } from "next/navigation";
 import { apiServerUrls } from "../../../../../../routing/routes";
 import ArticleTitle from "../../../../../../components/Article/ArticleTitle";
@@ -75,9 +75,9 @@ export default async function ArticlePageId({
     <div className="min-h-screen grid grid-rows-[var(--height-header)_1fr_var(--height-footer)]">
       <Header sticky progress />
       <main>
-        <Suspense>
+        <React.Suspense>
           <ArticleTitle {...article} />
-        </Suspense>
+        </React.Suspense>
         <ArticleBody {...article} />
         <Comments articleId={article.id} resolvedParams={resolvedParams} />
       </main>

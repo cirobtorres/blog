@@ -5,10 +5,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { cn, focusRing } from "../../../utils/variants";
 import { protectedWebUrls } from "../../../routing/routes";
 import { Link } from "../../Links";
-import { serverLogout } from "../../../services/auth/session/server/logout";
 import { useRouter } from "next/navigation";
 import Spinner from "../../Spinner";
 import { AvatarName } from "../../Avatar";
+import { serverLogout } from "../../../services/auth/logout";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
@@ -35,7 +35,6 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
           >
             <AvatarName
               authorName={user.data.name}
-              authorPicUrl={user.data.pictureUrl}
               options={{ hideName: true }}
             />
           </button>
@@ -50,7 +49,7 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
               {user.data.name}
             </p>
             <p className="text-xs line-clamp-2 text-neutral-400 dark:text-neutral-500">
-              {user.data.providerEmail}
+              {user.data.email}
             </p>
           </div>
           <div className={cn(elStyleWrapper, "border-b")}>

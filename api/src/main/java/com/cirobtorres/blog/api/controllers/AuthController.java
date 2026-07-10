@@ -2,13 +2,12 @@ package com.cirobtorres.blog.api.controllers;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.dtos.LoginRequest;
-import com.cirobtorres.blog.api.dtos.RegisterRequest;
+import com.cirobtorres.blog.api.dtos.UserPassResetDTO;
+import com.cirobtorres.blog.api.dtos.UserSignUpDTO;
 import com.cirobtorres.blog.api.dtos.UserDTO;
 import com.cirobtorres.blog.api.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.AccessTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ public class AuthController{
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody UserSignUpDTO request) {
         UserDTO userDTO = authService.saveLocalUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
     }
@@ -78,15 +77,12 @@ public class AuthController{
             @CookieValue(name = "refresh_token", required = false) String refreshToken,
             HttpServletResponse response
     ) {
-        // log.info("1. refresh_token: {}", refreshToken);
-        // log.info("2. refreshToken == null || refreshToken.isBlank(): {}", refreshToken == null || refreshToken.isBlank());
         if (refreshToken == null || refreshToken.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         try {
             String tokenEndpoint = String.format("%s/realms/%s/protocol/openid-connect/token", keycloakUrl, realm);
-            // log.info("3. tokenEndpoint: {}", tokenEndpoint);
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
@@ -107,7 +103,6 @@ public class AuthController{
             );
 
             AccessTokenResponse tokenResponse = tokenResponseWrapper.getBody();
-            // log.info("4. tokenResponse: {}", tokenResponse);
             if (tokenResponse == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -122,10 +117,8 @@ public class AuthController{
                     .build();
 
             String newRefreshToken = tokenResponse.getRefreshToken() != null ? tokenResponse.getRefreshToken() : refreshToken;
-            // log.info("5. newRefreshToken: {}", newRefreshToken);
             long newRefreshMaxAge = tokenResponse.getRefreshExpiresIn() > 0 ? tokenResponse.getRefreshExpiresIn() : 2592000;
 
-            // log.info("6. newRefreshMaxAge: {}", newRefreshMaxAge);
             ResponseCookie refreshTokenCookie = ResponseCookie
                     .from("refresh_token", newRefreshToken)
                     .httpOnly(true)
@@ -135,20 +128,48 @@ public class AuthController{
                     .sameSite("Lax")
                     .build();
 
-            // log.info("7. refreshToken: {}", refreshToken);
             response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-            // log.info("8. ResponseEntity.ok().build()");
             return ResponseEntity.ok().build();
 
         } catch (org.springframework.web.client.HttpClientErrorException e) {
-            // log.warn("Keycloak refused refresh_token (expired): {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            // log.error("Renovation failed: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/social/session")
+    public ResponseEntity<Void> socialSession(
+            @RequestBody AccessTokenResponse tokenResponse,
+            Authentication auth,
+            HttpServletResponse response
+    ) {
+        authService.getUser(auth);
+
+        ResponseCookie accessTokenCookie = ResponseCookie
+                .from("access_token", tokenResponse.getToken())
+                .httpOnly(true)
+                .secure(isProd)
+                .path("/")
+                .maxAge(tokenResponse.getExpiresIn())
+                .sameSite("Lax")
+                .build();
+
+        ResponseCookie refreshTokenCookie = ResponseCookie
+                .from("refresh_token", tokenResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(isProd)
+                .path("/")
+                .maxAge(tokenResponse.getRefreshExpiresIn())
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("me")
@@ -156,5 +177,13 @@ public class AuthController{
             Authentication auth
     ) {
         return ResponseEntity.ok(authService.getUser(auth));
+    }
+
+    @PostMapping("/password-reset-email-request")
+    public ResponseEntity<Void> requestPasswordReset(
+            @Valid @RequestBody UserPassResetDTO request
+    ) {
+        authService.sendPasswordResetEmail(request.email());
+        return ResponseEntity.ok().build();
     }
 }

@@ -15,7 +15,7 @@ import * as z from "zod";
 
 const signInSchema = z.object({
   email: z.email("E-mail inválido").trim().toLowerCase(),
-  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
+  password: z.string().min(8, "Mínimo de 8 e máximo de 32 caracteres"),
 });
 
 interface ZodReturnError {

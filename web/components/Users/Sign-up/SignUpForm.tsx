@@ -31,25 +31,38 @@ import * as z from "zod";
 import { publicWebUrls } from "../../../routing/routes";
 import { redirect } from "next/navigation";
 
-const signUpSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Pelo menos 3 caracteres")
-    .max(65, "Nome muito longo")
-    .regex(
-      /^[A-Za-zÀ-ÖØ-öø-ÿÇç\s]+$/,
-      "O nome não pode conter números ou símbolos especiais",
-    )
-    .refine((val) => !isForbiddenName(val), {
-      message: "Este nome contém palavras não permitidas",
+const signUpSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(3, "Pelo menos 3 caracteres")
+      .max(65, "Nome muito longo")
+      .regex(
+        /^[A-Za-zÀ-ÖØ-öø-ÿÇç\s]+$/,
+        "O nome não pode conter números ou símbolos especiais",
+      )
+      .refine((val) => !isForbiddenName(val), {
+        message: "Este nome contém palavras não permitidas",
+      }),
+
+    email: z.email("E-mail inválido").trim().toLowerCase(),
+
+    password: z
+      .string()
+      .min(8, "A senha deve ter pelo menos 8 caracteres")
+      .max(32, "A senha deve ter no máximo 32 caracteres"),
+
+    strength: z.number().min(4, "Senha muito fraca"),
+
+    termsCheckbox: z.refine((value) => value === "on", {
+      message: "Você precisa concordar com as políticas de uso de dados",
     }),
-  email: z.email("E-mail inválido").trim().toLowerCase(),
-  password: z.string().min(8, "Mínimo de 6 e máximo de 32 caracteres"),
-  strength: z.number().min(4, "Senha muito fraca"),
-  termsCheckbox: z.refine((value) => value === "on", {
-    message: "Você precisa concordar com as políticas de uso de dados",
-  }),
-});
+  })
+  .refine((data) => data.password.toLowerCase() !== data.email.toLowerCase(), {
+    path: ["password"],
+    message: "A senha não pode ser igual ao e-mail",
+  });
 
 interface ZodReturnError {
   name?: { errors: string[] } | undefined;

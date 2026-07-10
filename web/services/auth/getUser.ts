@@ -1,8 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls } from "../../../../routing/routes";
-import { serverFetch } from "../../../serverFetch";
+import { serverFetch } from "../serverFetch";
+import { apiServerUrls } from "../../routing/routes";
 
 const getUser = async (): Promise<SessionUser> => {
   console.log("getUser");

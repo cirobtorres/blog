@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:keycloak-theme": "tailwindcss -i ../keycloak/themes/blog/login/resources/css/input.css -o ../keycloak/themes/blog/login/resources/css/tailwind.css --minify",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
@@ -66,6 +67,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.2",
     "@tailwindcss/postcss": "^4",
     "@types/jest": "^29",
     "@types/node": "^20",

@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { serverLogout } from "../../../services/auth/session/server/logout";
 import Spinner from "../../Spinner";
 import { Button } from "../../Button";
 import { useRouter } from "next/navigation";
+import { serverLogout } from "../../../services/auth/logout";
 
 export function LogoutButton() {
   const router = useRouter();
