@@ -1,24 +1,20 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
+import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { serverFetch } from "../serverFetch";
 
 export default async function deleteFile({ id }: { id: string }) {
-  const cookie = await cookies();
-  const accessToken = cookie.get("access_token")?.value;
-
   try {
     const response = await serverFetch(apiServerUrls.media.root + "/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
       },
     });
 
     if (!response.ok) {
+      console.error("deleteFile failed: HTTP", response.status);
       return {
         ok: false,
         success: null,

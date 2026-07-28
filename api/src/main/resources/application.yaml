@@ -44,6 +44,7 @@ api-properties:
   frontend:
     url: ${WEB_URL}
   application:
+    domain: ${DOMAIN}
     mailerFrom: ${MAILER_FROM}
     mediaUpServName: ${CLOUDINARY_CLOUD_NAME}
     mediaUpServKey: ${CLOUDINARY_API_KEY}

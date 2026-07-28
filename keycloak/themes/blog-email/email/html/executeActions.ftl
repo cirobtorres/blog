@@ -17,15 +17,9 @@
                 <p style="margin:8px 0;font-size:16px;line-height:24px;color:#404040;">
                     Clique no link de confirmação abaixo.
                 </p>
-                <a
-                  href="${properties['webUrl']!'http://localhost:3000'}/local/auth/validate-email?keycloak_link=${link?url('UTF-8')}"
-                  style="display:inline-block;color:#7c3aed;text-decoration:underline;font-size:14px;font-weight:700;"
-                >
+                <a href="${properties['webUrl']!'http://localhost:3000'}/api/auth/validate-email?keycloak_link=${link?url('UTF-8')}" style="display:inline-block;color:#7c3aed;text-decoration:underline;font-size:14px;font-weight:700;">
                     Confirmar
                 </a>
-                <p style="margin:8px 0;font-size:14px;line-height:18px;color:#404040;">
-                    Se o botão não funcionar, <b>copie e cole</b> o seguinte link no navegador.
-                </p>
                 <p style="margin:8px 0;font-size:12px;line-height:18px;color:#7c3aed;">
                     ${link?url('UTF-8')}
                 </p>

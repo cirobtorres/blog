@@ -7,9 +7,10 @@ import {
   FieldsetLabel,
   FieldsetError,
 } from "../../Fieldset";
-import { signIn } from "../../../services/auth/signIn";
 import { FieldsetPassword } from "../../Fieldset/FieldsetPassword";
+import { protectedWebUrls, routeHandlers } from "../../../routing/routes";
 import { Button } from "../../Button";
+import { User } from "next-auth";
 import Spinner from "../../Spinner";
 import * as z from "zod";
 
@@ -21,19 +22,28 @@ const signInSchema = z.object({
 interface ZodReturnError {
   email?: { errors: string[] } | undefined;
   password?: { errors: string[] } | undefined;
+  form?: { errors: string[] };
 }
-
-const defaultState = {
-  ok: false,
-  success: null,
-  error: null,
-  data: null,
-};
 
 type SignInFormProps = {
   mode?: "page" | "modal";
   redirectUrl?: string;
 };
+
+function resolveRedirectUrl(userData: User, redirectUrl?: string) {
+  if (redirectUrl) {
+    const decoded = decodeURIComponent(redirectUrl);
+    if (decoded.startsWith("/")) {
+      return decoded;
+    }
+  }
+
+  if (userData.authorities.includes("AUTHOR")) {
+    return protectedWebUrls.authors;
+  }
+
+  return "/";
+}
 
 export default function SignInForm({
   mode = "page",
@@ -44,53 +54,66 @@ export default function SignInForm({
   const [errors, setErrors] = React.useState<ZodReturnError | undefined>(
     undefined,
   );
+  const [isPending, startTransition] = React.useTransition();
   const passRef = React.useRef(null);
 
-  const [state, action, isPending] = React.useActionState(
-    async (prevState: ActionState, formData: FormData) => {
-      const result = await signIn(prevState, formData);
+  async function onSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-      if (
-        mode === "modal" &&
-        result.ok &&
-        result.data &&
-        "redirectUrl" in result.data
-      ) {
-        const nextUrl = (result.data as Record<string, string>).redirectUrl;
-        if (nextUrl.startsWith("/")) {
-          // Navigate synchronously before any re-render can remount @signInModal.
-          window.location.replace(nextUrl);
-          return result;
-        }
-      }
-
-      if (!result.ok && result.error) {
-        setErrors(result.error);
-      }
-      return result;
-    },
-    defaultState,
-  );
-
-  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const rawData = Object.fromEntries(formData.entries());
 
-    const result = signInSchema.safeParse({
-      ...rawData,
-    });
+    const result = signInSchema.safeParse(rawData);
 
     if (!result.success) {
-      const zodErrors = z.treeifyError(result.error).properties;
-      setErrors(zodErrors);
-      e.preventDefault();
+      setErrors(z.treeifyError(result.error).properties);
       return;
     }
-  };
+
+    setErrors(undefined);
+
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(result.data),
+      credentials: "include",
+    };
+
+    startTransition(async () => {
+      const loginResponse = await fetch(routeHandlers.login, options);
+
+      if (loginResponse.ok) {
+        const userData: User = await loginResponse.json();
+
+        const nextUrl = resolveRedirectUrl(
+          userData,
+          redirectUrl ||
+            new URLSearchParams(window.location.search).get("redirect_url") ||
+            "",
+        );
+
+        window.location.replace(nextUrl);
+        return;
+      }
+
+      if ([400, 401, 404, 409].includes(loginResponse.status)) {
+        setErrors({
+          email: { errors: ["E-mail ou senha incorretos"] },
+          password: { errors: ["E-mail ou senha incorretos"] },
+        });
+        return;
+      }
+
+      setErrors({
+        form: { errors: ["Ocorreu um erro inesperado. Tente mais tarde."] },
+      });
+    });
+  }
 
   return (
     <form
-      action={action}
       onSubmit={onSubmit}
       className="w-full flex flex-col justify-center gap-2"
     >
@@ -123,7 +146,7 @@ export default function SignInForm({
         onChange={setPassword}
         passErrors={errors?.password?.errors}
       />
-      <FieldsetError error={state.error?.form?.errors} />
+      <FieldsetError error={errors?.form?.errors} />
       <Button disabled={isPending} className="rounded h-9.5">
         {isPending && <Spinner />} {isPending ? "Carregando" : "Confirmar"}
       </Button>

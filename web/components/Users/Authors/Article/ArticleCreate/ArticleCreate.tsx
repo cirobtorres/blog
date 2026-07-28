@@ -10,7 +10,6 @@ import { buttonVariants, cn } from "../../../../../utils/variants";
 import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { useArticleStore } from "../../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../../Fieldset";
-import { useAuth } from "../../../../../providers/AuthProvider";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
 import { ButtonPlaceholder } from "../ArticlePopoverButton";
 import { saveArticle } from "../../../../../services/article/saveArticle";
@@ -24,6 +23,7 @@ import {
   ArticleMediaManager,
 } from "../../../../Editors/editors/ArticleEditorImage";
 import { FileProvider } from "../../../../../providers/FileProvider";
+import { useSession } from "next-auth/react";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -41,7 +41,9 @@ const defaultState: ActionState = {
 };
 
 export function ArticleCreate() {
-  const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const { blocks } = useArticleStore();
   const [selectedTags, setSelectedTags] = React.useState<Tag[]>([]);
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
@@ -59,14 +61,14 @@ export function ArticleCreate() {
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      if (!user?.data?.id) {
+      if (!user?.id) {
         return {
           ...defaultState,
           error: ["Você precisa estar logado"],
         };
       }
 
-      formData.set("userId", user.data.id);
+      formData.set("userId", user.id);
       formData.set("body", JSON.stringify(blocks));
 
       const success = (serverResponse: ActionState) => {
@@ -137,7 +139,7 @@ export function ArticleCreate() {
               <div
                 className={cn(
                   buttonVariants(),
-                  "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/65",
+                  "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/75",
                 )}
               >
                 Publicar

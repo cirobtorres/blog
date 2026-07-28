@@ -2,24 +2,34 @@
 
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
-import { cn, focusRing } from "../../../utils/variants";
-import { protectedWebUrls } from "../../../routing/routes";
-import { Link } from "../../Links";
-import { useRouter } from "next/navigation";
-import Spinner from "../../Spinner";
 import { AvatarName } from "../../Avatar";
-import { serverLogout } from "../../../services/auth/logout";
+import { protectedWebUrls } from "../../../routing/routes";
+import { cn, focusRing } from "../../../utils/variants";
+import { Link } from "../../Links";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
+import Spinner from "../../Spinner";
+import { redirect } from "next/navigation";
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
   "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800 font-normal transition-[background-color,box-shadow] duration-300 rounded";
 
-export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
-  const router = useRouter();
+export default function UserSignedIn({ session }: { session: Session }) {
+  if (!session || !session.user) redirect("/"); // TODO
+
   const [, action, isPending] = React.useActionState(async () => {
-    await serverLogout();
-    router.refresh();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const data = await signOut({
+      redirect: false,
+    });
+    const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(window.location.origin)}`;
+    // const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout`; // Requires permission to logout
+
+    window.location.href = keycloakLogoutUrl;
   }, null);
+
+  const { user } = session;
 
   return (
     <div className="ml-auto mr-0">
@@ -34,7 +44,7 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
             )}
           >
             <AvatarName
-              authorName={user.data.name}
+              authorName={user.name || "Anonymous"}
               options={{ hideName: true }}
             />
           </button>
@@ -46,10 +56,10 @@ export default function UserSignedIn({ user }: { user: AuthSessionConfirmed }) {
         >
           <div className="flex flex-col p-2 border-b">
             <p className="text-xs font-bold truncate text-nowrap">
-              {user.data.name}
+              {user.name}
             </p>
             <p className="text-xs line-clamp-2 text-neutral-400 dark:text-neutral-500">
-              {user.data.email}
+              {user.email}
             </p>
           </div>
           <div className={cn(elStyleWrapper, "border-b")}>

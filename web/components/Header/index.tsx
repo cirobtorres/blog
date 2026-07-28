@@ -5,7 +5,6 @@ import { Link } from "../Links";
 import { ProgressBar } from "./ProgressBar";
 import { cn, linkVariants } from "../../utils/variants";
 import { externalUrls } from "../../routing/routes";
-import { useAuth } from "../../providers/AuthProvider";
 import { VariantProps } from "class-variance-authority";
 import UserAuthGate from "./UserSignedIn";
 
@@ -42,7 +41,6 @@ export default function Header({
 }) {
   const headerRef = React.useRef<HTMLElement>(null);
   const scrollingDownRef = React.useRef(0);
-  const { user } = useAuth();
 
   const hideNavbarListener = () => {
     let prevScrollPos = window.scrollY;
@@ -110,7 +108,7 @@ export default function Header({
             </Link>
           ))}
         </nav>
-        <UserAuthGate user={user} />
+        <UserAuthGate />
       </div>
       {progress && <ProgressBar />}
     </header>

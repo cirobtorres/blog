@@ -1,9 +1,9 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
+import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { serverFetch } from "../serverFetch";
+import { auth } from "../../keycloak/auth";
 
 export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
   const mediaDTOs = cloudinaryResults.map((res) => ({
@@ -21,10 +21,10 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     caption: res.custom_caption,
   }));
 
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
+  const session = await auth();
+  const token = session?.accessToken;
 
-  if (!accessToken)
+  if (!token)
     return {
       ok: false,
       success: null,
@@ -36,7 +36,7 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(mediaDTOs),
     cache: "no-store",

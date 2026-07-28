@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Button } from "../../../components/Button";
 import {
   Fieldset,
@@ -10,19 +9,27 @@ import Header from "../../../components/Header";
 import UserSettingsPassForm from "../../../components/Users/Settings/UserSettingsPassForm";
 import { Alert } from "../../../components/Alert";
 import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";
-import getUser from "../../../services/auth/getUser";
+import { auth } from "../../../keycloak/auth";
+import { redirect } from "next/navigation";
+import { User } from "next-auth";
 
 export default async function UserSettingsPage() {
-  const userData = await getUser();
+  const session = await auth();
 
-  const { data: user } = userData;
+  if (!session || !session.user) {
+    redirect("/"); // TODO: send to signIn
+  }
 
-  const isEmailUnverified = !user?.isEmailVerified;
+  const { user } = session;
+
+  if (user.isBanned) {
+    redirect("/user/banned");
+  }
+
+  const isEmailUnverified = !user.isEmailVerified;
 
   return (
-    <div
-      className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]" // grid-rows-[var(--height-header)_1fr_var(--height-footer)]
-    >
+    <div className="min-h-screen grid grid-rows-[1fr_var(--height-footer)]">
       <Header className="fixed" />
       <main className="mt-height-header px-4">
         <div className="w-full max-w-140 h-full flex flex-col gap-2 py-10 mx-auto">
@@ -42,7 +49,7 @@ export default async function UserSettingsPage() {
                 <h2 className="text-neutral-500">Profile</h2>
                 <div className="flex items-center gap-2">
                   <Fieldset>
-                    <FieldsetInput defaultValue={user?.name} />
+                    <FieldsetInput defaultValue={user.name || "Anonymous"} />
                     <FieldsetLabel label="Nome" />
                   </Fieldset>
                   <Button className="ml-auto w-full max-w-30 h-9.5">
@@ -74,7 +81,7 @@ export default async function UserSettingsPage() {
 const UserCard = ({
   user,
   isEmailUnverified,
-}: { user: User | null } & { isEmailUnverified?: boolean }) => (
+}: { user: User | undefined | null } & { isEmailUnverified?: boolean }) => (
   <div className="w-full flex items-center border rounded-lg p-4 gap-4 bg-stone-900">
     {/* <Image
       src={user?.pictureUrl ?? "https://placehold.co/160x160/000/fff/jpeg"}

@@ -12,7 +12,24 @@ import {
   FolderCardTitle,
 } from "./FolderCardsUtils";
 
-const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+// const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
+
+async function safeJson<T>(res: Response, fallback: T): Promise<T> {
+  if (!res.ok) {
+    console.error(`HTTP error ${res.status} de ${res.url}`);
+    return fallback;
+  }
+
+  const text = await res.text();
+  if (!text) return fallback;
+
+  try {
+    return JSON.parse(text) as T;
+  } catch (err) {
+    console.error("(safeJson) JSON.parse error:", err);
+    return fallback;
+  }
+}
 
 export default async function FolderCardLinks({
   currentPath,
@@ -38,19 +55,21 @@ export default async function FolderCardLinks({
     headers: {
       "Content-Type": "application/json",
     },
-    next: { tags: ["folders"], revalidate: TAG_REVALIDATE_TIME },
-    cache: "force-cache",
+    // next: { tags: ["folders"], revalidate: TAG_REVALIDATE_TIME },
+    next: { tags: ["folders"] },
+    // cache: "force-cache",
+    cache: "no-store",
   };
 
   const [folders, count] = await Promise.all([
     serverFetch(getUrl, options)
-      .then((res) => res.json() as Promise<Folder[]>)
+      .then((res) => safeJson<Folder[]>(res, []))
       .catch((e) => {
         console.error(e);
         return [];
       }),
     serverFetch(countUrl, options)
-      .then((res) => res.json() as Promise<number>)
+      .then((res) => safeJson<number>(res, 0))
       .catch((e) => {
         console.error(e);
         return 0;

@@ -8,13 +8,11 @@ import Text from "@tiptap/extension-text";
 import CharacterCount from "@tiptap/extension-character-count";
 import deleteComment from "../../services/comment/deleteComment";
 import Spinner from "../Spinner";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { AvatarName } from "../Avatar";
-import { useAuth } from "../../providers/AuthProvider";
 import { Button } from "../Button";
 import { cn } from "../../utils/variants";
-import { publicWebUrls } from "../../routing/routes";
 import { sonnerPromise, sonnerToastPromise } from "../../utils/sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import {
@@ -27,6 +25,7 @@ import {
   AlertDialogTrigger,
 } from "../AlertDialog";
 import putComment from "../../services/comment/putComment";
+import { signIn, useSession } from "next-auth/react";
 
 interface TiptapNode {
   type: string;
@@ -112,20 +111,22 @@ export function replaceHash(hash: string) {
 export default function CommentItem({
   articleId,
   comment,
-  depth,
+  // depth,
 }: {
   articleId: string;
   comment: Comments;
-  depth: number;
+  // depth: number;
 }) {
-  const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: session } = useSession();
+  const user = session?.user;
+  const isSignedIn = !!user?.id;
   const replyHash = `comment-${comment.id}`;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const currentPath = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const replyTo = searchParams.get("replyTo");
   const returnParams = new URLSearchParams(searchParams.toString());
   returnParams.delete("redirect_url");
@@ -136,10 +137,11 @@ export default function CommentItem({
   const search = returnParams.toString();
   const redirectParams = new URLSearchParams(search);
   redirectParams.set("replyTo", comment.id);
-  const redirectSearch = redirectParams.toString();
+  // OLD REDIRECT URLs
+  // const redirectSearch = redirectParams.toString();
   // const fullPath = (search ? `${currentPath}?${search}` : currentPath) + "#" + replyHash;
-  const fullPath = `${currentPath}?${redirectSearch}#${replyHash}`;
-  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=reply_comment`;
+  // const fullPath = `${currentPath}?${redirectSearch}#${replyHash}`;
+  // const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=reply_comment`;
 
   const safeTiptapContent = React.useMemo(() => {
     if (comment.isBlocked) return ensureTiptapJson("[Comentário bloqueado]");
@@ -155,11 +157,11 @@ export default function CommentItem({
       <p>{serverResponse.error ?? "Erro ao excluir comentário"}</p>
     );
 
-    if (!user?.data) return defaultState;
+    if (!user?.id) return defaultState;
 
     const data = {
       commentId: comment.id,
-      userId: user?.data.id,
+      userId: user.id,
       articlePath: currentPath,
     };
     const promise = deleteComment(data);
@@ -184,7 +186,7 @@ export default function CommentItem({
   });
 
   React.useEffect(() => {
-    if (!user?.ok) return;
+    if (!isSignedIn) return;
     if (replyTo !== comment.id) return;
     React.startTransition(() => {
       setIsReplying(true);
@@ -197,7 +199,7 @@ export default function CommentItem({
       document.title,
       `${window.location.pathname}${query ? `?${query}` : ""}#comment-${comment.id}`,
     );
-  }, [user?.ok, replyTo, comment.id, searchParams]);
+  }, [isSignedIn, replyTo, comment.id, searchParams]);
 
   React.useEffect(() => {
     if (editor && !editor.isDestroyed) {
@@ -244,9 +246,33 @@ export default function CommentItem({
     return result;
   };
 
-  const handleReplyClick = () => {
-    if (!user?.ok) {
-      router.push(loginUrl, { scroll: false });
+  // const handleReplyClick = () => {
+  //   if (!isSignedIn) {
+  //     router.push(loginUrl, { scroll: false });
+  //     return;
+  //   }
+  //   const next = !isReplying;
+  //   setIsReplying(next);
+  //   if (next) {
+  //     queueMicrotask(() => {
+  //       replaceHash("#" + replyHash);
+  //     });
+  //   } else {
+  //     queueMicrotask(() => {
+  //       clearHash();
+  //     });
+  //   }
+  // };
+
+  const handleReplyClick = async () => {
+    if (!isSignedIn) {
+      const returnParams = new URLSearchParams(searchParams.toString());
+      returnParams.set("replyTo", comment.id);
+      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${replyHash}`;
+
+      await signIn("keycloak", {
+        callbackUrl,
+      });
       return;
     }
     const next = !isReplying;
@@ -285,7 +311,7 @@ export default function CommentItem({
     isCommentDeleted || isCommentBlocked ? 0 : fullText.length;
   const wordCount =
     isCommentDeleted || isCommentBlocked ? 0 : countWords(fullText);
-  const isCommentOwner = comment.user.id === user?.data?.id;
+  const isCommentOwner = comment.user.id === user?.id;
 
   return (
     <>
@@ -415,13 +441,9 @@ export default function CommentItem({
           </Button>
         </div>
       )}
-      {isReplying && user?.ok && (
+      {isReplying && isSignedIn && (
         <div className="p-2 rounded-lg border border-primary/50 bg-primary/10">
-          <AvatarName
-            key={user?.data?.id}
-            authorName={user?.data?.name}
-            authorPicUrl={user?.data?.pictureUrl}
-          />
+          <AvatarName key={user?.id} authorName={user?.name || "Anonymous"} />
           <CommentEditor
             articleId={articleId}
             parentId={comment.id}

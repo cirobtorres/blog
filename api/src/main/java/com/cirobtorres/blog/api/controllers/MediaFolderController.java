@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/media/folders")
+@RequestMapping("media/folders")
 public class MediaFolderController {
     private final MediaFolderService mediaFolderService;
     private static final Logger log = LoggerFactory.getLogger(MediaFolderController.class);

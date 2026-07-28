@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
-import AuthProvider from "../providers/AuthProvider";
+import SessionProvider from "../providers/NextAuthProvider";
 import "../styles/globals.css";
-import getUser from "../services/auth/getUser";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export default async function RootLayout({
   children,
@@ -12,18 +21,25 @@ export default async function RootLayout({
   children: React.ReactNode;
   signInModal: React.ReactNode;
 }>) {
-  const user = await getUser();
-  const providerKey = user.data?.id ?? "guest";
   return (
     <html lang="pt">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider key={providerKey} initialUser={user}>
+        <SessionProvider>
           {children}
           {signInModal}
-          <Toaster position="top-center" />
-        </AuthProvider>
+          <Toaster
+            toastOptions={{
+              // unstyled: true,
+              classNames: {
+                success:
+                  "text-neutral-100! border-[oklch(59.6%_0.145_163.225)]! dark:border-[oklch(59.6%_0.145_163.225)]! bg-[oklch(34.542%_0.04553_168.616)]!",
+              },
+            }}
+            position="top-center"
+          />
+        </SessionProvider>
       </body>
     </html>
   );
@@ -71,13 +87,3 @@ export const metadata: Metadata = {
     description: "Engenharia de Software e Computação Gráfica por Ciro Torres.",
   },
 };
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});

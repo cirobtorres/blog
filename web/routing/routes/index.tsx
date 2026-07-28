@@ -9,7 +9,6 @@ const BLOG_GIT = "https://github.com/cirobtorres/blog";
 
 const publicWebUrls = {
   home: "/",
-  signIn: "/users/sign-in",
   forget: "/users/sign-in/forgot-password",
   signUp: "/users/sign-up",
   validateEmail: "/users/sign-in/validate-email",
@@ -27,20 +26,15 @@ const protectedWebUrls = {
 };
 
 const routeHandlers = {
-  refresh: WEB_URL + "/local/auth/refresh",
-  callback: WEB_URL + "/local/auth/callback",
+  login: WEB_URL + "/api/auth/login",
+  refresh: WEB_URL + "/api/auth/refresh",
+  callback: WEB_URL + "/api/auth/callback",
 };
 
 const apiServerUrls = {
-  login: API_SERVER + "/auth/login",
-  register: API_SERVER + "/auth/register",
-  emailCode: API_SERVER + "/auth/validation",
-  renewCode: API_SERVER + "/auth/renew-code",
-  refresh: API_SERVER + "/auth/refresh",
-  passResetEmailRequest: API_SERVER + "/auth/password-reset-email-request",
-  passResetCode: API_SERVER + "/auth/password-reset-code",
-  passwordReset: API_SERVER + "/auth/password-reset",
-  me: API_SERVER + "/auth/me",
+  auth: {
+    me: API_SERVER + "/auth/me",
+  },
   article: {
     root: API_SERVER + "/articles",
     id: API_SERVER + "/articles/id",
@@ -67,8 +61,8 @@ const apiServerUrls = {
 };
 
 const apiClientUrls = {
-  google: "/local/auth/google",
-  github: "/local/auth/github",
+  google: "/api/auth/google",
+  github: "/api/auth/github",
   logout: API_CLIENT + "/auth/logout",
 };
 

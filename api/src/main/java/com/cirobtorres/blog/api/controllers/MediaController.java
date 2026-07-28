@@ -1,11 +1,14 @@
 package com.cirobtorres.blog.api.controllers;
 
+import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.dtos.MediaDeleteAllDTO;
 import com.cirobtorres.blog.api.dtos.MediaDTO;
 import com.cirobtorres.blog.api.dtos.MediaFilesMoveToDTO;
 import com.cirobtorres.blog.api.dtos.MediaPutDTO;
 import com.cirobtorres.blog.api.services.MediaService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,11 +23,15 @@ import java.util.UUID;
 @RequestMapping("media")
 public class MediaController {
     private final MediaService mediaService;
+    private final boolean isProd;
+    private static final Logger log = LoggerFactory.getLogger(MediaController.class);
 
     public MediaController(
-            MediaService mediaService
+            MediaService mediaService,
+            ApiApplicationProperties apiApplicationProperties
     ) {
         this.mediaService = mediaService;
+        this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @GetMapping
@@ -55,7 +62,7 @@ public class MediaController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable UUID id
+            @PathVariable(name = "id") UUID id
     ) throws Exception {
         mediaService.deleteMedia(id);
         return ResponseEntity.noContent().build();

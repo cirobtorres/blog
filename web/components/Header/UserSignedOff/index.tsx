@@ -1,54 +1,47 @@
 "use client";
 
-import { publicWebUrls } from "../../../routing/routes";
-import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { cn, focusRing, linkVariants } from "../../../utils/variants";
 import { usePathname, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function UserSignedOff() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
   const fullPath = `${pathname}?${params.toString()}`;
-  const redirectSignIn = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`;
-  const redirectSignUp = `${publicWebUrls.signUp}?redirect_url=${encodeURIComponent(fullPath)}`;
+  // const redirectSignIn = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`; // TODO
+  // const redirectSignUp = `${publicWebUrls.signUp}?redirect_url=${encodeURIComponent(fullPath)}`; // TODO
+
+  const handleSignIn = async () => {
+    await signIn("keycloak", {
+      callbackUrl: "/",
+    });
+  };
 
   return (
-    <Popover>
-      <PopoverTrigger
+    <div className="relative flex gap-3">
+      <button
+        onClick={handleSignIn}
         className={cn(
-          "cursor-pointer flex justify-center items-center rounded-full border border-transparent transition-all duration-300",
+          linkVariants({ variant: "internal" }),
+          "cursor-pointer border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100",
+          // relative after:absolute after:-right-2 after:top-1/2 after:-translate-y-1/2 after:h-4 after:w-px after:shrink-0 after:bg-stone-200 dark:after:bg-stone-700
           focusRing,
         )}
       >
-        <UserSignedOffIcon />
-      </PopoverTrigger>
-      <PopoverContent
-        align="end"
-        className="w-30 flex flex-col gap-0 p-1 bg-stone-200 dark:bg-stone-900 [&_a]:text-sm [&_a]:font-normal [&_a]:text-neutral-900 [&_a]:dark:text-neutral-100 [&_a]:transition-background [&_a]:duration-300 [&_a]:hover:bg-stone-300 dark:[&_a]:hover:bg-stone-800 [&_a]:w-full [&_a]:py-1 [&_a]:px-2"
+        Entrar
+      </button>
+      {/* <a
+        href={redirectSignUp}
+        className={cn(
+          linkVariants({ variant: "internal" }),
+          "cursor-pointer border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
+          focusRing,
+        )}
       >
-        <a
-          href={redirectSignIn}
-          className={cn(
-            linkVariants({ variant: "internal" }),
-            "border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
-            focusRing,
-          )}
-        >
-          Entrar
-        </a>
-        <a
-          href={redirectSignUp}
-          className={cn(
-            linkVariants({ variant: "internal" }),
-            "border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
-            focusRing,
-          )}
-        >
-          Cadastrar
-        </a>
-      </PopoverContent>
-    </Popover>
+        Cadastrar
+      </a> */}
+    </div>
   );
 }
 

@@ -65,7 +65,7 @@ export default function DialogEmptyContent({
 
     try {
       const filePromise = fetchFileFromUrl(
-        `/local/fetch-file?url=${encodeURIComponent(url)}`,
+        `/api/fetch-file?url=${encodeURIComponent(url)}`,
       );
       const result = sonnerPromise(
         filePromise

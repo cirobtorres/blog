@@ -9,6 +9,8 @@ public record UserDTO (
         String name,
         String email,
         boolean isEmailVerified,
+        boolean isBanned,
+        boolean isDeleted,
         List<String> authorities,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

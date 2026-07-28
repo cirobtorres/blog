@@ -27,6 +27,7 @@ import {
   ArticleMediaManager,
 } from "../../../../Editors/editors/ArticleEditorImage";
 import { FileProvider } from "../../../../../providers/FileProvider";
+import { useSession } from "next-auth/react";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -53,7 +54,8 @@ export function ArticleUpdate({
   body,
   status,
 }: Article) {
-  const { user } = useAuth();
+  const { data: session, status: sessionStatus } = useSession();
+  const user = session?.user;
   const { blocks } = useArticleStore();
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
     null,
@@ -65,14 +67,14 @@ export function ArticleUpdate({
 
   const [saveState, saveAction, isSavePending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      if (!user?.data?.id) {
+      if (!user?.id) {
         return {
           ...defaultState,
           error: ["Você precisa estar logado"],
         };
       }
 
-      formData.set("userId", user.data.id);
+      formData.set("userId", user.id);
       formData.set("body", JSON.stringify(blocks));
 
       const publishSuccess = (serverResponse: ActionState) => {
@@ -105,14 +107,14 @@ export function ArticleUpdate({
 
   const [publishState, publishAction, isPublishPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
-      if (!user?.data?.id) {
+      if (!user?.id) {
         return {
           ...defaultState,
           error: ["Você precisa estar logado"],
         };
       }
 
-      formData.set("userId", user.data.id);
+      formData.set("userId", user.id);
       formData.set("body", JSON.stringify(blocks));
 
       const success = (serverResponse: ActionState) => {

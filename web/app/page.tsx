@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import { convertToLargeDate, mountURL } from "../utils/date";
 import { serverFetch } from "../services/serverFetch";
 import { apiServerUrls } from "../routing/routes";
+import { Skeleton } from "../components/Skeleton";
 import ArticlePagination from "../components/Article/ArticlePagination";
 import {
   ArticleCard,
@@ -16,7 +17,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { Skeleton } from "../components/Skeleton";
+import { EmailValidationToast } from "../components/EmailValidationToast";
 
 const ArticlePaginationFallback = () => (
   <div className="mx-auto flex w-full justify-center">
@@ -67,6 +68,9 @@ export default async function HomePage({
         <Header className="fixed" />
       </React.Suspense>
       <main className="mt-height-header">
+        <React.Suspense>
+          <EmailValidationToast />
+        </React.Suspense>
         {hasArticles &&
           (!(params?.page || params?.page === "0") ? (
             <RenderArticles articles={articles} />

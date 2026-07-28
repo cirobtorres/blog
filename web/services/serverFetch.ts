@@ -1,28 +1,24 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
-
-function buildHeaders(options: RequestInit, token?: string) {
-  const headersObj = new Headers(options.headers);
-  if (token) {
-    headersObj.set("Authorization", `Bearer ${token}`);
-  }
-  return headersObj;
-}
+import { auth } from "../keycloak/auth";
 
 export async function serverFetch(url: string, options: RequestInit = {}) {
-  const headersList = await headers();
-  const authorization = headersList.get("Authorization");
-  let token = authorization?.startsWith("Bearer ")
-    ? authorization.substring(7)
-    : undefined;
-  if (!token) {
-    const cookieStore = await cookies();
-    token = cookieStore.get("access_token")?.value;
+  const session = await auth();
+  const token = session?.accessToken;
+  const headers = new Headers(options?.headers);
+
+  if (token && !session?.error) {
+    headers.set("Authorization", `Bearer ${token}`);
+  } else {
+    console.warn(
+      "serverFetch failed to append bearer token:",
+      token && !session?.error,
+    );
   }
+
   const response = await fetch(url, {
     ...options,
-    headers: buildHeaders(options, token || undefined),
+    headers,
     cache: "no-store",
   });
   return response;

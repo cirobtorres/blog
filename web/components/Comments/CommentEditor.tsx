@@ -5,7 +5,6 @@ import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { sonnerToastPromise, sonnerPromise } from "../../utils/sonner";
 import { Button } from "../Button";
 import { cn, focusRing } from "../../utils/variants";
-import { useAuth } from "../../providers/AuthProvider";
 import { Skeleton } from "../Skeleton";
 import { usePathname } from "next/navigation";
 import Document from "@tiptap/extension-document";
@@ -15,6 +14,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
 import postComment from "../../services/comment/postComment";
 import Spinner from "../Spinner";
+import { useSession } from "next-auth/react";
 
 const defaultState: ActionState = {
   ok: false,
@@ -55,7 +55,9 @@ export default function CommentEditor({
   onCancel?: () => void;
   onSuccess?: () => void;
 }) {
-  const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const expectedHash = anchor ? `#${anchor}` : "#comment-root";
   const [isOpen, setIsOpen] = React.useState(() => {
     if (initialContent) return true;
@@ -207,7 +209,8 @@ export default function CommentEditor({
     // Rebuild cleaned JSON
     const cleanJson = { ...json, content: filteredContent };
     const body = JSON.stringify(cleanJson);
-    const identityId = user?.data?.identityId;
+    // const identityId = user?.data?.identityId;
+    const identityId = user?.id;
 
     if (!identityId)
       return { ...defaultState, error: "Usuário não autenticado" };
@@ -224,7 +227,8 @@ export default function CommentEditor({
     if (onSave) {
       result = onSave(obj);
     } else {
-      const identityId = user?.data?.identityId;
+      // const identityId = user?.data?.identityId;
+      const identityId = user?.id;
       if (!identityId) return { ...defaultState, error: "Usuário deslogado" };
 
       result = postComment(obj);

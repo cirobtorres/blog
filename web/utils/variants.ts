@@ -29,7 +29,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-neutral-100 bg-primary/65 border-primary",
+        default: "text-neutral-100 bg-primary/75 border-primary",
         outline:
           "text-neutral-500 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900",
         ghost:

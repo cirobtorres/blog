@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { Skeleton } from "../../Skeleton";
-import Spinner from "../../Spinner";
+import { useSession } from "next-auth/react";
 import UserSignedOff from "../UserSignedOff";
+import Spinner from "../../Spinner";
 
 const UserSignedInDynamic = dynamic(
   () => import("./UserSignedIn").then((m) => m.default),
@@ -21,16 +22,20 @@ const UserSkeleton = () => (
   </div>
 );
 
-const UserAuthGate = ({ user }: { user: SessionUser | null }) => {
-  if (user === null) {
+const UserAuthGate = () => {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
     return <UserSkeleton />;
   }
 
-  if (user.ok) {
-    return <UserSignedInDynamic user={user} />;
+  if (!session) {
+    return <UserSignedOff />;
   }
 
-  return <UserSignedOff />;
+  // if (session.user.isBanned) {} // TODO
+
+  return <UserSignedInDynamic session={session} />;
 };
 
 export { UserSkeleton };

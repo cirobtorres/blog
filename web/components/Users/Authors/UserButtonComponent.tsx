@@ -7,16 +7,17 @@ import { Link } from "../../Links";
 import { LogoutButton } from "./LogoutButton";
 import { protectedWebUrls } from "../../../routing/routes";
 import { Skeleton } from "../../Skeleton";
-import { useAuth } from "../../../providers/AuthProvider";
+import { useSession } from "next-auth/react";
 import Spinner from "../../Spinner";
 
 export function UserButton() {
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const popoverId = React.useId();
-  const { user: userData } = useAuth();
   const [open, setOpen] = React.useState(false);
   const isClient = typeof window !== "undefined";
 
-  if (!isClient || !userData?.ok) {
+  if (status === "loading") {
     return (
       <Skeleton className="size-9 my-1 mx-auto shrink-0 flex justify-center items-center rounded-full">
         <Spinner />
@@ -24,7 +25,7 @@ export function UserButton() {
     );
   }
 
-  const { data: user } = userData;
+  if (!isClient || !user) return <div></div>; // TODO
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,7 +43,7 @@ export function UserButton() {
               "size-full p-1 shrink-0 flex justify-center items-center rounded-full bg-primary",
             )}
           >
-            {user.name
+            {(user.name || "Anonymous")
               .toUpperCase()
               .split(" ")
               .map((i) => i[0])
@@ -78,7 +79,7 @@ export function UserButton() {
           >
             Profile settings
           </Link>
-          <LogoutButton />
+          <LogoutButton session={session} />
         </div>
       </PopoverContent>
     </Popover>

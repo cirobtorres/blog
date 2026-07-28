@@ -1,19 +1,19 @@
 "use client";
 
 import React from "react";
-import NextLink from "next/link";
 import CommentEditor, { characterLimit } from "./CommentEditor";
 import { buttonVariants, cn, focusRing } from "../../utils/variants";
 import { UserSignedOffIcon } from "../Header/UserSignedOff";
-import { useAuth } from "../../providers/AuthProvider";
 import { AvatarName } from "../Avatar";
 import { Link } from "../Links";
 import { usePathname, useSearchParams } from "next/navigation";
-import { publicWebUrls } from "../../routing/routes";
+import { signIn, useSession } from "next-auth/react";
 
 export default function CommentHere({ articleId }: { articleId: string }) {
-  const { user } = useAuth();
-  const isSignedIn = user?.ok;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const isSignedIn = !!user?.id || !!user?.name;
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const returnParams = new URLSearchParams(searchParams.toString());
@@ -25,16 +25,12 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   const search = returnParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#comment-root";
-  const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
+  const redirectUrl = `redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   if (isSignedIn) {
     return (
       <MainWrapper>
-        <AvatarName
-          key={user?.data?.id}
-          authorName={user?.data?.name}
-          authorPicUrl={user?.data?.pictureUrl}
-        />
+        <AvatarName key={user.id} authorName={user.name || "Anonymous"} />
         <CommentEditor articleId={articleId} />
       </MainWrapper>
     );
@@ -43,12 +39,12 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   return (
     <MainWrapper>
       <InnerWrapper>
-        <LinkToSignInHeader loginUrl={loginUrl}>
+        <LinkToSignInHeader>
           <UserSignedOffIcon />
           Anônimo
         </LinkToSignInHeader>
         <FakeEditorBody>
-          <LinkToSignInBody loginUrl={loginUrl}>Login...</LinkToSignInBody>
+          <LinkToSignInBody>Login...</LinkToSignInBody>
         </FakeEditorBody>
         <BottomWrapper>
           <FakeCountersWrapper>
@@ -76,23 +72,25 @@ const InnerWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Header----------------------------------------------------------------------------------------------
-const LinkToSignInHeader = ({
-  children,
-  loginUrl,
-}: {
-  children: React.ReactNode;
-  loginUrl: string;
-}) => (
-  <NextLink
-    href={loginUrl}
-    className={cn(
-      "w-fit flex items-center gap-2 rounded border border-transparent transition-[border,box-shadow] duration-300",
-      focusRing,
-    )}
-  >
-    {children}
-  </NextLink>
-);
+const LinkToSignInHeader = ({ children }: { children: React.ReactNode }) => {
+  const handleSignIn = async () => {
+    await signIn("keycloak", {
+      callbackUrl: window.location.href,
+    });
+  };
+
+  return (
+    <button
+      onClick={handleSignIn}
+      className={cn(
+        "w-fit flex items-center gap-2 rounded border border-transparent transition-[border,box-shadow] duration-300",
+        focusRing,
+      )}
+    >
+      {children}
+    </button>
+  );
+};
 
 // Body------------------------------------------------------------------------------------------------
 const FakeEditorBody = ({ children }: { children: React.ReactNode }) => (
@@ -101,21 +99,21 @@ const FakeEditorBody = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const LinkToSignInBody = ({
-  children,
-  loginUrl,
-}: {
-  children: React.ReactNode;
-  loginUrl: string;
-}) => (
-  <Link
-    href={loginUrl}
-    variant="external"
-    className={cn("px-1 border border-transparent", focusRing)}
-  >
-    {children}
-  </Link>
-);
+const LinkToSignInBody = ({ children }: { children: React.ReactNode }) => {
+  const handleSignIn = async () => {
+    await signIn("keycloak", {
+      callbackUrl: window.location.href,
+    });
+  };
+  return (
+    <button
+      onClick={handleSignIn}
+      className={cn("px-1 border border-transparent", focusRing)}
+    >
+      {children}
+    </button>
+  );
+};
 
 // Footer----------------------------------------------------------------------------------------------
 const BottomWrapper = ({ children }: { children: React.ReactNode }) => (
