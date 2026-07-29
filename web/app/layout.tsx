@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import SessionProvider from "../providers/NextAuthProvider";
 import "../styles/globals.css";
+import { SessionGuard } from "../keycloak/SessionGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,18 +28,20 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          {children}
-          {signInModal}
-          <Toaster
-            toastOptions={{
-              // unstyled: true,
-              classNames: {
-                success:
-                  "text-neutral-100! border-[oklch(59.6%_0.145_163.225)]! dark:border-[oklch(59.6%_0.145_163.225)]! bg-[oklch(34.542%_0.04553_168.616)]!",
-              },
-            }}
-            position="top-center"
-          />
+          <SessionGuard>
+            {children}
+            {signInModal}
+            <Toaster
+              toastOptions={{
+                // unstyled: true,
+                classNames: {
+                  success:
+                    "text-neutral-100! border-[oklch(59.6%_0.145_163.225)]! dark:border-[oklch(59.6%_0.145_163.225)]! bg-[oklch(34.542%_0.04553_168.616)]!",
+                },
+              }}
+              position="top-center"
+            />
+          </SessionGuard>
         </SessionProvider>
       </body>
     </html>

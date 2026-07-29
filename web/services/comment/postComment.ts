@@ -12,7 +12,7 @@ const defaultState = {
 };
 
 export default async function postComment({
-  identityId,
+  userId,
   articleId,
   parentId,
   body,
@@ -23,7 +23,7 @@ export default async function postComment({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ identityId, articleId, parentId, body }),
+    body: JSON.stringify({ userId, articleId, parentId, body }),
   };
 
   const response = await serverFetch(apiServerUrls.comment.root, options);

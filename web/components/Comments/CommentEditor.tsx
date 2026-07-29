@@ -46,7 +46,7 @@ export default function CommentEditor({
   anchor?: string;
   onSave?: ({
     commentId,
-    identityId,
+    userId,
     articleId,
     articlePath,
     parentId,
@@ -209,15 +209,13 @@ export default function CommentEditor({
     // Rebuild cleaned JSON
     const cleanJson = { ...json, content: filteredContent };
     const body = JSON.stringify(cleanJson);
-    // const identityId = user?.data?.identityId;
-    const identityId = user?.id;
+    const userId = user?.id;
 
-    if (!identityId)
-      return { ...defaultState, error: "Usuário não autenticado" };
+    if (!userId) return { ...defaultState, error: "Usuário não autenticado" };
 
     const obj = {
       parentId,
-      identityId,
+      userId,
       articleId,
       body,
       articlePath,
@@ -227,9 +225,8 @@ export default function CommentEditor({
     if (onSave) {
       result = onSave(obj);
     } else {
-      // const identityId = user?.data?.identityId;
-      const identityId = user?.id;
-      if (!identityId) return { ...defaultState, error: "Usuário deslogado" };
+      const userId = user?.id;
+      if (!userId) return { ...defaultState, error: "Usuário deslogado" };
 
       result = postComment(obj);
     }

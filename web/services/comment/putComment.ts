@@ -14,7 +14,7 @@ const defaultState = {
 export default async function putComment({
   commentId,
   parentId,
-  identityId,
+  userId,
   articleId,
   body,
   articlePath,
@@ -24,7 +24,7 @@ export default async function putComment({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ identityId, articleId, parentId, body }),
+    body: JSON.stringify({ userId, articleId, parentId, body }),
   };
 
   const response = await serverFetch(

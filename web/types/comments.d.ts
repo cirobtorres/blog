@@ -41,7 +41,7 @@ type UserComment = {
 type CommentSave = {
   commentId?: string;
   parentId?: string;
-  identityId: string;
+  userId: string;
   articleId: string;
   body: string;
   articlePath: string;

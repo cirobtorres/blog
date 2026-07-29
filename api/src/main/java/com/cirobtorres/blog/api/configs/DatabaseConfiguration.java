@@ -24,7 +24,7 @@ public class DatabaseConfiguration {
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    // DEVELOPMENT - not suitable for production
+    // DEVELOPMENT
     @Bean
     @Profile("!production")
     public DataSource dataSource() {

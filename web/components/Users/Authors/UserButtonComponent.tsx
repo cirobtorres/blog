@@ -64,7 +64,7 @@ export function UserButton() {
             {user.authorities.map((authority) => (
               <span
                 key={authority}
-                className="text-xs text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800"
+                className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800"
               >
                 {authority}
               </span>

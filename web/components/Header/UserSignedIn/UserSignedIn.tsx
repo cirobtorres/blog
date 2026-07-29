@@ -30,6 +30,7 @@ export default function UserSignedIn({ session }: { session: Session }) {
   }, null);
 
   const { user } = session;
+  const isAuthor = user.authorities.some((i) => i.toUpperCase() === "AUTHOR");
 
   return (
     <div className="ml-auto mr-0">
@@ -74,32 +75,34 @@ export default function UserSignedIn({ session }: { session: Session }) {
               Preferências
             </Link>
           </div>
-          <div className={cn(elStyleWrapper, "border-b")}>
-            <p className="text-xs cursor-pointer flex items-center gap-1 font-medium text-nowrap p-1 text-neutral-500">
-              Administrativo
-            </p>
-            <Link
-              href={protectedWebUrls.authors}
-              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
-            >
-              <AuthorIcon />
-              Autor
-            </Link>
-            <Link
-              href={protectedWebUrls.write}
-              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
-            >
-              <WriteIcon />
-              Escrever
-            </Link>
-            <Link
-              href={protectedWebUrls.media}
-              className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
-            >
-              <MediaIcon />
-              Media
-            </Link>
-          </div>
+          {isAuthor && (
+            <div className={cn(elStyleWrapper, "border-b")}>
+              <p className="text-xs cursor-pointer flex items-center gap-1 font-medium text-nowrap p-1 text-neutral-500">
+                Administrativo
+              </p>
+              <Link
+                href={protectedWebUrls.authors}
+                className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
+              >
+                <AuthorIcon />
+                Autor
+              </Link>
+              <Link
+                href={protectedWebUrls.write}
+                className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
+              >
+                <WriteIcon />
+                Escrever
+              </Link>
+              <Link
+                href={protectedWebUrls.media}
+                className={cn(elStyleItem, "flex items-center gap-2 pl-4")}
+              >
+                <MediaIcon />
+                Media
+              </Link>
+            </div>
+          )}
           <form action={action} className={elStyleWrapper}>
             <button type="submit" disabled={isPending} className={elStyleItem}>
               {isPending && <Spinner className="size-4" />} Sair
