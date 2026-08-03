@@ -20,9 +20,9 @@ export async function fetchWithAuth(
 
   if (!response.ok) {
     if (response.status === 401) {
-      throw new Error("Sessão expirada ou não autorizado.");
+      throw new Error("Session expired or not authorized");
     }
-    throw new Error("Erro ao buscar dados do servidor.");
+    throw new Error("Fetching error");
   }
 
   return response.json();

@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Skeleton } from "../../../../components/Skeleton";
 import { serverFetch } from "../../../../services/serverFetch";
 import { apiServerUrls } from "../../../../routing/routes";
-import { Hr } from "../../../../components/utils";
 import TagCreate from "../../../../components/Users/Authors/Tags/TagCreate";
 import TagFilter from "../../../../components/Users/Authors/Tags/TagFilter";
 
@@ -43,7 +42,7 @@ const LoadTags = async () => {
   return (
     <>
       <TagCreate tags={tags} />
-      <Hr className="my-6" />
+      <Hr />
       <h2 className="text-xl flex items-center">
         Tag{count > 1 && "s"}: {count}
       </h2>
@@ -55,7 +54,7 @@ const LoadTags = async () => {
 const LoadingTagState = () => (
   <>
     <Skeleton className="w-md h-27" />
-    <Hr className="my-6" />
+    <Hr />
     <h2 className="text-xl flex items-center">
       Tag: <Skeleton className="size-7" />
     </h2>
@@ -65,4 +64,8 @@ const LoadingTagState = () => (
       ))}
     </div>
   </>
+);
+
+const Hr = () => (
+  <div className="w-full h-px my-6 bg-linear-to-r dark:from-transparent via-stone-400 dark:via-stone-700 dark:to-transparent" />
 );

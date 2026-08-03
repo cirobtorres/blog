@@ -3,6 +3,7 @@ import getComments from "../../services/comment/getComments";
 import CommentHere from "./CommentHere";
 import { Button } from "../Button";
 import { Link } from "../Links";
+import countComments from "../../services/comment/countComments";
 
 function findCommentDeep(
   comments: Comments[],
@@ -32,6 +33,18 @@ export default async function CommentSection({
     limit: "20",
     repliesLimit: "5",
   });
+  const totalComments = await countComments({
+    articleId,
+  });
+
+  // const [comments, totalComments] = await Promise.all([getComments({
+  //   articleId,
+  //   page: "0",
+  //   limit: "20",
+  //   repliesLimit: "5",
+  // }),countComments({
+  //   articleId,
+  // })])
 
   const { content, page } = comments.data;
   const hasMore = page.number + 1 < page.totalPages;
@@ -58,9 +71,14 @@ export default async function CommentSection({
   };
 
   return (
-    <section id="comments" className="w-full my-10 flex flex-col gap-8">
+    <section
+      id="comments"
+      className="scroll-mt-16 w-full my-10 flex flex-col gap-8"
+    >
       <div className="w-full h-30 mx-auto flex flex-col justify-center items-center border-y bg-stone-200 dark:bg-stone-900">
-        <h2 className="text-3xl">Comentários {page.totalElements}</h2>
+        <h2 className="text-3xl">
+          Comentários {totalComments.ok ? totalComments.data : 0}
+        </h2>
       </div>
 
       {activeThreadId && (

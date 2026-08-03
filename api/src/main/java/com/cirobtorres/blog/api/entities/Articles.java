@@ -69,6 +69,8 @@ public class Articles {
         this.status = builder.status != null ? builder.status : ArticlesStatus.DRAFT;
         this.publishedAt = builder.publishedAt;
         this.currentPublishedRevision = builder.currentPublishedRevision;
+        this.likeCount = builder.likeCount != null ? builder.likeCount : 0;
+        this.commentCount = builder.commentCount != null ? builder.commentCount : 0;
     }
 
     public static class Builder {
@@ -77,6 +79,8 @@ public class Articles {
         private ArticlesStatus status;
         private LocalDateTime publishedAt;
         private Revisions currentPublishedRevision;
+        private Integer likeCount;
+        private Integer commentCount;
 
         public Builder author(Author author) {
             this.author = author;
@@ -100,6 +104,16 @@ public class Articles {
 
         public Builder currentPublishedRevision(Revisions revision) {
             this.currentPublishedRevision = revision;
+            return this;
+        }
+
+        public Builder likeCount(int likeCount) {
+            this.likeCount = likeCount;
+            return this;
+        }
+
+        public Builder commentCount(int commentCount) {
+            this.commentCount = commentCount;
             return this;
         }
 
@@ -136,6 +150,8 @@ public class Articles {
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
     }
+    public void setCommentCountPlusOne() { this.commentCount = this.commentCount + 1; }
+    public void setCommentCountMinusOne() { this.commentCount = Math.max(this.commentCount - 1, 0); }
 
     public int getLikeCount() {
         return likeCount;

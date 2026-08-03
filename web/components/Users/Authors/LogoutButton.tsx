@@ -3,19 +3,26 @@
 import React from "react";
 import Spinner from "../../Spinner";
 import { Button } from "../../Button";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import { getRequiredAuthorities } from "../../../routing/protected/getRequiredAuthorities";
 
 export function LogoutButton({ session }: { session: Session }) {
   if (!session || !session.user) redirect("/"); // TODO
+  const pathname = usePathname();
 
   const [, action, isPending] = React.useActionState(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const data = await signOut({
+    const requiredAuthorities = !!getRequiredAuthorities(pathname);
+
+    const postLogoutRedirectUri = requiredAuthorities
+      ? window.location.origin
+      : window.location.href;
+
+    await signOut({
       redirect: false,
     });
-    const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(window.location.origin)}`;
+    const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
     // const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout`; // Requires permission to logout
 
     window.location.href = keycloakLogoutUrl;

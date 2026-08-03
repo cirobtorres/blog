@@ -19,11 +19,11 @@ const content: ContentProps[] = [
     variant: "internal",
     text: "About",
   },
-  {
-    path: "/contact",
-    variant: "internal",
-    text: "Contact",
-  },
+  // {
+  //   path: "/contact",
+  //   variant: "internal",
+  //   text: "Contact",
+  // },
   {
     path: externalUrls.myGitHub,
     text: "Github",

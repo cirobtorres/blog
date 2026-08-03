@@ -10,36 +10,23 @@ const defaultState = {
   data: null,
 };
 
-export default async function getComments({
+export default async function countComments({
   articleId,
-  page,
-  limit,
-  repliesLimit,
 }: {
   articleId: string;
-  page: string;
-  limit: string;
-  repliesLimit: string;
 }) {
   const options: RequestInit = {};
 
-  const query = new URLSearchParams({
-    articleId,
-    page,
-    limit,
-    repliesLimit,
-  });
-
-  const getUrl = `${apiServerUrls.comment.root}?${query.toString()}`;
+  const getUrl = `${apiServerUrls.comment.count}/${articleId}`;
   const response = await serverFetch(getUrl, options);
 
   if (!response.ok) {
     throw new Error(
-      `getComments error: ${response.status} ${response.statusText}`,
+      `countComments error: ${response.status} ${response.statusText}`,
     );
   }
 
-  const result = (await response.json()) as PageableComments;
+  const result = (await response.json()) as number;
 
   return {
     ...defaultState,

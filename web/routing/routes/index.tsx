@@ -42,6 +42,10 @@ const apiServerUrls = {
   },
   comment: {
     root: API_SERVER + "/comments",
+    count: API_SERVER + "/comments/count",
+  },
+  commentLike: {
+    root: API_SERVER + "/comments/like",
   },
   media: {
     root: API_SERVER + "/media",

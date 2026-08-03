@@ -58,10 +58,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async jwt({ token, account, profile }) {
-      console.log("(NextAuth)");
-      console.log("account", account);
-      console.log("profile", profile);
       if (account) {
         token.accessToken = account.access_token;
         token.idToken = account.id_token;
@@ -94,9 +92,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (Date.now() < (token.accessTokenExpires as number) - 10000) {
         return token;
       }
-
-      console.log("!token.refreshToken", !token.refreshToken);
-      console.log("token.refreshToken", token.refreshToken?.slice(0, 20));
 
       if (!token.refreshToken) {
         console.error("No refresh token available on token object.");

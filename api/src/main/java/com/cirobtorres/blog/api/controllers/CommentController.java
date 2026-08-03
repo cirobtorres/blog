@@ -41,11 +41,19 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
+    @GetMapping("count/{articleId}")
+    public ResponseEntity<Long> countComments(
+            @PathVariable(name = "articleId") UUID articleId
+    ) {
+        long count = commentService.countVisibleCommentsByArticleId(articleId);
+        return ResponseEntity.ok(count);
+    }
+
     @GetMapping("id/{id}")
     public ResponseEntity<Void> getComment(
             @PathVariable UUID id
     ) {
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // TODO
     }
 
     // POST-------------------------------------------------------------------------------------------------------

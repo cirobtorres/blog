@@ -9,6 +9,7 @@ type Comments = {
   article: CommentArticle;
   user: UserComment;
   likeCount: number;
+  likedByCurrentUser: boolean;
   createdAt: string;
   parentId?: string;
   replies?: Comments[];

@@ -1,6 +1,6 @@
 import { auth } from "@/keycloak/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { hasAutorities } from "./routing/protected/hasAutorities";
+import { getRequiredAuthorities } from "./routing/protected/getRequiredAuthorities";
 import { Session } from "next-auth";
 
 interface NextAuthRequest extends NextRequest {
@@ -13,7 +13,7 @@ export default auth(async function middleware(request: NextAuthRequest) {
 
   // PUBLIC-----------------------------------------------
   // Direct pass
-  const requiredAuthorities = hasAutorities(pathname);
+  const requiredAuthorities = getRequiredAuthorities(pathname);
 
   if (!requiredAuthorities) {
     return NextResponse.next();

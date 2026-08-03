@@ -4,7 +4,9 @@ export const ROUTES_PERMISSIONS = {
 
 export type RoutePath = keyof typeof ROUTES_PERMISSIONS;
 
-export function hasAutorities(pathname: string): readonly string[] | null {
+export function getRequiredAuthorities(
+  pathname: string,
+): readonly string[] | null {
   const routes = Object.keys(ROUTES_PERMISSIONS) as RoutePath[];
 
   const matched = routes

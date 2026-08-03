@@ -1,6 +1,5 @@
 package com.cirobtorres.blog.api.services;
 
-import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.entities.User;
 import com.cirobtorres.blog.api.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -14,28 +13,12 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final boolean isProd;
     private final static Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(
-            UserRepository userRepository,
-            ApiApplicationProperties apiApplicationProperties
+            UserRepository userRepository
     ) {
         this.userRepository = userRepository;
-        this.isProd = apiApplicationProperties.getApplication().isProduction();
-    }
-
-    @Transactional
-    public User createLocalUser(UUID id, String name, String email) {
-        User localUser = User.builder()
-                .id(id)
-                .name(name)
-                .email(email)
-                .build();
-
-        localUser.setEmailVerified(false);
-
-        return userRepository.save(localUser);
     }
 
     @Transactional
@@ -66,13 +49,13 @@ public class UserService {
     }
 
     @Transactional
-    public User readUserById(UUID id) {
+    public User findUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
     @Transactional
-    public User readUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with e-mail: " + email));
     }

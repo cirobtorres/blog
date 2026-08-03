@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Hr } from "../../../../../components/utils";
 import MediaFileCards from "../../../../../components/Users/Authors/Media/Files/Cards/FileCardLinks";
 import FolderCardsLoading from "../../../../../components/Users/Authors/Media/Folders/Cards/FolderCardsLoading";
 import FolderCardLinks from "../../../../../components/Users/Authors/Media/Folders/Cards/FolderCardLinks";
@@ -20,7 +19,7 @@ export default async function AuthorsMediaFolderPage({
       <Suspense fallback={<FolderCardsLoading />}>
         <FolderCardLinks currentPath={currentPath} />
       </Suspense>
-      <Hr className="my-6" />
+      <Hr />
       <Suspense fallback={<FileCardsLoading />}>
         <MediaFileCards
           currentPath={currentPath}
@@ -30,3 +29,7 @@ export default async function AuthorsMediaFolderPage({
     </>
   );
 }
+
+const Hr = () => (
+  <div className="w-full h-px my-6 bg-linear-to-r dark:from-transparent via-stone-400 dark:via-stone-700 dark:to-transparent" />
+);

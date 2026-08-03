@@ -26,6 +26,7 @@ import {
 } from "../AlertDialog";
 import putComment from "../../services/comment/putComment";
 import { signIn, useSession } from "next-auth/react";
+import { toggleCommentLike } from "../../services/commentLike/toggleLike";
 
 interface TiptapNode {
   type: string;
@@ -73,7 +74,7 @@ function ensureTiptapJson(body: string): Record<string, unknown> {
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      // Plain text, usually sent from server
+      // Plain text from server
     }
   }
   return {
@@ -117,7 +118,6 @@ export default function CommentItem({
   comment: Comments;
   // depth: number;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session } = useSession();
   const user = session?.user;
   const isSignedIn = !!user?.id;
@@ -125,6 +125,13 @@ export default function CommentItem({
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
+  const [liked, setLiked] = React.useState<boolean>(
+    Boolean(comment.likedByCurrentUser),
+  );
+  const [likeCount, setLikeCount] = React.useState<number>(
+    comment.likeCount ?? 0,
+  );
+  const [isLiking, setIsLiking] = React.useState<boolean>(false);
   const currentPath = usePathname();
   const searchParams = useSearchParams();
   const replyTo = searchParams.get("replyTo");
@@ -246,24 +253,6 @@ export default function CommentItem({
     return result;
   };
 
-  // const handleReplyClick = () => {
-  //   if (!isSignedIn) {
-  //     router.push(loginUrl, { scroll: false });
-  //     return;
-  //   }
-  //   const next = !isReplying;
-  //   setIsReplying(next);
-  //   if (next) {
-  //     queueMicrotask(() => {
-  //       replaceHash("#" + replyHash);
-  //     });
-  //   } else {
-  //     queueMicrotask(() => {
-  //       clearHash();
-  //     });
-  //   }
-  // };
-
   const handleReplyClick = async () => {
     if (!isSignedIn) {
       const returnParams = new URLSearchParams(searchParams.toString());
@@ -286,6 +275,46 @@ export default function CommentItem({
         clearHash();
       });
     }
+  };
+
+  const handleLikeOrDislike = async () => {
+    if (!isSignedIn) {
+      const returnParams = new URLSearchParams(searchParams.toString());
+      returnParams.set("replyTo", comment.id);
+      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${replyHash}`;
+
+      await signIn("keycloak", { callbackUrl });
+      return;
+    }
+
+    if (isLiking) return;
+
+    const prevLiked = liked;
+    const prevLikeCount = likeCount;
+
+    // Otimistic update
+    const nextLiked = !prevLiked;
+    const nextLikeCount = nextLiked
+      ? prevLikeCount + 1
+      : Math.max(0, prevLikeCount - 1);
+
+    setLiked(nextLiked);
+    setLikeCount(nextLikeCount);
+    setIsLiking(true);
+
+    const result = await toggleCommentLike(comment.id);
+
+    if (!result.ok || !result.data) {
+      // Rollback
+      setLiked(prevLiked);
+      setLikeCount(prevLikeCount);
+    } else {
+      // Synchronize with backend
+      setLiked(result.data.liked);
+      setLikeCount(result.data.likeCount);
+    }
+
+    setIsLiking(false);
   };
 
   const closeEditor = () => {
@@ -393,6 +422,7 @@ export default function CommentItem({
             <Button
               type="button"
               variant="ghost"
+              onClick={handleLikeOrDislike}
               className="rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100"
             >
               <svg
@@ -409,7 +439,7 @@ export default function CommentItem({
                 <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />
               </svg>
             </Button>
-            0
+            {likeCount}
           </span>
           <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
             <svg
@@ -425,7 +455,7 @@ export default function CommentItem({
             >
               <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
             </svg>
-            0
+            {comment.replies?.length}
           </span>
           <Button
             type="button"

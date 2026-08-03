@@ -34,11 +34,7 @@ export default function CommentThread({
           "ml-4 border-l pl-4 border-stone-200 dark:border-stone-800",
       )}
     >
-      <CommentItem
-        articleId={articleId}
-        comment={comment}
-        depth={currentDepth}
-      />
+      <CommentItem articleId={articleId} comment={comment} />
 
       {hasReplies && !isTooDeep && (
         <div className="flex flex-col gap-4">

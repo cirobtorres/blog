@@ -33,15 +33,15 @@ export default async function UserSettingsPage() {
       <Header className="fixed" />
       <main className="mt-height-header px-4">
         <div className="w-full max-w-140 h-full flex flex-col gap-2 py-10 mx-auto">
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <h1 className="text-2xl font-bold">Placeholder</h1>
-          </div>
-          {isEmailUnverified && (
+          </div> */}
+          {/* {isEmailUnverified && (
             <Alert title="Autenticação de email necessária" variant="warn">
               Você ainda não validou este email:{" "}
               <strong className="text-yellow-500">{user?.email}</strong>
             </Alert>
-          )}
+          )} */}
           <div className="grid grid-cols-1 gap-2">
             <UserCard user={user} isEmailUnverified={isEmailUnverified} />
             <div className="grid grid-cols-1 gap-2">
@@ -65,7 +65,7 @@ export default async function UserSettingsPage() {
                     variant="destructive"
                     className="ml-auto w-full max-w-30 h-9.5"
                   >
-                    Salvar
+                    Excluir conta
                   </Button>
                 </div>
               </form>
@@ -80,7 +80,7 @@ export default async function UserSettingsPage() {
 
 const UserCard = ({
   user,
-  isEmailUnverified,
+  // isEmailUnverified,
 }: { user: User | undefined | null } & { isEmailUnverified?: boolean }) => (
   <div className="w-full flex items-center border rounded-lg p-4 gap-4 bg-stone-900">
     {/* <Image
@@ -97,13 +97,13 @@ const UserCard = ({
       <div className="text-xs font-bold text-neutral-500">
         <span className="relative">
           Email
-          {isEmailUnverified && (
+          {/* {isEmailUnverified && (
             <div className="absolute size-2 -top-1 -left-2 rounded-full animate-pulse-yellow bg-yellow-500" />
-          )}
+          )} */}
         </span>
         : <strong className="text-neutral-300">{user?.email} </strong>
       </div>
-      {user && (
+      {/* {user && (
         <div className="flex items-center gap-1">
           {user.authorities.map((authority) => (
             <p
@@ -114,7 +114,7 @@ const UserCard = ({
             </p>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   </div>
 );

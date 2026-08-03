@@ -226,10 +226,6 @@
                 Não armazenamos no banco mais que o necessário, como nome e
                 e-mail, e não enviamos newsletters ou e-mails promocionais.
               </p>
-              <p class="text-xs font-medium text-neutral-600 dark:text-neutral-500">
-                Para feedback ou relato de bugs, entre em contato por meio do
-                <a href="${properties['contactUrl']!'http://localhost:3000/contact'}" class="text-primary/75 hover:text-primary dark:hover:text-primary transition-all duration-300 underline underline-offset-2 rounded border border-transparent focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">link</a>.
-              </p>
               <div class="my-1 w-full h-px bg-linear-to-r from-transparent via-stone-400 to-transparent dark:via-stone-700"></div>
               <p class="text-xs font-medium text-neutral-600 dark:text-neutral-500">
                 O código deste site está disponível no <a href="${properties['githubUrl']!'https://github.com/cirobtorres/blog'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-primary/75 hover:text-primary dark:hover:text-primary transition-all duration-300 underline underline-offset-2 rounded border border-transparent focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">GitHub<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>.

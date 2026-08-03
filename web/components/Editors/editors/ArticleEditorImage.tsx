@@ -14,7 +14,6 @@ import { cn, focusRing } from "../../../utils/variants";
 import Image from "next/image";
 import FolderBreadcrumbState from "../../Users/Authors/Media/FolderBreadcrumbState";
 import FolderCardButtons from "../../Users/Authors/Media/Folders/Cards/FolderCardButtons";
-import { Hr } from "../../utils";
 import FileCardButtons from "../../Users/Authors/Media/Files/Cards/FileCardButtons";
 import { DashedBackground } from "../../DashedBackground";
 import {
@@ -85,7 +84,7 @@ export function ArticleMediaManager() {
           <div className="flex-1 overflow-y-auto p-4">
             <FolderBreadcrumbState />
             <FolderCardButtons />
-            <Hr className="my-6" />
+            <Hr />
             <FileCardButtons />
           </div>
           <AlertDialogFooter className="p-4 border-t">
@@ -324,3 +323,7 @@ export function ArticleImagesButton({
     </div>
   );
 }
+
+const Hr = () => (
+  <div className="w-full h-px my-6 bg-linear-to-r dark:from-transparent via-stone-400 dark:via-stone-700 dark:to-transparent" />
+);

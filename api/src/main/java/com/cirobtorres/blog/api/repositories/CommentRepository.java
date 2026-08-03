@@ -28,4 +28,13 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
             @Param("parentIds") List<UUID> parentIds,
             @Param("repliesLimit") int repliesLimit
     );
+
+    @Query("""
+        SELECT COUNT(c)
+        FROM Comment c
+        WHERE c.article.id = :articleId 
+          AND c.isDeleted = false
+          AND c.isBlocked = false
+    """)
+    long countVisibleCommentsByArticleId(UUID articleId);
 }

@@ -1,14 +1,9 @@
 package com.cirobtorres.blog.api.services;
 
-import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.dtos.UserSignUpDTO;
 import com.cirobtorres.blog.api.dtos.UserDTO;
 import com.cirobtorres.blog.api.entities.User;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import jakarta.transaction.Transactional;
-import org.jspecify.annotations.NonNull;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -24,15 +19,12 @@ import java.util.UUID;
 @Service
 public class AuthService {
     private final UserService userService;
-    private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public AuthService(
-            UserService userService,
-            ApiApplicationProperties apiApplicationProperties
+            UserService userService
     ) {
         this.userService = userService;
-        this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
     @Transactional
@@ -71,22 +63,5 @@ public class AuthService {
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
-    }
-
-    private static @NonNull UserRepresentation getUserRepresentation(UserSignUpDTO request) {
-        UserRepresentation kcUser = new UserRepresentation();
-        kcUser.setUsername(request.email());
-        kcUser.setEmail(request.email());
-        kcUser.setFirstName(request.name());
-        kcUser.setEnabled(true);
-        kcUser.setEmailVerified(false);
-        kcUser.setRequiredActions(List.of("VERIFY_EMAIL"));
-
-        CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(request.password());
-        credential.setTemporary(false);
-        kcUser.setCredentials(List.of(credential));
-        return kcUser;
     }
 }

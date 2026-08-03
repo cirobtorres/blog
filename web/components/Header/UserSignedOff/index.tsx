@@ -7,14 +7,18 @@ import { signIn } from "next-auth/react";
 export default function UserSignedOff() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams.toString());
-  const fullPath = `${pathname}?${params.toString()}`;
-  // const redirectSignIn = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}`; // TODO
-  // const redirectSignUp = `${publicWebUrls.signUp}?redirect_url=${encodeURIComponent(fullPath)}`; // TODO
+  const returnParams = new URLSearchParams(searchParams.toString());
+  returnParams.delete("redirect_url");
+  returnParams.delete("login");
+  returnParams.delete("callbackUrl");
+  returnParams.delete("callback");
+  returnParams.delete("replyTo");
+  const search = returnParams.toString();
+  const fullPath = search ? `${pathname}?${search}` : pathname;
 
   const handleSignIn = async () => {
     await signIn("keycloak", {
-      callbackUrl: "/",
+      callbackUrl: fullPath,
     });
   };
 

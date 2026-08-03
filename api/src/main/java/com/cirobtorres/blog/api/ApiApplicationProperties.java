@@ -10,25 +10,23 @@ public class ApiApplicationProperties {
     private final Keycloak keycloak = new Keycloak();
 
     public Frontend getFrontend() { return frontend; }
-    public Application getApplication() {
-        return application;
-    }
+    public Application getApplication() { return application; }
     public Debug getDebug() { return debug; }
     public Keycloak getKeycloak() { return keycloak; }
 
     public static class Application {
-        private String url;
+        private String domain;
         private String mailerFrom;
         private String mediaUpServName;
         private String mediaUpServKey;
         private String mediaUpServSecret;
         private boolean production;
 
-        public String getUrl() {
-            return url;
+        public String getDomain() {
+            return domain;
         }
-        public void setUrl(String url) {
-            this.url = url;
+        public void setDomain(String domain) {
+            this.domain = domain;
         }
 
         public String getMailerFrom() {

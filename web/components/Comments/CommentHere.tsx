@@ -5,7 +5,6 @@ import CommentEditor, { characterLimit } from "./CommentEditor";
 import { buttonVariants, cn, focusRing } from "../../utils/variants";
 import { UserSignedOffIcon } from "../Header/UserSignedOff";
 import { AvatarName } from "../Avatar";
-import { Link } from "../Links";
 import { usePathname, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
@@ -25,7 +24,7 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   const search = returnParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#comment-root";
-  const redirectUrl = `redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
+  // const redirectUrl = `redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   if (isSignedIn) {
     return (
@@ -39,12 +38,14 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   return (
     <MainWrapper>
       <InnerWrapper>
-        <LinkToSignInHeader>
+        <LinkToSignInHeader redirectPath={fullPath}>
           <UserSignedOffIcon />
           Anônimo
         </LinkToSignInHeader>
         <FakeEditorBody>
-          <LinkToSignInBody>Login...</LinkToSignInBody>
+          <LinkToSignInBody redirectPath={fullPath}>
+            Login para comentar...
+          </LinkToSignInBody>
         </FakeEditorBody>
         <BottomWrapper>
           <FakeCountersWrapper>
@@ -72,10 +73,17 @@ const InnerWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Header----------------------------------------------------------------------------------------------
-const LinkToSignInHeader = ({ children }: { children: React.ReactNode }) => {
+const LinkToSignInHeader = ({
+  children,
+  redirectPath,
+}: {
+  children: React.ReactNode;
+  redirectPath: string;
+}) => {
   const handleSignIn = async () => {
     await signIn("keycloak", {
-      callbackUrl: window.location.href,
+      // callbackUrl: window.location.href,
+      callbackUrl: redirectPath,
     });
   };
 
@@ -83,7 +91,7 @@ const LinkToSignInHeader = ({ children }: { children: React.ReactNode }) => {
     <button
       onClick={handleSignIn}
       className={cn(
-        "w-fit flex items-center gap-2 rounded border border-transparent transition-[border,box-shadow] duration-300",
+        "w-fit flex items-center gap-2 cursor-pointer text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 rounded border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
         focusRing,
       )}
     >
@@ -99,16 +107,26 @@ const FakeEditorBody = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const LinkToSignInBody = ({ children }: { children: React.ReactNode }) => {
+const LinkToSignInBody = ({
+  children,
+  redirectPath,
+}: {
+  children: React.ReactNode;
+  redirectPath: string;
+}) => {
   const handleSignIn = async () => {
     await signIn("keycloak", {
-      callbackUrl: window.location.href,
+      // callbackUrl: window.location.href,
+      callbackUrl: redirectPath,
     });
   };
   return (
     <button
       onClick={handleSignIn}
-      className={cn("px-1 border border-transparent", focusRing)}
+      className={cn(
+        "font-bold text-primary dark:text-primary hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer rounded px-1 border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
+        focusRing,
+      )}
     >
       {children}
     </button>

@@ -1,6 +1,5 @@
 package com.cirobtorres.blog.api.services;
 
-import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cirobtorres.blog.api.entities.Articles;
 import com.cirobtorres.blog.api.repositories.ArticlesRepository;
 import com.cirobtorres.blog.api.dtos.CommentDTO;
@@ -32,19 +31,21 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ArticlesRepository articlesRepository;
-    private final boolean isProd;
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public CommentService(
             CommentRepository commentRepository,
             UserRepository userRepository,
-            ArticlesRepository articlesRepository,
-            ApiApplicationProperties apiApplicationProperties
+            ArticlesRepository articlesRepository
     ) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.articlesRepository = articlesRepository;
-        this.isProd = apiApplicationProperties.getApplication().isProduction();
+    }
+
+    public Comment findCommentById(UUID id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
     }
 
     @Transactional
@@ -55,7 +56,9 @@ public class CommentService {
         Pageable customizedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 limit,
-                Sort.by(Sort.Direction.DESC, "likeCount").and(Sort.by(Sort.Direction.DESC, "createdAt"))
+                Sort
+                        .by(Sort.Direction.DESC, "likeCount")
+                        .and(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
         Specification<Comment> spec = (root, query, cb) -> cb.and(
@@ -94,8 +97,12 @@ public class CommentService {
     }
 
     @Transactional
+    public long countVisibleCommentsByArticleId(UUID articleId) {
+        return commentRepository.countVisibleCommentsByArticleId(articleId);
+    }
+
+    @Transactional
     public CommentDTO postComment(CommentPostDTO request) {
-        // CORREÇÃO: Busca direta na tabela users usando o ID enviado (que veio do token do usuário logado)
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -116,6 +123,8 @@ public class CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
+        article.setCommentCountPlusOne();
+        articlesRepository.save(article);
         return new CommentDTO(savedComment);
     }
 
@@ -131,6 +140,9 @@ public class CommentService {
         comment.setDeleted(true);
         comment.setDeletedAt(LocalDateTime.now());
         commentRepository.save(comment);
+        Articles article = comment.getArticle();
+        article.setCommentCountMinusOne();
+        articlesRepository.save(article);
     }
 
     @Transactional
@@ -138,7 +150,6 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
-        // CORREÇÃO: Validação simplificada direto no User
         if (comment.getUser() == null || !comment.getUser().getId().equals(request.userId())) {
             throw new UserUnauthorizedException("Unauthorized");
         }
