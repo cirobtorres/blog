@@ -12,16 +12,17 @@ export async function toggleCommentLike(commentId: string) {
         "Content-Type": "application/json",
       },
     };
-    const res = await serverFetch(
+
+    const response = await serverFetch(
       apiServerUrls.commentLike.root + "/" + commentId,
       options,
     );
 
-    if (!res.ok) {
+    if (!response.ok) {
       return { ok: false, error: "Comment like failed" };
     }
 
-    const data: { liked: boolean; likeCount: number } = await res.json();
+    const data: { liked: boolean; likeCount: number } = await response.json();
 
     revalidatePath("/", "layout");
 

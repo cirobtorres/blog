@@ -52,6 +52,9 @@ public class Comment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
+    private List<CommentLike> likes = new ArrayList<>();
+
     // SELF RELATION----------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -125,10 +128,11 @@ public class Comment {
     public void setParent(Comment parent) { this.parent = parent; }
 
     public List<Comment> getChildren() {
-        if (this.children == null) {
-            this.children = new ArrayList<>();
-        }
+        if (this.children == null) { this.children = new ArrayList<>(); }
         return this.children;
     }
     public void setChildren(List<Comment> children) { this.children = children; }
+
+    public List<CommentLike> getLikes() { return likes; }
+    public void setLikes(List<CommentLike> likes) { this.likes = likes; }
 }

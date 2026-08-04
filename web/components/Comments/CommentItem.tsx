@@ -26,7 +26,7 @@ import {
 } from "../AlertDialog";
 import putComment from "../../services/comment/putComment";
 import { signIn, useSession } from "next-auth/react";
-import { toggleCommentLike } from "../../services/commentLike/toggleLike";
+import { toggleCommentLike } from "../../services/commentLike/toggleCommentLike";
 
 interface TiptapNode {
   type: string;
@@ -121,13 +121,15 @@ export default function CommentItem({
   const { data: session } = useSession();
   const user = session?.user;
   const isSignedIn = !!user?.id;
-  const replyHash = `comment-${comment.id}`;
+  const replyHash = `comment-reply-${comment.id}`;
+  const likeHash = `comment-like-${comment.id}`;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const [liked, setLiked] = React.useState<boolean>(
     Boolean(comment.likedByCurrentUser),
   );
+  const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
   const [likeCount, setLikeCount] = React.useState<number>(
     comment.likeCount ?? 0,
   );
@@ -209,10 +211,16 @@ export default function CommentItem({
   }, [isSignedIn, replyTo, comment.id, searchParams]);
 
   React.useEffect(() => {
-    if (editor && !editor.isDestroyed) {
-      editor.commands.setContent(safeTiptapContent);
-    }
-  }, [safeTiptapContent, editor]);
+    const update = () => {
+      setIsHighlightedLike(window.location.hash === `#${likeHash}`);
+    };
+
+    update();
+
+    window.addEventListener("hashchange", update);
+
+    return () => window.removeEventListener("hashchange", update);
+  }, [likeHash]);
 
   const handleSave = async (editorData: Omit<CommentSave, "commentId">) => {
     // Saves for a possible rollback
@@ -264,8 +272,10 @@ export default function CommentItem({
       });
       return;
     }
+
     const next = !isReplying;
     setIsReplying(next);
+
     if (next) {
       queueMicrotask(() => {
         replaceHash("#" + replyHash);
@@ -279,20 +289,20 @@ export default function CommentItem({
 
   const handleLikeOrDislike = async () => {
     if (!isSignedIn) {
-      const returnParams = new URLSearchParams(searchParams.toString());
-      returnParams.set("replyTo", comment.id);
-      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${replyHash}`;
-
+      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${likeHash}`;
       await signIn("keycloak", { callbackUrl });
       return;
     }
 
+    await performLikeToggle();
+  };
+
+  const performLikeToggle = React.useCallback(async () => {
     if (isLiking) return;
 
     const prevLiked = liked;
     const prevLikeCount = likeCount;
 
-    // Otimistic update
     const nextLiked = !prevLiked;
     const nextLikeCount = nextLiked
       ? prevLikeCount + 1
@@ -309,13 +319,13 @@ export default function CommentItem({
       setLiked(prevLiked);
       setLikeCount(prevLikeCount);
     } else {
-      // Synchronize with backend
+      // Synch with server
       setLiked(result.data.liked);
       setLikeCount(result.data.likeCount);
     }
 
     setIsLiking(false);
-  };
+  }, [comment.id, isLiking, likeCount, liked]);
 
   const closeEditor = () => {
     setIsReplying(false);
@@ -420,10 +430,15 @@ export default function CommentItem({
         <div className="scroll-mt-24 flex items-center gap-4">
           <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
             <Button
+              id={likeHash}
               type="button"
               variant="ghost"
               onClick={handleLikeOrDislike}
-              className="rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100"
+              className={cn(
+                "rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100",
+                isHighlightedLike &&
+                  "bg-primary/20 ring-2 ring-primary/40 [&_svg]:text-primary dark:[&_svg]:text-primary animate-pulse-primary",
+              )}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

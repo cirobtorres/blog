@@ -1,20 +1,10 @@
 package com.cirobtorres.blog.api.services;
 
-import com.cirobtorres.blog.api.entities.Articles;
-import com.cirobtorres.blog.api.entities.Revisions;
+import com.cirobtorres.blog.api.dtos.*;
+import com.cirobtorres.blog.api.entities.*;
 import com.cirobtorres.blog.api.enums.ArticlesStatus;
-import com.cirobtorres.blog.api.repositories.ArticlesRepository;
-import com.cirobtorres.blog.api.repositories.RevisionsRepository;
-import com.cirobtorres.blog.api.entities.Author;
-import com.cirobtorres.blog.api.repositories.AuthorRepository;
-import com.cirobtorres.blog.api.dtos.ArticleDTO;
-import com.cirobtorres.blog.api.dtos.ArticleSaveDTO;
-import com.cirobtorres.blog.api.dtos.ArticleSlugDTO;
+import com.cirobtorres.blog.api.repositories.*;
 import com.cirobtorres.blog.api.exceptions.ResourceNotFoundException;
-import com.cirobtorres.blog.api.entities.Media;
-import com.cirobtorres.blog.api.repositories.MediaRepository;
-import com.cirobtorres.blog.api.entities.Tag;
-import com.cirobtorres.blog.api.repositories.TagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
@@ -30,21 +20,27 @@ import java.util.*;
 @Service
 public class ArticlesService {
     private final ArticlesRepository articlesRepository;
+    private final ArticlesLikeRepository articlesLikeRepository;
     private final RevisionsRepository revisionsRepository;
     private final AuthorRepository authorRepository;
+    private final UserService userService;
     private final MediaRepository mediaRepository;
     private final TagRepository tagsRepository;
 
     public ArticlesService(
             ArticlesRepository articlesRepository,
+            ArticlesLikeRepository articlesLikeRepository,
             RevisionsRepository revisionsRepository,
             AuthorRepository authorRepository,
+            UserService userService,
             MediaRepository mediaRepository,
             TagRepository tagsRepository
     ) {
         this.articlesRepository = articlesRepository;
+        this.articlesLikeRepository = articlesLikeRepository;
         this.revisionsRepository = revisionsRepository;
         this.authorRepository = authorRepository;
+        this.userService = userService;
         this.mediaRepository = mediaRepository;
         this.tagsRepository = tagsRepository;
     }
@@ -116,7 +112,7 @@ public class ArticlesService {
     }
 
     @Transactional
-    public ArticleDTO getByUrlMetadata(int year, int month, int day, String slug) {
+    public ArticleDTO getByUrlMetadata(UUID userId, int year, int month, int day, String slug) {
         // QUERY
         Articles article = articlesRepository
                 .findBySlug(slug)
@@ -140,7 +136,7 @@ public class ArticlesService {
             throw new ResourceNotFoundException("Invalid date on URL for article");
         }
 
-        return new ArticleDTO(article);
+        return new ArticleDTO(article, article.getCurrentPublishedRevision(), userId);
     }
 
     @Transactional
@@ -276,5 +272,28 @@ public class ArticlesService {
         article.setStatus(ArticlesStatus.DRAFT);
         articlesRepository.save(article);
         return new ArticleDTO(article);
+    }
+
+    @Transactional
+    public ArticleLikeDTO likeArticle(UUID articleId, UUID userId) {
+        Articles article = articlesRepository.findById(articleId).orElseThrow(() -> new EntityNotFoundException("Article not found"));
+        User user = userService.findUserById(userId);
+        Optional<ArticlesLike> existsLike = articlesLikeRepository.findByArticleIdAndUserId(articleId, userId);
+        boolean liked;
+        if (existsLike.isPresent()) {
+            articlesLikeRepository.delete(existsLike.get());
+            article.setLikeCountMinusOne();
+            liked = false;
+        } else {
+            ArticlesLike newLike = new ArticlesLike.Builder()
+                    .article(article)
+                    .user(user)
+                    .build();
+            articlesLikeRepository.save(newLike);
+            article.setLikeCountPlusOne();
+            liked = true;
+        }
+        articlesRepository.save(article);
+        return new ArticleLikeDTO(liked, article.getLikeCount());
     }
 }

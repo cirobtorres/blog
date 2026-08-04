@@ -66,6 +66,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/articles/**", "/comments/**", "/tags/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/articles/like/articleId/**").permitAll()
 
                         // ARTICLE
                         .requestMatchers(HttpMethod.POST, "/articles/**", "/tags/**").hasAuthority("AUTHOR")

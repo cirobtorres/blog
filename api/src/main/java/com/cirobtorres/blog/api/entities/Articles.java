@@ -50,6 +50,9 @@ public class Articles {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Revisions> revisions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    private List<ArticlesLike> likes = new ArrayList<>();
+
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
@@ -153,12 +156,10 @@ public class Articles {
     public void setCommentCountPlusOne() { this.commentCount = this.commentCount + 1; }
     public void setCommentCountMinusOne() { this.commentCount = Math.max(this.commentCount - 1, 0); }
 
-    public int getLikeCount() {
-        return likeCount;
-    }
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public void setLikeCountPlusOne() { this.likeCount = this.likeCount + 1; }
+    public void setLikeCountMinusOne() { this.likeCount = Math.max(this.likeCount - 1, 0); }
 
     public ArticlesStatus getStatus() { return status; }
     public void setStatus(ArticlesStatus status) { this.status = status; }
@@ -172,17 +173,12 @@ public class Articles {
     public List<Revisions> getRevisions() { return revisions; }
     public void setRevisions(List<Revisions> revisions) { this.revisions = revisions; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public List<ArticlesLike> getLikes() { return likes; }
+    public void setLikes(List<ArticlesLike> likes) { this.likes = likes; }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

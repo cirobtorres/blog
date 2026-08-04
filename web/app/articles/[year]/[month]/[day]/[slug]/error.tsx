@@ -11,31 +11,27 @@ interface ErrorProps {
 
 export default function ArticlePageIdError({ error, reset }: ErrorProps) {
   React.useEffect(() => {
-    // TODO: log erros somewhere else (Sentry, LogRocket etc)
-    console.error("Capturado pelo Error Boundary do Artigo:", error);
+    console.error(error);
   }, [error]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-stone-50 dark:bg-stone-950">
-      <div className="max-w-md p-6 bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-800">
+      <div className="max-w-md p-6 bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-700">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
           Ops! Algo deu errado ao abrir o artigo.
         </h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">
           Não foi possível processar esta página no momento.
         </p>
-        <div className="flex gap-4 justify-center">
+        <div className="flex gap-2 justify-center">
           <Button
             type="button"
             onClick={() => reset()}
-            className="px-4 py-2 text-sm font-medium text-white bg-neutral-950 dark:bg-neutral-50 dark:text-neutral-950 rounded-lg hover:opacity-90 transition-opacity"
+            className="flex-1 h-9 px-0"
           >
             Tentar novamente
           </Button>
-          <Link
-            href="/"
-            className="px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 border border-stone-300 dark:border-stone-700 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-          >
+          <Link href="/" variant="button" className="flex-1 h-9 px-0">
             Voltar para a Home
           </Link>
         </div>

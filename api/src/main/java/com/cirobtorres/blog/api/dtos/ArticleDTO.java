@@ -18,6 +18,7 @@ public record ArticleDTO(
         Set<TagDTO> tags,
         AuthorArticleDTO author,
         MediaArticleDTO media,
+        boolean likedByCurrentUser,
         String body,
         ArticlesStatus status,
         Integer likeCount,
@@ -25,11 +26,7 @@ public record ArticleDTO(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public ArticleDTO(Articles article) {
-        this(article, article.getCurrentPublishedRevision());
-    }
-
-    public ArticleDTO(Articles article, Revisions revision) {
+    public ArticleDTO(Articles article, Revisions revision, boolean likedByCurrentUser) {
         this(
                 article.getId(),
                 revision != null ? revision.getTitle() : "Sem título",
@@ -38,6 +35,7 @@ public record ArticleDTO(
                 revision != null ? revision.getTags().stream().map(TagDTO::new).collect(Collectors.toSet()) : Collections.emptySet(),
                 article.getAuthor() != null ? new AuthorArticleDTO(article.getAuthor()) : null,
                 (revision != null && revision.getMedia() != null) ? new MediaArticleDTO(revision.getMedia()) : null,
+                likedByCurrentUser,
                 revision != null ? revision.getBody() : "",
                 article.getStatus(),
                 article.getLikeCount(),
@@ -45,5 +43,25 @@ public record ArticleDTO(
                 article.getCreatedAt(),
                 revision != null ? revision.getCreatedAt() : article.getUpdatedAt()
         );
+    }
+
+    public ArticleDTO(Articles article) {
+        this(article, article.getCurrentPublishedRevision(), false);
+    }
+
+    public ArticleDTO(Articles article, Revisions revision) {
+        this(article, revision, false);
+    }
+
+    public ArticleDTO(Articles article, Revisions revision, UUID currentUserId) {
+        this(article, revision, checkIfLiked(article, currentUserId));
+    }
+
+    private static boolean checkIfLiked(Articles article, UUID currentUserId) {
+        if (currentUserId == null || article.getLikes() == null || article.getLikes().isEmpty()) {
+            return false;
+        }
+        return article.getLikes().stream()
+                .anyMatch(like -> like.getUser() != null && currentUserId.equals(like.getUser().getId()));
     }
 }

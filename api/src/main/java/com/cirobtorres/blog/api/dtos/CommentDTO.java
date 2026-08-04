@@ -95,7 +95,12 @@ public record CommentDTO(
     }
 
     private static boolean checkIfLiked(Comment comment, UUID currentUserId) {
-        if (currentUserId == null) return false;
-        return false;
+        if (currentUserId == null || comment.getLikes() == null || comment.getLikes().isEmpty()) {
+            return false; // Unauthenticated
+        }
+        return comment
+                .getLikes()
+                .stream()
+                .anyMatch(like -> like.getUser() != null && currentUserId.equals(like.getUser().getId()));
     }
 }

@@ -9,7 +9,7 @@ const cn = (...inputs: ClassValue[]): string => {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary";
+  "focus-visible:outline-none! focus-visible:ring-3! dark:focus-visible:ring-2! focus-visible:ring-stone-900/25! dark:focus-visible:ring-stone-100! focus-visible:ring-offset-2! focus-visible:ring-offset-stone-950! focus-visible:border-primary! dark:focus-visible:border-primary!";
 
 const hoverRing =
   "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";

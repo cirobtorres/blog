@@ -6,22 +6,12 @@ import Link from "next/link";
 import LikeButton from "./LikeButton";
 import { cn, focusRing } from "../../../utils/variants";
 
-export default function ArticleTitle({
-  id: articleId,
-  title,
-  subtitle,
-  author: { name: authorName, pictureUrl: authorPicUrl },
-  media: { url: artBannerUrl, alt: artBannerAlt },
-  likeCount,
-  commentCount,
-  createdAt,
-  updatedAt,
-}: Article) {
+export default function ArticleTitle(article: Article) {
   return (
     <div className="w-full inline-grid">
       <Image
-        src={artBannerUrl}
-        alt={artBannerAlt}
+        src={article.media.url}
+        alt={article.media.alt}
         width={1920}
         height={1080}
         className="col-start-1 row-start-1 h-full max-h-180 min-h-75 object-cover w-full border-b dark:border-stone-800"
@@ -31,19 +21,16 @@ export default function ArticleTitle({
         <div className="w-full max-w-article-title p-6 pb-0 lg:mx-auto lg:px-10">
           <section className="col-start-2">
             <ArtBreadcrumb />
-            <Title id={articleId} title={title} />
+            <Title id={article.id} title={article.title} />
           </section>
         </div>
       </div>
       <div className="w-full max-w-article-title px-3 lg:mx-auto lg:px-10">
-        <Subtitle subtitle={subtitle} />
+        <Subtitle subtitle={article.subtitle} />
       </div>
       <div className="w-full max-w-article-title px-3 lg:mx-auto lg:px-10 mb-6">
         <div className="flex items-center gap-8">
-          <span className="text-sm flex items-center gap-2">
-            <LikeButton />
-            {likeCount}
-          </span>
+          <LikeButton article={article} />
           <span className="text-sm flex items-center gap-2">
             <Link
               href="#comments"
@@ -66,7 +53,7 @@ export default function ArticleTitle({
                 <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
               </svg>
             </Link>
-            {commentCount}
+            {article.commentCount}
           </span>
           <div className="flex flex-col lg:hidden">
             <small className="flex font-medium text-xs text-neutral-500 dark:text-neutral-500 md:flex-row gap-1">
@@ -78,12 +65,13 @@ export default function ArticleTitle({
           </div>
           <div className="hidden lg:flex gap-3">
             <small className="flex font-medium text-xs text-neutral-500 dark:text-neutral-500 md:flex-row gap-1">
-              Criado: <time>{convertToLargeDate(new Date(createdAt))}</time>
+              Criado:{" "}
+              <time>{convertToLargeDate(new Date(article.createdAt))}</time>
             </small>
-            {updatedAt && (
+            {article.updatedAt && (
               <small className="flex font-medium text-xs text-neutral-500 dark:text-neutral-500 md:flex-row gap-1">
                 Atualizado:{" "}
-                <time>{convertToLargeDate(new Date(updatedAt))}</time>
+                <time>{convertToLargeDate(new Date(article.updatedAt))}</time>
               </small>
             )}
           </div>
@@ -92,7 +80,12 @@ export default function ArticleTitle({
       <div className="w-full bg-stone-200 dark:bg-stone-900 border-y py-2">
         <div className="w-full max-w-article-title px-6 lg:mx-auto lg:px-10">
           <div className="flex items-center gap-3 lg:gap-6">
-            <AvatarName {...{ authorName, authorPicUrl }} />
+            <AvatarName
+              {...{
+                authorName: article.author.name,
+                authorPicUrl: article.author.pictureUrl,
+              }}
+            />
           </div>
         </div>
       </div>

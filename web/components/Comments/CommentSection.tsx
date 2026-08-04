@@ -37,15 +37,6 @@ export default async function CommentSection({
     articleId,
   });
 
-  // const [comments, totalComments] = await Promise.all([getComments({
-  //   articleId,
-  //   page: "0",
-  //   limit: "20",
-  //   repliesLimit: "5",
-  // }),countComments({
-  //   articleId,
-  // })])
-
   const { content, page } = comments.data;
   const hasMore = page.number + 1 < page.totalPages;
 

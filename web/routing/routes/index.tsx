@@ -40,6 +40,9 @@ const apiServerUrls = {
     id: API_SERVER + "/articles/id",
     slug: API_SERVER + "/articles/slug",
   },
+  articleLike: {
+    toggle: API_SERVER + "/articles/like/articleId",
+  },
   comment: {
     root: API_SERVER + "/comments",
     count: API_SERVER + "/comments/count",

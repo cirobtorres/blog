@@ -24,6 +24,7 @@ public class CommentLikeController {
             @AuthenticationPrincipal Jwt jwt
     ) {
         UUID userId = UUID.fromString(jwt.getSubject());
-        return ResponseEntity.ok(commentLikeService.toggleLike(commentId, userId));
+        CommentLikeDTO likeCount = commentLikeService.toggleLike(commentId, userId);
+        return ResponseEntity.ok(likeCount);
     }
 }

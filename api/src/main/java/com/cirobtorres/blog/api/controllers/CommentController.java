@@ -33,7 +33,6 @@ public class CommentController {
             @RequestParam UUID articleId,
             @RequestParam Map<String, String> allParams,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
-
     ) {
         // params: limit, repliesLimit
         Page<CommentDTO> comments = commentService

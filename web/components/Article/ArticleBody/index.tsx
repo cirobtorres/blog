@@ -43,7 +43,7 @@ export default function ArticleBody({ body }: Article) {
     <div className="w-full max-w-article-body mx-auto px-3 my-8">
       <section className="relative grid grid-cols-1 lg:grid-cols-[300px_auto_1fr] gap-4">
         <ScrollSummary anchors={anchors} />
-        <article className="w-full max-w-article-title overflow-hidden">
+        <article className="w-full max-w-article-title p-1 overflow-hidden">
           {processedNodes.map((node, index) => (
             <React.Fragment key={index}>{node}</React.Fragment>
           ))}

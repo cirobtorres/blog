@@ -6,6 +6,7 @@ import ArticleBody from "../../../../../../components/Article/ArticleBody";
 import Comments from "../../../../../../components/Comments";
 import Header from "../../../../../../components/Header";
 import Footer from "../../../../../../components/Footer";
+import { serverFetch } from "../../../../../../services/serverFetch";
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -54,7 +55,7 @@ export default async function ArticlePageId({
   const getUrl =
     apiServerUrls.article.root + `/${year}/${month}/${day}/${slug}`;
 
-  const response = await fetch(getUrl, {
+  const response = await serverFetch(getUrl, {
     cache: "no-store",
   });
 
