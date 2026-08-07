@@ -14,6 +14,8 @@ export function Button({
     <Comp
       data-slot="button"
       data-variant={variant}
+      disabled={disabled}
+      aria-disabled={disabled}
       className={cn(buttonVariants({ variant, disabled, className }))}
       {...props}
     />

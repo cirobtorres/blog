@@ -7,10 +7,10 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "../../../Breadcrumb";
-import { Link } from "../../../Links";
+} from "../../Breadcrumb";
+import { Link } from "../../Links";
 
-export const ArtBreadcrumb = () => {
+export default function ArticleBreadcrumb() {
   const pathname = usePathname();
   const slug = pathname.split("/").at(-1) ?? "";
   const sugarPath =
@@ -51,4 +51,4 @@ export const ArtBreadcrumb = () => {
       </BreadcrumbList>
     </Breadcrumb>
   );
-};
+}

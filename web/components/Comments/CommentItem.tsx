@@ -6,27 +6,16 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import CharacterCount from "@tiptap/extension-character-count";
-import deleteComment from "../../services/comment/deleteComment";
-import Spinner from "../Spinner";
 import { usePathname, useSearchParams } from "next/navigation";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { AvatarName } from "../Avatar";
 import { Button } from "../Button";
 import { cn } from "../../utils/variants";
-import { sonnerPromise, sonnerToastPromise } from "../../utils/sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTrigger,
-} from "../AlertDialog";
 import putComment from "../../services/comment/putComment";
 import { signIn, useSession } from "next-auth/react";
-import { toggleCommentLike } from "../../services/commentLike/toggleCommentLike";
+import CommentLikeButton from "./CommentLikeButton";
+import CommentDeleteButton from "./CommentDeleteButton";
 
 interface TiptapNode {
   type: string;
@@ -50,13 +39,6 @@ function countWords(text: string): number {
   if (!cleanText) return 0;
   return cleanText.split(/\s+/).length;
 }
-
-const defaultState = {
-  ok: false,
-  success: null,
-  error: null,
-  data: null,
-};
 
 function ensureTiptapJson(body: string): Record<string, unknown> {
   const trimmed = body ? body.trim() : "";
@@ -112,28 +94,17 @@ export function replaceHash(hash: string) {
 export default function CommentItem({
   articleId,
   comment,
-  // depth,
 }: {
   articleId: string;
   comment: Comments;
-  // depth: number;
 }) {
   const { data: session } = useSession();
   const user = session?.user;
   const isSignedIn = !!user?.id;
   const replyHash = `comment-reply-${comment.id}`;
-  const likeHash = `comment-like-${comment.id}`;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isReplying, setIsReplying] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const [liked, setLiked] = React.useState<boolean>(
-    Boolean(comment.likedByCurrentUser),
-  );
-  const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
-  const [likeCount, setLikeCount] = React.useState<number>(
-    comment.likeCount ?? 0,
-  );
-  const [isLiking, setIsLiking] = React.useState<boolean>(false);
   const currentPath = usePathname();
   const searchParams = useSearchParams();
   const replyTo = searchParams.get("replyTo");
@@ -146,39 +117,12 @@ export default function CommentItem({
   const search = returnParams.toString();
   const redirectParams = new URLSearchParams(search);
   redirectParams.set("replyTo", comment.id);
-  // OLD REDIRECT URLs
-  // const redirectSearch = redirectParams.toString();
-  // const fullPath = (search ? `${currentPath}?${search}` : currentPath) + "#" + replyHash;
-  // const fullPath = `${currentPath}?${redirectSearch}#${replyHash}`;
-  // const loginUrl = `${publicWebUrls.signIn}?redirect_url=${encodeURIComponent(fullPath)}&login=reply_comment`;
 
   const safeTiptapContent = React.useMemo(() => {
     if (comment.isBlocked) return ensureTiptapJson("[Comentário bloqueado]");
     if (comment.isDeleted) return ensureTiptapJson("[Comentário excluído]");
     return ensureTiptapJson(comment.body);
   }, [comment.body, comment.isDeleted, comment.isBlocked]);
-
-  const [, delAction, isDelPending] = React.useActionState(async () => {
-    const success = (serverResponse: ActionState) => (
-      <p>{serverResponse.success ?? "Comentário excluído"}</p>
-    );
-    const error = (serverResponse: ActionState) => (
-      <p>{serverResponse.error ?? "Erro ao excluir comentário"}</p>
-    );
-
-    if (!user?.id) return defaultState;
-
-    const data = {
-      commentId: comment.id,
-      userId: user.id,
-      articlePath: currentPath,
-    };
-    const promise = deleteComment(data);
-    const result = sonnerPromise(promise);
-    sonnerToastPromise(result, success, error, "Excluindo comentário...");
-
-    return result;
-  }, defaultState);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -209,18 +153,6 @@ export default function CommentItem({
       `${window.location.pathname}${query ? `?${query}` : ""}#comment-${comment.id}`,
     );
   }, [isSignedIn, replyTo, comment.id, searchParams]);
-
-  React.useEffect(() => {
-    const update = () => {
-      setIsHighlightedLike(window.location.hash === `#${likeHash}`);
-    };
-
-    update();
-
-    window.addEventListener("hashchange", update);
-
-    return () => window.removeEventListener("hashchange", update);
-  }, [likeHash]);
 
   const handleSave = async (editorData: Omit<CommentSave, "commentId">) => {
     // Saves for a possible rollback
@@ -261,72 +193,6 @@ export default function CommentItem({
     return result;
   };
 
-  const handleReplyClick = async () => {
-    if (!isSignedIn) {
-      const returnParams = new URLSearchParams(searchParams.toString());
-      returnParams.set("replyTo", comment.id);
-      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${replyHash}`;
-
-      await signIn("keycloak", {
-        callbackUrl,
-      });
-      return;
-    }
-
-    const next = !isReplying;
-    setIsReplying(next);
-
-    if (next) {
-      queueMicrotask(() => {
-        replaceHash("#" + replyHash);
-      });
-    } else {
-      queueMicrotask(() => {
-        clearHash();
-      });
-    }
-  };
-
-  const handleLikeOrDislike = async () => {
-    if (!isSignedIn) {
-      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${likeHash}`;
-      await signIn("keycloak", { callbackUrl });
-      return;
-    }
-
-    await performLikeToggle();
-  };
-
-  const performLikeToggle = React.useCallback(async () => {
-    if (isLiking) return;
-
-    const prevLiked = liked;
-    const prevLikeCount = likeCount;
-
-    const nextLiked = !prevLiked;
-    const nextLikeCount = nextLiked
-      ? prevLikeCount + 1
-      : Math.max(0, prevLikeCount - 1);
-
-    setLiked(nextLiked);
-    setLikeCount(nextLikeCount);
-    setIsLiking(true);
-
-    const result = await toggleCommentLike(comment.id);
-
-    if (!result.ok || !result.data) {
-      // Rollback
-      setLiked(prevLiked);
-      setLikeCount(prevLikeCount);
-    } else {
-      // Synch with server
-      setLiked(result.data.liked);
-      setLikeCount(result.data.likeCount);
-    }
-
-    setIsLiking(false);
-  }, [comment.id, isLiking, likeCount, liked]);
-
   const closeEditor = () => {
     setIsReplying(false);
     clearHash();
@@ -362,45 +228,13 @@ export default function CommentItem({
         />
         {isCommentOwner && !isCommentDeleted && !isCommentBlocked && (
           <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                className={cn(
-                  "size-8 px-0",
-                  isMenuOpen &&
-                    "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-300 dark:bg-stone-800",
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="12" cy="5" r="1" />
-                  <circle cx="12" cy="19" r="1" />
-                </svg>
-              </Button>
-            </PopoverTrigger>
+            <CommentMenuButton isMenuOpen={isMenuOpen} />
             <PopoverContent className="w-fit p-1 gap-1">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setIsEditing(true)}
-                className="w-20 h-8"
-              >
-                Editar
-              </Button>
-              <DeleteCommentButton
-                action={delAction}
-                isPending={isDelPending}
+              <CommentEditButton onClick={() => setIsEditing(true)} />
+              <CommentDeleteButton
+                userId={user.id}
+                commentId={comment.id}
+                currentPath={currentPath}
               />
             </PopoverContent>
           </Popover>
@@ -428,62 +262,22 @@ export default function CommentItem({
       )}
       {!isCommentDeleted && !isCommentBlocked && (
         <div className="scroll-mt-24 flex items-center gap-4">
-          <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
-            <Button
-              id={likeHash}
-              type="button"
-              variant="ghost"
-              onClick={handleLikeOrDislike}
-              className={cn(
-                "rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100",
-                isHighlightedLike &&
-                  "bg-primary/20 ring-2 ring-primary/40 [&_svg]:text-primary dark:[&_svg]:text-primary animate-pulse-primary",
-              )}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />
-              </svg>
-            </Button>
-            {likeCount}
-          </span>
-          <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-            </svg>
-            {comment.replies?.length}
-          </span>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleReplyClick}
-            className={cn(
-              "h-8 text-neutral-900 dark:text-neutral-100 opacity-100",
-              isReplying &&
-                "border-primary/50 bg-primary/25 dark:hover:border-primary/75 dark:hover:bg-primary/35",
-            )}
-          >
-            Responder
-          </Button>
+          <CommentLikeButton
+            comment={comment}
+            isSignedIn={isSignedIn}
+            currentPath={currentPath}
+            returnParams={returnParams}
+          />
+          <CommentReplyLength length={comment.replies?.length ?? 0} />
+          <CommentReplyButton
+            isSignedIn={isSignedIn}
+            commentId={comment.id}
+            replyHash={replyHash}
+            currentPath={currentPath}
+            searchParams={searchParams.toString()}
+            isReplying={isReplying}
+            setIsReplying={setIsReplying}
+          />
         </div>
       )}
       {isReplying && isSignedIn && (
@@ -503,51 +297,116 @@ export default function CommentItem({
   );
 }
 
-const DeleteCommentButton = ({
-  action,
-  isPending,
+const CommentEditButton = ({ onClick }: { onClick: () => void }) => (
+  <Button type="button" variant="ghost" onClick={onClick} className="w-20 h-8">
+    Editar
+  </Button>
+);
+
+const CommentReplyLength = ({ length }: { length: number }) => (
+  <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+    </svg>
+    {length}
+  </span>
+);
+
+const CommentMenuButton = ({ isMenuOpen }: { isMenuOpen: boolean }) => (
+  <PopoverTrigger asChild>
+    <Button
+      type="button"
+      variant="ghost"
+      className={cn(
+        "size-8 px-0",
+        isMenuOpen &&
+          "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-300 dark:bg-stone-800",
+      )}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="12" cy="5" r="1" />
+        <circle cx="12" cy="19" r="1" />
+      </svg>
+    </Button>
+  </PopoverTrigger>
+);
+
+const CommentReplyButton = ({
+  isSignedIn,
+  commentId,
+  replyHash,
+  currentPath,
+  searchParams,
+  isReplying,
+  setIsReplying,
 }: {
-  action: () => void;
-  isPending: boolean;
+  isSignedIn: boolean;
+  commentId: string;
+  replyHash: string;
+  currentPath: string;
+  searchParams: string;
+  isReplying: boolean;
+  setIsReplying: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const handleReplyClick = async () => {
+    if (!isSignedIn) {
+      const returnParams = new URLSearchParams(searchParams);
+      returnParams.set("replyTo", commentId);
+      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${replyHash}`;
+
+      await signIn("keycloak", {
+        callbackUrl,
+      });
+      return;
+    }
+
+    const next = !isReplying;
+    setIsReplying(next);
+
+    if (next) {
+      queueMicrotask(() => {
+        replaceHash("#" + replyHash);
+      });
+    } else {
+      queueMicrotask(() => {
+        clearHash();
+      });
+    }
+  };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <Button variant="ghost" disabled={isPending} className="w-20 h-8">
-          Excluir
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-xs">
-        <AlertDialogHeader>Excluir comentário</AlertDialogHeader>
-        <form action={action}>
-          <AlertDialogDescription className="p-4">
-            Confirmar?
-          </AlertDialogDescription>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              variant="outline"
-              className="w-full max-w-30 h-8"
-            >
-              Cancelar
-            </AlertDialogCancel>
-            <Button
-              type="button"
-              disabled={isPending}
-              variant="default"
-              className="w-full max-w-30 h-8"
-              onClick={() => {
-                React.startTransition(() => {
-                  action();
-                });
-              }}
-            >
-              {isPending && <Spinner />} Confirmar
-            </Button>
-          </AlertDialogFooter>
-        </form>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Button
+      type="button"
+      variant="ghost"
+      onClick={handleReplyClick}
+      className={cn(
+        "h-8 text-neutral-900 dark:text-neutral-100 opacity-100",
+        isReplying &&
+          "border-primary/50 bg-primary/25 dark:hover:border-primary/75 dark:hover:bg-primary/35",
+      )}
+    >
+      Responder
+    </Button>
   );
 };

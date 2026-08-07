@@ -32,11 +32,15 @@ public class CommentController {
     public ResponseEntity<Page<CommentDTO>> getComments(
             @RequestParam UUID articleId,
             @RequestParam Map<String, String> allParams,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication auth
     ) {
         // params: limit, repliesLimit
-        Page<CommentDTO> comments = commentService
-                .getAllByQueryParams(articleId, allParams, pageable);
+        UUID userId = null;
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            userId = UUID.fromString(auth.getName());
+        }
+        Page<CommentDTO> comments = commentService.getAllByQueryParams(userId, articleId, allParams, pageable);
         return ResponseEntity.ok(comments);
     }
 
@@ -46,13 +50,6 @@ public class CommentController {
     ) {
         long count = commentService.countVisibleCommentsByArticleId(articleId);
         return ResponseEntity.ok(count);
-    }
-
-    @GetMapping("id/{id}")
-    public ResponseEntity<Void> getComment(
-            @PathVariable UUID id
-    ) {
-        return ResponseEntity.noContent().build(); // TODO
     }
 
     // POST-------------------------------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { AvatarName } from "../../Avatar";
-import { ArtBreadcrumb } from "./Breadcrumb";
 import { convertToLargeDate } from "../../../utils/date";
-import Link from "next/link";
-import LikeButton from "./LikeButton";
 import { cn, focusRing } from "../../../utils/variants";
+import ArticleBreadcrumb from "./ArticleBreadcrumb";
+import ArticleLikeButton from "./ArticleLikeButton";
+import Link from "next/link";
 
 export default function ArticleTitle(article: Article) {
   return (
@@ -20,7 +20,7 @@ export default function ArticleTitle(article: Article) {
       <div className="lg:col-start-1 lg:row-start-1 lg:px-10 lg:mt-auto lg:mb-0 lg:pt-10 border-t lg:backdrop-blur-xl lg:bg-linear-to-t dark:lg:from-25% not-dark:lg:from-stone-100 not-dark:lg:via-white/75 not-dark:lg:to-white/50 dark:lg:from-stone-925 dark:lg:to-stone-925/25">
         <div className="w-full max-w-article-title p-6 pb-0 lg:mx-auto lg:px-10">
           <section className="col-start-2">
-            <ArtBreadcrumb />
+            <ArticleBreadcrumb />
             <Title id={article.id} title={article.title} />
           </section>
         </div>
@@ -30,7 +30,7 @@ export default function ArticleTitle(article: Article) {
       </div>
       <div className="w-full max-w-article-title px-3 lg:mx-auto lg:px-10 mb-6">
         <div className="flex items-center gap-8">
-          <LikeButton article={article} />
+          <ArticleLikeButton article={article} />
           <span className="text-sm flex items-center gap-2">
             <Link
               href="#comments"

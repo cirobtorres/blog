@@ -40,8 +40,8 @@ export default function CommentThread({
         <div className="flex flex-col gap-4">
           {comment.replies!.map((reply) => (
             <CommentThread
-              articleId={articleId}
               key={reply.id}
+              articleId={articleId}
               comment={reply}
               depth={currentDepth + 1}
               maxDepth={maxDepth}

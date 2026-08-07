@@ -6,6 +6,7 @@ import com.cirobtorres.blog.api.dtos.CommentDTO;
 import com.cirobtorres.blog.api.dtos.CommentPostDTO;
 import com.cirobtorres.blog.api.dtos.CommentPutDTO;
 import com.cirobtorres.blog.api.entities.Comment;
+import com.cirobtorres.blog.api.repositories.CommentLikeRepository;
 import com.cirobtorres.blog.api.repositories.CommentRepository;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import com.cirobtorres.blog.api.entities.User;
@@ -21,9 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,16 +30,19 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ArticlesRepository articlesRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public CommentService(
             CommentRepository commentRepository,
             UserRepository userRepository,
-            ArticlesRepository articlesRepository
+            ArticlesRepository articlesRepository,
+            CommentLikeRepository commentLikeRepository
     ) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.articlesRepository = articlesRepository;
+        this.commentLikeRepository = commentLikeRepository;
     }
 
     public Comment findCommentById(UUID id) {
@@ -49,15 +51,14 @@ public class CommentService {
     }
 
     @Transactional
-    public Page<CommentDTO> getAllByQueryParams(UUID articleId, Map<String, String> allParams, Pageable pageable) {
+    public Page<CommentDTO> getAllByQueryParams(UUID userId, UUID articleId, Map<String, String> allParams, Pageable pageable) {
         int limit = allParams.containsKey("limit") ? Integer.parseInt(allParams.get("limit")) : pageable.getPageSize();
         int repliesLimit = allParams.containsKey("repliesLimit") ? Integer.parseInt(allParams.get("repliesLimit")) : 5;
 
         Pageable customizedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 limit,
-                Sort
-                        .by(Sort.Direction.DESC, "likeCount")
+                Sort.by(Sort.Direction.DESC, "likeCount")
                         .and(Sort.by(Sort.Direction.DESC, "createdAt"))
         );
 
@@ -93,7 +94,30 @@ public class CommentService {
             }
         });
 
-        return rootCommentsPage.map(CommentDTO::new);
+        Set<UUID> likedCommentIds = Set.of();
+
+        if (userId != null) {
+            Set<UUID> allCommentIds = new HashSet<>();
+            rootCommentsPage.forEach(root -> collectAllCommentIds(root, allCommentIds));
+
+            likedCommentIds = commentLikeRepository.findLikedCommentIdsByUserIdAndCommentIds(userId, allCommentIds);
+        }
+
+        final Set<UUID> finalLikedCommentIds = likedCommentIds;
+
+        return rootCommentsPage.map(comment -> new CommentDTO(comment, finalLikedCommentIds));
+    }
+
+    private void collectAllCommentIds(Comment comment, Set<UUID> accumulator) {
+        if (comment == null) return;
+
+        accumulator.add(comment.getId());
+
+        if (comment.getChildren() != null && !comment.getChildren().isEmpty()) {
+            for (Comment child : comment.getChildren()) {
+                collectAllCommentIds(child, accumulator);
+            }
+        }
     }
 
     @Transactional
@@ -173,5 +197,14 @@ public class CommentService {
             return parentEntity.getId().equals(requestParentId);
         }
         return false;
+    }
+
+    private void collectAllCommentIds(Comment comment, List<UUID> accumulator) {
+        accumulator.add(comment.getId());
+        if (comment.getChildren() != null && !comment.getChildren().isEmpty()) {
+            for (Comment child : comment.getChildren()) {
+                collectAllCommentIds(child, accumulator);
+            }
+        }
     }
 }

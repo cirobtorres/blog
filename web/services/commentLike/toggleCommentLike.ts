@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
-export async function toggleCommentLike(commentId: string) {
+export async function toggleCommentLike({ commentId }: { commentId: string }) {
   try {
     const options: RequestInit = {
       method: "POST",

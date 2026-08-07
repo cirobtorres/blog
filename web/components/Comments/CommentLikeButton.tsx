@@ -1,33 +1,34 @@
 "use client";
 
 import React from "react";
-import { cn, focusRing } from "../../../../utils/variants";
-import { toggleArticleLike } from "../../../../services/articleLike/toggleArticleLike";
-import { signIn, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { cn, focusRing } from "../../utils/variants";
+import { Button } from "../Button";
+import { signIn } from "next-auth/react";
+import { toggleCommentLike } from "../../services/commentLike/toggleCommentLike";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function LikeButton({
-  article,
-  size = 20,
+export default function CommentLikeButton({
+  comment,
+  isSignedIn,
+  currentPath,
+  returnParams,
+  size = 24,
 }: {
-  article: Article;
+  comment: Comments;
+  isSignedIn: boolean;
+  currentPath: string;
+  returnParams: URLSearchParams;
   size?: number;
 }) {
-  const { data: session } = useSession();
-  const user = session?.user;
-  const isSignedIn = !!user?.id;
-  const currentPath = usePathname();
-  const likeHash = `article-like-${article.id}`;
-
+  const likeHash = `comment-like-${comment.id}`;
   const [liked, setLiked] = React.useState<boolean>(
-    Boolean(article.likedByCurrentUser),
+    Boolean(comment.likedByCurrentUser),
   );
   const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
   const [likeCount, setLikeCount] = React.useState<number>(
-    article.likeCount ?? 0,
+    comment.likeCount ?? 0,
   );
-  const initialLikedRef = React.useRef(Boolean(article.likedByCurrentUser));
+  const initialLikedRef = React.useRef(Boolean(comment.likedByCurrentUser));
 
   React.useEffect(() => {
     const checkHash = () => {
@@ -63,12 +64,12 @@ export default function LikeButton({
       // Click state = server state: user toggled his like/dislike quickly
       if (targetLikedState === initialLikedRef.current) return;
 
-      const result = await toggleArticleLike({ articleId: article.id });
+      const result = await toggleCommentLike({ commentId: comment.id });
 
       if (!result.ok || !result.data) {
         // Rollback
         setLiked(initialLikedRef.current);
-        setLikeCount(article.likeCount ?? 0);
+        setLikeCount(comment.likeCount ?? 0);
       } else {
         // Success: match with server
         initialLikedRef.current = result.data.liked;
@@ -79,10 +80,10 @@ export default function LikeButton({
     400,
   );
 
-  const handleLikeOrDislike = () => {
+  const handleLikeOrDislike = async () => {
     if (!isSignedIn) {
-      const callbackUrl = `${window.location.origin}${currentPath}#${likeHash}`;
-      signIn("keycloak", { callbackUrl });
+      const callbackUrl = `${window.location.origin}${currentPath}?${returnParams.toString()}#${likeHash}`;
+      await signIn("keycloak", { callbackUrl });
       return;
     }
 
@@ -99,15 +100,16 @@ export default function LikeButton({
   };
 
   return (
-    <span className="text-sm flex items-center gap-2">
-      <button
+    <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
+      <Button
         id={likeHash}
         type="button"
+        variant="ghost"
         onClick={handleLikeOrDislike}
         className={cn(
-          "scroll-mt-16 cursor-pointer flex items-center rounded-full p-1 border border-transparent transition-all duration-300",
+          "rounded-full size-8 [&_svg]:text-neutral-900 dark:[&_svg]:text-neutral-100 opacity-100",
           isHighlightedLike &&
-            "bg-primary/20 [&_svg]:text-primary dark:[&_svg]:text-primary animate-pulse-primary",
+            "bg-primary/20 ring-2 ring-primary/40 [&_svg]:text-primary dark:[&_svg]:text-primary animate-pulse-primary",
           focusRing,
         )}
       >
@@ -123,9 +125,9 @@ export default function LikeButton({
             liked ? "stroke-primary fill-primary" : "stroke-current fill-none",
           )}
         >
-          <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+          <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />
         </svg>
-      </button>
+      </Button>
       {likeCount}
     </span>
   );
