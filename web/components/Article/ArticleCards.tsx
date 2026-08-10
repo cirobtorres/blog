@@ -28,7 +28,7 @@ export function ArticleCard({ children, className, ...props }: ArticleCard) {
       {...props}
       tabIndex={-1}
       className={cn(
-        "relative w-full max-w-100 h-100 flex flex-col gap-2 p-1",
+        "w-full max-w-100 h-100 flex flex-col gap-2 p-1",
         focusRing,
         className,
       )}
@@ -132,10 +132,56 @@ export function ArticleCardSubtitle({
 
 ArticleCardSubtitle.displayName = "ArticleCardSubtitle";
 
-export function ArticleIsPublished() {
+export function ArticleCardFooter({ children }: { children: React.ReactNode }) {
+  return <div className="flex mt-auto mr-auto mb-0 ml-0 gap-1">{children}</div>;
+}
+
+ArticleCardFooter.displayName = "ArticleCardFooter";
+
+export function ArticleCardStatus({ status }: { status: ArticleStatus }) {
+  const upperStatus = status.toUpperCase();
+
+  const translateStatus = (txt: string) => {
+    switch (txt) {
+      case "PUBLISHED":
+        return "Publicado";
+      case "DRAFT":
+        return "Rascunho";
+      case "ARCHIVED":
+        return "Arquivado";
+      default:
+        return "Unknown";
+    }
+  };
+
   return (
-    <div className="z-10 absolute top-4 right-4 size-2 rounded-full animate-pulse-green bg-emerald-500" />
+    <span
+      className={cn(
+        "w-fit px-2 rounded border text-[10px] text-neutral-100 dark:text-neutral-100",
+        upperStatus === "PUBLISHED"
+          ? "border-success/50 bg-success/25"
+          : "border-warning/50 bg-warning/25",
+      )}
+    >
+      {translateStatus(upperStatus)}
+    </span>
   );
 }
 
-ArticleIsPublished.displayName = "ArticleIsPublished";
+ArticleCardStatus.displayName = "ArticleCardStatus";
+
+export function ArticleCardPendingRev({
+  hasUnpublishedChanges,
+}: {
+  hasUnpublishedChanges: boolean;
+}) {
+  return (
+    hasUnpublishedChanges && (
+      <span className="w-fit flex items-center text-[10px] px-2 rounded border border-informative/50 bg-informative/25">
+        Pendente
+      </span>
+    )
+  );
+}
+
+ArticleCardPendingRev.displayName = "ArticleCardPendingRev";

@@ -20,14 +20,14 @@ export default async function AuthorLayout({
         <aside className="relative w-full h-full border-r bg-stone-200 dark:bg-stone-900">
           <nav className="fixed w-15 h-full mx-auto flex flex-col gap-2 py-2">
             <Logo />
-            <div className="w-full h-px bg-stone-700" />
+            <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
             <HomeLink />
             <ArticlesLink />
             <MediaLink />
             <TagLink />
             <div className="w-full flex flex-col gap-2 mt-auto">
               <AboutLink />
-              <div className="w-full h-px bg-stone-700" />
+              <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
               <UserButton />
             </div>
           </nav>

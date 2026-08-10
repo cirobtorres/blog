@@ -34,13 +34,13 @@ export function UserButton() {
           type="button"
           aria-controls={popoverId}
           className={cn(
-            "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-200 dark:hover:bg-stone-750 group",
+            "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-300 dark:hover:bg-stone-750 group",
             focusRing,
           )}
         >
           <span
             className={cn(
-              "size-full p-1 shrink-0 flex justify-center items-center rounded-full bg-primary",
+              "size-full p-1 shrink-0 flex justify-center items-center rounded-full text-neutral-100 dark:text-neutral-100 bg-primary",
             )}
           >
             {(user.name || "Anonymous")
@@ -61,14 +61,17 @@ export function UserButton() {
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            {user.authorities.map((authority) => (
+            <span className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800">
+              Author
+            </span>
+            {/* {user.authorities.map((authority) => (
               <span
                 key={authority}
                 className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800"
               >
                 {authority}
               </span>
-            ))}
+            ))} */}
           </div>
         </div>
         <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />

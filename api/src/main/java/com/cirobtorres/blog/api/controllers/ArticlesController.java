@@ -3,7 +3,6 @@ package com.cirobtorres.blog.api.controllers;
 import com.cirobtorres.blog.api.dtos.ArticleDTO;
 import com.cirobtorres.blog.api.dtos.ArticleSaveDTO;
 import com.cirobtorres.blog.api.dtos.ArticleSlugDTO;
-import com.cirobtorres.blog.api.entities.Articles;
 import com.cirobtorres.blog.api.services.ArticlesService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
@@ -15,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,21 +58,29 @@ public class ArticlesController {
         return ResponseEntity.ok(articles);
     }
 
-    // Protected
     @GetMapping("me")
     @PreAuthorize("hasAuthority('AUTHOR')")
     public ResponseEntity<Page<ArticleDTO>> getMyArticles(
             Authentication auth,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        String userId = auth.getName();
+        UUID userId = UUID.fromString(auth.getName());
         return ResponseEntity.ok(articlesService.getAllByAuthor(userId, pageable));
+    }
+
+    @GetMapping("me/id/{id}")
+    @PreAuthorize("hasAuthority('AUTHOR')")
+    public ResponseEntity<ArticleDTO> getMyArticleById(
+            @PathVariable UUID id,
+            Authentication auth
+    ) {
+        UUID userId = UUID.fromString(auth.getName());
+        return ResponseEntity.ok(articlesService.getByIdForAuthor(id, userId));
     }
 
     @GetMapping("slug")
     public ResponseEntity<List<String>> getAllSlug() {
-        List<String> slugs = articlesService.getAllSlugs();
-        return ResponseEntity.ok(slugs);
+        return ResponseEntity.ok(articlesService.getAllSlugs());
     }
 
     @GetMapping("id/{id}")
@@ -112,20 +117,33 @@ public class ArticlesController {
     }
 
     // PUT----------------------------------------------------------------------------------------------------
-    @PutMapping("id/{id}")
-    public ResponseEntity<ArticleDTO> putArticle(
-            @PathVariable UUID id, // TODO: use id from URL instead
-            @RequestBody ArticleSaveDTO createArticleDTO // TODO: actual id is coming from here
-    ) {
-        ArticleDTO article = articlesService.putArticle(createArticleDTO);
-        return ResponseEntity.ok(article);
-    }
-
     @PutMapping("id/{id}/unpublish")
     public ResponseEntity<ArticleDTO> unpublishArticle(
             @PathVariable UUID id
     ) {
         ArticleDTO article = articlesService.unpublishArticle(id);
+        return ResponseEntity.ok(article);
+    }
+
+    @PutMapping("id/{id}/draft")
+    public ResponseEntity<ArticleDTO> saveDraftArticle(
+            @PathVariable UUID id,
+            @RequestBody ArticleSaveDTO createArticleDTO,
+            Authentication auth
+    ) {
+        UUID userId = UUID.fromString(auth.getName());
+        ArticleDTO article = articlesService.putDraft(id, createArticleDTO, userId);
+        return ResponseEntity.ok(article);
+    }
+
+    @PutMapping("id/{id}/publish")
+    public ResponseEntity<ArticleDTO> publishArticle(
+            @PathVariable UUID id,
+            @RequestBody ArticleSaveDTO createArticleDTO,
+            Authentication auth
+    ) {
+        UUID userId = UUID.fromString(auth.getName());
+        ArticleDTO article = articlesService.putPublish(id, createArticleDTO, userId);
         return ResponseEntity.ok(article);
     }
 

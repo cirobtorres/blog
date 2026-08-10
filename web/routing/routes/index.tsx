@@ -36,8 +36,9 @@ const apiServerUrls = {
     me: API_SERVER + "/auth/me",
   },
   article: {
-    root: API_SERVER + "/articles",
     id: API_SERVER + "/articles/id",
+    me: API_SERVER + "/articles/me/id",
+    root: API_SERVER + "/articles",
     slug: API_SERVER + "/articles/slug",
   },
   articleLike: {

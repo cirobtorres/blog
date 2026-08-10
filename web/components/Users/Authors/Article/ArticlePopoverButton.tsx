@@ -55,9 +55,9 @@ export function ArticlePopoverButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="max-w-fit">
-        <Button variant="outline" className="w-full max-w-30 h-8">
+        {/* <Button variant="outline" className="w-full max-w-30 h-8">
           Preview
-        </Button>
+        </Button> */}
         <UnpublishButton articleId={articleId} status={status} />
         <DeleteButton articleId={articleId} />
       </PopoverContent>

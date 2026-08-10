@@ -8,12 +8,10 @@ import { AddBlockButton, BlockList } from "../../../../Editors/blocks";
 import { convertToLargeDate, mountURL } from "../../../../../utils/date";
 import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../../../../utils/variants";
-import { publishArticle } from "../../../../../services/article/publishArticle";
 import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { Button } from "../../../../Button";
 import { useArticleStore } from "../../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../../Fieldset";
-import { useAuth } from "../../../../../providers/AuthProvider";
 import { toast } from "sonner";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
 import { ArticlePopoverButton } from "../ArticlePopoverButton";
@@ -22,12 +20,14 @@ import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
 import ArticleButton from "../ArticleButton";
 import AlertErrorList from "../AlertErrorList";
 import putSaveArticle from "../../../../../services/article/putSaveArticle";
+import putPublishArticle from "../../../../../services/article/putPublishArticle";
 import {
   ArticleBannerButton,
   ArticleMediaManager,
 } from "../../../../Editors/editors/ArticleEditorImage";
 import { FileProvider } from "../../../../../providers/FileProvider";
 import { useSession } from "next-auth/react";
+import { Alert } from "../../../../Alert";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -44,16 +44,7 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export function ArticleUpdate({
-  id,
-  title,
-  subtitle,
-  tags,
-  slug,
-  media,
-  body,
-  status,
-}: Article) {
+export function ArticleUpdate(articles: Article) {
   const { data: session, status: sessionStatus } = useSession();
   const user = session?.user;
   const { blocks } = useArticleStore();
@@ -61,7 +52,9 @@ export function ArticleUpdate({
     null,
   );
   const [, setIsOpenState] = React.useState(false);
-  const [selectedTags, setSelectedTags] = React.useState<Tag[]>(() => tags);
+  const [selectedTags, setSelectedTags] = React.useState<Tag[]>(
+    () => articles.tags,
+  );
 
   const router = useRouter();
 
@@ -145,7 +138,7 @@ export function ArticleUpdate({
         return <p>{serverResponse.error ?? "Artigo não publicado"}</p>;
       };
 
-      const result = publishArticle(prevState, formData);
+      const result = putPublishArticle(prevState, formData);
       const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Publicando artigo...");
       return result;
@@ -155,26 +148,30 @@ export function ArticleUpdate({
 
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // event.stopPropagation();
 
+    const nativeEvent = event.nativeEvent as SubmitEvent;
+    const submitter = nativeEvent.submitter as HTMLButtonElement | null;
+    const intent = submitter?.value; // save / publish
     const formData = new FormData(event.currentTarget);
-    const rawData = Object.fromEntries(formData.entries());
 
-    const result = publishArticleSchema.safeParse({
-      ...rawData,
-    });
-
-    if (!result.success) {
-      const error = z.treeifyError(result.error).properties;
-      setErrors(error);
+    if (!intent) {
+      console.warn("Não foi possível identificar o botão clicado.");
       return;
+    }
+
+    if (intent === "publish") {
+      const rawData = Object.fromEntries(formData.entries());
+      const result = publishArticleSchema.safeParse(rawData);
+
+      if (!result.success) {
+        const error = z.treeifyError(result.error).properties;
+        setErrors(error);
+        return;
+      }
     }
 
     setErrors(null);
 
-    // "intent" = which button was clicked
-    // @ts-expect-error - submitter do exist in nativeEvent
-    const intent = event.nativeEvent.submitter?.value;
     React.startTransition(() => {
       if (intent === "publish") {
         publishAction(formData);
@@ -213,7 +210,10 @@ export function ArticleUpdate({
               >
                 Publicar
               </ArticleButton>
-              <ArticlePopoverButton articleId={id} status={status} />
+              <ArticlePopoverButton
+                articleId={articles.id}
+                status={articles.status}
+              />
             </div>
           </div>
           <AlertErrorList state={saveState || publishState} />
@@ -223,26 +223,37 @@ export function ArticleUpdate({
               type="hidden"
               className="appearance-none"
               name="id"
-              value={id}
+              value={articles.id}
             />
             <input
               hidden
               type="hidden"
               className="appearance-none"
               name="status"
-              value={status}
+              value={articles.status}
             />
+            {articles.hasUnpublishedChanges && (
+              <Alert
+                title="Tem informação salva ainda não publicada"
+                variant="warn"
+              >
+                <p>
+                  Existem alterações salvas, mas que estão pendentes de
+                  publicação.
+                </p>
+              </Alert>
+            )}
             <div className="w-full flex gap-2">
               <div className="w-full">
                 <ArticleEditorTitle
-                  defaultVal={title}
+                  defaultVal={articles.title}
                   error={!!errors?.title?.errors}
                 />
                 <FieldsetError error={errors?.title?.errors} />
               </div>
               <div className="w-full">
                 <ArticleEditorSubtitle
-                  defaultVal={subtitle}
+                  defaultVal={articles.subtitle}
                   maxLength={200}
                   error={!!errors?.subtitle?.errors}
                 />
@@ -260,18 +271,18 @@ export function ArticleUpdate({
               </div>
               <div className="w-full">
                 <ArticleEditorSlug
-                  articleId={id}
-                  defaultVal={slug}
+                  articleId={articles.id}
+                  defaultVal={articles.slug}
                   error={!!errors?.slug?.errors}
                 />
                 <FieldsetError error={errors?.slug?.errors} />
               </div>
             </div>
-            <ArticleBannerButton defaultBanner={media} />
+            <ArticleBannerButton defaultBanner={articles.media} />
             <FieldsetError error={errors?.banner?.errors} />
           </div>
           <div className="mt-2">
-            <BlockList defaultVal={body} />
+            <BlockList defaultVal={articles.body} />
           </div>
           <div className="mt-2">
             <AddBlockButton />

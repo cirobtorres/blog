@@ -7,6 +7,7 @@ type Article = {
   media: ImageEditor;
   tags: Tag[];
   likedByCurrentUser: boolean;
+  hasUnpublishedChanges: boolean;
   body: string;
   status: ArticleStatus;
   likeCount: number;

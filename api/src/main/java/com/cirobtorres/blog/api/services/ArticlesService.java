@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -175,61 +176,113 @@ public class ArticlesService {
     }
 
     @Transactional
-    public Page<ArticleDTO> getAllByAuthor(String userId, Pageable pageable) {
-        UUID uuid = UUID.fromString(userId);
-        Author author = authorRepository.findByUserId(uuid).orElseThrow(
+    public Page<ArticleDTO> getAllByAuthor(UUID userId, Pageable pageable) {
+        Author author = authorRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException("Author not found")
         );
-        Specification<Articles> spec = (
-                root,
-                query,
-                cb
-        ) -> cb.equal(root.get("author"), author);
-        return articlesRepository.findAll(spec, pageable).map(ArticleDTO::new);
+        Specification<Articles> spec = (root, query, cb) -> cb.equal(root.get("author"), author);
+
+        return articlesRepository.findAll(spec, pageable).map(article -> {
+            Revisions latestRevision = article.getRevisions().stream()
+                    .max(Comparator.comparing(Revisions::getCreatedAt))
+                    .orElse(article.getCurrentPublishedRevision());
+
+            return new ArticleDTO(article, latestRevision);
+        });
     }
 
     @Transactional
-    public ArticleDTO putArticle(ArticleSaveDTO createArticleDTO) {
-        Articles article = articlesRepository
-                .findById(createArticleDTO.id())
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "Article not found"
-                        )
-                );
+    public ArticleDTO getByIdForAuthor(UUID id, UUID authenticatedUserId) {
+        Articles article = articlesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
-        Set<Tag> tags = tagsRepository
-                .findAllByIdIn(createArticleDTO.tags())
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "Tags not found"
-                        )
-                );
+        if (!article.getAuthor().getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("You don't have permission to access this Article");
+        }
 
-        Media bannerMedia = mediaRepository
-                .findById(createArticleDTO.banner())
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "Media not found"
-                        )
-                );
+        Revisions latestRevision = article.getRevisions().stream()
+                .max(Comparator.comparing(Revisions::getCreatedAt))
+                .orElse(article.getCurrentPublishedRevision());
+
+        return new ArticleDTO(article, latestRevision);
+    }
+
+    @Transactional
+    public ArticleDTO putDraft(@NonNull UUID id, ArticleSaveDTO dto, UUID authenticatedUserId) {
+        Articles article = articlesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
+
+        if (!article.getAuthor().getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("You don't have permission to access this Article");
+        }
+
+        Set<Tag> tags = tagsRepository.findAllByIdIn(dto.tags())
+                .orElseThrow(() -> new EntityNotFoundException("Tags not found"));
+
+        Media bannerMedia = mediaRepository.findById(dto.banner())
+                .orElseThrow(() -> new EntityNotFoundException("Media not found"));
 
         Revisions revision = new Revisions.Builder()
-                .title(createArticleDTO.title())
-                .subtitle(createArticleDTO.subtitle())
+                .title(dto.title())
+                .subtitle(dto.subtitle())
                 .tags(tags)
                 .media(bannerMedia)
-                .body(createArticleDTO.body())
+                .body(dto.body())
                 .article(article)
                 .build();
 
         Revisions savedRevision = revisionsRepository.save(revision);
-        article.setSlug(createArticleDTO.slug());
-        article.setStatus(createArticleDTO.status());
-        article.setCurrentPublishedRevision(savedRevision);
         article.getRevisions().add(savedRevision);
+
+        if (dto.slug() != null && !dto.slug().isBlank()) {
+            article.setSlug(dto.slug());
+        }
+
         articlesRepository.save(article);
-        return new ArticleDTO(article);
+
+        return new ArticleDTO(article, savedRevision);
+    }
+
+    @Transactional
+    public ArticleDTO putPublish(@NonNull UUID id, ArticleSaveDTO dto, UUID authenticatedUserId) {
+        Articles article = articlesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
+
+        if (!article.getAuthor().getUser().getId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("You don't have permission to access this Article");
+        }
+
+        Set<Tag> tags = tagsRepository.findAllByIdIn(dto.tags())
+                .orElseThrow(() -> new EntityNotFoundException("Tags not found"));
+
+        Media bannerMedia = mediaRepository.findById(dto.banner())
+                .orElseThrow(() -> new EntityNotFoundException("Media not found"));
+
+        Revisions revision = new Revisions.Builder()
+                .title(dto.title())
+                .subtitle(dto.subtitle())
+                .tags(tags)
+                .media(bannerMedia)
+                .body(dto.body())
+                .article(article)
+                .build();
+
+        Revisions savedRevision = revisionsRepository.save(revision);
+        article.getRevisions().add(savedRevision);
+
+        if (dto.slug() != null && !dto.slug().isBlank()) {
+            article.setSlug(dto.slug());
+        }
+        article.setStatus(ArticlesStatus.PUBLISHED);
+        article.setCurrentPublishedRevision(savedRevision);
+
+        if (article.getPublishedAt() == null) {
+            article.setPublishedAt(LocalDateTime.now());
+        }
+
+        articlesRepository.save(article);
+
+        return new ArticleDTO(article, savedRevision);
     }
 
     public List<String> getAllSlugs() {
@@ -238,7 +291,7 @@ public class ArticlesService {
 
     public ArticleDTO getById(UUID id) {
         return articlesRepository.findById(id).map(ArticleDTO::new).orElseThrow(
-                () -> new ResourceNotFoundException("Article with id=" + id + " was not found")
+                () -> new ResourceNotFoundException("Article not found")
         );
     }
 

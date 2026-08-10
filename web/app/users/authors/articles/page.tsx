@@ -4,12 +4,14 @@ import { getOptimizedMediaUrl } from "../../../../utils/media-file-utils";
 import {
   ArticleCard,
   ArticleCardDate,
+  ArticleCardFooter,
   ArticleCardImage,
   ArticleCardLink,
+  ArticleCardPendingRev,
   ArticleCards,
+  ArticleCardStatus,
   ArticleCardSubtitle,
   ArticleCardTitle,
-  ArticleIsPublished,
 } from "../../../../components/Article/ArticleCards";
 import { convertToLargeDate } from "../../../../utils/date";
 import { buttonVariants, cn } from "../../../../utils/variants";
@@ -42,7 +44,6 @@ export default async function AuthorsArticlesPage() {
                 href={`articles/write/${article.id}`}
                 className="relative"
               >
-                <ArticleIsPublished />
                 <ArticleCard id={article.id}>
                   <ArticleCardImage
                     id={article.id}
@@ -55,16 +56,12 @@ export default async function AuthorsArticlesPage() {
                   </ArticleCardDate>
                   <ArticleCardTitle>{article.title}</ArticleCardTitle>
                   <ArticleCardSubtitle>{article.subtitle}</ArticleCardSubtitle>
-                  <span
-                    className={cn(
-                      "mt-auto mb-0 px-2 font-bold",
-                      article.status.toUpperCase() === "PUBLISHED"
-                        ? "text-emerald-600"
-                        : "text-sky-600",
-                    )}
-                  >
-                    {article.status}
-                  </span>
+                  <ArticleCardFooter>
+                    <ArticleCardStatus status={article.status} />
+                    <ArticleCardPendingRev
+                      hasUnpublishedChanges={article.hasUnpublishedChanges}
+                    />
+                  </ArticleCardFooter>
                 </ArticleCard>
               </ArticleCardLink>
             );

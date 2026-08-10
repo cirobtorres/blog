@@ -19,6 +19,7 @@ public record ArticleDTO(
         AuthorArticleDTO author,
         MediaArticleDTO media,
         boolean likedByCurrentUser,
+        boolean hasUnpublishedChanges,
         String body,
         ArticlesStatus status,
         Integer likeCount,
@@ -36,6 +37,7 @@ public record ArticleDTO(
                 article.getAuthor() != null ? new AuthorArticleDTO(article.getAuthor()) : null,
                 (revision != null && revision.getMedia() != null) ? new MediaArticleDTO(revision.getMedia()) : null,
                 likedByCurrentUser,
+                checkHasUnpublishedChanges(article, revision),
                 revision != null ? revision.getBody() : "",
                 article.getStatus(),
                 article.getLikeCount(),
@@ -63,5 +65,12 @@ public record ArticleDTO(
         }
         return article.getLikes().stream()
                 .anyMatch(like -> like.getUser() != null && currentUserId.equals(like.getUser().getId()));
+    }
+
+    private static boolean checkHasUnpublishedChanges(Articles article, Revisions revision) {
+        if (article.getCurrentPublishedRevision() == null || revision == null) {
+            return false;
+        }
+        return !article.getCurrentPublishedRevision().getId().equals(revision.getId());
     }
 }

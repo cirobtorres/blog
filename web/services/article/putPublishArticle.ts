@@ -1,12 +1,13 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
-const publishArticle = async (
+export default async function putPublishArticle(
   prevState: ActionState,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionState> {
   const validatedData = Object.fromEntries(formData.entries());
   const { id, tags } = validatedData;
   formData.set("status", "PUBLISHED");
@@ -14,7 +15,7 @@ const publishArticle = async (
 
   try {
     const response = await serverFetch(
-      apiServerUrls.article.root + "/id/" + id,
+      apiServerUrls.article.root + "/id/" + id + "/publish",
       {
         method: "PUT",
         headers: {
@@ -40,6 +41,8 @@ const publishArticle = async (
 
     const errorData = await response.json();
 
+    revalidatePath("/", "layout");
+
     return {
       ok: false,
       success: null,
@@ -55,6 +58,4 @@ const publishArticle = async (
       data: null,
     };
   }
-};
-
-export { publishArticle };
+}

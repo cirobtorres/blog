@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
@@ -23,8 +24,9 @@ export default async function putSaveArticle(
       }),
       cache: "no-store",
     };
+
     const response = await serverFetch(
-      apiServerUrls.article.id + "/" + id,
+      apiServerUrls.article.id + "/" + id + "/draft",
       options,
     );
 
@@ -40,6 +42,8 @@ export default async function putSaveArticle(
     }
 
     const errorData = await response.json();
+
+    revalidatePath("/", "layout");
 
     return {
       ok: false,

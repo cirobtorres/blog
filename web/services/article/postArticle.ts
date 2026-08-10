@@ -3,10 +3,10 @@
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
-const saveArticle = async (
+export default async function postArticle(
   prevState: ActionState,
   formData: FormData,
-): Promise<ActionState> => {
+): Promise<ActionState> {
   // FETCH
   const validatedData = Object.fromEntries(formData.entries());
   const { tags } = validatedData;
@@ -53,6 +53,4 @@ const saveArticle = async (
       data: null,
     };
   }
-};
-
-export { saveArticle };
+}

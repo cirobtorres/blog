@@ -12,7 +12,7 @@ import { useArticleStore } from "../../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../../Fieldset";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
 import { ButtonPlaceholder } from "../ArticlePopoverButton";
-import { saveArticle } from "../../../../../services/article/saveArticle";
+import postArticle from "../../../../../services/article/postArticle";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
 import AlertErrorList from "../AlertErrorList";
@@ -87,7 +87,7 @@ export function ArticleCreate() {
         return <p>{serverResponse.error ?? "Artigo não foi salvo"}</p>;
       };
 
-      const result = saveArticle(prevState, formData);
+      const result = postArticle(prevState, formData);
       const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Salvando artigo...");
       return result;

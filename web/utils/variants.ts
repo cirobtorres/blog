@@ -35,7 +35,7 @@ const buttonVariants = cva(
         ghost:
           "opacity-50 text-neutral-500 dark:text-neutral-400 border-transparent",
         destructive:
-          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25",
+          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50",
         link: "text-primary bg-stone-200 dark:bg-stone-925",
       },
       disabled: {

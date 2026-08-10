@@ -125,10 +125,12 @@ const LastPublishedArticle = ({ article }: { article: Article }) => (
     <div className="z-20 absolute bottom-0 left-0 right-0">
       <div className="flex justify-center p-8 backdrop-blur-lg">
         <div className="w-full text-center max-w-300">
-          <h2 className="text-neutral-100 text-3xl font-bold">
+          <h2 className="text-neutral-100 dark:text-neutral-100 text-3xl font-bold">
             {article.title}
           </h2>
-          {article.subtitle}
+          <p className="text-neutral-400 dark:text-neutral-400">
+            {article.subtitle}
+          </p>
         </div>
       </div>
     </div>
