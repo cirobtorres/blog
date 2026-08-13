@@ -34,7 +34,7 @@ export function LogoutButton({ session }: { session: Session }) {
         type="submit"
         variant="link"
         disabled={isPending}
-        className="w-full h-auto text-start text-destructive font-normal p-1 border border-transparent not-dark:shadow-none justify-start bg-inherit dark:bg-inherit hover:bg-stone-300 dark:hover:bg-stone-800 hover:border-transparent dark:hover:border-transparent focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800"
+        className="w-full h-auto text-start text-destructive font-normal p-1 border border-transparent not-dark:shadow-none justify-start bg-inherit dark:bg-inherit hover:bg-stone-125 dark:hover:bg-stone-800 hover:border-transparent dark:hover:border-transparent"
       >
         {isPending && <Spinner />} Sair
       </Button>

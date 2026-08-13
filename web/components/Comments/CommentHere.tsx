@@ -24,7 +24,6 @@ export default function CommentHere({ articleId }: { articleId: string }) {
   const search = returnParams.toString();
   const fullPath =
     (search ? `${pathname}?${search}` : pathname) + "#comment-root";
-  // const redirectUrl = `redirect_url=${encodeURIComponent(fullPath)}&login=comment`;
 
   if (isSignedIn) {
     return (
@@ -91,7 +90,7 @@ const LinkToSignInHeader = ({
     <button
       onClick={handleSignIn}
       className={cn(
-        "w-fit flex items-center gap-2 cursor-pointer text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 rounded border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
+        "w-fit flex items-center gap-2 cursor-pointer text-neutral-500 rounded border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
         focusRing,
       )}
     >
@@ -124,7 +123,7 @@ const LinkToSignInBody = ({
     <button
       onClick={handleSignIn}
       className={cn(
-        "font-bold text-primary dark:text-primary hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer rounded px-1 border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
+        "font-bold text-primary dark:text-primary cursor-pointer rounded px-1 border border-transparent transition-all duration-300 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100",
         focusRing,
       )}
     >

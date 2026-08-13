@@ -55,7 +55,7 @@ export function ArticleEditorTitle({
           focusWithinRing,
           error
             ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
-            : "bg-stone-200 dark:bg-stone-900",
+            : "border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-900",
         )}
         {...props}
       />

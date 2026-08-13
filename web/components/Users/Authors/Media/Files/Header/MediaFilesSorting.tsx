@@ -113,7 +113,7 @@ export default function MediaFilesSorting() {
               <PopoverTrigger asChild className="group">
                 <Button
                   variant="outline"
-                  className="cursor-auto justify-between text-xs h-9.5 hover:border-stone-500 hover:bg-stone-250! bg-stone-200 data-open:text-neutral-900 data-open:border-stone-500 data-open:bg-stone-250 focus-visible:bg-stone-250! dark:hover:border-stone-600 dark:hover:bg-stone-750! dark:bg-stone-800 dark:data-open:text-neutral-100 dark:data-open:border-stone-600 dark:data-open:bg-stone-750 dark:focus-visible:bg-stone-750!"
+                  className="cursor-auto justify-between text-xs h-9.5 bg-stone-100 hover:bg-stone-125 data-open:text-neutral-900 data-open:bg-stone-125 dark:bg-stone-800 dark:data-open:text-neutral-100 dark:data-open:bg-stone-750"
                 >
                   {date ? convertToSmallDate(date) : "MM-DD-YYYY"}
                   <svg

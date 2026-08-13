@@ -1,6 +1,8 @@
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, focusRing } from "../../utils/variants";
+import { convertToLargeDate, convertToSmallDate } from "../../utils/date";
 
 export function ArticleCards({
   children,
@@ -11,7 +13,7 @@ export function ArticleCards({
     <section
       {...props}
       className={cn(
-        "grid grid-cols-1 min-[480px]:grid-cols-2 min-[960px]:grid-cols-3 gap-4",
+        "grid grid-cols-1 min-[625px]:grid-cols-2 min-[960px]:grid-cols-3 gap-2",
         className,
       )}
     >
@@ -28,7 +30,7 @@ export function ArticleCard({ children, className, ...props }: ArticleCard) {
       {...props}
       tabIndex={-1}
       className={cn(
-        "w-full max-w-100 h-100 flex flex-col gap-2 p-1",
+        "w-full max-w-156.25 h-100 flex flex-col gap-2 p-1",
         focusRing,
         className,
       )}
@@ -50,7 +52,8 @@ export function ArticleCardLink({
       href={href}
       {...props}
       className={cn(
-        "transition-shadow duration-300 rounded-2xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
+        // "transition-shadow duration-300 rounded-2xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
+        "transition-shadow duration-300 border border-stone-300 not-dark:shadow bg-stone-100 dark:border-stone-700 dark:bg-stone-900 focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
         focusRing,
         className,
       )}
@@ -68,14 +71,14 @@ export function ArticleCardImage({
   ...props
 }: ArticleCardImage) {
   return fill ? (
-    <div className="relative w-full h-50 shrink-0 rounded-2xl overflow-hidden">
+    <div className="relative w-full h-1/2 shrink-0 overflow-hidden">
       <Image
         src={src}
         alt={alt || ""}
         {...props}
         fill
-        sizes="(max-width: 480px) 100vw, (max-width: 960px) 50vw, 33vw"
-        className={cn("absolute object-cover", className)}
+        sizes="(max-width: 625px) 100vw, (max-width: 960px) 50vw, 33vw"
+        className={cn("absolute object-cover px-2 pt-2", className)}
       />
     </div>
   ) : (
@@ -83,22 +86,25 @@ export function ArticleCardImage({
       src={src}
       alt={alt || ""}
       {...props}
-      className={cn("object-cover", className)}
+      className={cn("object-cover px-2 pt-2", className)}
     />
   );
 }
 
 ArticleCardImage.displayName = "ArticleCardImage";
 
-export function ArticleCardDate({ className, ...props }: ArticleCardDate) {
+export function ArticleCardDate({ children, ...props }: ArticleCardDate) {
+  const smallDate = convertToSmallDate(children);
+  const largeDate = convertToLargeDate(children);
+
   return (
     <time
       {...props}
-      className={cn(
-        "px-2 text-xs text-neutral-400 dark:text-neutral-500",
-        className,
-      )}
-    />
+      className={cn("px-2 text-xs text-neutral-400 dark:text-neutral-500")}
+    >
+      <span className="md:hidden">{smallDate}</span>
+      <span className="hidden md:inline">{largeDate}</span>
+    </time>
   );
 }
 
@@ -133,7 +139,9 @@ export function ArticleCardSubtitle({
 ArticleCardSubtitle.displayName = "ArticleCardSubtitle";
 
 export function ArticleCardFooter({ children }: { children: React.ReactNode }) {
-  return <div className="flex mt-auto mr-auto mb-0 ml-0 gap-1">{children}</div>;
+  return (
+    <div className="flex mt-auto mr-auto mb-2 ml-0 px-2 gap-1">{children}</div>
+  );
 }
 
 ArticleCardFooter.displayName = "ArticleCardFooter";
@@ -170,7 +178,7 @@ export function ArticleCardStatus({ status }: { status: ArticleStatus }) {
 
 ArticleCardStatus.displayName = "ArticleCardStatus";
 
-export function ArticleCardPendingRev({
+export function ArticleCardPendingRevision({
   hasUnpublishedChanges,
 }: {
   hasUnpublishedChanges: boolean;
@@ -184,4 +192,4 @@ export function ArticleCardPendingRev({
   );
 }
 
-ArticleCardPendingRev.displayName = "ArticleCardPendingRev";
+ArticleCardPendingRevision.displayName = "ArticleCardPendingRevision";

@@ -14,7 +14,7 @@ import { getRequiredAuthorities } from "../../../routing/protected/getRequiredAu
 
 const elStyleWrapper = "flex flex-col p-1";
 const elStyleItem =
-  "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-300 dark:hover:bg-stone-800 font-normal transition-[background-color,box-shadow] duration-300 rounded";
+  "w-full cursor-pointer flex items-center gap-1 text-xs py-1 px-2 text-start text-neutral-900 dark:text-neutral-100 hover:bg-stone-125 dark:hover:bg-stone-800 font-normal transition-all duration-300 rounded";
 
 export default function UserSignedIn({ session }: { session: Session }) {
   if (!session || !session.user) redirect("/"); // TODO

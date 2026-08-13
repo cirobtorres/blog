@@ -21,7 +21,7 @@ export default function MediaFileCheckbox({ allFiles }: { allFiles: Media[] }) {
     <div className="w-full flex flex-row items-center gap-2">
       <label
         htmlFor="files-select-all"
-        className="flex flex-row flex-nowrap items-center gap-2 border rounded-lg p-1 not-dark:shadow bg-stone-200 dark:bg-stone-900 overflow-hidden"
+        className="flex flex-row flex-nowrap items-center gap-2 border rounded-lg p-1 not-dark:shadow bg-stone-100 dark:bg-stone-900 overflow-hidden"
       >
         <Checkbox
           id="files-select-all"

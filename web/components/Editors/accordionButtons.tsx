@@ -17,7 +17,7 @@ import { Button } from "../Button";
 const buttonSizes = "w-7 h-9";
 
 const buttonStyles =
-  "cursor-pointer outline-none shrink-0 transition-none rounded border border-transparent hover:bg-stone-300 dark:hover:border-transparent dark:hover:bg-stone-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 focus-visible:bg-stone-300 dark:focus-visible:bg-stone-700 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100";
+  "cursor-pointer outline-none shrink-0 transition-none rounded border border-transparent! text-neutral-400 dark:text-neutral-500";
 
 const Chevron = () => {
   return (
@@ -54,9 +54,7 @@ const Disable = ({
         buttonStyles,
         focusRing,
         buttonSizes,
-        locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
       )}
       onClick={onDisable}
     >
@@ -125,9 +123,7 @@ const Delete = ({
             buttonStyles,
             focusRing,
             buttonSizes,
-            locked
-              ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-              : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
+            "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
           )}
           onClick={handleOpenDialog}
         >
@@ -189,7 +185,7 @@ const Delete = ({
           <AlertDialogCancel
             variant="outline"
             onClick={handleCloseDialog}
-            className=" w-full max-w-22 h-8! bg-stone-800"
+            className=" w-full max-w-22 h-8!"
           >
             Cancelar
           </AlertDialogCancel>
@@ -222,9 +218,7 @@ const MoveDownward = ({
         buttonStyles,
         focusRing,
         buttonSizes,
-        locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:active:border-stone-400 dark:focus-visible:bg-stone-700 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100 pointer-events-auto disabled:pointer-events-auto"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
       )}
       onClick={moveDownward}
     >
@@ -257,9 +251,7 @@ const Drag = ({ locked }: { locked: boolean }) => {
         buttonStyles,
         buttonSizes,
         "cursor-move",
-        locked
-          ? "transition-all duration-300 dark:text-neutral-100 dark:bg-stone-750 dark:hover:bg-stone-700 dark:active:bg-stone-600 dark:active:border-stone-400 pointer-events-auto disabled:pointer-events-auto dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100"
-          : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:active:bg-stone-750 dark:active:border-stone-500 dark:focus-visible:bg-stone-800 dark:focus-visible:border-primary dark:focus-visible:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
       )}
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();

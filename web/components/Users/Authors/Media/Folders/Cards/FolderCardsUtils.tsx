@@ -11,7 +11,12 @@ export function FolderCardTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn("text-xl", className)}>
+    <h2
+      className={cn(
+        "text-xl text-neutral-900 dark:text-neutral-100",
+        className,
+      )}
+    >
       {title ?? "Pasta"}
       {count > 1 && "s"}: {count}
     </h2>
@@ -54,7 +59,9 @@ export function FolderCardGridWrapper({
 export function FolderCardInfos({ folder }: { folder: Folder }) {
   return (
     <div className="flex flex-col gap-1 items-start overflow-hidden">
-      <p className="text-neutral-100 truncate">{folder.name}</p>
+      <p className="text-neutral-900 dark:text-neutral-100 truncate">
+        {folder.name}
+      </p>
       <p className="text-xs text-nowrap text-neutral-400">
         {folder.subfolderCount != 1
           ? folder.subfolderCount + " pastas"
@@ -97,7 +104,7 @@ export function FolderCardLinkWrapper({
   return (
     <label
       htmlFor={"folder-" + folder.id}
-      className="relative w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary focus-within:bg-stone-300 dark:focus-within:bg-stone-800 group"
+      className="relative w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-800 group"
     >
       {children}
       <FolderCardInfos folder={folder} />

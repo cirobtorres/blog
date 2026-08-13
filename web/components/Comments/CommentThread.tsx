@@ -56,7 +56,7 @@ export default function CommentThread({
         <Link
           href={createThreadUrl(comment.id)}
           variant="button"
-          className="w-full max-w-30 mx-auto h-8 text-primary/75 dark:text-primary/75 hover:text-primary dark:hover:text-primary"
+          className="w-full max-w-30 mx-auto h-8 text-primary/75 dark:text-primary/75" //  hover:text-primary dark:hover:text-primary
         >
           Carregar...
         </Link>

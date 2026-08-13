@@ -45,6 +45,9 @@ function resolveRedirectUrl(userData: User, redirectUrl?: string) {
   return "/";
 }
 
+/**
+ * @deprecated: use Keycloak instead
+ */
 export default function SignInForm({
   mode = "page",
   redirectUrl = "",

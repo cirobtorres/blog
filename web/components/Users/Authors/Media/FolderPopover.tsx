@@ -18,7 +18,7 @@ import { cn } from "../../../../utils/variants";
 import { useFolders } from "../../../../services/hooks/folders/hook-folders";
 
 const Current = () => (
-  <span className="text-[10px] font-bold leading-[10px] text-emerald-500">
+  <span className="text-[10px] font-bold leading-2.5 text-emerald-500">
     Atual
   </span>
 );
@@ -64,7 +64,7 @@ export default function FolderPopover({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-full h-9.5 flex items-center justify-between text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 hover:not-disabled:border-stone-400 dark:hover:not-disabled:border-stone-600 hover:not-disabled:bg-stone-150 dark:hover:not-disabled:bg-stone-750 data-[state=open]:border-stone-400 dark:data-[state=open]:border-stone-600 data-[state=open]:bg-stone-150 dark:data-[state=open]:bg-stone-750 group"
+              className="w-full h-9.5 flex items-center justify-between text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 group" // data-[state=open]:bg-stone-125 dark:data-[state=open]:bg-stone-750
             >
               <div className="flex items-center gap-2">
                 {selectedFolderName}
@@ -120,8 +120,8 @@ export default function FolderPopover({
                         className={cn(
                           "cursor-pointer",
                           isCurrent
-                            ? "text-neutral-900 dark:text-neutral-100 bg-stone-200 dark:bg-stone-800 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100"
-                            : "text-neutral-600 dark:text-neutral-500 aria-selected:bg-stone-200 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100",
+                            ? "text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 aria-selected:bg-stone-100 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100"
+                            : "text-neutral-600 dark:text-neutral-500 aria-selected:bg-stone-100 dark:aria-selected:bg-stone-800 aria-selected:text-neutral-900 dark:aria-selected:text-neutral-100",
                         )}
                         style={{ paddingLeft: `${depth * 12 + 8}px` }}
                       >

@@ -79,7 +79,7 @@ const FolderCardButton = React.forwardRef<
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          "cursor-pointer w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 p-2 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary focus-within:bg-stone-300 dark:focus-within:bg-stone-800 group",
+          "cursor-pointer w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 p-2 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 hover:bg-stone-125 dark:hover:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary group",
           focusRing,
           className,
         )}
@@ -87,7 +87,7 @@ const FolderCardButton = React.forwardRef<
       >
         <div
           className={cn(
-            "block w-fit rounded-lg p-3 transition-all duration-300 border border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925 group-hover:border-stone-400 dark:group-hover:border-stone-700 group-hover:bg-stone-300 dark:group-hover:bg-stone-900 group-focus-within:border-stone-400 dark:group-focus-within:border-stone-700 group-focus-within:bg-stone-300 dark:group-focus-within:bg-stone-900",
+            "block w-fit rounded-lg p-3 transition-all duration-300 border border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-925 dark:group-hover:border-stone-700 group-hover:bg-stone-125 dark:group-hover:bg-stone-900",
             focusRing,
           )}
         >

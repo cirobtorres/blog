@@ -3,7 +3,7 @@ export default async function AuthorsPage() {
     <section className="w-full max-w-6xl mx-auto flex flex-col gap-2 px-2 my-6">
       <h1 className="text-3xl font-extrabold mb-6">Resumo</h1>
       <div className="grid grid-cols-3 gap-2">
-        <article className="w-full p-4 border rounded-lg bg-stone-200 dark:bg-stone-900">
+        <article className="w-full p-4 border rounded-lg bg-stone-100 dark:bg-stone-900">
           <h2 className="font-bold flex-col">Artigos:</h2>
           <div className="text-sm flex flex-col">
             <span className="text-neutral-600 dark:text-neutral-500">
@@ -34,7 +34,7 @@ export default async function AuthorsPage() {
             </span>
           </div>
         </article>
-        <article className="w-full p-4 border rounded-lg bg-stone-200 dark:bg-stone-900">
+        <article className="w-full p-4 border rounded-lg bg-stone-100 dark:bg-stone-900">
           <h2 className="font-bold flex-col">Mídia</h2>
           <div className="text-sm flex flex-col">
             <span className="text-neutral-600 dark:text-neutral-500">
@@ -51,7 +51,7 @@ export default async function AuthorsPage() {
             </span>
           </div>
         </article>
-        <article className="w-full p-4 border rounded-lg bg-stone-200 dark:bg-stone-900">
+        <article className="w-full p-4 border rounded-lg bg-stone-100 dark:bg-stone-900">
           <h2 className="font-bold flex-col">Usuários</h2>
           <div className="text-sm flex flex-col">
             <span className="text-neutral-600 dark:text-neutral-500">

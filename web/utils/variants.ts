@@ -4,26 +4,32 @@ import { twMerge } from "tailwind-merge";
 
 type ClassValue = string | number | null | undefined | boolean;
 
-const cn = (...inputs: ClassValue[]): string => {
+export const cn = (...inputs: ClassValue[]): string => {
   return twMerge(clsx(inputs));
 };
 
-const focusRing =
-  "focus-visible:outline-none! focus-visible:ring-3! dark:focus-visible:ring-2! focus-visible:ring-stone-900/25! dark:focus-visible:ring-stone-100! focus-visible:ring-offset-2! focus-visible:ring-offset-stone-950! focus-visible:border-primary! dark:focus-visible:border-primary!";
+export const focusRing =
+  "focus-visible:outline-none! dark:focus-visible:outline-none! focus-visible:ring-2! dark:focus-visible:ring-2! focus-visible:ring-primary! dark:focus-visible:ring-stone-100! dark:focus-visible:ring-offset-2! dark:focus-visible:ring-offset-stone-950! focus-visible:border-primary! dark:focus-visible:border-primary!";
 
-const hoverRing =
-  "hover:outline-none hover:ring-3 dark:hover:ring-2 hover:ring-stone-900/25 dark:hover:ring-stone-100 hover:ring-offset-2 hover:ring-offset-neutral-950";
+export const focusWithinRing =
+  "focus-within:outline-none! dark:focus-within:outline-none! focus-within:ring-2! dark:focus-within:ring-2! focus-within:ring-primary! dark:focus-within:ring-stone-100! dark:focus-within:ring-offset-2! dark:focus-within:ring-offset-stone-950! focus-within:border-primary dark:focus-within:border-primary!";
 
-const focusRingOTPGroup =
-  "outline-none has-aria-invalid:outline-none has-aria-invalid:ring-2 has-aria-invalid:ring-destructive has-aria-invalid:ring-offset-2 has-aria-invalid:ring-offset-stone-900 has-aria-invalid:bg-destructive/15";
+export const edtAccFocusWithinRing =
+  "has-[[data-slot=accordion-trigger]:focus-visible]:outline-none has-[[data-slot=accordion-trigger]:focus-visible]:ring-2 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-primary dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-100 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-neutral-950 has-[[data-slot=accordion-trigger]:focus-visible]:border-primary dark:has-[[data-slot=accordion-trigger]:focus-visible]:border-primary!";
 
-const focusRingOTPSlot =
-  "data-[active=true]:outline-none data-[active=true]:z-10 data-[active=true]:ring-3 data-[active=true]:ring-offset-2 data-[active=true]:ring-stone-900/25 data-[active=true]:ring-offset-stone-950 dark:data-[active=true]:ring-2 dark:data-[active=true]:ring-stone-100 dark:data-[active=true]:ring-offset-stone-900";
+export const btnGroupStyle =
+  "w-fit flex [&_button]:border [&_button]:first:rounded-l [&_button]:last:rounded-r [&_button]:focus-visible:z-10";
 
-const focusWithinRing =
-  "focus-within:outline-none focus-within:ring-3 dark:focus-within:ring-2 focus-within:ring-stone-900/25 dark:focus-within:ring-stone-100 focus-within:ring-offset-2 focus-within:ring-offset-stone-950 focus-within:border-primary dark:focus-within:border-primary";
+export const dashedBgStyle =
+  "w-1 border-y dark:bg-[repeating-linear-gradient(315deg,#44403b_0,#44403b_1px,transparent_0,transparent_50%)] bg-size-[5px_5px]";
 
-const buttonVariants = cva(
+export const btnActive =
+  "[&_svg]:stroke-primary bg-stone-125 dark:bg-stone-800";
+
+export const btnNotActive =
+  "[&_svg]:stroke-neutral-400 dark:[&_svg]:stroke-neutral-500 bg-stone-100 dark:bg-stone-900";
+
+export const buttonVariants = cva(
   "cursor-pointer border disabled:cursor-auto rounded text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none group/button select-none h-9.5 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow focus-visible:border-primary dark:focus-visible:border-primary [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 " +
     focusRing,
   {
@@ -31,12 +37,12 @@ const buttonVariants = cva(
       variant: {
         default: "text-neutral-100 bg-primary/75 border-primary",
         outline:
-          "text-neutral-500 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900",
+          "text-neutral-500 dark:text-neutral-500 border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-900",
         ghost:
-          "opacity-50 text-neutral-500 dark:text-neutral-400 border-transparent",
+          "opacity-50 text-neutral-500 dark:text-neutral-500 border-transparent",
         destructive:
-          "border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50",
-        link: "text-primary bg-stone-200 dark:bg-stone-925",
+          "text-destructive dark:text-neutral-100 border-destructive/50 dark:border-destructive/50 bg-destructive/25 dark:bg-destructive/25 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50",
+        link: "text-primary bg-stone-100 dark:bg-stone-925",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed pointer-events-none",
@@ -47,32 +53,24 @@ const buttonVariants = cva(
       {
         variant: "default",
         disabled: false,
-        className: "hover:bg-primary/80 focus-visible:bg-primary/80",
+        className: "focus-visible:bg-primary/80",
       },
       {
         variant: "outline",
         disabled: false,
-        className: [
-          "hover:text-neutral-900 hover:bg-stone-300",
-          "dark:hover:bg-stone-800 dark:hover:text-neutral-100",
-          "hover:border-stone-400 dark:hover:border-stone-600",
-          "focus-visible:text-neutral-900 focus-visible:bg-stone-300",
-          "dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100",
-        ].join(" "),
+        className: ["dark:focus-visible:bg-stone-800"].join(" "),
       },
       {
         variant: "ghost",
         disabled: false,
         className: [
-          "hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-300 dark:hover:bg-stone-800 focus-visible:opacity-100 focus-visible:text-neutral-900 dark:focus-visible:text-neutral-100 focus-visible:border-primary dark:focus-visible:border-primary focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800",
+          "focus-visible:opacity-100 focus-visible:border-primary dark:focus-visible:border-primary focus-visible:bg-stone-125 dark:focus-visible:bg-stone-800",
         ].join(" "),
       },
       {
         variant: "destructive",
         disabled: false,
         className: [
-          "hover:border-destructive/75 dark:hover:border-destructive/75",
-          "hover:bg-destructive/30 dark:hover:bg-destructive/30",
           "focus-visible:border-destructive dark:focus-visible:border-destructive",
         ].join(" "),
       },
@@ -84,7 +82,7 @@ const buttonVariants = cva(
   },
 );
 
-const linkVariants = cva(
+export const linkVariants = cva(
   cn(
     "w-fit text-sm inline-flex rounded transition-all duration-300",
     focusRing,
@@ -93,13 +91,12 @@ const linkVariants = cva(
     variants: {
       variant: {
         internal:
-          "font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 no-underline",
-        external:
-          "font-bold text-primary/75 hover:text-primary dark:hover:text-primary underline underline-offset-2",
+          "font-bold text-neutral-500 dark:text-neutral-500 no-underline",
+        external: "font-bold text-primary/75 underline underline-offset-2",
         markdown:
-          "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 hover:text-primary duration-300 italic underline underline-offset-2 focus-visible:border-primary dark:focus-visible:border-primary",
+          "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 duration-300 italic underline underline-offset-2 focus-visible:border-primary dark:focus-visible:border-primary",
         button:
-          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-400 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 hover:border-stone-400 focus-visible:border-primary dark:border-stone-700 dark:hover:border-stone-600 focus-visible:border-primary dark:focus-visible:border-primary",
+          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 focus-visible:border-primary dark:border-stone-700 focus-visible:border-primary dark:focus-visible:border-primary",
       },
     },
     defaultVariants: {
@@ -108,7 +105,7 @@ const linkVariants = cva(
   },
 );
 
-const alertVariants = cva(
+export const alertVariants = cva(
   "border w-full text-left text-xs p-4 rounded bg-linear-90 from-5% to-90% not-dark:shadow",
   {
     variants: {
@@ -128,15 +125,3 @@ const alertVariants = cva(
     },
   },
 );
-
-export {
-  cn,
-  focusRing,
-  hoverRing,
-  focusRingOTPGroup,
-  focusRingOTPSlot,
-  focusWithinRing,
-  buttonVariants,
-  linkVariants,
-  alertVariants,
-};

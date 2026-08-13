@@ -57,7 +57,7 @@ export default function FileCardButton({
           onCheckedChange={toggle}
         />
         <Image
-          src={file.url ?? "https://placehold.co/1920x1080/000/fff/jpeg"}
+          src={file.url ?? "https://placehold.co/1920x1080/000/fff/jpeg"} // TODO
           alt={file.name || "Media file"}
           fill
           priority={isPriority}

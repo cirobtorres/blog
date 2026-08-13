@@ -78,7 +78,7 @@ export default function FolderCardEditButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="size-8 not-dark:shadow-none">
+        <Button variant="outline" className="size-8">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

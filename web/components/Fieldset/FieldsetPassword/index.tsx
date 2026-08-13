@@ -11,6 +11,9 @@ import {
 import CopyToClipBoard from "../../CopyToClipBoard";
 import { ZxcvbnResult } from "@zxcvbn-ts/core";
 
+/**
+ * @deprecated
+ */
 export function FieldsetPassword({
   ref,
   value,

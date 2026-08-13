@@ -210,8 +210,8 @@ const LocalUpload = ({
         className={cn(
           "cursor-pointer relative w-full h-60 flex flex-col justify-center items-center gap-2 rounded-lg outline-none border border-dashed transition-all duration-300 overflow-hidden",
           isDragging
-            ? "ring-4 ring-emerald-500 dark:ring-emerald-500 border-transparent bg-emerald-300 dark:bg-emerald-900/25"
-            : "bg-stone-200 hover:bg-stone-250 hover:border-stone-400 dark:bg-stone-900 dark:hover:bg-stone-850 dark:hover:border-stone-600",
+            ? "ring-3 ring-success dark:ring-success border-transparent bg-success/15 dark:bg-success/15"
+            : "bg-stone-100 dark:bg-stone-900",
         )}
       >
         <input
@@ -253,10 +253,10 @@ const UrlUpload = ({
         <label
           htmlFor="url"
           className={cn(
-            "w-full h-full block cursor-text p-2 rounded-lg border duration-300 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary",
+            "w-full h-full block cursor-text p-2 rounded-lg border duration-300 has-focus-visible:outline-none dark:has-focus-visible:outline-none has-focus-visible:ring-2 dark:has-focus-visible:ring-2 has-focus-visible:ring-primary dark:has-focus-visible:ring-stone-100 dark:has-focus-visible:ring-offset-2 dark:has-focus-visible:ring-offset-stone-950 has-focus-visible:border-primary dark:has-focus-visible:border-primary",
             errors
               ? "transition-shadow bg-destructive/10 dark:bg-destructive/10 border-destructive/50 dark:border-destructive/50"
-              : "transition-all bg-stone-200 dark:bg-stone-900 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-250 dark:hover:bg-stone-850",
+              : "transition-all bg-stone-100 dark:bg-stone-900",
           )}
         >
           <textarea

@@ -41,9 +41,7 @@ export function Link({
           </NextLink>
         </HoverCardTrigger>
         <HoverCardContent side="top">
-          <p className="text-xs text-neutral-400 dark:text-neutral-500">
-            {href}
-          </p>
+          <p>{href}</p>
         </HoverCardContent>
       </HoverCard>
     );
@@ -83,7 +81,7 @@ export function GitHubLink({
       href={apiClientUrls.github}
       target="_self"
       className={cn(
-        "w-full h-10.5 flex justify-center items-center gap-2 rounded border cursor-pointer text-base shadow font-medium transition-shadow duration-300 bg-stone-200 dark:bg-stone-800",
+        "w-full h-10.5 flex justify-center items-center gap-2 rounded border cursor-pointer text-base shadow font-medium transition-shadow duration-300 bg-stone-100 dark:bg-stone-800",
         focusRing,
         className,
       )}
@@ -124,7 +122,7 @@ export function GoogleLink({
       href={apiClientUrls.google}
       target="_self"
       className={cn(
-        "w-full h-10.5 flex justify-center items-center gap-2 rounded border cursor-pointer text-base shadow font-medium transition-shadow duration-300 bg-stone-200 dark:bg-stone-800",
+        "w-full h-10.5 flex justify-center items-center gap-2 rounded border cursor-pointer text-base shadow font-medium transition-shadow duration-300 bg-stone-100 dark:bg-stone-800",
         focusRing,
         className,
       )}

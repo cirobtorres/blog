@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Accordion as AccordionPrimitive } from "radix-ui";
-import { cn, focusRing } from "../../utils/variants";
+import { cn, edtAccFocusWithinRing, focusRing } from "../../utils/variants";
 import {
   Chevron,
   Delete,
@@ -10,9 +10,6 @@ import {
   Drag,
   MoveDownward,
 } from "./accordionButtons";
-
-const focusWithinRing =
-  "has-[[data-slot=accordion-trigger]:focus-visible]:outline-none has-[[data-slot=accordion-trigger]:focus-visible]:ring-3 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-900/25 dark:has-[[data-slot=accordion-trigger]:focus-visible]:ring-stone-100 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-2 has-[[data-slot=accordion-trigger]:focus-visible]:ring-offset-neutral-950";
 
 function EditorsAccordionWrapper({
   className,
@@ -42,12 +39,12 @@ function EditorsAccordionItem({
       className={cn(
         "w-full h-full rounded overflow-hidden border not-dark:shadow",
         !locked && focusRing,
-        !locked && focusWithinRing,
+        !locked && edtAccFocusWithinRing,
         locked
           ? "bg-stone-900 border-stone-800"
           : hasError
             ? "border-destructive/50 bg-destructive/15 dark:bg-destructive/15 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
-            : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 dark:focus-within:bg-stone-800 dark:focus-within:border-primary dark:focus-within:text-neutral-100 group",
+            : "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 group",
         className,
       )}
       {...props}
@@ -97,7 +94,7 @@ function EditorsAccordionTrigger({
         </div>
       </AccordionPrimitive.Trigger>
       <div className="flex items-center gap-1 px-1.5">
-        <Disable onDisable={onDisable} locked={locked} />
+        {/* <Disable onDisable={onDisable} locked={locked} /> */}
         <Delete onDelete={onDelete} locked={locked} />
         <MoveDownward moveDownward={moveDownward} locked={locked} />
         <Drag locked={locked} />
@@ -117,7 +114,7 @@ function EditorsAccordionContent({
     <AccordionPrimitive.Content
       data-slot="accordion-content"
       className={cn(
-        "border-t p-1 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden bg-stone-100 dark:bg-stone-925",
+        "border-t p-2 data-open:animate-accordion-down data-closed:animate-accordion-up overflow-hidden bg-stone-100 dark:bg-stone-925",
         hasError && "border-destructive/50",
       )}
       {...props}

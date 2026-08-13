@@ -402,8 +402,7 @@ const CommentReplyButton = ({
       onClick={handleReplyClick}
       className={cn(
         "h-8 text-neutral-900 dark:text-neutral-100 opacity-100",
-        isReplying &&
-          "border-primary/50 bg-primary/25 dark:hover:border-primary/75 dark:hover:bg-primary/35",
+        isReplying && "border-primary/50 bg-primary/25", // dark:hover:border-primary/75 dark:hover:bg-primary/35
       )}
     >
       Responder

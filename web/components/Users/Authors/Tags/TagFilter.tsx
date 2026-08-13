@@ -6,7 +6,7 @@ export default function TagFilter({ tags }: { tags: Tag[] }) {
       {tags.map((tag) => (
         <li
           key={tag.id}
-          className="text-sm break-all flex justify-between items-center p-1 pl-2 border rounded-lg bg-stone-200 dark:bg-stone-900"
+          className="text-sm break-all flex justify-between items-center p-1 pl-2 border rounded-lg not-dark:shadow bg-stone-100 dark:bg-stone-900"
         >
           <span className="w-full truncate italic text-neutral-600 dark:text-neutral-500">
             {tag.name}

@@ -27,11 +27,11 @@ const FieldsetInput = ({ error, className, ...props }: FieldsetInputProps) => (
     placeholder={props.placeholder ?? ""}
     aria-invalid={!!error}
     className={cn(
-      "h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-[border,background-color,box-shadow] duration-300 placeholder:text-transparent placeholder:select-none border peer",
+      "h-full w-full px-2 pt-4.25 pb-1 text-xs text-neutral-900 dark:text-neutral-100 font-medium rounded peer transition-all duration-300 placeholder:text-transparent placeholder:select-none border peer",
       focusRing,
       error
-        ? "text-neutral-100 border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
-        : "text-neutral-900 dark:text-neutral-400 bg-stone-100 dark:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 hover:bg-stone-150 dark:hover:bg-stone-750 focus:placeholder:text-neutral-500 focus-within:bg-stone-stone-600 dark:focus-within:bg-stone-stone-750",
+        ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive/50 dark:focus-visible:border-destructive/50"
+        : "bg-stone-100 dark:bg-stone-800 focus:placeholder:text-neutral-500",
       className,
     )}
   />
@@ -61,6 +61,9 @@ const FieldsetLabel = ({
   </label>
 );
 
+/**
+ * @deprecated
+ */
 const FieldsetPassTypeBtn = ({
   state,
   setState,
@@ -88,7 +91,7 @@ const FieldsetPassTypeBtn = ({
         });
       }}
       className={cn(
-        "absolute top-1/2 -translate-y-1/2 right-1.25 size-7 cursor-pointer flex items-center justify-center not-dark:shadow transition-all duration-300 border rounded dark:border-stone-700 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 dark:hover:border-stone-650 dark:hover:bg-stone-750 focus-visible:border-stone-300 dark:focus-visible:border-stone-650",
+        "absolute top-1/2 -translate-y-1/2 right-1.25 size-7 cursor-pointer flex items-center justify-center not-dark:shadow transition-all duration-300 border rounded border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800",
         focusRing,
       )}
     >
@@ -131,6 +134,9 @@ const FieldsetPassTypeBtn = ({
   );
 };
 
+/**
+ * @deprecated
+ */
 const FieldsetGeneratePassword = ({
   text,
   setState,
@@ -164,7 +170,7 @@ const FieldsetGeneratePassword = ({
       });
     }}
     className={cn(
-      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-24 border rounded not-dark:shadow transition-all duration-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 dark:hover:border-stone-650 dark:hover:bg-stone-750 focus-visible:border-stone-300 dark:focus-visible:border-stone-650",
+      "cursor-pointer inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-24 border rounded not-dark:shadow transition-all duration-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-800 focus-visible:border-stone-300 dark:focus-visible:border-stone-650",
       focusRing,
       className,
     )}
@@ -199,6 +205,9 @@ const FieldsetError = ({
   }
 };
 
+/**
+ * @deprecated
+ */
 const PasswordStrength = ({ strength }: { strength: Score }) => {
   const percentage = (strength / 4) * 100;
 
@@ -240,8 +249,8 @@ export {
   Fieldset,
   FieldsetInput,
   FieldsetLabel,
-  FieldsetPassTypeBtn,
-  FieldsetGeneratePassword,
-  PasswordStrength,
+  FieldsetPassTypeBtn, // Depreated
+  FieldsetGeneratePassword, // Depreated
+  PasswordStrength, // Depreated
   FieldsetError,
 };

@@ -4,7 +4,6 @@
 
 :root {
   --primary: oklch(0.541 0.281 293.009);
-  --secondary: oklch(0.432 0.232 292.759);
   --success: oklch(59.6% 0.145 163.225);
   --informative: oklch(54.6% 0.245 262.881);
   --destructive: oklch(58.6% 0.253 17.585);
@@ -14,7 +13,6 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: oklch(0.606 0.25 292.717);
-    --secondary: oklch(0.432 0.232 292.759);
     --success: oklch(59.6% 0.145 163.225);
     --informative: oklch(54.6% 0.245 262.881);
     --destructive: oklch(58.6% 0.253 17.585);
@@ -24,7 +22,6 @@
 
 @theme {
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
   --color-success: var(--success);
   --color-informative: var(--informative);
   --color-destructive: var(--destructive);
@@ -98,7 +95,7 @@
   input:-webkit-autofill:focus,
   input:-internal-autofill-selected {
     -webkit-box-shadow: 0 0 0px 1000px
-      color-mix(in oklab, var(--primary) 25%, transparent) inset !important;
+      color-mix(in oklab, var(--primary) 50%, transparent) inset !important;
     -webkit-text-fill-color: #ffffff !important; /* Text */
     -webkit-background-clip: text !important;
     background-clip: text !important;

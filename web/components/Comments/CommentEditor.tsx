@@ -311,7 +311,8 @@ export default function CommentEditor({
                 focusRing,
               )}
             >
-              {isPending && <Spinner className="size-4" />} Salvar
+              {isPending && <Spinner className="size-4 text-neutral-100" />}{" "}
+              Salvar
             </Button>
           </div>
         )}

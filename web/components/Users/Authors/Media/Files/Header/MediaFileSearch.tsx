@@ -59,7 +59,7 @@ export default function MediaFileSearch() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="h-8 flex justify-center items-center relative border rounded transition-all duration-300 bg-stone-900 hover:bg-stone-800 hover:border-stone-600 has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-3 dark:has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-stone-900/25 dark:has-[input:focus-visible]:ring-stone-100 has-[input:focus-visible]:ring-offset-2 has-[input:focus-visible]:ring-offset-stone-950 has-[input:focus-visible]:border-primary dark:has-[input:focus-visible]:border-primary has-[input:focus-visible]:bg-stone-800 group"
+      className="h-8 flex justify-center items-center relative border rounded transition-all duration-300 not-dark:shadow bg-stone-100 dark:bg-stone-900 has-[input:focus-visible]:outline-none dark:has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-2 dark:has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-primary dark:has-[input:focus-visible]:ring-stone-100 dark:has-[input:focus-visible]:ring-offset-2 dark:has-[input:focus-visible]:ring-offset-stone-950 has-[input:focus-visible]:border-primary dark:has-[input:focus-visible]:border-primary group"
     >
       <button
         type="submit"
@@ -80,7 +80,7 @@ export default function MediaFileSearch() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="transition-all duration-300 stroke-neutral-400 dark:stroke-neutral-400 hover:stroke-neutral-900 dark:hover:stroke-neutral-100"
+          className="transition-all duration-300 stroke-neutral-400 dark:stroke-neutral-400"
         >
           <path d="m21 21-4.34-4.34" />
           <circle cx="11" cy="11" r="8" />
@@ -119,7 +119,7 @@ export default function MediaFileSearch() {
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
-          className="transition-all duration-300 stroke-neutral-400 dark:stroke-neutral-400 hover:stroke-neutral-900 dark:hover:stroke-neutral-100"
+          className="transition-all duration-300 stroke-neutral-400 dark:stroke-neutral-400"
         >
           <path d="M18 6 6 18" />
           <path d="m6 6 12 12" />

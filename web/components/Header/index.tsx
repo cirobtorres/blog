@@ -87,7 +87,7 @@ export default function Header({
       id="main-header"
       ref={headerRef}
       className={cn(
-        "z-50 sticky top-0 left-0 right-0 h-header flex items-center border-b px-3 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900",
+        "z-50 sticky top-0 left-0 right-0 h-header flex items-center border-b px-3 transition-transform duration-300 will-change-transform not-dark:shadow bg-stone-100 dark:bg-stone-900",
         sticky ? "" : "static",
         className,
       )}
@@ -102,7 +102,7 @@ export default function Header({
               key={index}
               href={path}
               variant={variant}
-              className="text-sm font-normal text-neutral-900 dark:text-neutral-100 border border-transparent"
+              className="text-sm font-normal text-neutral-600 dark:text-neutral-100 border border-transparent"
             >
               {text}
             </Link>

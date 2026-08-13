@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { DashedBackground } from "../../../components/DashedBackground";
 import { cn, focusRing } from "../../../utils/variants";
 import { UserButton } from "../../../components/Users/Authors/UserButton";
 import { TagLink } from "../../../components/Users/Authors/Media/AsideNavButtons/TagPathLink";
@@ -16,24 +15,23 @@ export default async function AuthorLayout({
 }) {
   return (
     <MediaFolderProdiver>
-      <main className="w-full min-h-screen grid grid-cols-[60px_1fr_60px] mx-auto">
-        <aside className="relative w-full h-full border-r bg-stone-200 dark:bg-stone-900">
+      <main className="w-full min-h-screen grid grid-cols-[60px_1fr] mx-auto">
+        <aside className="relative w-full h-full border-r bg-stone-100 dark:bg-stone-900">
           <nav className="fixed w-15 h-full mx-auto flex flex-col gap-2 py-2">
             <Logo />
-            <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
+            <Border />
             <HomeLink />
             <ArticlesLink />
             <MediaLink />
             <TagLink />
-            <div className="w-full flex flex-col gap-2 mt-auto">
+            <NavFooter>
               <AboutLink />
-              <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
+              <Border />
               <UserButton />
-            </div>
+            </NavFooter>
           </nav>
         </aside>
         {children}
-        <DashedBackground className="border-l" />
       </main>
     </MediaFolderProdiver>
   );
@@ -43,7 +41,7 @@ const Logo = () => (
   <Link
     href="/"
     className={cn(
-      "cursor-pointer size-11 p-1 mx-2 rounded-lg border border-transparent transition-[background-color,box-shadow] duration-300 hover:bg-stone-200 dark:hover:bg-stone-800",
+      "cursor-pointer size-11 p-1 mx-2 rounded-lg border border-transparent transition-all duration-300 hover:bg-stone-125 dark:hover:bg-stone-800",
       focusRing,
     )}
   >
@@ -52,4 +50,12 @@ const Logo = () => (
       className="size-full p-1 rounded-full bg-stone-900 dark:bg-stone-100"
     />
   </Link>
+);
+
+const Border = () => (
+  <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
+);
+
+const NavFooter = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-full flex flex-col gap-2 mt-auto">{children}</div>
 );

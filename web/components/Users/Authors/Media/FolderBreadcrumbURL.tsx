@@ -78,7 +78,7 @@ export default function FolderBreadcrumbURL() {
                     </svg>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="min-w-[160px]">
+                <DropdownMenuContent align="start" className="min-w-40">
                   {menuItems.map((segment, index) => {
                     const fullPath =
                       "/" + segments.slice(0, mediaIndex + 2 + index).join("/");

@@ -84,7 +84,7 @@ export function FileCardWrapper({ children }: { children: React.ReactNode }) {
   return (
     <article
       className={cn(
-        "w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border hover:not-has-data-[state=checked]:border-stone-300 dark:hover:not-has-data-[state=checked]:border-stone-600 dark:hover:focus-within:border-primary not-dark:shadow bg-stone-200 dark:bg-stone-900 hover:bg-stone-150 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 group",
+        "w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border dark:hover:not-has-data-[state=checked]:border-stone-600 dark:hover:focus-within:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-stone-850 group",
         focusWithinRing,
       )}
     >

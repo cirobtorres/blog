@@ -84,7 +84,7 @@ export default function TagCreate({ tags }: { tags: Tag[] }) {
     <form
       action={action}
       onSubmit={onSubmit} // VALIDATIONS
-      className="w-full max-w-md p-4 rounded border bg-stone-850"
+      className="w-full max-w-md p-4 rounded border not-dark:shadow bg-stone-100 dark:bg-stone-850"
     >
       <div className="flex items-center gap-2">
         <input

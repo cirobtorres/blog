@@ -30,27 +30,7 @@ export function UserButton() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-controls={popoverId}
-          className={cn(
-            "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-[background-color,box-shadow] duration-300 hover:bg-stone-300 dark:hover:bg-stone-750 group",
-            focusRing,
-          )}
-        >
-          <span
-            className={cn(
-              "size-full p-1 shrink-0 flex justify-center items-center rounded-full text-neutral-100 dark:text-neutral-100 bg-primary",
-            )}
-          >
-            {(user.name || "Anonymous")
-              .toUpperCase()
-              .split(" ")
-              .map((i) => i[0])
-              .splice(0, 2)
-              .join("")}
-          </span>
-        </button>
+        <PopoverUserButton popoverId={popoverId} name={user.name} />
       </PopoverTrigger>
       <PopoverContent id={popoverId} className="flex flex-col gap-0 p-0">
         <div className="flex flex-col gap-2 p-3">
@@ -60,31 +40,65 @@ export function UserButton() {
               {user.email}
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800">
-              Author
-            </span>
-            {/* {user.authorities.map((authority) => (
-              <span
-                key={authority}
-                className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-800"
-              >
-                {authority}
-              </span>
-            ))} */}
-          </div>
+          <AuthorLabel />
         </div>
-        <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
+        <Border />
         <div className="flex flex-col p-2">
-          <Link
-            href={protectedWebUrls.users}
-            className="w-full h-auto text-start text-neutral-900 dark:text-neutral-100 font-normal p-1 border border-transparent not-dark:shadow-none justify-start bg-inherit dark:bg-inherit hover:bg-stone-300 dark:hover:bg-stone-800 hover:border-transparent dark:hover:border-transparent focus-within:bg-stone-300 dark:focus-within:bg-stone-800"
-          >
-            Profile settings
-          </Link>
+          <ProfileButton />
           <LogoutButton session={session} />
         </div>
       </PopoverContent>
     </Popover>
   );
 }
+
+const PopoverUserButton = ({
+  popoverId,
+  name,
+}: {
+  popoverId: string;
+  name?: string | null;
+}) => (
+  <button
+    type="button"
+    aria-controls={popoverId}
+    className={cn(
+      "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-all duration-300 hover:bg-stone-200 dark:hover:bg-stone-750 group",
+      focusRing,
+    )}
+  >
+    <span
+      className={cn(
+        "size-full p-1 shrink-0 flex justify-center items-center rounded-full text-neutral-100 dark:text-neutral-100 bg-primary",
+      )}
+    >
+      {(name || "Anonymous")
+        .toUpperCase()
+        .split(" ")
+        .map((i) => i[0])
+        .splice(0, 2)
+        .join("")}
+    </span>
+  </button>
+);
+
+const AuthorLabel = () => (
+  <div className="flex flex-wrap items-center gap-2">
+    <span className="text-[10px] text-neutral-500 font-bold rounded-lg px-2 py-1 bg-stone-125 dark:bg-stone-800">
+      Author
+    </span>
+  </div>
+);
+
+const Border = () => (
+  <div className="w-full h-px bg-stone-300 dark:bg-stone-700" />
+);
+
+const ProfileButton = () => (
+  <Link
+    href={protectedWebUrls.users}
+    className="w-full h-auto text-start text-neutral-900 dark:text-neutral-100 font-normal p-1 border border-transparent not-dark:shadow-none justify-start bg-inherit dark:bg-inherit"
+  >
+    Profile settings
+  </Link>
+);

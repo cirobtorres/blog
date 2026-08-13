@@ -4,7 +4,7 @@ import React from "react";
 import type { HTMLAttributes } from "react";
 import { motion, useAnimation } from "motion/react";
 import { useDebouncedCallback } from "use-debounce";
-import { cn, focusRing } from "../../../utils/variants";
+import { cn } from "../../../utils/variants";
 import { useArticleStore } from "../../../zustand-store/article-state";
 import { apiServerUrls } from "../../../routing/routes";
 import { slugify } from "../../../utils/strings-transforms";
@@ -96,13 +96,12 @@ export default function ArticleEditorSlug({
           value={slug}
           onChange={handleChange}
           className={cn(
-            "w-full p-2 pr-9 text-sm border outline-none outline-transparent appearance-none rounded transition-shadow duration-300 placeholder:text-neutral-700 dark:placeholder:text-neutral-600",
-            focusRing,
+            "w-full p-2 pr-9 text-sm border outline-none outline-transparent appearance-none rounded not-dark:shadow transition-shadow duration-300 placeholder:text-neutral-700 dark:placeholder:text-neutral-600 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950",
             isSlugValid
-              ? "border-emerald-500 dark:border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/10 focus-visible:border-emerald-500 dark:focus-visible:border-emerald-500"
+              ? "focus-visible:ring-success border-success dark:border-success bg-success/10 dark:bg-success/10 focus-visible:border-success dark:focus-visible:border-success"
               : hasError
-                ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
-                : "bg-stone-200 dark:bg-stone-900",
+                ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:ring-destructive focus-visible:border-destructive dark:focus-visible:border-destructive"
+                : "focus-visible:ring-primary focus-visible:border-primary dark:focus-visible:border-primary border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-900",
           )}
           {...props}
         />

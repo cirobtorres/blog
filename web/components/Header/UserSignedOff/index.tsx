@@ -28,23 +28,12 @@ export default function UserSignedOff() {
         onClick={handleSignIn}
         className={cn(
           linkVariants({ variant: "internal" }),
-          "cursor-pointer border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100",
-          // relative after:absolute after:-right-2 after:top-1/2 after:-translate-y-1/2 after:h-4 after:w-px after:shrink-0 after:bg-stone-200 dark:after:bg-stone-700
+          "cursor-pointer font-normal text-neutral-600 dark:text-neutral-100 border border-transparent transition-all duration-300 dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100",
           focusRing,
         )}
       >
         Entrar
       </button>
-      {/* <a
-        href={redirectSignUp}
-        className={cn(
-          linkVariants({ variant: "internal" }),
-          "cursor-pointer border border-transparent transition-all duration-300 focus-visible:bg-stone-200 dark:focus-visible:bg-stone-800",
-          focusRing,
-        )}
-      >
-        Cadastrar
-      </a> */}
     </div>
   );
 }

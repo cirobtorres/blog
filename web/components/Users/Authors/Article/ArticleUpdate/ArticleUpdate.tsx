@@ -187,9 +187,7 @@ export function ArticleUpdate(articles: Article) {
         <FileProvider>
           <ArticleMediaManager />
           <div className="flex justify-between items-center mb-6">
-            <h1 className="w-full text-3xl font-extrabold">
-              Escrever novo artigo
-            </h1>
+            <h1 className="w-full text-3xl font-extrabold">Editar artigo</h1>
             <div className="w-full flex justify-end items-center gap-2">
               <ArticleButton
                 type="submit"

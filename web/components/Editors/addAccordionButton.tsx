@@ -22,7 +22,7 @@ export function AddAccordionButton({
               onClick={() => addBlock(prop.blockType)}
               variant="outline"
               className={cn(
-                "size-14 shrink-0 [&_svg]:size-6 rounded-lg text-neutral-500 bg-stone-850 hover:not-disabled:border-stone-600 hover:not-disabled:bg-stone-800 hover:not-disabled:text-neutral-100 active:not-disabled:border-stone-500 active:not-disabled:text-neutral-100 active:not-disabled:bg-stone-700 focus-within:not-disabled:bg-stone-800 focus-within:not-disabled:border-primary focus-within:not-disabled:text-neutral-100 dark:text-neutral-500 dark:bg-stone-850 dark:hover:not-disabled:border-stone-600 dark:hover:not-disabled:bg-stone-800 dark:hover:not-disabled:text-neutral-100 dark:active:not-disabled:border-stone-500 dark:active:not-disabled:text-neutral-100 dark:active:not-disabled:bg-stone-700 dark:focus-within:not-disabled:bg-stone-800 dark:focus-within:not-disabled:border-primary dark:focus-within:not-disabled:text-neutral-100 peer",
+                "size-14 shrink-0 [&_svg]:size-6 rounded-lg text-neutral-500 bg-stone-100 border-stone-300 dark:text-neutral-500 dark:bg-stone-850 peer",
               )}
               style={{
                 animationDelay: `${index * 50}ms`,
@@ -32,7 +32,7 @@ export function AddAccordionButton({
             </Button>
             <p
               className={cn(
-                "w-fit text-xs text-center text-neutral-600 dark:text-neutral-500 transition-all duration-300 peer-disabled:opacity-50 dark:peer-disabled:opacity-50 peer-hover:peer-not-disabled:text-neutral-100 peer-active:peer-not-disabled:text-neutral-100 peer-focus-within:peer-not-disabled:text-neutral-100 dark:peer-hover:peer-not-disabled:text-neutral-100 dark:peer-active:peer-not-disabled:text-neutral-100 dark:peer-focus-within:peer-not-disabled:text-neutral-100",
+                "w-fit text-xs text-center text-neutral-600 dark:text-neutral-500 transition-all duration-300 peer-disabled:opacity-50 dark:peer-disabled:opacity-50",
               )}
               style={{
                 animationDelay: `${index * 50}ms`,
@@ -188,25 +188,4 @@ const buttons: {
     blockType: "accordion",
     label: "Acordeão",
   },
-  // {
-  //   children: (
-  //     <svg
-  //       xmlns="http://www.w3.org/2000/svg"
-  //       width="24"
-  //       height="24"
-  //       viewBox="0 0 24 24"
-  //       fill="none"
-  //       stroke="currentColor"
-  //       strokeWidth="2"
-  //       strokeLinecap="round"
-  //       strokeLinejoin="round"
-  //       className="size-fit"
-  //     >
-  //       <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
-  //       <rect x="2" y="6" width="14" height="12" rx="2" />
-  //     </svg>
-  //   ),
-  //   blockType: "video",
-  //   label: "Vídeos",
-  // },
 ];

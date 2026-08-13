@@ -54,10 +54,10 @@ export default function ScrollSummary({
   }, [anchors]);
 
   return (
-    <aside className="w-full h-fit lg:sticky lg:top-16 ml-auto border rounded-lg bg-stone-200 dark:bg-stone-900">
+    <aside className="w-full h-fit lg:sticky lg:top-16 ml-auto border rounded-lg not-dark:shadow bg-stone-100 dark:bg-stone-900">
       <Accordion type="single" defaultValue="summary" collapsible>
         <AccordionItem value="summary">
-          <AccordionTrigger className="mx-1.5 my-1.5 hover:bg-stone-250 dark:hover:bg-stone-800">
+          <AccordionTrigger className="mx-1.5 my-1.5 hover:bg-stone-125 dark:hover:bg-stone-800">
             <p className="text-xs font-medium text-neutral-500 dark:text-neutral-100">
               Sumário
             </p>
@@ -74,7 +74,7 @@ export default function ScrollSummary({
                       aria-current={i === 0 ? "true" : "false"}
                       aria-label={`Navegar até a sessão "${anchor.text}"`}
                       className={cn(
-                        "block text-xs ml-1 py-px px-1 my-1 font-medium border border-transparent rounded transition-all duration-300 no-underline! hover:bg-stone-250 dark:hover:bg-stone-800",
+                        "block text-xs ml-1 py-px px-1 my-1 font-medium border border-transparent rounded transition-all duration-300 no-underline! hover:bg-stone-125 dark:hover:bg-stone-800",
                         focusRing,
                       )}
                       style={{ paddingLeft: padding * 8 + "px" }}

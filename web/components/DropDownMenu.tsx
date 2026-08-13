@@ -43,7 +43,7 @@ function DropdownMenuContent({
         sideOffset={sideOffset}
         align={align}
         className={cn(
-          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 min-w-32 rounded-lg p-1 not-dark:shadow z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden border text-neutral-900 bg-stone-200 dark:text-neutral-100 dark:bg-stone-900",
+          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 min-w-32 rounded-lg p-1 not-dark:shadow z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden border text-neutral-900 bg-stone-100 dark:text-neutral-100 dark:bg-stone-900",
           className,
         )}
         {...props}
@@ -75,7 +75,7 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "relative flex cursor-default focus:bg-stone-300 focus:text-neutral-900 text-neutral-400 dark:focus:bg-stone-800 dark:focus:text-neutral-100 dark:text-neutral-500 gap-1.5 rounded border border-transparent px-1.5 py-1 text-sm data-inset:pl-7 group/dropdown-menu-item items-center outline-hidden select-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 transition-all duration-300",
+        "relative flex cursor-default hover:bg-stone-125 hover:text-neutral-900 text-neutral-400 dark:hover:bg-stone-800 dark:hover:text-neutral-100 dark:text-neutral-500 gap-1.5 rounded border border-transparent px-1.5 py-1 text-sm data-inset:pl-7 group/dropdown-menu-item items-center outline-hidden select-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 transition-all duration-300",
         className,
       )}
       {...props}
@@ -97,7 +97,7 @@ function DropdownMenuCheckboxItem({
       data-slot="dropdown-menu-checkbox-item"
       data-inset={inset}
       className={cn(
-        "relative flex cursor-default items-center focus:bg-stone-300 dark:focus:bg-stone-800 gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "relative flex cursor-default items-center hover:bg-stone-125 dark:hover:bg-stone-800 gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       checked={checked}
@@ -140,7 +140,7 @@ function DropdownMenuRadioItem({
       data-slot="dropdown-menu-radio-item"
       data-inset={inset}
       className={cn(
-        "relative flex cursor-default items-center focus:bg-stone-300 dark:focus:bg-stone-800 gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "relative flex cursor-default items-center hover:bg-stone-125 dark:hover:bg-stone-800 gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       {...props}
@@ -186,7 +186,7 @@ function DropdownMenuSeparator({
     <DropdownMenuPrimitive.Separator
       data-slot="dropdown-menu-separator"
       className={cn(
-        "bg-stone-300 dark:bg-stone-700 -mx-1 my-1 h-px",
+        "bg-stone-125 dark:bg-stone-700 -mx-1 my-1 h-px",
         className,
       )}
       {...props}
@@ -229,7 +229,7 @@ function DropdownMenuSubTrigger({
       data-slot="dropdown-menu-sub-trigger"
       data-inset={inset}
       className={cn(
-        "focus:bg-stone-300 dark:focus:bg-stone-800 data-open:bg-stone-300 data-open:text-neutral-900 dark:data-open:bg-stone-800 dark:data-open:text-neutral-100 gap-1.5 rounded px-1.5 py-1 text-sm data-inset:pl-7 flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "hover:bg-stone-125 dark:hover:bg-stone-800 data-open:bg-stone-125 data-open:text-neutral-900 dark:data-open:bg-stone-800 dark:data-open:text-neutral-100 gap-1.5 rounded px-1.5 py-1 text-sm data-inset:pl-7 flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       {...props}
@@ -248,7 +248,7 @@ function DropdownMenuSubContent({
     <DropdownMenuPrimitive.SubContent
       data-slot="dropdown-menu-sub-content"
       className={cn(
-        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-stone-200 text-neutral-400 dark:bg-stone-800 dark:text-neutral-500 min-w-24 rounded-lg p-1 not-dark:shadow z-50 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden",
+        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-stone-100 text-neutral-400 dark:bg-stone-800 dark:text-neutral-500 min-w-24 rounded-lg p-1 not-dark:shadow z-50 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden",
         className,
       )}
       {...props}

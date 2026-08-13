@@ -69,7 +69,7 @@ export function Mark({
     <mark
       {...props}
       className={cn(
-        "border rounded-lg italic px-1 py-0.5 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900",
+        "border rounded-lg italic px-1 py-0.5 dark:text-neutral-400 bg-stone-100 dark:bg-stone-900",
         className,
       )}
     />

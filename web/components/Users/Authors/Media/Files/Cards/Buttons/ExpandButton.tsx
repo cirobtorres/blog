@@ -6,7 +6,7 @@ export const ExpandButton = ({ url }: { url: string }) => (
     href={url}
     target="_blank"
     className={cn(
-      "outline-none select-none size-8 p-2 border cursor-pointer rounded bg-clip-padding inline-flex items-center justify-center transition-all duration-300 shrink-0 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 bg-stone-200 dark:bg-stone-900 hover:bg-stone-300 dark:hover:bg-stone-800 hover:border-stone-400 dark:hover:border-stone-600 focus-visible:border-primary dark:focus-visible:border-primary",
+      "cursor-pointer size-8 border rounded text-sm inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none select-none px-2.5 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-900",
       focusRing,
     )}
   >
@@ -17,7 +17,7 @@ export const ExpandButton = ({ url }: { url: string }) => (
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
     >

@@ -161,7 +161,7 @@ export function processBlocks(blocks: Blocks[]) {
         <Accordion
           key={block.id}
           type="multiple"
-          className="not-first:mt-6 px-4 border rounded-lg bg-stone-200 dark:bg-stone-900"
+          className="not-first:mt-6 px-4 border rounded-lg bg-stone-100 dark:bg-stone-900"
         >
           {accordionData.accordions.map((accordion) => {
             return (

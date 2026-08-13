@@ -140,11 +140,10 @@ export function ArticleBannerButton({
       type="button"
       onClick={() => openMediaLibrary("banner")}
       className={cn(
-        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300",
+        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950",
         error
-          ? "bg-destructive/10 border-destructive/50"
-          : "bg-stone-200 dark:bg-stone-900",
-        focusRing,
+          ? "border-destructive/50 bg-destructive/5 dark:bg-destructive/5 focus-visible:border-destructive dark:focus-visible:border-destructive"
+          : "focus-visible:border-primary dark:focus-visible:border-primary border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-900",
       )}
     >
       {bannerMediaId && bannerUrl && bannerAlt ? (
@@ -189,8 +188,7 @@ export function ArticleImageButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300 bg-stone-200 dark:bg-stone-900",
-        focusRing,
+        "cursor-pointer relative w-full flex justify-center items-center aspect-[2.3333333333333335] border rounded overflow-hidden not-dark:shadow transition-shadow duration-300 bg-stone-100 dark:bg-stone-900",
       )}
     >
       {data.id && data.url && data.alt ? (

@@ -82,7 +82,7 @@ const FolderCardLinkIcon = forwardRef<
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          "group block w-fit rounded-lg p-3 transition-all duration-300 border border-stone-300 dark:border-stone-800 bg-stone-200 dark:bg-stone-925 group-hover:border-stone-400 dark:group-hover:border-stone-700 group-hover:bg-stone-300 dark:group-hover:bg-stone-900 group-focus-within:border-stone-400 dark:group-focus-within:border-stone-700 group-focus-within:bg-stone-300 dark:group-focus-within:bg-stone-900 peer-data-[state=checked]:border-stone-400 dark:peer-data-[state=checked]:border-stone-700",
+          "group block w-fit rounded-lg p-3 transition-all duration-300 border border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-925 dark:group-hover:border-stone-700 dark:group-hover:bg-stone-900 dark:group-focus-within:border-stone-700 dark:group-focus-within:bg-stone-900 dark:peer-data-[state=checked]:border-stone-700",
           focusRing,
           className,
         )}

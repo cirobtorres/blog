@@ -55,9 +55,6 @@ export function ArticlePopoverButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="max-w-fit">
-        {/* <Button variant="outline" className="w-full max-w-30 h-8">
-          Preview
-        </Button> */}
         <UnpublishButton articleId={articleId} status={status} />
         <DeleteButton articleId={articleId} />
       </PopoverContent>
@@ -94,7 +91,7 @@ const UnpublishButton = ({
       data-disabled="disabled"
       className={cn(
         buttonVariants({ variant: "outline" }),
-        "cursor-auto w-full max-w-30 h-8 hover:text-neutral-500 dark:hover:text-neutral-400 hover:bg-stone-200 dark:hover:bg-stone-900 hover:border-stone-300 dark:hover:border-stone-700 opacity-50",
+        "cursor-auto w-full max-w-30 h-8 opacity-50",
       )}
     >
       Despublicar
@@ -171,7 +168,7 @@ const DeleteButton = ({ articleId }: { articleId: string }) => {
         <form action={action}>
           <AlertDialogDescription className="p-4">
             Tem certeza que deseja <b className="text-destructive">EXCLUIR</b> o
-            artigo? Essa operação não tem retorno!
+            artigo? Essa operação não tem volta!
           </AlertDialogDescription>
           <AlertDialogFooter>
             <AlertDialogCancel
@@ -205,7 +202,7 @@ export function ButtonPlaceholder() {
     <div
       className={cn(
         buttonVariants({ variant: "outline" }),
-        "cursor-auto size-8 opacity-50 hover:text-neutral-500 hover:bg-stone-200 dark:hover:bg-stone-900 dark:hover:text-neutral-400 hover:border-stone-300 dark:hover:border-stone-700",
+        "cursor-auto size-8 opacity-50",
       )}
     >
       <svg

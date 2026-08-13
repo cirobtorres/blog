@@ -75,8 +75,8 @@ export const AboutLink = React.forwardRef<AboutLinkHandle, AboutLinkProps>(
           <Link
             href={protectedWebUrls.authors + path}
             className={cn(
-              "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-300 dark:hover:bg-stone-750",
-              currentLink && "bg-stone-300 dark:bg-stone-750",
+              "rounded-lg p-2 mx-2 transition-background duration-300 border border-transparent hover:bg-stone-200 dark:hover:bg-stone-750",
+              currentLink && "bg-stone-200 dark:bg-stone-750",
               focusRing,
               className,
             )}

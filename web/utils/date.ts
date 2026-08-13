@@ -27,7 +27,7 @@ export const convertToLargeDate = (ISOdate: Date | string) => {
   return `${day} de ${month} de ${year}, às ${hours}:${minutes}`;
 };
 
-export const convertToSmallDate = (ISOdate: Date) => {
+export const convertToSmallDate = (ISOdate: Date | string) => {
   const date = new Date(ISOdate);
 
   const months = [

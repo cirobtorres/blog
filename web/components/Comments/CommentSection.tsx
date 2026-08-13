@@ -66,7 +66,7 @@ export default async function CommentSection({
       id="comments"
       className="scroll-mt-16 w-full my-10 flex flex-col gap-8"
     >
-      <div className="w-full h-30 mx-auto flex flex-col justify-center items-center border-y bg-stone-200 dark:bg-stone-900">
+      <div className="w-full h-30 mx-auto flex flex-col justify-center items-center border-y not-dark:shadow bg-stone-100 dark:bg-stone-900">
         <h2 className="text-3xl">
           Comentários {totalComments.ok ? totalComments.data : 0}
         </h2>
@@ -77,7 +77,7 @@ export default async function CommentSection({
           <Link
             href={getParentThreadUrl()}
             variant="button"
-            className="w-full max-w-64 mx-auto h-8 text-primary/75 dark:text-primary/75 hover:text-primary dark:hover:text-primary"
+            className="w-full max-w-64 mx-auto h-8 text-primary/75 dark:text-primary/75" // hover:text-primary dark:hover:text-primary
           >
             ← Voltar conversa
           </Link>

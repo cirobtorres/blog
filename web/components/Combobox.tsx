@@ -60,8 +60,7 @@ function ComboboxContent({
           data-slot="combobox-content"
           data-chips={!!anchor}
           className={cn(
-            "relative w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] max-h-(--available-height) origin-(--transform-origin) overflow-hidden rounded border bg-stone-200 dark:bg-stone-900 not-dark:shadow data-[chips=true]:min-w-(--anchor-width) data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 group/combobox-content",
-            "*:data-[slot=input-group]:bg-inherit/30 *:data-[slot=input-group]:border-inherit/30", // TODO: might be deleted
+            "relative w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] max-h-(--available-height) origin-(--transform-origin) overflow-hidden rounded border bg-stone-100 dark:bg-stone-900 not-dark:shadow data-[chips=true]:min-w-(--anchor-width) data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 group/combobox-content",
             className,
           )}
           {...props}
@@ -100,7 +99,7 @@ function ComboboxItem({
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-highlighted:bg-stone-300  dark:data-highlighted:bg-stone-750 text-neutral-600 dark:text-neutral-500 data-highlighted:text-neutral-900 dark:data-highlighted:text-neutral-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+        "relative flex w-full cursor-default items-center gap-2 rounded py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-highlighted:bg-stone-125  dark:data-highlighted:bg-stone-750 text-neutral-600 dark:text-neutral-500 data-highlighted:text-neutral-900 dark:data-highlighted:text-neutral-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
         className,
       )}
       {...props}
@@ -205,10 +204,10 @@ function ComboboxChips({
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
       className={cn(
-        "w-full flex min-h-9.5 flex-wrap items-center gap-1 rounded border bg-clip-padding p-1 px-2 has-data-[slot=combobox-chip]:px-1 text-sm transition-shadow duration-300 has-focus-visible:outline-none has-focus-visible:ring-3 dark:has-focus-visible:ring-2 has-focus-visible:ring-stone-900/25 dark:has-focus-visible:ring-stone-100 has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-stone-950",
+        "w-full min-h-9.5 flex flex-wrap items-center gap-1 text-sm rounded border bg-clip-padding p-1 px-2 has-data-[slot=combobox-chip]:px-1 not-dark:shadow transition-shadow duration-300 has-focus-visible:outline-none dark:has-focus-visible:outline-none has-focus-visible:ring-2 dark:has-focus-visible:ring-2 has-focus-visible:ring-primary dark:has-focus-visible:ring-stone-100 dark:has-focus-visible:ring-offset-2 dark:has-focus-visible:ring-offset-stone-950",
         error
           ? "border-destructive/50 bg-destructive/5 has-focus-visible:border-destructive dark:has-focus-visible:border-destructive"
-          : "has-focus-visible:border-primary dark:has-focus-visible:border-primary bg-stone-200 dark:bg-stone-900",
+          : "has-focus-visible:border-primary dark:has-focus-visible:border-primary border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-900",
         className,
       )}
       {...props}
@@ -229,7 +228,7 @@ function ComboboxChip({
     <ComboboxPrimitive.Chip
       data-slot="combobox-chip"
       className={cn(
-        "w-fit h-7 flex items-center justify-center gap-1 rounded-sm px-1.5 text-xs font-medium whitespace-nowrap has-data-[slot=combobox-chip-remove]:pr-0 border transition-all duration-300 bg-stone-250 dark:bg-stone-800",
+        "w-fit h-7 flex items-center justify-center gap-1 rounded-sm px-1.5 text-xs font-medium whitespace-nowrap has-data-[slot=combobox-chip-remove]:pr-0 border transition-all duration-300 not-dark:shadow bg-stone-100 dark:bg-stone-800",
         focusRing,
         className,
       )}
@@ -243,7 +242,7 @@ function ComboboxChip({
           render={
             <Button
               variant="outline"
-              className="size-4 border-transparent bg-transparent dark:bg-transparent hover:border-transparent dark:hover:border-transparent"
+              className="size-4 bg-transparent dark:bg-transparent shadow-none! border-transparent! hover:border-transparent! dark:hover:border-transparent!"
             >
               <XIcon className="pointer-events-none" />
             </Button>

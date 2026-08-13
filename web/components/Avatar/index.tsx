@@ -44,7 +44,7 @@ export function AvatarName({
           className={cn(
             "size-8 p-1 shrink-0 flex justify-center items-center rounded-full font-semibold text-xs",
             isNameHiden
-              ? "text-neutral-500 dark:text-neutral-500 bg-stone-200 dark:bg-stone-850"
+              ? "text-neutral-500 dark:text-neutral-500 bg-stone-100 dark:bg-stone-850"
               : "text-neutral-100 dark:text-neutral-100 bg-primary",
           )}
         >

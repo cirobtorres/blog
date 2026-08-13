@@ -15,7 +15,7 @@ export default function DownloadButton({
       download={name}
       title="Baixar arquivo"
       className={cn(
-        "cursor-pointer size-8 border rounded text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none select-none px-2.5 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 text-neutral-500 dark:text-neutral-400 bg-stone-200 dark:bg-stone-900 hover:text-neutral-900 hover:bg-stone-300 dark:hover:bg-stone-800 dark:hover:text-neutral-100 hover:border-stone-400 dark:hover:border-stone-600 disabled:opacity-50 focus-visible:text-neutral-900 focus-visible:bg-stone-300 dark:focus-visible:bg-stone-800 dark:focus-visible:text-neutral-100 focus-visible:border-primary dark:focus-visible:border-primary",
+        "cursor-pointer size-8 border rounded text-sm inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none select-none px-2.5 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-900",
         focusRing,
       )}
     >
@@ -26,7 +26,7 @@ export default function DownloadButton({
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"
       >

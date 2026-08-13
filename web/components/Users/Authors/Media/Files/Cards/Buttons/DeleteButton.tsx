@@ -17,6 +17,11 @@ import {
   AlertDialogTrigger,
 } from "../../../../../../AlertDialog";
 import { Button } from "../../../../../../Button";
+import {
+  cn,
+  focusRing,
+  linkVariants,
+} from "../../../../../../../utils/variants";
 
 const defaultState: ActionState = {
   ok: false,
@@ -37,7 +42,13 @@ export default function DeleteButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="size-8 not-dark:shadow-none">
+        <button
+          className={cn(
+            linkVariants(),
+            "cursor-pointer size-8 border rounded text-sm inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none select-none px-2.5 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 text-neutral-900 dark:text-neutral-100 bg-stone-100 dark:bg-stone-900",
+            focusRing,
+          )}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -45,7 +56,7 @@ export default function DeleteButton({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="1"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -55,14 +66,14 @@ export default function DeleteButton({
             <path d="M3 6h18" />
             <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
-        </Button>
+        </button>
       </AlertDialogTrigger>
       <AlertDialogContent asChild className="max-w-xs">
         <form>
           <AlertDialogHeader>Excluir arquivo</AlertDialogHeader>
           <AlertDialogDescription className="text-wrap break-all text-sm p-4 text-neutral-600 dark:text-neutral-500">
             Excluir{" "}
-            <span className="text-wrap break-all text-neutral-100 font-bold">
+            <span className="text-wrap break-all text-neutral-900 dark:text-neutral-100 font-bold">
               {name}.{extension}
             </span>
             ?

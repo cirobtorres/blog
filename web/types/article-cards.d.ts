@@ -19,7 +19,7 @@ type ArticleCardImage =
   | (BaseProps & { fill?: false | undefined; width: number; height: number });
 
 interface ArticleCardDate extends React.ComponentProps<"time"> {
-  className?: string;
+  children: string;
 }
 
 interface ArticleCardTitle extends React.ComponentProps<"h2"> {

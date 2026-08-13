@@ -1,23 +1,24 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { convertToLargeDate, mountURL } from "../utils/date";
+import { mountURL } from "../utils/date";
 import { serverFetch } from "../services/serverFetch";
 import { apiServerUrls } from "../routing/routes";
 import { Skeleton } from "../components/Skeleton";
 import ArticlePagination from "../components/Article/ArticlePagination";
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
+import { EmailValidationToast } from "../components/EmailValidationToast";
 import {
   ArticleCard,
-  ArticleCardDate,
   ArticleCardImage,
   ArticleCardLink,
   ArticleCards,
   ArticleCardSubtitle,
   ArticleCardTitle,
+  ArticleCardDate,
 } from "../components/Article/ArticleCards";
-import Link from "next/link";
-import Image from "next/image";
-import React from "react";
-import { EmailValidationToast } from "../components/EmailValidationToast";
+import { cn, focusRing } from "../utils/variants";
 
 const ArticlePaginationFallback = () => (
   <div className="mx-auto flex w-full justify-center">
@@ -33,7 +34,7 @@ const ArticlePaginationFallback = () => (
 
 const HeaderFallback = () => (
   <div
-    className="fixed top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-200 dark:bg-stone-900"
+    className="fixed top-0 left-0 right-0 h-header flex items-center border-b px-6 transition-transform duration-300 will-change-transform bg-stone-100 dark:bg-stone-900"
     aria-hidden
   />
 );
@@ -112,7 +113,10 @@ const LastPublishedArticle = ({ article }: { article: Article }) => (
   <Link
     id={article.id}
     href={mountURL(article)}
-    className="relative block w-full lg:h-150 lg:col-start-1 lg:row-start-1 border-b aspect-video overflow-hidden after:content-[''] after:absolute after:inset-0 after:z-10 after:bg-[radial-gradient(circle,rgba(0,0,0,0.10)_10%,rgba(0,0,0,1)_100%)]"
+    className={cn(
+      "relative block w-full lg:h-150 lg:col-start-1 lg:row-start-1 border-b aspect-video overflow-hidden after:content-[''] after:absolute after:inset-0 after:z-10 after:bg-[radial-gradient(circle,rgba(0,0,0,0.10)_10%,rgba(0,0,0,1)_100%)] transition-all duration-300",
+      focusRing,
+    )}
   >
     <Image
       id={article.id}
@@ -155,9 +159,7 @@ const LoopCards = ({ articles }: { articles: Article[] }) => (
               alt={article.media.alt}
               fill
             />
-            <ArticleCardDate>
-              {convertToLargeDate(article.createdAt)}
-            </ArticleCardDate>
+            <ArticleCardDate>{article.createdAt}</ArticleCardDate>
             <ArticleCardTitle>{article.title}</ArticleCardTitle>
             <ArticleCardSubtitle>{article.subtitle}</ArticleCardSubtitle>
           </ArticleCard>

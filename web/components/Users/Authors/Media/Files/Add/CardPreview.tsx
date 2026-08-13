@@ -66,7 +66,7 @@ export default function CardPreview({
   return (
     <div
       className={cn(
-        "relative group flex items-center gap-3 p-3 rounded-2xl border bg-white dark:bg-stone-900 shadow-sm transition-all hover:shadow-md",
+        "relative group flex items-center gap-3 p-3 rounded-2xl border bg-stone-100 dark:bg-stone-900 not-dark:shadow transition-all",
         !!errors?.form &&
           "border-destructive/50 dark:border-destructive/50 bg-destructive/10 dark:bg-destructive/10",
       )}
@@ -74,7 +74,7 @@ export default function CardPreview({
       {(isImage || isVideo) && preview ? (
         <Preview preview={preview} file={file.file} onRemove={onRemove} />
       ) : isVideo ? (
-        <div className="animate-pulse bg-stone-300 w-full h-full" />
+        <div className="animate-pulse bg-stone-100 w-full h-full" /> // TODO
       ) : isAudio ? (
         <svg
           className="text-emerald-500"
@@ -212,7 +212,7 @@ const Preview = ({
   preview: string;
   onRemove: () => void;
 }) => (
-  <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 mt-0 mb-auto rounded-lg border not-dark:shadow bg-stone-200 dark:bg-stone-900 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-850 group">
+  <article className="w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 mt-0 mb-auto rounded-lg border not-dark:shadow bg-stone-100 dark:bg-stone-900 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-stone-300 dark:has-data-[state=checked]:bg-stone-850 focus-within:outline-none dark:focus-within:outline-none focus-within:ring-2 dark:focus-within:ring-2 focus-within:ring-primary dark:focus-within:ring-neutral-100 dark:focus-within:ring-offset-2 dark:focus-within:ring-offset-stone-950 focus-within:border-primary dark:focus-within:border-primary group">
     <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
       <div className="relative">
         <div className="relative w-full h-full overflow-hidden">
@@ -265,7 +265,7 @@ const Preview = ({
               {" - "}
               {(file.size / 1024 / 1024).toFixed(2) + " MB"}
             </span>
-            <span className="text-xs px-2 py-1 rounded font-bold transition-[colors,background-color] duration-300 dark:text-neutral-500 dark:bg-stone-800 dark:group-has-data-[state=checked]:bg-stone-750">
+            <span className="text-xs px-2 py-1 rounded font-bold transition-[colors,background-color] duration-300 dark:text-neutral-500 not-dark:shadow bg-stone-125 dark:bg-stone-800 dark:group-has-data-[state=checked]:bg-stone-750">
               {file.type.includes("image") && "IMAGEM"}
             </span>
           </div>
