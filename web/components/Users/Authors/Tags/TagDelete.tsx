@@ -23,15 +23,17 @@ const defaultState: ActionState = {
 };
 
 export default function TagDelete({ tag }: { tag: Tag }) {
-  const { mutateAsync } = useDeleteTag();
+  const { mutateAsync, isPending: isPendingAsync } = useDeleteTag();
   const [, action, isPending] = React.useActionState(async () => {
     const success = (responseStatus: ActionState) => (
       <p>{responseStatus?.success ?? "Tag excluída!"}</p>
     );
     const error = (responseStatus: ActionState) => (
       <div className="flex flex-col">
-        <p className="text-sm text-neutral-100">Erro!</p>
-        <p className="text-xs text-neutral-400">
+        <p className="text-sm text-neutral-900 dark:text-neutral-100">
+          Ação não concluída
+        </p>
+        <p className="text-xs text-neutral-500 dark:text-neutral-500">
           {responseStatus?.error ?? "Ocorreu algum erro"}
         </p>
       </div>
@@ -43,6 +45,28 @@ export default function TagDelete({ tag }: { tag: Tag }) {
 
     return promise;
   }, defaultState);
+
+  const aaa = () => {
+    const success = (responseStatus: ActionState) => (
+      <p>{responseStatus?.success ?? "Tag excluída!"}</p>
+    );
+    const error = (responseStatus: ActionState) => (
+      <div className="flex flex-col">
+        <p className="text-sm text-neutral-900 dark:text-neutral-100">
+          Ação não concluída
+        </p>
+        <p className="text-xs text-neutral-500 dark:text-neutral-500">
+          {responseStatus?.error ?? "Ocorreu algum erro"}
+        </p>
+      </div>
+    );
+
+    const promise = mutateAsync({ tagId: tag.id });
+    const result = sonnerPromise(promise);
+    sonnerToastPromise(result, success, error, "Excluindo tag...");
+
+    return promise;
+  };
 
   return (
     <AlertDialog>
@@ -60,11 +84,21 @@ export default function TagDelete({ tag }: { tag: Tag }) {
           <AlertDialogCancel variant="outline" className="w-full max-w-30 h-8">
             Cancelar
           </AlertDialogCancel>
-          <form action={action} className="w-full max-w-30 ml-auto mr-0">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              React.startTransition(() => {
+                action();
+              });
+            }}
+            className="w-full max-w-30 ml-auto mr-0"
+          >
             <Button
-              disabled={isPending}
               variant="destructive"
               className="w-full max-w-30 h-8"
+              // onClick={aaa}
+              // disabled={isPendingAsync}
+              disabled={isPending}
             >
               {isPending && <Spinner className="p-1" />} Confirmar
             </Button>

@@ -11,9 +11,10 @@ const defaultState: ActionState = {
 export const toastStyles = {
   classNames: {
     toast:
-      "rounded-lg! text-neutral-900! border-stone-300! not-dark:shadow! bg-stone-100! dark:text-neutral-100! dark:border-stone-700! dark:bg-stone-800!",
-    content: "w-full",
-    title: "w-full flex justify-between items-center",
+      "rounded-lg! not-dark:shadow! text-neutral-900! dark:text-neutral-100! border-stone-300! dark:border-stone-700! bg-stone-100! dark:bg-stone-800!",
+    content: "w-full text-neutral-900! dark:text-neutral-100!",
+    title:
+      "w-full flex justify-between items-center text-neutral-900! dark:text-neutral-100!",
     // icon: "",
     // loading: "",
     // description: "",

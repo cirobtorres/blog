@@ -18,7 +18,7 @@ import React from "react";
 import { Calendar } from "../../../../../Calendar";
 import { convertToSmallDate } from "../../../../../../utils/date";
 
-export default function MediaFilesSorting() {
+export default function MediaFileSorting() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [sortBy, setSortBy] = React.useState("createdAt");

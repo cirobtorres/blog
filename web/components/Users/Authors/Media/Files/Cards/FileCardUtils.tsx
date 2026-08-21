@@ -97,22 +97,24 @@ export function FileCardWrapper({ children }: { children: React.ReactNode }) {
 
 export function FileCardsLoading() {
   return (
-    <div className="flex flex-col items-start justify-center gap-2">
+    <div className="flex flex-col gap-2">
       <h2 className="text-xl flex items-center">
         Arquivos: {<Skeleton className="size-7" />}
       </h2>
-      <div className="w-full flex justify-between items-center gap-2">
-        <div className="flex items-center gap-2">
+      <div className="w-full flex flex-row max-[850px]:flex-col justify-between items-center gap-2">
+        <div className="flex sm:flex-row flex-col sm:items-center gap-2">
           <Skeleton className="w-32 h-8.5 flex items-center rounded-lg" />
-          <Skeleton className="w-30 h-8.5" />
-          <Skeleton className="w-30 h-8.5" />
+          <div className="mr-0 ml-auto gap-2 flex flex-row max-[500px]:flex-col max-[500px]:items-start items-center max-[850px]:justify-start justify-end">
+            <Skeleton className="w-30 h-8.5" />
+            <Skeleton className="w-30 h-8.5" />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Skeleton className="size-8.5" />
           <Skeleton className="w-22 h-8.5" />
         </div>
       </div>
-      <div className="w-full grid grid-cols-3 items-center gap-2">
+      <div className="w-full grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
         {Array.from({ length: 3 }).map((_, index) => (
           <Skeleton
             key={index}
@@ -134,7 +136,7 @@ export function FileCardsLoadingSimplified() {
         {Array.from({ length: 3 }).map((_, index) => (
           <Skeleton
             key={index}
-            className="w-full max-w-100 h-65 shrink-0 overflow-hidden rounded-lg not-dark:shadow"
+            className="w-full max-w-full h-65 shrink-0 overflow-hidden rounded-lg not-dark:shadow"
           />
         ))}
       </div>

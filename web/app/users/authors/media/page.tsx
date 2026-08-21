@@ -20,6 +20,7 @@ export default async function AuthorsMediaPage({
       <Suspense fallback={<FileCardsLoading />}>
         <MediaFileCards searchParams={resolvedParams} />
       </Suspense>
+      {/* <FileCardsLoading /> */}
     </>
   );
 }

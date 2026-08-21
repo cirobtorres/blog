@@ -76,7 +76,8 @@ export default function DialogCardsContent({
               disabled={isPending}
               className="w-full max-w-30 h-8"
             >
-              {isPending && <Spinner />} Salvar
+              {isPending && <Spinner className="text-neutral-100 size-4" />}{" "}
+              Salvar
             </Button>
           </AlertDialogFooter>
         </form>

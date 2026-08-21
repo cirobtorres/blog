@@ -9,11 +9,10 @@ export default async function MediaLayout({
 }) {
   return (
     <div className="w-full max-w-6xl mx-auto flex-1 flex flex-col gap-2 px-2 my-6">
-      <div className="flex justify-between items-center gap-2 mb-6">
+      <div className="flex md:flex-row flex-col justify-between md:items-center gap-2 mb-6">
         <h1 className="text-3xl font-extrabold">Biblioteca de Mídia</h1>
-        <div className="flex-1 flex justify-end items-center gap-2">
+        <div className="flex-1 flex flex-row max-[500px]:flex-col md:justify-end max-[500px]:items-start items-center gap-2">
           <AddFolderButton />
-
           <AddFilesButton />
         </div>
       </div>

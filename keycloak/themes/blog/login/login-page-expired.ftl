@@ -13,7 +13,7 @@
 
 <body class="bg-neutral-50 dark:bg-neutral-900 flex min-h-screen flex-col items-center justify-center p-4 antialiased">
 
-    <div class="w-full max-w-md rounded-xl border border-neutral-200/80 bg-white p-8 shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
+    <div class="w-full max-w-md rounded-xl border border-neutral-200/80 bg-white p-8 not-dark:shadow dark:border-neutral-800 dark:bg-neutral-950">
         
         <#-- Alert -->
         <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/50">

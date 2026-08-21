@@ -16,7 +16,7 @@ export default function ArticlePageIdError({ error, reset }: ErrorProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-stone-50 dark:bg-stone-950">
-      <div className="max-w-md p-6 bg-white dark:bg-stone-900 rounded-2xl shadow-sm border border-stone-200 dark:border-stone-700">
+      <div className="max-w-md p-6 bg-white dark:bg-stone-900 rounded-2xl not-dark:shadow border border-stone-200 dark:border-stone-700">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
           Ops! Algo deu errado ao abrir o artigo.
         </h2>

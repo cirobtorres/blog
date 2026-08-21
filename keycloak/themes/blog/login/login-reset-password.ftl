@@ -6,8 +6,8 @@
     <title>Redefinir senha</title>
     <link rel="stylesheet" href="${url.resourcesPath}/css/tailwind.css">
   </head>
-  <body class="w-full min-h-screen flex justify-center items-center shadow bg-stone-100 dark:bg-stone-925"><!--bg-stone-150 dark:bg-stone-950-->
-    <main class="w-full"><!--not-dark:shadow bg-stone-100 dark:bg-stone-925 border-y border-stone-300 dark:border-stone-700-->
+  <body class="w-full min-h-screen flex justify-center items-center not-dark:shadow bg-stone-100 dark:bg-stone-925"><!--bg-stone-150 dark:bg-stone-950-->
+    <main class="w-full">
       <section class="w-full max-w-120 mx-auto px-4 sm:px-8 py-8 flex flex-col items-center justify-center gap-2">
         <h1 class="text-3xl font-bold mb-4 text-neutral-900 dark:text-neutral-100">Redefinir senha</h1>
         <p class="text-neutral-900 dark:text-neutral-400">

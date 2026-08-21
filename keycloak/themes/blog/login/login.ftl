@@ -179,7 +179,7 @@
                 </div>
                 <div class="w-full flex flex-col gap-2">
                   <#list social.providers as provider>
-                    <a id="social-${provider.alias}" href="${provider.loginUrl}" class="w-full h-9.5 cursor-pointer text-base flex justify-center items-center gap-2 rounded border border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 shadow font-medium transition-all duration-300 bg-stone-100 not-dark:shadow dark:bg-stone-800 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+                    <a id="social-${provider.alias}" href="${provider.loginUrl}" class="w-full h-9.5 cursor-pointer text-base flex justify-center items-center gap-2 rounded border border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 not-dark:shadow font-medium transition-all duration-300 bg-stone-100 dark:bg-stone-800 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                       <#if provider.alias?lower_case == "google">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="-3 0 262 262" preserveAspectRatio="xMidYMid">
                           <path

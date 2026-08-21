@@ -18,10 +18,10 @@ export default function MediaFileCheckbox({ allFiles }: { allFiles: Media[] }) {
   };
 
   return (
-    <div className="w-full flex flex-row items-center gap-2">
+    <div className="w-full flex max-[500px]:flex-col flex-row max-[500px]:items-start items-center gap-2">
       <label
         htmlFor="files-select-all"
-        className="flex flex-row flex-nowrap items-center gap-2 border rounded-lg p-1 not-dark:shadow bg-stone-100 dark:bg-stone-900 overflow-hidden"
+        className="flex flex-row flex-nowrap items-center gap-2 border rounded-lg p-1 not-dark:shadow bg-stone-100 dark:bg-stone-900 overflow-hidden shrink-0"
       >
         <Checkbox
           id="files-select-all"
@@ -33,11 +33,16 @@ export default function MediaFileCheckbox({ allFiles }: { allFiles: Media[] }) {
           {count} {count === 1 ? "arquivo" : "arquivos"}
         </span>
       </label>
-      <DeleteButton
-        files={selectedItems}
-        disabled={selectedItems.length === 0}
-      />
-      <MoveButton files={selectedItems} disabled={selectedItems.length === 0} />
+      <div className="flex gap-2">
+        <DeleteButton
+          files={selectedItems}
+          disabled={selectedItems.length === 0}
+        />
+        <MoveButton
+          files={selectedItems}
+          disabled={selectedItems.length === 0}
+        />
+      </div>
     </div>
   );
 }

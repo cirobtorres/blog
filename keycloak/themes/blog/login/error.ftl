@@ -35,33 +35,33 @@
               <div class="flex flex-col gap-2">
 
                 <#if properties?? && properties.homeUrl??>
-                  <a href="${properties.homeUrl}" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="${properties.homeUrl}" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Voltar para o aplicativo
                   </a>
 
                 <#elseif client?? && client.baseUrl??>
-                  <a href="${client.baseUrl}" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="${client.baseUrl}" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Voltar para o aplicativo
                   </a>
 
                 <#else>
-                  <a href="http://localhost:3000" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="http://localhost:3000" class="w-full h-9.5 text-sm text-neutral-100 font-medium not-dark:shadow rounded border border-primary bg-primary/75 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Voltar para o aplicativo
                   </a>
                 </#if>
                 
                 <#if url.loginRestartFlowUrl??>
-                  <a href="${url.loginRestartFlowUrl}" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 hover:bg-stone-150 dark:hover:bg-stone-750 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="${url.loginRestartFlowUrl}" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Recomeçar Login
                   </a>
 
                 <#elseif client?? && client.baseUrl??>
-                  <a href="${client.baseUrl}" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 hover:bg-stone-150 dark:hover:bg-stone-750 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="${client.baseUrl}" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Ir para a página de login
                   </a>
 
                 <#else>
-                  <a href="http://localhost:3000" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 hover:bg-stone-150 dark:hover:bg-stone-750 transition-all duration-300 flex items-center justify-center gap-2">
+                  <a href="http://localhost:3000" class="w-full h-9.5 text-sm text-neutral-900 dark:text-neutral-100 font-medium not-dark:shadow rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 flex items-center justify-center gap-2 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Ir para a página de login
                   </a>
                 </#if>

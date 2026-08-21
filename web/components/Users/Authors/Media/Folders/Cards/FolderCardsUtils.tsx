@@ -33,7 +33,7 @@ export function FolderCardHeaderButtonsWrapper({
   return (
     <div
       className={cn(
-        "w-full flex justify-between items-center gap-2",
+        "w-full flex flex-row justify-between items-center gap-2",
         className,
       )}
     >
@@ -50,7 +50,12 @@ export function FolderCardGridWrapper({
   className?: string;
 }) {
   return (
-    <div className={cn("w-full grid grid-cols-4 gap-2", className)}>
+    <div
+      className={cn(
+        "w-full grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2",
+        className,
+      )}
+    >
       {children}
     </div>
   );
@@ -104,7 +109,7 @@ export function FolderCardLinkWrapper({
   return (
     <label
       htmlFor={"folder-" + folder.id}
-      className="relative w-full max-w-70 flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-800 group"
+      className="relative w-full max-w-full flex-1 flex shrink-0 items-center gap-2 py-2 px-3 transition-border duration-300 rounded border hover:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-800 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-stone-800 focus-within:border-primary dark:focus-within:border-primary dark:focus-within:bg-stone-800 group"
     >
       {children}
       <FolderCardInfos folder={folder} />

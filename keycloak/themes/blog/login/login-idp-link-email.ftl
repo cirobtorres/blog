@@ -22,8 +22,10 @@
                   sua conta.
                 </p>
               </div>
-              <hr class="border-neutral-200 dark:border-neutral-800">
-              <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 text-sm text-blue-800 dark:text-blue-300">
+              
+              <div class="my-1 w-full h-px bg-linear-to-r from-transparent via-stone-400 to-transparent dark:via-stone-700"></div>
+
+              <div class="p-4 rounded-lg text-sm text-informative dark:text-informative border border-informative/50 bg-informative/10 dark:bg-informative/10">
                 <span class="font-bold block mb-1">
                   Confirmação necessária
                 </span>
@@ -44,7 +46,7 @@
 
                   <a
                     href="${url.loginAction}"
-                    class="font-bold text-primary underline underline-offset-2"
+                    class="font-bold text-primary underline underline-offset-2 border border-transparent rounded transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary"
                   >
                     ${msg("emailLinkIdp3")}
                   </a>
@@ -55,7 +57,7 @@
 
                   <a
                     href="${url.loginAction}"
-                    class="font-bold text-primary underline underline-offset-2"
+                    class="font-bold text-primary underline underline-offset-2 border border-transparent rounded transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary"
                   >
                     ${msg("emailLinkIdp5")}
                   </a>
@@ -76,14 +78,14 @@
 
                   <button
                     type="submit"
-                    class="w-full h-9.5 cursor-pointer rounded border border-neutral-300 dark:border-neutral-700 font-medium transition-all hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                    class="w-full h-9.5 cursor-pointer text-base flex justify-center items-center gap-2 rounded border border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 not-dark:shadow font-medium bg-stone-100 dark:bg-stone-800 transition-all duration-300 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary"
                   >
                     ${msg("doTryAnotherWay")}
                   </button>
                 </form>
               </#if>
 
-              <hr class="border-neutral-200 dark:border-neutral-800">
+              <div class="my-1 w-full h-px bg-linear-to-r from-transparent via-stone-400 to-transparent dark:via-stone-700"></div>
 
               <p class="text-xs text-center font-medium text-neutral-500">
                 O vínculo será concluído somente após a confirmação do e-mail.

@@ -30,10 +30,44 @@
                 </div>
               </#if>
               <form id="kc-idp-review-profile-form" action="${url.loginAction}" method="post" class="w-full flex flex-col justify-center gap-2">
-                <div class="kc-user-profile-form [&_.required]:text-rose-600 [&_input]:w-full [&_input]:text-neutral-900 [&_input]:dark:text-neutral-400 [&_input]:border [&_input]:border-stone-200 [&_input]:border-stone-700 [&_input]:px-2 [&_input]:py-1 [&_input]:rounded [&_input]:bg-stone-100 [&_input]:dark:bg-stone-800 [&_input]:mb-2 [&_input]:transition-all [&_input]:focus-visible:outline-none [&_input]:focus-visible:ring-3 [&_input]:dark:focus-visible:ring-2 [&_input]:focus-visible:ring-stone-900/25 [&_input]:dark:focus-visible:ring-stone-100 [&_input]:focus-visible:ring-offset-2 [&_input]:focus-visible:ring-offset-stone-950 [&_input]:focus-visible:border-primary [&_input]:dark:focus-visible:border-primary [&_input]:text-neutral-900 [&_input]:dark:text-neutral-400 [&_input]:bg-stone-100 [&_input]:dark:bg-stone-800 [&_input]:focus:placeholder:text-neutral-500 [&_input]:focus-within:bg-stone-stone-600 [&_input]:dark:focus-within:bg-stone-stone-750">
-                  <@userProfileCommons.userProfileFormFields/>
-                </div>
-                  <button type="submit" class="cursor-pointer border disabled:cursor-auto text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none group/button select-none gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary text-neutral-100 bg-primary/75 border-primary focus-visible:bg-primary/80 rounded h-9.5">
+                <!--<div class="kc-user-profile-form [&_.required]:text-rose-600 [&_input]:h-9.75 [&_input]:w-full [&_input]:text-neutral-900 [&_input]:dark:text-neutral-400 [&_input]:border [&_input]:border-stone-300 [&_input]:dark:border-stone-700 [&_input]:px-2 [&_input]:py-1 [&_input]:rounded [&_input]:bg-stone-100 [&_input]:dark:bg-stone-800 [&_input]:mb-2 [&_input]:transition-all [&_input]:duration-300 [&_input]:not-dark:shadow [&_input]:focus-visible:outline-none [&_input]:dark:focus-visible:outline-none [&_input]:focus-visible:ring-2 [&_input]:dark:focus-visible:ring-2 [&_input]:focus-visible:ring-primary [&_input]:dark:focus-visible:ring-stone-100 [&_input]:dark:focus-visible:ring-offset-2 [&_input]:dark:focus-visible:ring-offset-stone-950 [&_input]:focus-visible:border-primary [&_input]:dark:focus-visible:border-primary [&_input]:text-neutral-900 [&_input]:dark:text-neutral-400 [&_input]:bg-stone-100 [&_input]:dark:bg-stone-800 [&_input]:focus:placeholder:text-neutral-500 [&_input]:focus-within:bg-stone-stone-600 [&_input]:dark:focus-within:bg-stone-stone-750">-->
+                  <!--<@userProfileCommons.userProfileFormFields/>-->
+
+                  <div class="relative w-full rounded not-dark:shadow">
+
+                    <input type="email" id="email" name="email" value="${(profile.attributesByName.email.value!(user.email!''))}" autocomplete="email" required aria-invalid="<#if messagesPerField.existsError('email')>true<#else>false</#if>" placeholder="" class="h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 placeholder:text-transparent placeholder:select-none border text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 <#if messagesPerField.existsError('email')>bg-destructive/10 border-destructive/75 dark:border-destructive/50<#else>bg-stone-100 dark:bg-stone-800 border-stone-300 dark:border-stone-700 focus-visible:border-primary dark:focus-visible:border-primary</#if>"/>
+
+                    <label for="email" class="absolute origin-left top-1/2 z-10 inset-s-1 px-1.5 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 peer-focus:-translate-y-4.5 peer-placeholder-shown:-translate-y-1/2 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100 text-neutral-900 peer-focus:text-neutral-900 peer-placeholder-shown:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 dark:peer-placeholder-shown:text-neutral-100">
+                      E-mail
+                    </label>
+
+                  </div>
+                  
+                  <#if messagesPerField.existsError('email')>
+                    <span role="alert" class="mx-2 text-xs font-medium text-destructive">
+                      ${kcSanitize(messagesPerField.get('email'))?no_esc}
+                    </span>
+                  </#if>
+
+                  <div class="relative w-full rounded not-dark:shadow">
+
+                    <input type="text" id="firstName" name="firstName" value="${(profile.attributesByName.firstName.value!(user.firstName!''))}" required aria-invalid="<#if messagesPerField.existsError('firstName')>true<#else>false</#if>" placeholder="Nome Completo" class="h-full w-full px-2 pt-4.25 pb-1 text-xs font-medium rounded peer transition-all duration-300 placeholder:text-transparent placeholder:select-none border text-neutral-900 dark:text-neutral-400 focus:placeholder:text-neutral-500 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 <#if messagesPerField.existsError('firstName')>bg-destructive/10 border-destructive/75 dark:border-destructive/50<#else>bg-stone-100 dark:bg-stone-800 border-stone-300 dark:border-stone-700 focus-visible:border-primary dark:focus-visible:border-primary</#if>"/>
+
+                    <label for="firstName" class="absolute origin-left top-1/2 z-10 inset-s-1 px-1.5 font-medium select-none text-sm pointer-events-none bg-transparent bg-opacity-50 transform transition-top duration-100 -translate-y-4.5 peer-focus:-translate-y-4.5 peer-placeholder-shown:-translate-y-1/2 scale-75 peer-focus:scale-75 peer-placeholder-shown:scale-100 text-neutral-900 peer-focus:text-neutral-900 peer-placeholder-shown:text-neutral-900 dark:text-neutral-100 dark:peer-focus:text-neutral-100 dark:peer-placeholder-shown:text-neutral-100">
+                      Nome Completo
+                    </label>
+
+                  </div>
+
+                  <#if messagesPerField.existsError('firstName')>
+                    <span role="alert" class="mx-2 text-xs font-medium text-destructive">
+                      ${kcSanitize(messagesPerField.get('firstName'))?no_esc}
+                    </span>
+                  </#if>
+
+                <!--</div>-->
+                
+                  <button type="submit" class="cursor-pointer border disabled:cursor-auto text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 shrink-0 outline-none group/button select-none gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 not-dark:shadow [&_svg]:shrink-0 [&_svg]:pointer-events-none [&_svg]:size-4 text-neutral-100 bg-primary/75 border-primary rounded h-9.5 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                     Confirmar
                   </button>
                 </form>

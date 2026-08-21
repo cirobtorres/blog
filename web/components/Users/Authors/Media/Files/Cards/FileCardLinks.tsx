@@ -1,11 +1,12 @@
 import { apiServerUrls } from "../../../../../../routing/routes";
 import MediaFileCheckbox from "../Header/MediaFileCheckbox";
 import MediaFileSearch from "../Header/MediaFileSearch";
-import MediaFilesSorting from "../Header/MediaFilesSorting";
+import MediaFilesSorting from "../Header/MediaFileSorting";
 import FilePaginationURL from "../Pagination/FilePaginationURL";
 import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
 import FileCardLink from "./FileCardLink";
 import { serverFetch } from "../../../../../../services/serverFetch";
+import { cn } from "../../../../../../utils/variants";
 
 const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 
@@ -64,9 +65,9 @@ export default async function FileCardLinks({
   return (
     <FileCardSectionWrapper>
       <FileCardTitle count={count} />
-      <div className="w-full flex justify-between items-center gap-2">
+      <div className="w-full flex flex-row max-[850px]:flex-col justify-between items-center gap-2">
         <MediaFileCheckbox allFiles={media ?? []} />
-        <div className="w-full flex justify-end items-center mr-0 ml-auto gap-2">
+        <div className="w-full mr-0 ml-auto gap-2 flex flex-row max-[500px]:flex-col max-[500px]:items-start items-center max-[850px]:justify-start justify-end">
           <MediaFileSearch />
           <MediaFilesSorting />
         </div>

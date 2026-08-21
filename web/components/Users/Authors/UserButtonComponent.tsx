@@ -29,9 +29,7 @@ export function UserButton() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <PopoverUserButton popoverId={popoverId} name={user.name} />
-      </PopoverTrigger>
+      <PopoverUserButton popoverId={popoverId} name={user.name} />
       <PopoverContent id={popoverId} className="flex flex-col gap-0 p-0">
         <div className="flex flex-col gap-2 p-3">
           <div className="flex flex-col">
@@ -59,27 +57,29 @@ const PopoverUserButton = ({
   popoverId: string;
   name?: string | null;
 }) => (
-  <button
-    type="button"
-    aria-controls={popoverId}
-    className={cn(
-      "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-all duration-300 hover:bg-stone-200 dark:hover:bg-stone-750 group",
-      focusRing,
-    )}
-  >
-    <span
+  <PopoverTrigger asChild>
+    <button
+      type="button"
+      aria-controls={popoverId}
       className={cn(
-        "size-full p-1 shrink-0 flex justify-center items-center rounded-full text-neutral-100 dark:text-neutral-100 bg-primary",
+        "size-11 p-1 mx-2 flex items-center justify-start gap-2 border border-transparent rounded-lg cursor-pointer transition-all duration-300 hover:bg-stone-200 dark:hover:bg-stone-750 group",
+        focusRing,
       )}
     >
-      {(name || "Anonymous")
-        .toUpperCase()
-        .split(" ")
-        .map((i) => i[0])
-        .splice(0, 2)
-        .join("")}
-    </span>
-  </button>
+      <span
+        className={cn(
+          "size-full p-1 shrink-0 flex justify-center items-center rounded-full text-neutral-100 dark:text-neutral-100 bg-primary",
+        )}
+      >
+        {(name || "Anonymous")
+          .toUpperCase()
+          .split(" ")
+          .map((i) => i[0])
+          .splice(0, 2)
+          .join("")}
+      </span>
+    </button>
+  </PopoverTrigger>
 );
 
 const AuthorLabel = () => (

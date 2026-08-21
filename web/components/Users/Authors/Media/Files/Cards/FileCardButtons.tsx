@@ -3,7 +3,7 @@
 import { useFilesWithCount } from "../../../../../../services/hooks/files/hook-files";
 import { useArticleStore } from "../../../../../../zustand-store/article-state";
 import MediaFileSearch from "../Header/MediaFileSearch";
-import MediaFilesSorting from "../Header/MediaFilesSorting";
+import MediaFileSorting from "../Header/MediaFileSorting";
 import FilePaginationState from "../Pagination/FilePaginationState";
 import FileCardButton from "./FileCardButton";
 import {
@@ -38,9 +38,9 @@ export default function FileCardButtons() {
     <FileCardSectionWrapper>
       <div className="w-full flex justify-between">
         <FileCardTitle count={count} className="w-full flex-1" />
-        <div className="flex justify-end items-center mr-0 ml-auto gap-2">
+        <div className="flex flex-row max-[450px]:flex-col justify-end items-center mr-0 ml-auto gap-2">
           <MediaFileSearch />
-          <MediaFilesSorting />
+          <MediaFileSorting />
         </div>
       </div>
       {files.length > 0 && (

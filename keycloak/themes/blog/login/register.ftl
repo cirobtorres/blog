@@ -28,7 +28,7 @@
               </div>
 
               <#if message?has_content && (message.type != 'warning' || !isAppInitiatedAction??)>
-                <div class="p-3 rounded border text-sm flex items-start gap-2 <#if message.type == 'error'>bg-destructive/10 border-destructive/50 text-neutral-100 dark:text-neutral-100<#else>bg-informative/10 border-informative/50 text-neutral-100 dark:text-neutral-100</#if>">
+                <div class="p-3 rounded border text-sm flex items-start gap-2 <#if message.type == 'error'>bg-destructive/10 border-destructive/50 text-neutral-100 dark:text-neutral-100<#else>text-informative dark:text-informative border border-informative/50 bg-informative/10 dark:bg-informative/10</#if>">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5">
                     <circle cx="12" cy="12" r="10"/>
                     <line x1="12" y1="8" x2="12" y2="12"/>
@@ -171,7 +171,7 @@
                 </div>
                 <div class="w-full flex flex-col gap-2">
                   <#list social.providers as provider>
-                    <a id="social-${provider.alias}" href="${provider.loginUrl}" class="w-full h-9.5 cursor-pointer text-base flex justify-center items-center gap-2 rounded border border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 shadow font-medium transition-all duration-300 bg-stone-100 not-dark:shadow dark:bg-stone-800 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+                    <a id="social-${provider.alias}" href="${provider.loginUrl}" class="w-full h-9.5 cursor-pointer text-base flex justify-center items-center gap-2 rounded border border-stone-300 dark:border-stone-700 text-neutral-900 dark:text-neutral-100 not-dark:shadow font-medium transition-all duration-300 bg-stone-100 dark:bg-stone-800 focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                       <#if provider.alias?lower_case == "google">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="-3 0 262 262" preserveAspectRatio="xMidYMid">
                           <path
@@ -208,6 +208,7 @@
               </p>
 
               <div class="my-1 w-full h-px bg-linear-to-r from-transparent via-stone-400 to-transparent dark:via-stone-700"></div>
+              
               <p class="text-xs font-medium text-neutral-600 dark:text-neutral-500">
                 As contas criadas aqui são para fins de interação com o autor
                 deste website, especialmente por meio de comentários nas

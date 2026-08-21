@@ -20,7 +20,7 @@
                 </div>
                 <hr class="border-stone-200 dark:border-stone-700" />
                 <#if message?? && message.summary??>
-                    <div class="p-4 rounded bg-linear-to-r from-rose-500/25 to-rose-500/5 border border-rose-500/50 text-sm text-neutral-100">
+                    <div class="p-4 border rounded text-sm text-destructive dark:text-neutral-100 border-destructive/75 dark:border-destructive/50 bg-linear-to-r from-destructive/20 to-transparent">
                         <span class="font-bold block mb-1">Ação necessária</span>
                         ${message.summary}
                     </div>
@@ -42,7 +42,7 @@
                         name="submitAction"
                         id="linkAccount"
                         value="linkAccount"
-                        class="cursor-pointer text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 text-neutral-100 bg-primary/75 border border-primary rounded h-9.5 shrink-0 outline-none select-none px-2.5 not-dark:shadow focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+                        class="cursor-pointer text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 text-neutral-100 bg-primary/75 border border-primary rounded h-9.5 shrink-0 outline-none select-none px-2.5 not-dark:shadow focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                         Vincular contas
                     </button>
                     <button
@@ -50,7 +50,7 @@
                         name="submitAction"
                         id="updateProfile"
                         value="updateProfile"
-                        class="cursor-pointer text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 text-neutral-500 dark:text-neutral-400 bg-stone-200 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded h-9.5 shrink-0 outline-none select-none px-2.5 not-dark:shadow focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+                        class="cursor-pointer text-sm font-medium inline-flex items-center justify-center whitespace-nowrap transition-all duration-300 text-neutral-500 dark:text-neutral-400 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded h-9.5 shrink-0 outline-none select-none px-2.5 not-dark:shadow focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                         Revisar perfil
                     </button>
                 </form>

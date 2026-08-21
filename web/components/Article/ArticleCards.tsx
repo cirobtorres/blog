@@ -165,10 +165,10 @@ export function ArticleCardStatus({ status }: { status: ArticleStatus }) {
   return (
     <span
       className={cn(
-        "w-fit px-2 rounded border text-[10px] text-neutral-100 dark:text-neutral-100",
+        "w-fit px-2 rounded border text-[10px]",
         upperStatus === "PUBLISHED"
-          ? "border-success/50 bg-success/25"
-          : "border-warning/50 bg-warning/25",
+          ? "text-success dark:text-success border-success/50 bg-success/25"
+          : "text-warning dark:text-warning border-warning/50 bg-warning/25",
       )}
     >
       {translateStatus(upperStatus)}
@@ -185,7 +185,7 @@ export function ArticleCardPendingRevision({
 }) {
   return (
     hasUnpublishedChanges && (
-      <span className="w-fit flex items-center text-[10px] px-2 rounded border border-informative/50 bg-informative/25">
+      <span className="w-fit flex items-center text-informative dark:text-informative text-[10px] px-2 rounded border border-informative/50 bg-informative/25">
         Pendente
       </span>
     )
