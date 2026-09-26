@@ -41,6 +41,9 @@ export default function DeleteButton({
     clearSelection();
   };
 
+  const fileCount = files.length;
+  const plural = files.length > 1 ? "s" : "";
+
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
@@ -55,15 +58,21 @@ export default function DeleteButton({
       </AlertDialogTrigger>
       <AlertDialogContent asChild>
         <form className="max-w-xs">
-          <AlertDialogHeader>Excluir pasta</AlertDialogHeader>
+          <AlertDialogHeader>Excluir arquivos</AlertDialogHeader>
           <AlertDialogDescription asChild className="p-4">
             <div className="w-full">
               <p className="text-sm text-neutral-600 dark:text-neutral-500">
-                Excluir estas{" "}
-                <strong className="text-neutral-900 dark:text-neutral-100">
-                  {files.length}
-                </strong>{" "}
-                pastas?
+                {plural ? (
+                  <>
+                    Excluir estes{" "}
+                    <strong className="text-neutral-900 dark:text-neutral-100">
+                      {fileCount}
+                    </strong>{" "}
+                    arquivos?
+                  </>
+                ) : (
+                  "Excluir o arquivo?"
+                )}
               </p>
             </div>
           </AlertDialogDescription>

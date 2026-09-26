@@ -30,7 +30,9 @@ export default async function AuthorsArticlesPage() {
             href="articles/write"
             className={cn(buttonVariants(), "w-fit max-w-30 h-8")}
           >
-            <span className="hidden min-[475px]:inline">Criar Novo</span>
+            <span className="text-neutral-100 hidden min-[475px]:inline">
+              Criar Novo
+            </span>
             <span className="min-[475px]:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,8 +65,8 @@ export default async function AuthorsArticlesPage() {
                 <ArticleCard id={article.id}>
                   <ArticleCardImage
                     id={article.id}
-                    src={getOptimizedMediaUrl(article.media.url, 400)}
-                    alt={article.media.alt}
+                    src={getOptimizedMediaUrl(article.banner.url, 400)}
+                    alt={article.banner.alt}
                     fill
                   />
                   <ArticleCardDate>{article.createdAt}</ArticleCardDate>

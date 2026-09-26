@@ -26,6 +26,7 @@ public class ArticlesService {
     private final AuthorRepository authorRepository;
     private final UserService userService;
     private final MediaRepository mediaRepository;
+    private final CommentRepository commentRepository;
     private final TagRepository tagsRepository;
 
     public ArticlesService(
@@ -35,6 +36,7 @@ public class ArticlesService {
             AuthorRepository authorRepository,
             UserService userService,
             MediaRepository mediaRepository,
+            CommentRepository commentRepository,
             TagRepository tagsRepository
     ) {
         this.articlesRepository = articlesRepository;
@@ -43,6 +45,7 @@ public class ArticlesService {
         this.authorRepository = authorRepository;
         this.userService = userService;
         this.mediaRepository = mediaRepository;
+        this.commentRepository = commentRepository;
         this.tagsRepository = tagsRepository;
     }
 
@@ -295,6 +298,7 @@ public class ArticlesService {
         );
     }
 
+    @Transactional
     public void deleteArticle(UUID id) {
         Articles article = articlesRepository
                 .findById(id)
@@ -303,6 +307,15 @@ public class ArticlesService {
                                 "Article not found"
                         )
                 );
+
+        articlesLikeRepository.deleteByArticleId(id);
+
+        List<Comment> topLevelComments = commentRepository.findByArticleIdAndParentIsNull(id);
+        commentRepository.deleteAll(topLevelComments);
+
+        article.setCurrentPublishedRevision(null);
+        articlesRepository.save(article);
+
         articlesRepository.delete(article);
     }
 

@@ -8,7 +8,7 @@ import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 import UserSettingsPassForm from "../../../components/Users/Settings/UserSettingsPassForm";
 import { Alert } from "../../../components/Alert";
-import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";
+// import UserSettingsEmailForm from "../../../components/Users/Settings/UserSettingsEmailForm";
 import { auth } from "../../../keycloak/auth";
 import { redirect } from "next/navigation";
 import { User } from "next-auth";
@@ -57,7 +57,7 @@ export default async function UserSettingsPage() {
                   </Button>
                 </div>
               </form>
-              <UserSettingsEmailForm user={user} />
+              {/* <UserSettingsEmailForm user={user} /> */}
               <UserSettingsPassForm />
               <form className="flex flex-col gap-2 flex-1 p-4 rounded-lg border bg-stone-900">
                 <div className="flex items-center gap-2">

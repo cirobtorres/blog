@@ -31,7 +31,8 @@
     "**/*.mts",
     ".next2/types/**/*.ts",
     ".next2/dev/types/**/*.ts",
-    "proxy.ts"
+    "proxy.ts",
+    "providers"
   ],
   "exclude": ["node_modules"]
 }

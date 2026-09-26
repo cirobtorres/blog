@@ -1,4 +1,3 @@
-import { FileProvider } from "../../../../../../providers/FileProvider";
 import { cn, focusWithinRing } from "../../../../../../utils/variants";
 import { Skeleton } from "../../../../../Skeleton";
 
@@ -10,16 +9,14 @@ export function FileCardSectionWrapper({
   className?: string;
 }) {
   return (
-    <FileProvider>
-      <section
-        className={cn(
-          "flex flex-col items-start justify-center gap-2",
-          className,
-        )}
-      >
-        {children}
-      </section>
-    </FileProvider>
+    <section
+      className={cn(
+        "flex flex-col items-start justify-center gap-2",
+        className,
+      )}
+    >
+      {children}
+    </section>
   );
 }
 
@@ -80,7 +77,30 @@ export function FileCardFloatingButtonsWrapper({
   );
 }
 
-export function FileCardWrapper({ children }: { children: React.ReactNode }) {
+export function FileCardButtonWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <article
+      className={cn(
+        "w-full max-w-100 h-65 flex flex-col shrink-0 items-center overflow-hidden transition-border duration-300 rounded-lg border dark:hover:not-has-data-[state=checked]:border-stone-600 dark:hover:focus-within:border-primary not-dark:shadow bg-stone-100 dark:bg-stone-900 dark:hover:bg-stone-850 has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-stone-850 group",
+        focusWithinRing,
+      )}
+    >
+      <div className="w-full h-full grid grid-rows-[1fr_calc(28px+24px+4px+16px+1px)]">
+        <div className="relative">{children}</div>
+      </div>
+    </article>
+  );
+}
+
+export function FileCardLinkWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <article
       className={cn(

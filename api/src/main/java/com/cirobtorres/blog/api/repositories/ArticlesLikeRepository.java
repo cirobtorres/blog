@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface ArticlesLikeRepository extends JpaRepository<ArticlesLike, UUID> {
     Optional<ArticlesLike> findByArticleIdAndUserId(UUID commentId, UUID userId);
+
+    void deleteByArticleId(UUID id);
 }

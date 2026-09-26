@@ -59,7 +59,11 @@ export default function DeleteCommentButton({
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" disabled={isPending} className="w-20 h-8">
+        <Button
+          variant="ghost"
+          disabled={isPending}
+          className="w-20 h-8 text-neutral-900 dark:text-neutral-100 not-dark:shadow-none"
+        >
           Excluir
         </Button>
       </AlertDialogTrigger>

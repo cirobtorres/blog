@@ -34,6 +34,7 @@ public class MediaController {
         this.isProd = apiApplicationProperties.getApplication().isProduction();
     }
 
+    // GET
     @GetMapping
     public ResponseEntity<Page<MediaDTO>> listPaged(
             @RequestParam(name = "folder", defaultValue = "Home") String folder,
@@ -51,6 +52,23 @@ public class MediaController {
         return ResponseEntity.ok(mediaService.countFilesByFolder(folder));
     }
 
+    @GetMapping("sync/check")
+    public ResponseEntity<List<Map<String, Object>>> checkSync(
+            @RequestParam String folder
+    ) throws Exception {
+        return ResponseEntity.ok(mediaService.findOrphanFiles(folder));
+    }
+
+    // POST
+    @PostMapping("sync/import")
+    public ResponseEntity<Void> importMedia(
+            @RequestBody List<MediaDTO> mediaList
+    ) {
+        mediaService.saveAll(mediaList);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    // PUT
     @PutMapping("{id}")
     public ResponseEntity<Void> put(
             @PathVariable UUID id,
@@ -60,6 +78,15 @@ public class MediaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("move/all")
+    public ResponseEntity<String> updateFolders(
+            @RequestBody @Valid MediaFilesMoveToDTO mediaFilesMoveToDTO
+    ) {
+        mediaService.moveFiles(mediaFilesMoveToDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    // DELETE
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(
             @PathVariable(name = "id") UUID id
@@ -74,28 +101,5 @@ public class MediaController {
             ) {
         mediaService.deleteMediaAll(fileIdsDTO);
         return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("move/all")
-    public ResponseEntity<String> updateFolders(
-            @RequestBody @Valid MediaFilesMoveToDTO mediaFilesMoveToDTO
-    ) {
-        mediaService.moveFiles(mediaFilesMoveToDTO);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("sync/check")
-    public ResponseEntity<List<Map<String, Object>>> checkSync(
-            @RequestParam String folder
-    ) throws Exception {
-        return ResponseEntity.ok(mediaService.findOrphanFiles(folder));
-    }
-
-    @PostMapping("sync/import")
-    public ResponseEntity<Void> importMedia(
-            @RequestBody List<MediaDTO> mediaList
-    ) {
-        mediaService.saveAll(mediaList);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

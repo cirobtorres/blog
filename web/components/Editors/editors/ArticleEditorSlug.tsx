@@ -5,11 +5,11 @@ import type { HTMLAttributes } from "react";
 import { motion, useAnimation } from "motion/react";
 import { useDebouncedCallback } from "use-debounce";
 import { cn } from "../../../utils/variants";
-import { useArticleStore } from "../../../zustand-store/article-state";
 import { apiServerUrls } from "../../../routing/routes";
 import { slugify } from "../../../utils/strings-transforms";
 import Spinner from "../../Spinner";
 import { fetchAction } from "../../../services/fetchAction";
+import { useArticleStore } from "../../../providers/ArticleStoreProvider";
 
 export default function ArticleEditorSlug({
   articleId,

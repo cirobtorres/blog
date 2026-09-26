@@ -33,7 +33,7 @@ public class Revisions {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "media_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    private Media media;
+    private Media media; // TODO: renomear para banner
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

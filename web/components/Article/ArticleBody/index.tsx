@@ -41,7 +41,7 @@ export default function ArticleBody({ body }: Article) {
 
   return (
     <div className="w-full max-w-article-body mx-auto px-3 my-8">
-      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_auto_1fr] gap-4">
+      <section className="relative grid grid-cols-1 lg:grid-cols-[300px_1fr_auto] gap-4">
         <ScrollSummary anchors={anchors} />
         <article className="w-full max-w-article-title p-1 overflow-hidden">
           {processedNodes.map((node, index) => (
@@ -59,6 +59,22 @@ export default function ArticleBody({ body }: Article) {
 export function processBlocks(blocks: Blocks[]) {
   const anchors: { id: string; text: string; padding: number }[] = [];
 
+  const usedIds = new Set<string>(); // Each id must be unique
+
+  const generateUniqueId = (text: string) => {
+    const base = slugify(text) || "secao";
+    let id = base;
+    let counter = 2;
+
+    while (usedIds.has(id)) {
+      id = `${base}-${counter}`;
+      counter++;
+    }
+
+    usedIds.add(id);
+    return id;
+  };
+
   const replaceOptions = (domNode: DOMNode) => {
     if (domNode.type !== "tag") return;
 
@@ -73,7 +89,7 @@ export function processBlocks(blocks: Blocks[]) {
         .join("");
 
       const padding = Number(tagName.slice(1));
-      const id = slugify(text);
+      const id = generateUniqueId(text);
       anchors.push({ id, text, padding });
 
       const Component = typographyMap[tagName];

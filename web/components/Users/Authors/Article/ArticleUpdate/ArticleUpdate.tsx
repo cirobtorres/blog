@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { cn, focusRing } from "../../../../../utils/variants";
 import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { Button } from "../../../../Button";
-import { useArticleStore } from "../../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../../Fieldset";
 import { toast } from "sonner";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
@@ -18,16 +17,18 @@ import { ArticlePopoverButton } from "../ArticlePopoverButton";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
 import ArticleButton from "../ArticleButton";
-import AlertErrorList from "../AlertErrorList";
+import InputAlerts from "../AlertErrorList";
 import putSaveArticle from "../../../../../services/article/putSaveArticle";
 import putPublishArticle from "../../../../../services/article/putPublishArticle";
 import {
   ArticleBannerButton,
   ArticleMediaManager,
 } from "../../../../Editors/editors/ArticleEditorImage";
-import { FileProvider } from "../../../../../providers/FileProvider";
+import { ArticleStoreProvider } from "../../../../../providers/ArticleStoreProvider";
 import { useSession } from "next-auth/react";
 import { Alert } from "../../../../Alert";
+import { parseBlocks } from "../../../../../utils/editors";
+import BlocksInput from "../BlocksInput";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -44,16 +45,15 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export function ArticleUpdate(articles: Article) {
+export function ArticleUpdate(article: Article) {
   const { data: session, status: sessionStatus } = useSession();
   const user = session?.user;
-  const { blocks } = useArticleStore();
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
     null,
   );
   const [, setIsOpenState] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState<Tag[]>(
-    () => articles.tags,
+    () => article.tags,
   );
 
   const router = useRouter();
@@ -68,7 +68,6 @@ export function ArticleUpdate(articles: Article) {
       }
 
       formData.set("userId", user.id);
-      formData.set("body", JSON.stringify(blocks));
 
       const publishSuccess = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
@@ -108,7 +107,6 @@ export function ArticleUpdate(articles: Article) {
       }
 
       formData.set("userId", user.id);
-      formData.set("body", JSON.stringify(blocks));
 
       const success = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
@@ -181,112 +179,159 @@ export function ArticleUpdate(articles: Article) {
     });
   };
 
+  const initialBlocks = React.useMemo(
+    () => parseBlocks(article.body),
+    [article.body],
+  );
+
   return (
-    <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
-      <form onSubmit={onSubmit}>
-        <FileProvider>
-          <ArticleMediaManager />
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="w-full text-3xl font-extrabold">Editar artigo</h1>
-            <div className="w-full flex justify-end items-center gap-2">
-              <ArticleButton
-                type="submit"
-                name="intent"
-                value="save"
-                variant="link"
+    <ArticleStoreProvider
+      key={article.id}
+      initial={{
+        title: article.title,
+        slug: article.slug,
+        bannerMediaId: article.banner?.id ?? null,
+        bannerUrl: article.banner?.url ?? null,
+        bannerAlt: article.banner?.alt ?? null,
+        blocks: initialBlocks,
+      }}
+    >
+      <ArticleMediaManager />
+      <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
+        <form onSubmit={onSubmit} className="w-full flex flex-col gap-2">
+          <HiddenInputs {...article} />
+          <Row className="justify-between mb-4">
+            <Col>
+              <h1 className="text-3xl font-extrabold">Editar artigo</h1>
+            </Col>
+            <Col className="flex justify-end items-center gap-2">
+              <Buttons
                 disabled={isPublishPending || isSavePending}
-                className="w-full max-w-30 h-8"
-              >
-                Salvar
-              </ArticleButton>
-              <ArticleButton
-                type="submit"
-                name="intent"
-                value="publish"
-                disabled={isPublishPending || isSavePending}
-                className="w-full max-w-30 h-8"
-              >
-                Publicar
-              </ArticleButton>
-              <ArticlePopoverButton
-                articleId={articles.id}
-                status={articles.status}
+                {...article}
               />
-            </div>
-          </div>
-          <AlertErrorList state={saveState || publishState} />
-          <div className="w-full flex flex-col gap-2">
-            <input
-              hidden
-              type="hidden"
-              className="appearance-none"
-              name="id"
-              value={articles.id}
-            />
-            <input
-              hidden
-              type="hidden"
-              className="appearance-none"
-              name="status"
-              value={articles.status}
-            />
-            {articles.hasUnpublishedChanges && (
-              <Alert
-                title="Tem informação salva ainda não publicada"
-                variant="warn"
-              >
-                <p>
-                  Existem alterações salvas, mas que estão pendentes de
-                  publicação.
-                </p>
-              </Alert>
-            )}
-            <div className="w-full flex gap-2">
-              <div className="w-full">
-                <ArticleEditorTitle
-                  defaultVal={articles.title}
-                  error={!!errors?.title?.errors}
-                />
-                <FieldsetError error={errors?.title?.errors} />
-              </div>
-              <div className="w-full">
-                <ArticleEditorSubtitle
-                  defaultVal={articles.subtitle}
-                  maxLength={200}
-                  error={!!errors?.subtitle?.errors}
-                />
-                <FieldsetError error={errors?.subtitle?.errors} />
-              </div>
-            </div>
-            <div className="w-full flex gap-2">
-              <div className="w-full">
-                <ArticleEditorTag
-                  tags={selectedTags}
-                  setTags={setSelectedTags}
-                  error={!!errors?.tags?.errors}
-                />
-                <FieldsetError error={errors?.tags?.errors} />
-              </div>
-              <div className="w-full">
-                <ArticleEditorSlug
-                  articleId={articles.id}
-                  defaultVal={articles.slug}
-                  error={!!errors?.slug?.errors}
-                />
-                <FieldsetError error={errors?.slug?.errors} />
-              </div>
-            </div>
-            <ArticleBannerButton defaultBanner={articles.media} />
-            <FieldsetError error={errors?.banner?.errors} />
-          </div>
-          <div className="mt-2">
-            <BlockList defaultVal={articles.body} />
-          </div>
-          <div className="mt-2">
-            <AddBlockButton />
-          </div>
-        </FileProvider>
-      </form>
-    </section>
+            </Col>
+          </Row>
+          <InputAlerts state={saveState || publishState} />
+          <FormAlerts {...article} />
+          <Row className="gap-2">
+            <Col>
+              <ArticleEditorTitle
+                defaultVal={article.title}
+                error={!!errors?.title?.errors}
+              />
+              <FieldsetError error={errors?.title?.errors} />
+            </Col>
+            <Col>
+              <ArticleEditorSubtitle
+                defaultVal={article.subtitle}
+                maxLength={200}
+                error={!!errors?.subtitle?.errors}
+              />
+              <FieldsetError error={errors?.subtitle?.errors} />
+            </Col>
+          </Row>
+          <Row className="gap-2">
+            <Col>
+              <ArticleEditorTag
+                tags={selectedTags}
+                setTags={setSelectedTags}
+                error={!!errors?.tags?.errors}
+              />
+              <FieldsetError error={errors?.tags?.errors} />
+            </Col>
+            <Col>
+              <ArticleEditorSlug
+                articleId={article.id}
+                defaultVal={article.slug}
+                error={!!errors?.slug?.errors}
+              />
+              <FieldsetError error={errors?.slug?.errors} />
+            </Col>
+          </Row>
+          <ArticleBannerButton />
+          <FieldsetError error={errors?.banner?.errors} />
+          <BlockList defaultVal={article.body} />
+          <AddBlockButton />
+        </form>
+      </section>
+    </ArticleStoreProvider>
   );
 }
+
+const Buttons = ({ disabled, ...article }: Article & { disabled: boolean }) => (
+  <>
+    <ArticleButton
+      type="submit"
+      name="intent"
+      value="save"
+      variant="link"
+      disabled={disabled}
+      className="w-full max-w-30 h-8"
+    >
+      Salvar
+    </ArticleButton>
+    <ArticleButton
+      type="submit"
+      name="intent"
+      value="publish"
+      disabled={disabled}
+      className="w-full max-w-30 h-8"
+    >
+      Publicar
+    </ArticleButton>
+    <ArticlePopoverButton articleId={article.id} status={article.status} />
+  </>
+);
+
+const Row = ({
+  children,
+  className,
+  ...props
+}: Omit<React.ComponentProps<"div">, "className"> & { className?: string }) => (
+  <div
+    className={cn(
+      "w-full flex flex-row justify-center items-center",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+const Col = ({
+  children,
+  className,
+  ...props
+}: Omit<React.ComponentProps<"div">, "className"> & { className?: string }) => (
+  <div className={cn("w-full", className)} {...props}>
+    {children}
+  </div>
+);
+
+const HiddenInputs = ({ ...article }: Article) => (
+  <>
+    <input
+      hidden
+      type="hidden"
+      className="appearance-none"
+      name="id"
+      value={article.id}
+    />
+    <input
+      hidden
+      type="hidden"
+      className="appearance-none"
+      name="status"
+      value={article.status}
+    />
+    <BlocksInput />
+  </>
+);
+
+const FormAlerts = ({ ...article }: Article) =>
+  article.hasUnpublishedChanges && (
+    <Alert title="Tem informação salva ainda não publicada" variant="warn">
+      <p>Existem alterações salvas, mas que estão pendentes de publicação.</p>
+    </Alert>
+  );

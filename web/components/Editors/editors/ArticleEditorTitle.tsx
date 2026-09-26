@@ -2,8 +2,8 @@
 
 import React from "react";
 import { cn, focusWithinRing } from "../../../utils/variants";
-import { useArticleStore } from "../../../zustand-store/article-state";
 import { SentenceCounter } from "./utils";
+import { useArticleStore } from "../../../providers/ArticleStoreProvider";
 
 export function ArticleEditorTitle({
   defaultVal,

@@ -222,7 +222,7 @@ public class MediaService {
         Map<?, ?> destroyParams = ObjectUtils.asMap("resource_type", resourceType);
         Map<?, ?> response = cloudinary.uploader().destroy(media.getPublicId(), destroyParams);
 
-        if (!"ok".equals(response.get("result")) && !"not_found".equals(response.get("result"))) {
+        if (!"ok".equals(response.get("result")) && !"not found".equals(response.get("result"))) {
             throw new RuntimeException("Cloudinary delete fail: " + response.get("result"));
         }
 
@@ -241,20 +241,59 @@ public class MediaService {
 
         for (Media media : mediaList) {
             try {
-                Map<?, ?> result = cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
+                String resourceType = "image";
+                if (media.getType() == MediaType.VIDEO) resourceType = "video";
+                if (media.getType() == MediaType.RAW) resourceType = "raw";
+
+                Map<?, ?> result = cloudinary.uploader().destroy(
+                        media.getPublicId(),
+                        ObjectUtils.asMap("resource_type", resourceType)
+                );
 
                 if (!"ok".equals(result.get("result")) && !"not found".equals(result.get("result"))) {
-                    throw new RuntimeException("Cloudinary delete fail while deleting banner of public_id=" + media.getPublicId());
+                    throw new RuntimeException("Cloudinary delete fail while deleting media public_id=" + media.getPublicId());
                 }
             } catch (Exception e) {
                 // Because we are inside a @Transactional, the RuntimeException must be thrown here in order to trigger a rollback
-                throw new RuntimeException("Cloudinary fail: ", e);
+                throw new RuntimeException("Cloudinary fail on public_id=" + media.getPublicId() + ": ", e);
             }
         }
 
         List<UUID> mediaIds = mediaList.stream().map(Media::getId).toList();
 
         mediaRepository.deleteAllById(mediaIds);
+    }
+
+    public static class MediaSpecification {
+        public static Specification<Media> filterBy(String field, String rawValue) {
+            return (root, query, cb) -> {
+                String[] parts = rawValue.split("=");
+                if (parts.length < 2) return null;
+
+                FilterQueryParams condition = FilterQueryParams.fromString(parts[0]);
+                String valueStr = parts[1];
+
+                if (field.equals("createdAt") || field.equals("updatedAt")) {
+                    Instant startOfDay = Instant.parse(valueStr);
+                    Instant endOfDay = startOfDay.plus(Duration.ofDays(1)).minus(Duration.ofMillis(1));
+
+                    return switch (condition) {
+                        case isGreaterThan -> cb.greaterThan(root.get(field), startOfDay);
+                        case isGreaterThanOrEqualTo -> cb.greaterThanOrEqualTo(root.get(field), startOfDay);
+                        case isLowerThan -> cb.lessThan(root.get(field), startOfDay);
+                        case isLowerThanOrEqualTo -> cb.lessThanOrEqualTo(root.get(field), endOfDay);
+                        case isNot -> cb.or(
+                                cb.lessThan(root.get(field), startOfDay),
+                                cb.greaterThan(root.get(field), endOfDay)
+                        );
+                        default -> cb.between(root.get(field), startOfDay, endOfDay);
+                    };
+                }
+                return condition == FilterQueryParams.isNot
+                        ? cb.notEqual(root.get(field), valueStr)
+                        : cb.equal(root.get(field), valueStr);
+            };
+        }
     }
 
     private Media convertToEntity(@NonNull MediaDTO dto) {
@@ -306,37 +345,5 @@ public class MediaService {
         if (path == null || path.isBlank()) return "file";
         String[] parts = path.split("/");
         return parts[parts.length - 1];
-    }
-
-    public static class MediaSpecification {
-        public static Specification<Media> filterBy(String field, String rawValue) {
-            return (root, query, cb) -> {
-                String[] parts = rawValue.split("=");
-                if (parts.length < 2) return null;
-
-                FilterQueryParams condition = FilterQueryParams.fromString(parts[0]);
-                String valueStr = parts[1];
-
-                if (field.equals("createdAt") || field.equals("updatedAt")) {
-                    Instant startOfDay = Instant.parse(valueStr);
-                    Instant endOfDay = startOfDay.plus(Duration.ofDays(1)).minus(Duration.ofMillis(1));
-
-                    return switch (condition) {
-                        case isGreaterThan -> cb.greaterThan(root.get(field), startOfDay);
-                        case isGreaterThanOrEqualTo -> cb.greaterThanOrEqualTo(root.get(field), startOfDay);
-                        case isLowerThan -> cb.lessThan(root.get(field), startOfDay);
-                        case isLowerThanOrEqualTo -> cb.lessThanOrEqualTo(root.get(field), endOfDay);
-                        case isNot -> cb.or(
-                                cb.lessThan(root.get(field), startOfDay),
-                                cb.greaterThan(root.get(field), endOfDay)
-                        );
-                        default -> cb.between(root.get(field), startOfDay, endOfDay);
-                    };
-                }
-                return condition == FilterQueryParams.isNot
-                        ? cb.notEqual(root.get(field), valueStr)
-                        : cb.equal(root.get(field), valueStr);
-            };
-        }
     }
 }

@@ -4,6 +4,7 @@ import com.cirobtorres.blog.api.dtos.ArticleDTO;
 import com.cirobtorres.blog.api.dtos.ArticleSaveDTO;
 import com.cirobtorres.blog.api.dtos.ArticleSlugDTO;
 import com.cirobtorres.blog.api.services.ArticlesService;
+import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,11 +41,7 @@ public class ArticlesController {
             @PathVariable String slug,
             Authentication auth
     ) {
-        UUID userId = null;
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-            userId = UUID.fromString(auth.getName());
-        }
-        ArticleDTO dto = articlesService.getByUrlMetadata(userId, year, month, day, slug);
+        ArticleDTO dto = articlesService.getByUrlMetadata(optionalUserId(auth), year, month, day, slug);
         return ResponseEntity.ok(dto);
     }
 
@@ -64,8 +61,7 @@ public class ArticlesController {
             Authentication auth,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        UUID userId = UUID.fromString(auth.getName());
-        return ResponseEntity.ok(articlesService.getAllByAuthor(userId, pageable));
+        return ResponseEntity.ok(articlesService.getAllByAuthor(requireUserId(auth), pageable));
     }
 
     @GetMapping("me/id/{id}")
@@ -74,8 +70,7 @@ public class ArticlesController {
             @PathVariable UUID id,
             Authentication auth
     ) {
-        UUID userId = UUID.fromString(auth.getName());
-        return ResponseEntity.ok(articlesService.getByIdForAuthor(id, userId));
+        return ResponseEntity.ok(articlesService.getByIdForAuthor(id, requireUserId(auth)));
     }
 
     @GetMapping("slug")
@@ -110,7 +105,7 @@ public class ArticlesController {
     // POST---------------------------------------------------------------------------------------------------
     @PostMapping
     public ResponseEntity<ArticleDTO> createArticle(
-            @RequestBody ArticleSaveDTO createArticleDTO
+            @Valid @RequestBody ArticleSaveDTO createArticleDTO
     ) {
         ArticleDTO article = articlesService.createArticle(createArticleDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
@@ -128,22 +123,20 @@ public class ArticlesController {
     @PutMapping("id/{id}/draft")
     public ResponseEntity<ArticleDTO> saveDraftArticle(
             @PathVariable UUID id,
-            @RequestBody ArticleSaveDTO createArticleDTO,
+            @Valid @RequestBody ArticleSaveDTO createArticleDTO,
             Authentication auth
     ) {
-        UUID userId = UUID.fromString(auth.getName());
-        ArticleDTO article = articlesService.putDraft(id, createArticleDTO, userId);
+        ArticleDTO article = articlesService.putDraft(id, createArticleDTO, requireUserId(auth));
         return ResponseEntity.ok(article);
     }
 
     @PutMapping("id/{id}/publish")
     public ResponseEntity<ArticleDTO> publishArticle(
             @PathVariable UUID id,
-            @RequestBody ArticleSaveDTO createArticleDTO,
+            @Valid @RequestBody ArticleSaveDTO createArticleDTO,
             Authentication auth
     ) {
-        UUID userId = UUID.fromString(auth.getName());
-        ArticleDTO article = articlesService.putPublish(id, createArticleDTO, userId);
+        ArticleDTO article = articlesService.putPublish(id, createArticleDTO, requireUserId(auth));
         return ResponseEntity.ok(article);
     }
 
@@ -154,5 +147,16 @@ public class ArticlesController {
     ) {
         articlesService.deleteArticle(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private static UUID optionalUserId(Authentication auth) {
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            return UUID.fromString(auth.getName());
+        }
+        return null;
+    }
+
+    private static UUID requireUserId(Authentication auth) {
+        return UUID.fromString(auth.getName());
     }
 }

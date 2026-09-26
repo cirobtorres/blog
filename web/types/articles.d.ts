@@ -4,7 +4,7 @@ type Article = {
   subtitle: string;
   slug: string;
   author: Author;
-  media: ImageEditor;
+  banner: ImageEditor;
   tags: Tag[];
   likedByCurrentUser: boolean;
   hasUnpublishedChanges: boolean;

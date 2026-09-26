@@ -50,7 +50,7 @@ public class Articles {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Revisions> revisions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticlesLike> likes = new ArrayList<>();
 
     @Column(name = "created_at", updatable = false, nullable = false)

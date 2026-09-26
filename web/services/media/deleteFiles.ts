@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiServerUrls, protectedWebUrls } from "../../routing/routes";
+import { apiServerUrls } from "../../routing/routes";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { serverFetch } from "../serverFetch";
 

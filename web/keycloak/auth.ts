@@ -55,10 +55,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: WEB_CLIENT_ID!,
       clientSecret: WEB_CLIENT_SECRET!,
       issuer: ISSUER,
+      // authorization: {
+      //   params: { scope: "openid email profile offline_access" }, // Offline tokens
+      // },
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async jwt({ token, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;

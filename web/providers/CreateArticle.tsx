@@ -2,12 +2,25 @@
 
 import React from "react";
 
-const ArticleContext = React.createContext<any>(null);
+interface ArticleFormData {
+  title: string;
+  bannerUrl: string;
+}
+
+interface ArticleContextValue {
+  formData: ArticleFormData;
+  updateField: (field: keyof ArticleFormData, value: string) => void;
+}
+
+const ArticleContext = React.createContext<ArticleContextValue | null>(null);
 
 export function ArticleProvider({ children }: { children: React.ReactNode }) {
-  const [formData, setFormData] = React.useState({ title: "", bannerUrl: "" });
+  const [formData, setFormData] = React.useState<ArticleFormData>({
+    title: "",
+    bannerUrl: "",
+  });
 
-  const updateField = (field: string, value: string) => {
+  const updateField = (field: keyof ArticleFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 

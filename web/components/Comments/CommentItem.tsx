@@ -16,6 +16,7 @@ import putComment from "../../services/comment/putComment";
 import { signIn, useSession } from "next-auth/react";
 import CommentLikeButton from "./CommentLikeButton";
 import CommentDeleteButton from "./CommentDeleteButton";
+import CommentEditButton from "./CommentEditButton";
 
 interface TiptapNode {
   type: string;
@@ -297,12 +298,6 @@ export default function CommentItem({
   );
 }
 
-const CommentEditButton = ({ onClick }: { onClick: () => void }) => (
-  <Button type="button" variant="ghost" onClick={onClick} className="w-20 h-8">
-    Editar
-  </Button>
-);
-
 const CommentReplyLength = ({ length }: { length: number }) => (
   <span className="flex items-center gap-2 text-sm text-neutral-400 dark:text-neutral-500">
     <svg
@@ -330,7 +325,7 @@ const CommentMenuButton = ({ isMenuOpen }: { isMenuOpen: boolean }) => (
       className={cn(
         "size-8 px-0",
         isMenuOpen &&
-          "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-300 dark:bg-stone-800",
+          "text-neutral-900 dark:text-neutral-100 border-stone-400 dark:border-stone-600 bg-stone-100 dark:bg-stone-800",
       )}
     >
       <svg

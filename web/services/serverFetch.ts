@@ -10,10 +10,6 @@ export async function serverFetch(url: string, options: RequestInit = {}) {
   if (token && !session?.error) {
     headers.set("Authorization", `Bearer ${token}`);
   } else {
-    console.warn(
-      "serverFetch failed to append bearer token:",
-      token && !session?.error,
-    );
   }
 
   const response = await fetch(url, {

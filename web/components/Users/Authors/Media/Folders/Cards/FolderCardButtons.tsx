@@ -1,6 +1,5 @@
 "use client";
 
-import { useArticleStore } from "../../../../../../zustand-store/article-state";
 import FolderCardButton from "./FolderCardButton";
 import {
   FolderCardGridWrapper,
@@ -9,6 +8,7 @@ import {
 } from "./FolderCardsUtils";
 import { FolderCardsLoadingSimplified } from "./FolderCardsLoading";
 import { useFoldersWithCount } from "../../../../../../services/hooks/folders/hook-folders";
+import { useArticleStore } from "../../../../../../providers/ArticleStoreProvider";
 
 export default function FolderCardButtons() {
   const { currentModalFolder, setCurrentModalFolder } = useArticleStore();

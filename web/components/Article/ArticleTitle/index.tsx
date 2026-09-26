@@ -10,8 +10,8 @@ export default function ArticleTitle(article: Article) {
   return (
     <section className="w-full inline-grid">
       <ArticleBanner
-        bannerUrl={article.media.url}
-        bannerAlt={article.media.alt}
+        bannerUrl={article.banner.url}
+        bannerAlt={article.banner.alt}
       />
       <div className="lg:col-start-1 lg:row-start-1 lg:px-10 lg:mt-auto lg:mb-0 lg:pt-10 border-t lg:backdrop-blur-xl lg:bg-linear-to-t dark:lg:from-25% not-dark:lg:bg-stone-100 dark:lg:from-stone-925 dark:lg:to-stone-925/25">
         <div className="w-full max-w-article-title p-6 pb-0 lg:mx-auto lg:px-10">

@@ -6,7 +6,6 @@ import FilePaginationURL from "../Pagination/FilePaginationURL";
 import { FileCardSectionWrapper, FileCardTitle } from "./FileCardUtils";
 import FileCardLink from "./FileCardLink";
 import { serverFetch } from "../../../../../../services/serverFetch";
-import { cn } from "../../../../../../utils/variants";
 
 const TAG_REVALIDATE_TIME = 60 * 60 * 24 * 7; // 1 week
 

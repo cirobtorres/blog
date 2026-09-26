@@ -8,22 +8,22 @@ import { AddBlockButton, BlockList } from "../../../../Editors/blocks";
 import { convertToLargeDate } from "../../../../../utils/date";
 import { buttonVariants, cn } from "../../../../../utils/variants";
 import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
-import { useArticleStore } from "../../../../../zustand-store/article-state";
 import { FieldsetError } from "../../../../Fieldset";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
 import { ButtonPlaceholder } from "../ArticlePopoverButton";
 import postArticle from "../../../../../services/article/postArticle";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
-import AlertErrorList from "../AlertErrorList";
+import InputAlerts from "../AlertErrorList";
 import ArticleButton from "../ArticleButton";
 import { useRouter } from "next/navigation";
 import {
   ArticleBannerButton,
   ArticleMediaManager,
 } from "../../../../Editors/editors/ArticleEditorImage";
-import { FileProvider } from "../../../../../providers/FileProvider";
+import { ArticleStoreProvider } from "../../../../../providers/ArticleStoreProvider";
 import { useSession } from "next-auth/react";
+import BlocksInput from "../BlocksInput";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -44,20 +44,12 @@ export function ArticleCreate() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, status } = useSession();
   const user = session?.user;
-  const { blocks } = useArticleStore();
   const [selectedTags, setSelectedTags] = React.useState<Tag[]>([]);
   const [errors, setErrors] = React.useState<ArticleErrors | null | undefined>(
     null,
   );
   const [, setIsOpenState] = React.useState(false);
   const { replace } = useRouter();
-
-  const { reset } = useArticleStore();
-
-  React.useEffect(() => {
-    // Preventing zustand from loading state saved from previous articles
-    return () => reset();
-  }, [reset]);
 
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
@@ -69,7 +61,6 @@ export function ArticleCreate() {
       }
 
       formData.set("userId", user.id);
-      formData.set("body", JSON.stringify(blocks));
 
       const success = (serverResponse: ActionState) => {
         const now = convertToLargeDate(new Date());
@@ -120,10 +111,10 @@ export function ArticleCreate() {
   };
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
-      <form action={action} onSubmit={onSubmit}>
-        <FileProvider>
-          <ArticleMediaManager />
+    <ArticleStoreProvider>
+      <ArticleMediaManager />
+      <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
+        <form action={action} onSubmit={onSubmit}>
           <div className="flex justify-between items-center mb-6">
             <h1 className="w-full text-3xl font-extrabold">
               Escrever novo artigo
@@ -147,7 +138,7 @@ export function ArticleCreate() {
               <ButtonPlaceholder />
             </div>
           </div>
-          <AlertErrorList state={state} />
+          <InputAlerts state={state} />
           <div className="w-full flex flex-col gap-2">
             <div className="w-full flex gap-2">
               <div className="w-full">
@@ -180,13 +171,14 @@ export function ArticleCreate() {
             <FieldsetError error={errors?.banner?.errors} />
           </div>
           <div className="mt-2">
+            <BlocksInput />
             <BlockList />
           </div>
           <div className="mt-2">
             <AddBlockButton />
           </div>
-        </FileProvider>
-      </form>
-    </section>
+        </form>
+      </section>
+    </ArticleStoreProvider>
   );
 }

@@ -13,8 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "../../../DropDownMenu";
 import { Button } from "../../../Button";
-import { useArticleStore } from "../../../../zustand-store/article-state";
 import { cn, focusRing } from "../../../../utils/variants";
+import { useArticleStore } from "../../../../providers/ArticleStoreProvider";
 
 export default function FolderBreadcrumbState() {
   const { currentModalFolder, setCurrentModalFolder } = useArticleStore();

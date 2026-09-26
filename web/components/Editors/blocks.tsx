@@ -4,7 +4,6 @@ import React from "react";
 import { EditorsAccordion } from "./accordion";
 import { HtmlEditor } from "./editors/ArticleEditorHtml";
 import { CodeEditor } from "./editors/ArticleEditorCode";
-import { useArticleStore } from "../../zustand-store/article-state";
 import { AddAccordionButton } from "./addAccordionButton";
 import { FieldsetError } from "../Fieldset";
 import AlertEditor from "./editors/ArticleEditorAlert";
@@ -13,6 +12,7 @@ import {
   ArticleImageButton,
   ArticleImagesButton,
 } from "./editors/ArticleEditorImage";
+import { useArticleStore } from "../../providers/ArticleStoreProvider";
 
 const BlockItem = React.memo(function BlockItem({
   block,
@@ -21,9 +21,13 @@ const BlockItem = React.memo(function BlockItem({
   block: Blocks;
   error?: BlockPropertyErrors;
 }) {
-  const { updateBlock, deleteBlock, toggleBlockLock, moveBlockDownward } =
-    useArticleStore();
-  const { openMediaLibrary } = useArticleStore();
+  const {
+    updateBlock,
+    deleteBlock,
+    toggleBlockLock,
+    moveBlockDownward,
+    openMediaLibrary,
+  } = useArticleStore();
   const dataErrors = error?.data?.properties as BlockDataErrors | undefined;
 
   switch (block.type) {
@@ -204,7 +208,7 @@ const BlockList = ({
   return (
     blocks.length > 0 && (
       <div className="space-y-2">
-        {blocks.map((block) => (
+        {blocks.map((block: Blocks) => (
           <BlockItem key={block.id} block={block} error={errorMap[block.id]} />
         ))}
       </div>

@@ -5,13 +5,12 @@ import { DashedBackground } from "../../../../../DashedBackground";
 import {
   FileCardFloatingButtonsWrapper,
   FileCardInfos,
-  FileCardWrapper,
+  FileCardButtonWrapper,
 } from "./FileCardUtils";
 import { Checkbox } from "../../../../../Fieldset/Checkbox";
-import React from "react";
-import { SelectionContext } from "../../../../../Editors/editors/ArticleEditorImage";
 import { ExpandButton } from "./Buttons/ExpandButton";
 import DownloadButton from "./Buttons/DownloadButton";
+import { useFile } from "../../../../../../providers/FileProvider";
 
 export default function FileCardButton({
   file,
@@ -20,31 +19,11 @@ export default function FileCardButton({
   file: Media;
   isPriority?: boolean;
 }) {
-  const context = React.useContext(SelectionContext);
-  if (!context) return null;
-
-  const { tempSelection, setTempSelection, multiSelect } = context;
-  const isChecked = tempSelection.some((i) => i.id === file.id);
-
-  const toggle = () => {
-    if (isChecked) {
-      setTempSelection(tempSelection.filter((i) => i.id !== file.id));
-    } else {
-      if (multiSelect) {
-        setTempSelection([
-          ...tempSelection,
-          { id: file.id, url: file.url, alt: file.alt, caption: file.caption },
-        ]);
-      } else {
-        setTempSelection([
-          { id: file.id, url: file.url, alt: file.alt, caption: file.caption },
-        ]);
-      }
-    }
-  };
+  const { selectedItems, toggleItem } = useFile();
+  const isChecked = selectedItems.some((i) => i.id === file.id);
 
   return (
-    <FileCardWrapper>
+    <FileCardButtonWrapper>
       <label
         htmlFor={"card-" + file.publicId}
         className="relative w-full h-full overflow-hidden"
@@ -54,7 +33,7 @@ export default function FileCardButton({
           id={"card-" + file.publicId}
           className="absolute z-10 size-6 rounded left-2 top-2"
           checked={isChecked}
-          onCheckedChange={toggle}
+          onCheckedChange={() => toggleItem(file)}
         />
         <Image
           src={file.url ?? "https://placehold.co/1920x1080/000/fff/jpeg"} // TODO
@@ -71,6 +50,6 @@ export default function FileCardButton({
         <DownloadButton {...file} />
       </FileCardFloatingButtonsWrapper>
       <FileCardInfos file={file} />
-    </FileCardWrapper>
+    </FileCardButtonWrapper>
   );
 }

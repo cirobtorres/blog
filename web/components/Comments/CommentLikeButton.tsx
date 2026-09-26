@@ -7,6 +7,8 @@ import { signIn } from "next-auth/react";
 import { toggleCommentLike } from "../../services/commentLike/toggleCommentLike";
 import { useDebouncedCallback } from "use-debounce";
 
+const DEBOUNCE_DURATION = 2000; // ms
+
 export default function CommentLikeButton({
   comment,
   isSignedIn,
@@ -21,14 +23,23 @@ export default function CommentLikeButton({
   size?: number;
 }) {
   const likeHash = `comment-like-${comment.id}`;
-  const [liked, setLiked] = React.useState<boolean>(
+  const [likedByUser, setLikedByUser] = React.useState<boolean>(
     Boolean(comment.likedByCurrentUser),
   );
-  const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
-  const [likeCount, setLikeCount] = React.useState<number>(
-    comment.likeCount ?? 0,
+  const [fromServer, setFromServer] = React.useState({
+    liked: Boolean(comment.likedByCurrentUser),
+    count: comment.likeCount ?? 0,
+  });
+  const likeCount = Math.max(
+    0,
+    fromServer.count +
+      (likedByUser === fromServer.liked ? 0 : likedByUser ? 1 : -1),
   );
-  const initialLikedRef = React.useRef(Boolean(comment.likedByCurrentUser));
+  const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
+
+  const likedRef = React.useRef(fromServer.liked);
+  const serverRef = React.useRef(fromServer);
+  const inFlightRef = React.useRef(false);
 
   React.useEffect(() => {
     const checkHash = () => {
@@ -59,26 +70,34 @@ export default function CommentLikeButton({
     return () => window.removeEventListener("hashchange", checkHash);
   }, [likeHash]);
 
-  const debouncedToggleLike = useDebouncedCallback(
-    async (targetLikedState: boolean) => {
-      // Click state = server state: user toggled his like/dislike quickly
-      if (targetLikedState === initialLikedRef.current) return;
+  const sync = React.useCallback(async () => {
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
 
-      const result = await toggleCommentLike({ commentId: comment.id });
+    try {
+      // As long as the intention differs from the server's, toggle it
+      while (likedRef.current !== serverRef.current.liked) {
+        const result = await toggleCommentLike({ commentId: comment.id });
 
-      if (!result.ok || !result.data) {
-        // Rollback
-        setLiked(initialLikedRef.current);
-        setLikeCount(comment.likeCount ?? 0);
-      } else {
-        // Success: match with server
-        initialLikedRef.current = result.data.liked;
-        setLiked(result.data.liked);
-        setLikeCount(result.data.likeCount);
+        if (!result.ok || !result.data) {
+          // Rollback
+          likedRef.current = serverRef.current.liked;
+          setLikedByUser(serverRef.current.liked);
+          return;
+        }
+
+        serverRef.current = {
+          liked: result.data.liked,
+          count: result.data.likeCount,
+        };
+        setFromServer(serverRef.current);
       }
-    },
-    400,
-  );
+    } finally {
+      inFlightRef.current = false;
+    }
+  }, [comment.id]);
+
+  const debouncedSync = useDebouncedCallback(sync, DEBOUNCE_DURATION);
 
   const handleLikeOrDislike = async () => {
     if (!isSignedIn) {
@@ -89,14 +108,11 @@ export default function CommentLikeButton({
 
     setIsHighlightedLike(false);
 
-    // Optimistic update
-    const nextLiked = !liked;
-    const nextCount = nextLiked ? likeCount + 1 : Math.max(0, likeCount - 1);
+    const next = !likedRef.current; // Prevents outdated closure (stale closure)
+    likedRef.current = next;
+    setLikedByUser(next); // Optimistic (visual first, resolve later)
 
-    setLiked(nextLiked);
-    setLikeCount(nextCount);
-
-    debouncedToggleLike(nextLiked);
+    debouncedSync();
   };
 
   return (
@@ -122,7 +138,9 @@ export default function CommentLikeButton({
           strokeLinecap="round"
           strokeLinejoin="round"
           className={cn(
-            liked ? "stroke-primary fill-primary" : "stroke-current fill-none",
+            likedByUser
+              ? "stroke-primary fill-primary"
+              : "stroke-current fill-none",
           )}
         >
           <path d="M9 19a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-6a1 1 0 0 1 1-1h3.293a.707.707 0 0 0 .5-1.207l-7.086-7.086a1 1 0 0 0-1.414 0l-7.086 7.086a.707.707 0 0 0 .5 1.207H8a1 1 0 0 1 1 1z" />

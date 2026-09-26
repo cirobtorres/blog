@@ -37,4 +37,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
           AND c.isBlocked = false
     """)
     long countVisibleCommentsByArticleId(UUID articleId);
+
+    List<Comment> findByArticleIdAndParentIsNull(UUID articleId);
 }

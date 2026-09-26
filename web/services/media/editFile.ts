@@ -46,6 +46,7 @@ export default async function editFile(
     );
 
     if (!response.ok) {
+      console.log(response.status);
       return {
         ...returnState,
         error: "Falha ao editar arquivo.",

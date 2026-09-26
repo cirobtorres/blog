@@ -1,7 +1,7 @@
 "use client";
 
+import { useArticleStore } from "../../../../../../providers/ArticleStoreProvider";
 import { useFilesWithCount } from "../../../../../../services/hooks/files/hook-files";
-import { useArticleStore } from "../../../../../../zustand-store/article-state";
 import MediaFileSearch from "../Header/MediaFileSearch";
 import MediaFileSorting from "../Header/MediaFileSorting";
 import FilePaginationState from "../Pagination/FilePaginationState";

@@ -17,10 +17,8 @@ const geistMono = Geist_Mono({
 
 export default async function RootLayout({
   children,
-  signInModal,
 }: Readonly<{
   children: React.ReactNode;
-  signInModal: React.ReactNode;
 }>) {
   return (
     <html lang="pt">
@@ -30,7 +28,6 @@ export default async function RootLayout({
         <SessionProvider>
           <SessionGuard>
             {children}
-            {signInModal}
             <Toaster
               toastOptions={{
                 // unstyled: true,

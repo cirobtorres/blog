@@ -7,12 +7,12 @@ import DownloadButton from "./Buttons/DownloadButton";
 import { ExpandButton } from "./Buttons/ExpandButton";
 import EditButton from "./Buttons/EditButton";
 import DeleteButton from "./Buttons/DeleteButton";
-import { useFile } from "../../../../../../providers/FileProvider";
 import {
   FileCardFloatingButtonsWrapper,
   FileCardInfos,
-  FileCardWrapper,
+  FileCardLinkWrapper,
 } from "./FileCardUtils";
+import { useFile } from "../../../../../../providers/FileProvider";
 
 export default function FileCardLink({
   file,
@@ -23,8 +23,9 @@ export default function FileCardLink({
 }) {
   const { selectedItems, toggleItem } = useFile();
   const isChecked = selectedItems.some((i) => i.id === file.id);
+
   return (
-    <FileCardWrapper>
+    <FileCardLinkWrapper>
       <label
         htmlFor={"card-" + file.publicId}
         className="relative w-full h-full overflow-hidden"
@@ -53,6 +54,6 @@ export default function FileCardLink({
         <DeleteButton {...file} />
       </FileCardFloatingButtonsWrapper>
       <FileCardInfos file={file} />
-    </FileCardWrapper>
+    </FileCardLinkWrapper>
   );
 }

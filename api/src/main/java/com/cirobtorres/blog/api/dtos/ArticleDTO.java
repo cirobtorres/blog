@@ -17,7 +17,7 @@ public record ArticleDTO(
         String slug,
         Set<TagDTO> tags,
         AuthorArticleDTO author,
-        MediaArticleDTO media,
+        MediaArticleDTO banner,
         boolean likedByCurrentUser,
         boolean hasUnpublishedChanges,
         String body,

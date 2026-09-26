@@ -120,8 +120,8 @@ const LastPublishedArticle = ({ article }: { article: Article }) => (
   >
     <Image
       id={article.id}
-      src={article.media.url}
-      alt={article.media.alt}
+      src={article.banner.url}
+      alt={article.banner.alt}
       fill
       priority
       className="object-cover z-0"
@@ -155,8 +155,8 @@ const LoopCards = ({ articles }: { articles: Article[] }) => (
           <ArticleCard id={article.id}>
             <ArticleCardImage
               id={article.id}
-              src={article.media.url}
-              alt={article.media.alt}
+              src={article.banner.url}
+              alt={article.banner.alt}
               fill
             />
             <ArticleCardDate>{article.createdAt}</ArticleCardDate>

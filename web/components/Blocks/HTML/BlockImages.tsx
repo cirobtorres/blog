@@ -45,7 +45,7 @@ export default function BlockImages({
   }, [mainApi, onSelect]);
 
   return (
-    <div key={blockType} className="not-first:mt-6 w-full max-w-3xl mx-auto">
+    <div key={blockType} className="not-first:mt-6 w-full mx-auto">
       <Carousel setApi={setMainApi} opts={{ loop: true }}>
         <CarouselContent className="-ml-1">
           {images.map((image) => (

@@ -7,6 +7,8 @@ import { signIn, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
+const DEBOUNCE_DURATION = 2000; // ms
+
 export default function ArticleLikeButton({
   article,
   size = 20,
@@ -19,14 +21,22 @@ export default function ArticleLikeButton({
   const isSignedIn = !!user?.id;
   const currentPath = usePathname();
   const likeHash = `article-like-${article.id}`;
-  const [liked, setLiked] = React.useState<boolean>(
+  const [likedByUser, setLikedByUser] = React.useState<boolean>(
     Boolean(article.likedByCurrentUser),
   );
   const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
-  const [likeCount, setLikeCount] = React.useState<number>(
-    article.likeCount ?? 0,
+  const [fromServer, setFromServer] = React.useState({
+    liked: Boolean(article.likedByCurrentUser),
+    count: article.likeCount ?? 0,
+  });
+  const likeCount = Math.max(
+    0,
+    fromServer.count +
+      (likedByUser === fromServer.liked ? 0 : likedByUser ? 1 : -1),
   );
-  const initialLikedRef = React.useRef(Boolean(article.likedByCurrentUser));
+  const likedRef = React.useRef(fromServer.liked);
+  const serverRef = React.useRef(fromServer);
+  const inFlightRef = React.useRef(false);
 
   React.useEffect(() => {
     const checkHash = () => {
@@ -57,26 +67,34 @@ export default function ArticleLikeButton({
     return () => window.removeEventListener("hashchange", checkHash);
   }, [likeHash]);
 
-  const debouncedToggleLike = useDebouncedCallback(
-    async (targetLikedState: boolean) => {
-      // Click state = server state: user toggled his like/dislike quickly
-      if (targetLikedState === initialLikedRef.current) return;
+  const sync = React.useCallback(async () => {
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
 
-      const result = await toggleArticleLike({ articleId: article.id });
+    try {
+      // As long as the intention differs from the server's, toggle it
+      while (likedRef.current !== serverRef.current.liked) {
+        const result = await toggleArticleLike({ articleId: article.id });
 
-      if (!result.ok || !result.data) {
-        // Rollback
-        setLiked(initialLikedRef.current);
-        setLikeCount(article.likeCount ?? 0);
-      } else {
-        // Success: match with server
-        initialLikedRef.current = result.data.liked;
-        setLiked(result.data.liked);
-        setLikeCount(result.data.likeCount);
+        if (!result.ok || !result.data) {
+          // Rollback
+          likedRef.current = serverRef.current.liked;
+          setLikedByUser(serverRef.current.liked);
+          return;
+        }
+
+        serverRef.current = {
+          liked: result.data.liked,
+          count: result.data.likeCount,
+        };
+        setFromServer(serverRef.current);
       }
-    },
-    400,
-  );
+    } finally {
+      inFlightRef.current = false;
+    }
+  }, [article.id]);
+
+  const debouncedSync = useDebouncedCallback(sync, DEBOUNCE_DURATION);
 
   const handleLikeOrDislike = () => {
     if (!isSignedIn) {
@@ -87,14 +105,11 @@ export default function ArticleLikeButton({
 
     setIsHighlightedLike(false);
 
-    // Optimistic update
-    const nextLiked = !liked;
-    const nextCount = nextLiked ? likeCount + 1 : Math.max(0, likeCount - 1);
+    const next = !likedRef.current; // Prevents outdated closure (stale closure)
+    likedRef.current = next;
+    setLikedByUser(next); // Optimistic (visual first, resolve later)
 
-    setLiked(nextLiked);
-    setLikeCount(nextCount);
-
-    debouncedToggleLike(nextLiked);
+    debouncedSync();
   };
 
   return (
@@ -119,7 +134,9 @@ export default function ArticleLikeButton({
           strokeLinecap="round"
           strokeLinejoin="round"
           className={cn(
-            liked ? "stroke-primary fill-primary" : "stroke-current fill-none",
+            likedByUser
+              ? "stroke-primary fill-primary"
+              : "stroke-current fill-none",
           )}
         >
           <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />

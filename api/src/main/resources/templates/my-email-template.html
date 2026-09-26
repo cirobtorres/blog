@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            .body-wrapper {}
+
+            .text-wrapper {}
+        </style>
+        <title th:text="${title}">Título do email</title>
+    </head>
+    <body class="body-wrapper">
+        <h2 class="heading" th:text="${subject}">Motivo do email</h2>
+
+        <div class="text-wrapper">
+            <p>Olá, <span th:text="${name}" class="">Usuário</span></p>
+            <p th:text="${body}">Corpo da mensagem...</p>
+        </div>
+
+        <small>Este é um e-mail automático.</small>
+    </body>
+</html>

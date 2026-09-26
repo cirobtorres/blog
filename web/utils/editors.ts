@@ -58,3 +58,13 @@ export const validateAllowedAutoLink = (url: string) => {
     return false;
   }
 };
+
+export function parseBlocks(body: string | null | undefined): Blocks[] {
+  if (!body) return [];
+  try {
+    const parsed: unknown = JSON.parse(body);
+    return Array.isArray(parsed) ? (parsed as Blocks[]) : [];
+  } catch {
+    return [];
+  }
+}

@@ -1,6 +1,5 @@
 "use client";
 
-import { useArticleStore } from "../../../../../../zustand-store/article-state";
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +10,7 @@ import {
   PaginationPrevious,
 } from "../../../../../Pagination";
 import { cn } from "../../../../../../utils/variants";
+import { useArticleStore } from "../../../../../../providers/ArticleStoreProvider";
 
 export default function FilePaginationState({
   totalPages,

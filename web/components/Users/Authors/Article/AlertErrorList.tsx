@@ -1,6 +1,6 @@
 import { Alert } from "../../../Alert";
 
-export default function AlertErrorList({ state }: { state: ActionState }) {
+export default function InputAlerts({ state }: { state: ActionState }) {
   return state?.error ? (
     <Alert title="Erros" variant="default" className="mb-2">
       {state?.error?.title &&
