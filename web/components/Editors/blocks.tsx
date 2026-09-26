@@ -13,13 +13,32 @@ import {
   ArticleImagesButton,
 } from "./editors/ArticleEditorImage";
 import { useArticleStore } from "../../providers/ArticleStoreProvider";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
 
 const BlockItem = React.memo(function BlockItem({
   block,
   error,
+  ...dndProps // Comes to BlockItem through prop-drilling
 }: {
   block: Blocks;
   error?: BlockPropertyErrors;
+  attributes?: ReturnType<typeof useSortable>["attributes"];
+  listeners?: ReturnType<typeof useSortable>["listeners"];
 }) {
   const {
     updateBlock,
@@ -43,6 +62,7 @@ const BlockItem = React.memo(function BlockItem({
             onDisable={toggleBlockLock}
             moveDownward={moveBlockDownward}
             hasError={!!error}
+            {...dndProps}
           >
             <HtmlEditor
               id={textEditorId}
@@ -66,6 +86,7 @@ const BlockItem = React.memo(function BlockItem({
             onDisable={toggleBlockLock}
             moveDownward={moveBlockDownward}
             hasError={!!error}
+            {...dndProps}
           >
             <CodeEditor
               editorId={codeEditorId}
@@ -91,6 +112,7 @@ const BlockItem = React.memo(function BlockItem({
           onDisable={toggleBlockLock}
           moveDownward={moveBlockDownward}
           hasError={!!error}
+          {...dndProps}
         >
           <AccordionEditor
             accordions={(block.data as AccordionEditor)?.accordions ?? null}
@@ -111,12 +133,8 @@ const BlockItem = React.memo(function BlockItem({
           onDisable={toggleBlockLock}
           moveDownward={moveBlockDownward}
           hasError={!!error}
+          {...dndProps}
         >
-          {/* <input 
-            value={data.caption}
-            onChange={(e) => updateBlock(blockId, { caption: e.target.value })}
-            placeholder="Adicionar legenda..."
-          /> */}
           <ArticleImageButton
             blockId={block.id}
             text="Selecionar Imagem"
@@ -135,6 +153,7 @@ const BlockItem = React.memo(function BlockItem({
           onDisable={toggleBlockLock}
           moveDownward={moveBlockDownward}
           hasError={!!error}
+          {...dndProps}
         >
           <ArticleImagesButton
             blockId={block.id}
@@ -158,6 +177,7 @@ const BlockItem = React.memo(function BlockItem({
           onDisable={toggleBlockLock}
           moveDownward={moveBlockDownward}
           hasError={!!error}
+          {...dndProps}
         >
           <AlertEditor
             titleId={alertEditorTitleId}
@@ -177,20 +197,23 @@ const BlockItem = React.memo(function BlockItem({
   }
 });
 
-const BlockList = ({
-  defaultVal,
-  blocksErrors,
-}: {
-  defaultVal?: string;
-  blocksErrors?: BodyItemError[];
-}) => {
+const BlockList = ({ blocksErrors }: { blocksErrors?: BodyItemError[] }) => {
   const { blocks, setBlocks } = useArticleStore();
 
-  React.useEffect(() => {
-    if (defaultVal) {
-      setBlocks(JSON.parse(defaultVal));
-    }
-  }, [defaultVal, setBlocks]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 4 },
+    }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = blocks.findIndex((b) => b.id === active.id);
+    const newIndex = blocks.findIndex((b) => b.id === over.id);
+    setBlocks(arrayMove(blocks, oldIndex, newIndex));
+  };
 
   const errorMap = React.useMemo(() => {
     const map: Record<string, BlockPropertyErrors> = {};
@@ -207,12 +230,63 @@ const BlockList = ({
 
   return (
     blocks.length > 0 && (
-      <div className="space-y-2">
-        {blocks.map((block: Blocks) => (
-          <BlockItem key={block.id} block={block} error={errorMap[block.id]} />
-        ))}
-      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis]}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={blocks.map((b) => b.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-2">
+            {blocks.map((block: Blocks) => (
+              <SortableBlockItem key={block.id} id={block.id}>
+                <BlockItem block={block} error={errorMap[block.id]} />
+              </SortableBlockItem>
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     )
+  );
+};
+
+const SortableBlockItem = ({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) => {
+  const {
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+    attributes,
+    listeners,
+  } = useSortable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Translate.toString(transform), // Translate only, no scaling
+        transition,
+        zIndex: isDragging ? 10 : undefined,
+        position: "relative",
+      }}
+      className={isDragging ? "opacity-70" : undefined}
+    >
+      {React.isValidElement(children)
+        ? React.cloneElement(children, { attributes, listeners } as {
+            attributes: ReturnType<typeof useSortable>["attributes"];
+            listeners: ReturnType<typeof useSortable>["listeners"];
+          })
+        : children}
+    </div>
   );
 };
 

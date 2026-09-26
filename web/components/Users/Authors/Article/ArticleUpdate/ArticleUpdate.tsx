@@ -250,7 +250,8 @@ export function ArticleUpdate(article: Article) {
           </Row>
           <ArticleBannerButton />
           <FieldsetError error={errors?.banner?.errors} />
-          <BlockList defaultVal={article.body} />
+          <BlockList />
+          {/* <BlockList defaultVal={article.body} /> */}
           <AddBlockButton />
         </form>
       </section>

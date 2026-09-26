@@ -10,6 +10,7 @@ import {
   Drag,
   MoveDownward,
 } from "./accordionButtons";
+import { useSortable } from "@dnd-kit/sortable";
 
 function EditorsAccordionWrapper({
   className,
@@ -59,6 +60,8 @@ function EditorsAccordionTrigger({
   onDelete,
   onDisable,
   moveDownward,
+  attributes,
+  listeners,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
   label: string;
@@ -66,6 +69,8 @@ function EditorsAccordionTrigger({
   onDelete: (e: React.MouseEvent) => void;
   onDisable: (e: React.MouseEvent) => void;
   moveDownward: (e: React.MouseEvent) => void;
+  attributes?: ReturnType<typeof useSortable>["attributes"];
+  listeners?: ReturnType<typeof useSortable>["listeners"];
 }) {
   return (
     <AccordionPrimitive.Header className="flex">
@@ -97,7 +102,7 @@ function EditorsAccordionTrigger({
         {/* <Disable onDisable={onDisable} locked={locked} /> */}
         <Delete onDelete={onDelete} locked={locked} />
         <MoveDownward moveDownward={moveDownward} locked={locked} />
-        <Drag locked={locked} />
+        <Drag locked={locked} attributes={attributes} listeners={listeners} />
       </div>
     </AccordionPrimitive.Header>
   );
@@ -140,6 +145,8 @@ function EditorsAccordion({
   onDelete: (id: string) => void;
   onDisable: (id: string) => void;
   moveDownward: (id: string) => void;
+  attributes?: ReturnType<typeof useSortable>["attributes"];
+  listeners?: ReturnType<typeof useSortable>["listeners"];
 }) {
   return (
     <EditorsAccordionWrapper type="single" collapsible>

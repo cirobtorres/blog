@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "../AlertDialog";
 import { Button } from "../Button";
+import { useSortable } from "@dnd-kit/sortable";
 
 const buttonSizes = "w-7 h-9";
 
@@ -241,21 +242,28 @@ const MoveDownward = ({
   );
 };
 
-const Drag = ({ locked }: { locked: boolean }) => {
+const Drag = ({
+  locked,
+  attributes,
+  listeners,
+}: {
+  locked: boolean;
+  attributes?: ReturnType<typeof useSortable>["attributes"];
+  listeners?: ReturnType<typeof useSortable>["listeners"];
+}) => {
   return (
     <Button
       type="button"
       variant="outline"
       tabIndex={-1}
+      {...attributes}
+      {...listeners}
       className={cn(
         buttonStyles,
         buttonSizes,
         "cursor-move",
         "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
       )}
-      onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation();
-      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
