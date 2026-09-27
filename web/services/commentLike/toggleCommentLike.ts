@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
@@ -19,12 +18,18 @@ export async function toggleCommentLike({ commentId }: { commentId: string }) {
     );
 
     if (!response.ok) {
+      console.error(
+        "toggleCommentLike fail:",
+        response.ok,
+        response.status,
+        response.statusText,
+      );
       return { ok: false, error: "Comment like failed" };
     }
 
     const data: { liked: boolean; likeCount: number } = await response.json();
 
-    revalidatePath("/", "layout");
+    // revalidatePath("/", "layout");
 
     return { ok: true, data };
   } catch (error) {
