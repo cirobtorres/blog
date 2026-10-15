@@ -32,6 +32,7 @@ import {
   focusRing,
   linkVariants,
 } from "../../../../../../../utils/variants";
+import { EditIcon } from "../../../../../../Icons";
 
 const defaultState: ActionState = {
   ok: false,
@@ -40,21 +41,49 @@ const defaultState: ActionState = {
   data: null,
 };
 
-export default function EditButton({
-  id,
-  url,
-  name,
-  type,
-  size,
-  extension,
-  folder,
-  alt,
-  caption,
-  width,
-  height,
-}: Media) {
-  const [open, setOpen] = React.useState(false);
+function isStringOrErrorMap(
+  error: unknown,
+): error is string | ActionStateError {
+  // 1. Checks if it is a string
+  if (typeof error === "string") {
+    return true;
+  }
 
+  // 2. Checks if it is not an object or it is null
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+
+  // 3. Checks if it respects the following format { errors: string[] }
+  const record = error as Record<string, unknown>;
+
+  for (const key of Object.keys(record)) {
+    const value = record[key];
+
+    // 3.1. Checks if it is not a valid object
+    if (typeof value !== "object" || value === null || !("errors" in value)) {
+      return false;
+    }
+
+    const innerValue = value as Record<string, unknown>;
+
+    // 3.2. Checks if it is an array of strings
+    if (
+      !Array.isArray(innerValue.errors) ||
+      !innerValue.errors.every((item) => typeof item === "string")
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export default function EditButton(media: Media) {
+  const [open, setOpen] = React.useState(false);
+  const [name, setName] = React.useState(media.name);
+  const [alt, setAlt] = React.useState(media.alt);
+  const [caption, setCaption] = React.useState(media.caption);
   const [state, action, isPending] = React.useActionState(
     async (prevState: ActionState, formData: FormData) => {
       const success = (serverResponse: ActionState) => {
@@ -69,7 +98,21 @@ export default function EditButton({
       };
 
       const error = (serverResponse: ActionState) => {
-        return <p>{serverResponse.error}</p>;
+        const error = serverResponse.error;
+        if (isStringOrErrorMap(error)) {
+          if (typeof error === "string") {
+            return <p>{serverResponse.error}</p>;
+          } else {
+            return (
+              <ul>
+                {Object.values(serverResponse.error as ActionStateError).map(
+                  (x) => x.errors.map((y, i) => <li key={`${y}-${i}`}>{y}</li>),
+                )}
+              </ul>
+            );
+          }
+        }
+        return <p>Ocorreu um erro ao tentar salvar o artigo</p>;
       };
 
       const validation = validateFile(formData);
@@ -78,7 +121,6 @@ export default function EditButton({
       const result = editFile(prevState, formData);
       const promise = sonnerPromise(result);
       sonnerToastPromise(promise, success, error, "Alterando arquivo...");
-
       return result;
     },
     defaultState,
@@ -95,39 +137,42 @@ export default function EditButton({
           </AlertDialogDescription>
           <FieldsetsWrapper>
             <FileCardEdit
-              url={url}
-              name={name}
-              type={type}
-              size={size}
-              extension={extension}
-              width={width}
-              height={height}
+              url={media.url}
+              name={media.name}
+              type={media.type}
+              size={media.size}
+              extension={media.extension}
+              width={media.width}
+              height={media.height}
             />
             <div className="w-full h-full flex flex-col gap-2 mb-auto">
-              <FieldsetHiddenInputs {...{ id, size }} />
+              <FieldsetHiddenInputs {...{ id: media.id, size: media.size }} />
               <FieldsetWrapper>
                 <FieldsetNameInput
-                  defaultValue={name}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   error={state?.error?.customName}
                 />
               </FieldsetWrapper>
               <FieldsetWrapper>
                 <FieldsetCaptionInput
-                  defaultValue={caption}
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
                   error={state?.error?.customCaption}
                 />
               </FieldsetWrapper>
               <FieldsetWrapper>
                 <FieldsetAltInput
-                  defaultValue={alt}
+                  value={alt}
+                  onChange={(e) => setAlt(e.target.value)}
                   error={state?.error?.customAlt}
                 />
               </FieldsetWrapper>
               <FieldsetWrapper>
                 <FolderPopover
                   name="file_0_folder_id"
-                  defaultValue={folder.id}
-                  movingFolderIds={[folder.id]}
+                  defaultValue={media.folder.id}
+                  movingFolderIds={[media.folder.id]}
                 />
                 {state?.error?.customFolderId && (
                   <FieldsetError error={state?.error?.customFolderId?.errors} />
@@ -176,10 +221,9 @@ const FieldsetHiddenInputs = ({ ...props }: { id: string; size: number }) => {
 };
 
 const FieldsetNameInput = ({
-  defaultValue,
   error,
-}: {
-  defaultValue?: string;
+  ...props
+}: FieldsetInputProps & {
   error?: { errors: string[] };
 }) => (
   <>
@@ -187,8 +231,8 @@ const FieldsetNameInput = ({
       <FieldsetInput
         id="file_0_name"
         name="file_0_name"
-        defaultValue={defaultValue}
         error={!!error?.errors}
+        {...props}
       />
       <FieldsetLabel id="name-label" label="name" htmlFor="file_0_name" />
     </Fieldset>
@@ -197,10 +241,9 @@ const FieldsetNameInput = ({
 );
 
 const FieldsetCaptionInput = ({
-  defaultValue,
   error,
-}: {
-  defaultValue?: string;
+  ...props
+}: FieldsetInputProps & {
   error?: { errors: string[] };
 }) => (
   <>
@@ -208,8 +251,8 @@ const FieldsetCaptionInput = ({
       <FieldsetInput
         id="file_0_caption"
         name="file_0_caption"
-        defaultValue={defaultValue}
         error={!!error?.errors}
+        {...props}
       />
       <FieldsetLabel
         id="caption-label"
@@ -225,10 +268,9 @@ const FieldsetCaptionInput = ({
 );
 
 const FieldsetAltInput = ({
-  defaultValue,
   error,
-}: {
-  defaultValue?: string;
+  ...props
+}: FieldsetInputProps & {
   error?: { errors: string[] };
 }) => (
   <>
@@ -236,8 +278,8 @@ const FieldsetAltInput = ({
       <FieldsetInput
         id="file_0_alt"
         name="file_0_alt"
-        defaultValue={defaultValue}
         error={!!error?.errors}
+        {...props}
       />
       <FieldsetLabel id="alt-label" label="Alt" htmlFor="file_0_alt" />
     </Fieldset>
@@ -269,21 +311,7 @@ const FileCardEditTrigger = () => (
         focusRing,
       )}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className=""
-      >
-        <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-        <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
-      </svg>
+      <EditIcon />
     </button>
   </AlertDialogTrigger>
 );
@@ -332,9 +360,6 @@ function FileCardEdit({
               className="absolute object-contain p-px"
             />
           </div>
-          {/* <div className="absolute top-2 right-2 flex items-center gap-1 transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 group-has-data-[state=checked]:opacity-100">
-            <ExcludeButton />
-          </div> */}
         </div>
         <div className="w-full flex justify-between items-center gap-2 p-2 border-t">
           <div className="w-full h-full flex flex-col justify-start gap-1">

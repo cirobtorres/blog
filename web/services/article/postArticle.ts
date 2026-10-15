@@ -38,10 +38,33 @@ export default async function postArticle(
 
     const errorData = await response.json();
 
+    if (errorData.status === 409) {
+      const message: string = errorData.message ?? "";
+      const isSlug = message.includes("slug");
+      if (isSlug) {
+        return {
+          ok: false,
+          success: null,
+          error: isSlug
+            ? "Já existe um artigo com este slug. Escolha outro."
+            : "Já existe um registro com estes dados.",
+
+          data: null,
+        };
+      }
+      // Generic 409
+      return {
+        ok: false,
+        success: null,
+        error: "Erro ao salvar artigo",
+        data: null,
+      };
+    }
+
     return {
       ok: false,
       success: null,
-      error: errorData.message ?? "Erro no servidor",
+      error: "Erro ao salvar artigo",
       data: null,
     };
   } catch (err) {

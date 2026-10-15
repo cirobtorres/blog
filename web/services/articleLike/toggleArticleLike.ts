@@ -14,7 +14,7 @@ export async function toggleArticleLike({ articleId }: { articleId: string }) {
     };
 
     const response = await serverFetch(
-      apiServerUrls.articleLike.toggle + "/" + articleId,
+      apiServerUrls.articleLike.root + "/" + articleId,
       options,
     );
 

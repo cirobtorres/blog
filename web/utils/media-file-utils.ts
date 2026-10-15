@@ -1,5 +1,3 @@
-import { serverFetch } from "../services/serverFetch";
-
 export function VideoThumbnail(file: File): Promise<string> {
   return new Promise((resolve) => {
     const video = document.createElement("video");
@@ -25,7 +23,7 @@ export function VideoThumbnail(file: File): Promise<string> {
   });
 }
 
-export async function fetchFileFromUrl(url: string): Promise<Response> {
+export async function fetchFileFromUrl(url: string) {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(

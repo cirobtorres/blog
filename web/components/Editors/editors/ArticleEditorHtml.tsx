@@ -455,7 +455,7 @@ export function HtmlEditor({
                     className={cn(
                       editorState?.isActiveLink
                         ? "[&_svg]:stroke-primary bg-stone-400 dark:bg-stone-800"
-                        : "text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900 hover:bg-stone-125 dark:hover:bg-stone-800",
+                        : "text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900",
                       "cursor-pointer transition-all duration-300",
                       focusRing,
                     )}
@@ -567,7 +567,7 @@ export function HtmlEditor({
                     Cancelar
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    variant="outline"
+                    variant="default"
                     onClick={() => {
                       setIsDialogOpen(false);
                       if (editor?.isActive("link")) {
@@ -673,7 +673,7 @@ export function HtmlEditor({
                 type="button"
                 onClick={() => editor.chain().focus().undo().run()}
                 className={cn(
-                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900 hover:bg-stone-125 dark:hover:bg-stone-800",
+                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900",
                   focusRing,
                 )}
               >
@@ -705,7 +705,7 @@ export function HtmlEditor({
                 type="button"
                 onClick={() => editor.chain().focus().redo().run()}
                 className={cn(
-                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900 hover:bg-stone-125 dark:hover:bg-stone-800",
+                  "cursor-pointer transition-all duration-300 text-neutral-400 dark:text-neutral-500 bg-stone-100 dark:bg-stone-900",
                   focusRing,
                 )}
               >

@@ -3,6 +3,9 @@
 import { apiServerUrls } from "../../routing/routes";
 import { serverFetch } from "../serverFetch";
 
+/**
+ * @deprecated Use `setCommentLike` instead. This function is kept for backward compatibility and will be removed in future versions.
+ */
 export async function toggleCommentLike({ commentId }: { commentId: string }) {
   try {
     const options: RequestInit = {

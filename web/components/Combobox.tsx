@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
-import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import { Button } from "./Button";
 import { cn, focusRing } from "../utils/variants";
+import { CheckIcon, ChevronDownIcon, CloseIcon } from "./Icons";
 
 const Combobox = ComboboxPrimitive.Root;
 
@@ -244,7 +244,7 @@ function ComboboxChip({
               variant="outline"
               className="size-4 bg-transparent dark:bg-transparent shadow-none! border-transparent! hover:border-transparent! dark:hover:border-transparent!"
             >
-              <XIcon className="pointer-events-none" />
+              <CloseIcon className="pointer-events-none" />
             </Button>
           }
         />

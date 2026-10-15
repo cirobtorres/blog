@@ -58,7 +58,7 @@ export default function ScrollSummary({
       <Accordion type="single" defaultValue="summary" collapsible>
         <AccordionItem value="summary">
           <AccordionTrigger className="mx-1.5 my-1.5 hover:bg-stone-125 dark:hover:bg-stone-800">
-            <p className="text-xs font-medium text-neutral-500 dark:text-neutral-100">
+            <p className="text-sm font-medium text-neutral-500 dark:text-neutral-100">
               Sumário
             </p>
           </AccordionTrigger>

@@ -46,7 +46,16 @@ export default async function editFile(
     );
 
     if (!response.ok) {
-      console.log(response.status);
+      if (response.status === 409) {
+        return {
+          ...returnState,
+          error: {
+            customName: {
+              errors: ["Já existe um arquivo com esse nome"],
+            },
+          },
+        };
+      }
       return {
         ...returnState,
         error: "Falha ao editar arquivo.",

@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "../keycloak/auth";
 import { serverFetch } from "./serverFetch";
 
 const defaultState: ActionState = {
@@ -10,6 +11,16 @@ const defaultState: ActionState = {
 };
 
 export async function fetchAction(url: string, options: RequestInit = {}) {
+  const session = await auth();
+  const token = session?.accessToken;
+  const headers = new Headers(options?.headers);
+
+  if (token && !session?.error) {
+    headers.set("Authorization", `Bearer ${token}`);
+  } else {
+    // Does nothing
+  }
+
   try {
     const response = await serverFetch(url, options);
     if (!response.ok) {

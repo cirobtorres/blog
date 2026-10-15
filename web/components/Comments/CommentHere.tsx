@@ -3,10 +3,10 @@
 import React from "react";
 import CommentEditor, { characterLimit } from "./CommentEditor";
 import { buttonVariants, cn, focusRing } from "../../utils/variants";
-import { UserSignedOffIcon } from "../Header/UserSignedOff";
 import { AvatarName } from "../Avatar";
 import { usePathname, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
+import { UserSignedOffIcon } from "../Icons";
 
 export default function CommentHere({ articleId }: { articleId: string }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,7 +38,7 @@ export default function CommentHere({ articleId }: { articleId: string }) {
     <MainWrapper>
       <InnerWrapper>
         <LinkToSignInHeader redirectPath={fullPath}>
-          <UserSignedOffIcon />
+          <UserSignedOffIcon className="size-8 p-1 border rounded-full not-default:shadow bg-stone-100 border-stone-300 dark:border-stone-700 dark:bg-stone-800" />
           Anônimo
         </LinkToSignInHeader>
         <FakeEditorBody>

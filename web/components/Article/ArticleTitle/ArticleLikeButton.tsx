@@ -2,12 +2,9 @@
 
 import React from "react";
 import { cn, focusRing } from "../../../utils/variants";
-import { toggleArticleLike } from "../../../services/articleLike/toggleArticleLike";
 import { signIn, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useDebouncedCallback } from "use-debounce";
-
-const DEBOUNCE_DURATION = 2000; // ms
+import { setArticleLike } from "../../../services/articleLike/setArticleLike";
 
 export default function ArticleLikeButton({
   article,
@@ -72,29 +69,37 @@ export default function ArticleLikeButton({
     inFlightRef.current = true;
 
     try {
-      // As long as the intention differs from the server's, toggle it
       while (likedRef.current !== serverRef.current.liked) {
-        const result = await toggleArticleLike({ articleId: article.id });
+        const desired = likedRef.current;
 
-        if (!result.ok || !result.data) {
-          // Rollback
+        try {
+          const result = await setArticleLike({
+            articleId: article.id,
+            liked: desired,
+          });
+
+          if (!result.ok || !result.data) {
+            likedRef.current = serverRef.current.liked;
+            setLikedByUser(serverRef.current.liked);
+            return;
+          }
+
+          serverRef.current = {
+            liked: result.data.liked,
+            count: result.data.likeCount,
+          };
+          setFromServer(serverRef.current);
+        } catch (error) {
+          console.error("Falha ao sincronizar like do artigo:", error);
           likedRef.current = serverRef.current.liked;
           setLikedByUser(serverRef.current.liked);
           return;
         }
-
-        serverRef.current = {
-          liked: result.data.liked,
-          count: result.data.likeCount,
-        };
-        setFromServer(serverRef.current);
       }
     } finally {
       inFlightRef.current = false;
     }
   }, [article.id]);
-
-  const debouncedSync = useDebouncedCallback(sync, DEBOUNCE_DURATION);
 
   const handleLikeOrDislike = () => {
     if (!isSignedIn) {
@@ -109,7 +114,7 @@ export default function ArticleLikeButton({
     likedRef.current = next;
     setLikedByUser(next); // Optimistic (visual first, resolve later)
 
-    debouncedSync();
+    sync();
   };
 
   return (

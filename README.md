@@ -5,20 +5,18 @@
 
 ### .env
 
-#### Rename .env.example to **.env** and set up your environment.
-
-### Java Spring Boot
-
-#### I'm using IntelliJ community (free). Just set your .env variables inside IntelliJ local .env variables. If you don't want to make use of IntelliJ, you'll have to install a dotenv lib or, better yet (my opinion), you might create a simple shell script that loads the .env variables and run maven.
+#### For development, you won't need the root .env file. Rename your .env.local.example **.env.local** and set up your environment. For Java Spring Boot I'd recommend IntelliJ community (free). Edit your application configuration and set/import your .env variables.
 
 ### Keycloak
 
 #### Realm
 
-##### Left pannel > Manage realms > Create Realm. Name it whatever you want. Ex.: blog-realm. Everything from now on must be done inside your realm. Do not forget to navigate to your realm everytime you log in to admin panel. In case you accidently delete admin user, code below:
+##### Left pannel > Manage realms > Create Realm. Name it whatever you want. Ex.: blog-realm. Everything from now on must be done inside your realm. Do not forget to navigate to your realm everytime you log in to admin panel. In case you accidently delete admin user, create a new one with code below:
 
 ```bash
 ./kc.sh bootstrap-admin user
+
+./kc.bat bootstrap-admin user
 ```
 
 #### Realm Settings
@@ -71,43 +69,25 @@
 
 ```bash
 cd .\web
+
+pnpm i
+
 pnpm dev
 ```
 
-### Docker (nginx, postgres, pgadmin)
+### Database
+
+#### There is a couple of options. I believe the easiest one is Docker
 
 ```bash
 docker-compose up -d --build
 ```
 
-</details>
+#### If you have no access to DOcker for whatever the reason, Supabase comes in very handy for development situation in my opinion. Supabase > authenticate > create a new project > dashboard > connect (button somewhere on top) > direct > session pooler.
 
-<details>
-<summary style="font-size:20px;font-weight:500">PRODUCTION</summary>
+![Location of the connect button on Supabase dashboard](image-1.png)
 
-### .env
-
-#### **Rename .env.example to `.env` and set up your environment.**
-
-### SSL
-
-#### The keys must be placed in `/keys` folder.
-
-### Way easier. Just `run` docker command:
-
-```bash
-docker-compose up -d --build
-```
-
-### or (shell)
-
-```sh
-docker compose up -d --build
-```
-
-</details>
-
-## SUPABASE AS DATABASE
+![DIrect connection, session pooler](image-2.png)
 
 ```yml
 datasource.url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?prepareThreshold=0
@@ -119,13 +99,17 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 ```
 
-### SSL
+</details>
 
-#### I find easier to generate openssl keys with Ubuntu. Make sure to check your openssl version and adapt it to your needs.
+<details>
+<summary style="font-size:20px;font-weight:500">PRODUCTION</summary>
+
+### .env
+
+#### **Rename .env.example to `.env` and set up your environment.**
 
 ```bash
-/opt/openssl-3.5/bin/openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out jwt-private.pem; /opt/openssl-3.5/bin/openssl pkey -in jwt-private.pem -pubout -out jwt-public.pem;
-
-# And then move it to your location:
-mv jwt-*.pem /mnt/c/Users/myuser/whateverFolderIAm/keys-dev
+docker-compose up -d --build
 ```
+
+</details>

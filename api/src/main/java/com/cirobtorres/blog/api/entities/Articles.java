@@ -158,7 +158,11 @@ public class Articles {
 
     public int getLikeCount() { return likeCount; }
     public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+
+    @Deprecated(forRemoval = true)
     public void setLikeCountPlusOne() { this.likeCount = this.likeCount + 1; }
+
+    @Deprecated(forRemoval = true)
     public void setLikeCountMinusOne() { this.likeCount = Math.max(this.likeCount - 1, 0); }
 
     public ArticlesStatus getStatus() { return status; }

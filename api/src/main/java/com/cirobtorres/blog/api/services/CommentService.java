@@ -1,16 +1,14 @@
 package com.cirobtorres.blog.api.services;
 
 import com.cirobtorres.blog.api.entities.Articles;
-import com.cirobtorres.blog.api.repositories.ArticlesRepository;
+import com.cirobtorres.blog.api.entities.CommentRevision;
+import com.cirobtorres.blog.api.repositories.*;
 import com.cirobtorres.blog.api.dtos.CommentDTO;
 import com.cirobtorres.blog.api.dtos.CommentPostDTO;
 import com.cirobtorres.blog.api.dtos.CommentPutDTO;
 import com.cirobtorres.blog.api.entities.Comment;
-import com.cirobtorres.blog.api.repositories.CommentLikeRepository;
-import com.cirobtorres.blog.api.repositories.CommentRepository;
 import com.cirobtorres.blog.api.exceptions.UserUnauthorizedException;
 import com.cirobtorres.blog.api.entities.User;
-import com.cirobtorres.blog.api.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +29,21 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ArticlesRepository articlesRepository;
     private final CommentLikeRepository commentLikeRepository;
+    CommentRevisionRepository commentRevisionRepository;
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public CommentService(
             CommentRepository commentRepository,
             UserRepository userRepository,
             ArticlesRepository articlesRepository,
-            CommentLikeRepository commentLikeRepository
+            CommentLikeRepository commentLikeRepository,
+            CommentRevisionRepository commentRevisionRepository
     ) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.articlesRepository = articlesRepository;
         this.commentLikeRepository = commentLikeRepository;
+        this.commentRevisionRepository = commentRevisionRepository;
     }
 
     public Comment findCommentById(UUID id) {
@@ -170,11 +171,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDTO putComment(UUID commentId, CommentPutDTO request) {
+    public CommentDTO putComment(UUID commentId, UUID currentUserId, CommentPutDTO request) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
-        if (comment.getUser() == null || !comment.getUser().getId().equals(request.userId())) {
+        if (comment.getUser() == null || !comment.getUser().getId().equals(currentUserId)) {
             throw new UserUnauthorizedException("Unauthorized");
         }
 
@@ -186,9 +187,40 @@ public class CommentService {
             throw new UserUnauthorizedException("Unauthorized");
         }
 
-        comment.setBody(request.body());
-        Comment savedComment = commentRepository.save(comment);
-        return new CommentDTO(savedComment);
+        if (comment.isDeleted() || comment.isBlocked()) {
+            throw new IllegalStateException("Comment cannot be edited");
+        }
+
+        String newBody = normalizeBody(request.body());
+        if (newBody.isEmpty()) {
+            throw new IllegalArgumentException("Comment body must not be blank");
+        }
+
+        String currentBody = comment.getBody();
+        if (newBody.equals(normalizeBody(currentBody))) {
+            return new CommentDTO(comment); // nada mudou de fato: sem revisão, sem editedAt
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        int nextRevision = (int) commentRevisionRepository.countByCommentId(comment.getId()) + 1;
+
+        commentRevisionRepository.save(
+                new CommentRevision.Builder()
+                        .comment(comment)
+                        .revisionNumber(nextRevision)
+                        .previousBody(currentBody)
+                        .editedBy(currentUserId)
+                        .editedAt(now)
+                        .build()
+        );
+
+        comment.setBody(newBody);
+        comment.setEditedAt(now);
+        return new CommentDTO(commentRepository.save(comment));
+    }
+
+    private static String normalizeBody(String body) {
+        return body == null ? "" : body.replace("\r\n", "\n").strip();
     }
 
     private boolean isSameParent(Comment parentEntity, UUID requestParentId) {

@@ -15,21 +15,23 @@ export const LoadingSkeleton = () => (
       <div className="w-full flex gap-2">
         <div className="w-full">
           <Skeleton className="w-full max-w-24 h-6 mb-2" />
-          <Skeleton className="w-full max-w-138.5 h-14.5" />
+          <Skeleton className="w-full h-14.5 mb-2" />
+          <Skeleton className="w-full max-w-24 h-5" />
         </div>
         <div className="w-full">
           <Skeleton className="w-full max-w-28 h-6 mb-2" />
-          <Skeleton className="w-full max-w-138.5 h-14.5" />
+          <Skeleton className="w-full h-14.5 mb-2" />
+          <Skeleton className="w-full max-w-24 h-5" />
         </div>
       </div>
       <div className="w-full flex gap-2">
         <div className="w-full">
           <Skeleton className="w-full max-w-16 h-6 mb-2" />
-          <Skeleton className="w-full max-w-138.5 h-9.5" />
+          <Skeleton className="w-full h-9.5" />
         </div>
         <div className="w-full">
           <Skeleton className="w-full max-w-34 h-6 mb-2" />
-          <Skeleton className="w-full max-w-138.5 h-9.5" />
+          <Skeleton className="w-full h-9.5" />
         </div>
       </div>
       <Skeleton className="w-full aspect-[2.3333333333333335]" />

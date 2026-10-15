@@ -4,6 +4,7 @@ import com.cirobtorres.blog.api.dtos.*;
 import com.cirobtorres.blog.api.entities.Media;
 import com.cirobtorres.blog.api.enums.FilterQueryParams;
 import com.cirobtorres.blog.api.enums.MediaType;
+import com.cirobtorres.blog.api.exceptions.MediaNameAlreadyExistsException;
 import com.cirobtorres.blog.api.repositories.MediaRepository;
 import com.cirobtorres.blog.api.entities.MediaFolder;
 import com.cirobtorres.blog.api.repositories.MediaFolderRepository;
@@ -175,20 +176,26 @@ public class MediaService {
             try {
                 response = cloudinary
                         .uploader()
-                        .rename(
-                                oldPublicId,
-                                newPublicId,
-                                ObjectUtils.emptyMap()
-                );
-                if (response == null || !response.containsKey("public_id")) {
-                    throw new RuntimeException(
-                            "Cloudinary update fail: Response was empty or invalid."
+                        .rename(oldPublicId, newPublicId, ObjectUtils.emptyMap());
+            } catch (Exception e) {
+                if (causeMessageContains(e, "already exists")) {
+                    throw new MediaNameAlreadyExistsException(
+                            "A file with name \"" + newPublicId + "\" already exists."
                     );
                 }
-            } catch (Exception e) {
+                if (causeMessageContains(e, "not found")) {
+                    throw new EntityNotFoundException(
+                            "Cloudinary: file not found. public_id={" + oldPublicId + "}"
+                    );
+                }
                 throw new RuntimeException(
-                        "Cloudinary update fail: make sure file with public_id={" + oldPublicId + "} exists."
+                        "Cloudinary: update fail. public_id={" + oldPublicId + "}", e
                 );
+            }
+
+            // Outside try-catch, so it is not overwritten by catch clause
+            if (response == null || !response.containsKey("public_id")) {
+                throw new RuntimeException("Cloudinary update fail: response was empty or invalid.");
             }
         } else {
             response = Map.of("result", "ok", "public_id", oldPublicId);
@@ -345,5 +352,16 @@ public class MediaService {
         if (path == null || path.isBlank()) return "file";
         String[] parts = path.split("/");
         return parts[parts.length - 1];
+    }
+
+    private boolean causeMessageContains(Throwable t, String text) {
+        while (t != null) {
+            if (t.getMessage() != null
+                    && t.getMessage().toLowerCase().contains(text)) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
     }
 }

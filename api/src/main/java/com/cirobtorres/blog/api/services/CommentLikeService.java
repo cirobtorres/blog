@@ -31,6 +31,7 @@ public class CommentLikeService {
         this.userService = userService;
     }
 
+    @Deprecated(forRemoval = true)
     @Transactional
     public CommentLikeDTO toggleLike(UUID commentId, UUID userId) {
         Comment comment = commentService.findCommentById(commentId);
@@ -52,5 +53,21 @@ public class CommentLikeService {
         }
         commentRepository.save(comment);
         return new CommentLikeDTO(liked, comment.getLikeCount());
+    }
+
+    @Transactional
+    public CommentLikeDTO setLike(UUID commentId, UUID userId, boolean liked) {
+        commentService.findCommentById(commentId); // 404
+        userService.findUserById(userId);
+
+        int changed = liked
+                ? commentLikeRepository.insertIfAbsent(commentId, userId)
+                : commentLikeRepository.deleteIfPresent(commentId, userId);
+
+        if (changed > 0) {
+            commentRepository.refreshLikeCount(commentId);
+        }
+
+        return new CommentLikeDTO(liked, commentRepository.findLikeCountById(commentId));
     }
 }

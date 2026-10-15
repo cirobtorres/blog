@@ -5,18 +5,20 @@ type PageableComments = {
 
 type Comments = {
   id: string;
-  body: string; // JSON do Tiptap
+  body: string; // Tiptap JSON
   article: CommentArticle;
   user: UserComment;
   likeCount: number;
   likedByCurrentUser: boolean;
-  createdAt: string;
   parentId?: string;
   replies?: Comments[];
   isBlocked: boolean;
   blockedAt: string | null;
-  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string | null;
+  editedAt: string | null;
   deletedAt: string | null;
+  isDeleted: boolean;
   _count?: {
     children: number;
   };

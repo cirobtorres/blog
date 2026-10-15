@@ -21,6 +21,7 @@ public record CommentDTO(
         LocalDateTime blockedAt,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
+        LocalDateTime editedAt,
         List<CommentDTO> replies
 ) {
     public CommentDTO(Comment comment, UUID currentUserId) {
@@ -38,6 +39,7 @@ public record CommentDTO(
                 comment.getBlockedAt(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
+                comment.getEditedAt(),
                 comment.getChildren() != null
                         ? comment.getChildren().stream().map(CommentDTO::new).collect(Collectors.toList())
                         : List.of()
@@ -63,6 +65,7 @@ public record CommentDTO(
                 comment.getBlockedAt(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
+                comment.getEditedAt(),
                 comment.getChildren() != null
                         ? comment.getChildren().stream()
                         .map(child -> new CommentDTO(child, likedCommentIds))

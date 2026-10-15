@@ -4,6 +4,7 @@ import React from "react";
 import { cn, focusWithinRing } from "../../../utils/variants";
 import { SentenceCounter } from "./utils";
 import { useArticleStore } from "../../../providers/ArticleStoreProvider";
+import { slugify } from "../../../utils/strings-transforms";
 
 export function ArticleEditorTitle({
   defaultVal,
@@ -27,7 +28,7 @@ export function ArticleEditorTitle({
   ) => {
     const val = e.target.value;
     setTitle(val);
-    setSlug(val);
+    setSlug(slugify(val));
     if (val.length < 5) setIsSlugTaken("empty");
   };
 

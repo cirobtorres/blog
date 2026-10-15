@@ -96,7 +96,7 @@ export const linkVariants = cva(
         markdown:
           "border text-base font-medium rounded-lg px-1 py-0.5 bg-stone-200 dark:bg-stone-900 text-primary/75 duration-300 italic underline underline-offset-2 focus-visible:border-primary dark:focus-visible:border-primary",
         button:
-          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 bg-stone-200 dark:bg-stone-900 border border-transparent border-stone-300 focus-visible:border-primary dark:border-stone-700 focus-visible:border-primary dark:focus-visible:border-primary",
+          "w-full flex items-center justify-center h-10.5 no-underline text-neutral-500 bg-stone-100 dark:bg-stone-900 border border-transparent border-stone-300 focus-visible:border-primary dark:border-stone-700 focus-visible:border-primary dark:focus-visible:border-primary",
       },
     },
     defaultVariants: {

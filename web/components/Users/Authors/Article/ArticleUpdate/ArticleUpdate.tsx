@@ -29,6 +29,7 @@ import { useSession } from "next-auth/react";
 import { Alert } from "../../../../Alert";
 import { parseBlocks } from "../../../../../utils/editors";
 import BlocksInput from "../BlocksInput";
+import { Col, Row } from "../utils";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -251,7 +252,6 @@ export function ArticleUpdate(article: Article) {
           <ArticleBannerButton />
           <FieldsetError error={errors?.banner?.errors} />
           <BlockList />
-          {/* <BlockList defaultVal={article.body} /> */}
           <AddBlockButton />
         </form>
       </section>
@@ -282,32 +282,6 @@ const Buttons = ({ disabled, ...article }: Article & { disabled: boolean }) => (
     </ArticleButton>
     <ArticlePopoverButton articleId={article.id} status={article.status} />
   </>
-);
-
-const Row = ({
-  children,
-  className,
-  ...props
-}: Omit<React.ComponentProps<"div">, "className"> & { className?: string }) => (
-  <div
-    className={cn(
-      "w-full flex flex-row justify-center items-center",
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </div>
-);
-
-const Col = ({
-  children,
-  className,
-  ...props
-}: Omit<React.ComponentProps<"div">, "className"> & { className?: string }) => (
-  <div className={cn("w-full", className)} {...props}>
-    {children}
-  </div>
 );
 
 const HiddenInputs = ({ ...article }: Article) => (

@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import { Checkbox as CheckboxPrimitive } from "radix-ui";
-
-import { CheckIcon } from "lucide-react";
 import { cn, focusRing } from "../../../utils/variants";
+import { CheckIcon } from "../../Icons";
 
 function Checkbox({
   className,

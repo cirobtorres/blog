@@ -1,5 +1,15 @@
 import he from "he";
 
+// For real time input typing
+export const slugifyWhileTyping = (str: string) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+/, "");
+
 export const slugify = (str: string) => {
   return str
     .toLowerCase()

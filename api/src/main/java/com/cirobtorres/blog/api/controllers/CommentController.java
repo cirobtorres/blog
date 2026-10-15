@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,10 +38,14 @@ public class CommentController {
     ) {
         // params: limit, repliesLimit
         UUID userId = null;
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+        if (
+                auth != null && auth.isAuthenticated() &&
+                !(auth instanceof AnonymousAuthenticationToken)
+        ) {
             userId = UUID.fromString(auth.getName());
         }
-        Page<CommentDTO> comments = commentService.getAllByQueryParams(userId, articleId, allParams, pageable);
+        Page<CommentDTO> comments = commentService
+                .getAllByQueryParams(userId, articleId, allParams, pageable);
         return ResponseEntity.ok(comments);
     }
 
@@ -57,8 +62,7 @@ public class CommentController {
     public ResponseEntity<CommentDTO> postComment(
             @RequestBody CommentPostDTO request
     ) {
-        CommentDTO comment = commentService
-                .postComment(request);
+        CommentDTO comment = commentService.postComment(request);
         return ResponseEntity.ok(comment);
     }
 
@@ -66,11 +70,14 @@ public class CommentController {
     @PutMapping("id/{id}")
     public ResponseEntity<CommentDTO> putComment(
             @PathVariable UUID id,
-            @RequestBody CommentPutDTO request
+            @RequestBody CommentPutDTO request,
+            Authentication auth
     ) {
-        CommentDTO comment = commentService
-                .putComment(id, request);
-        return ResponseEntity.ok(comment);
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UUID userId = UUID.fromString(auth.getName());
+        return ResponseEntity.ok(commentService.putComment(id, userId, request));
     }
 
     // DELETE-----------------------------------------------------------------------------------------------------

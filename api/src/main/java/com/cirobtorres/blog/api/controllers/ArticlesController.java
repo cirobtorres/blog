@@ -80,22 +80,22 @@ public class ArticlesController {
 
     @GetMapping("id/{id}")
     public ResponseEntity<ArticleDTO> getById(
-            @PathVariable UUID id
+            @PathVariable(name = "id") UUID id
     ) {
         return ResponseEntity.ok(articlesService.getById(id));
     }
 
     @GetMapping("slug/{slug}")
     public ResponseEntity<ArticleDTO> getBySlug(
-            @PathVariable @NonNull ArticleSlugDTO slug
+            @PathVariable(name = "slug") @NonNull ArticleSlugDTO slugDTO
     ) {
-        ArticleDTO article = articlesService.getBySlug(slug);
+        ArticleDTO article = articlesService.getBySlug(slugDTO);
         return ResponseEntity.ok(article);
     }
 
     @GetMapping("slug/{slug}/check")
     public ResponseEntity<Map<String, Boolean>> isSlugAvailable(
-            @PathVariable @NonNull ArticleSlugDTO slugDTO,
+            @PathVariable(name = "slug") @NonNull ArticleSlugDTO slugDTO,
             @RequestParam(required = false) UUID excludeId
     ) {
         boolean isAvailable = articlesService.isSlugAvailable(slugDTO, excludeId);
@@ -114,7 +114,7 @@ public class ArticlesController {
     // PUT----------------------------------------------------------------------------------------------------
     @PutMapping("id/{id}/unpublish")
     public ResponseEntity<ArticleDTO> unpublishArticle(
-            @PathVariable UUID id
+            @PathVariable(name = "id") UUID id
     ) {
         ArticleDTO article = articlesService.unpublishArticle(id);
         return ResponseEntity.ok(article);
@@ -122,7 +122,7 @@ public class ArticlesController {
 
     @PutMapping("id/{id}/draft")
     public ResponseEntity<ArticleDTO> saveDraftArticle(
-            @PathVariable UUID id,
+            @PathVariable(name = "id") UUID id,
             @Valid @RequestBody ArticleSaveDTO createArticleDTO,
             Authentication auth
     ) {
@@ -132,7 +132,7 @@ public class ArticlesController {
 
     @PutMapping("id/{id}/publish")
     public ResponseEntity<ArticleDTO> publishArticle(
-            @PathVariable UUID id,
+            @PathVariable(name = "id") UUID id,
             @Valid @RequestBody ArticleSaveDTO createArticleDTO,
             Authentication auth
     ) {
@@ -143,7 +143,7 @@ public class ArticlesController {
     // DELETE-------------------------------------------------------------------------------------------------
     @DeleteMapping("id/{id}")
     public ResponseEntity<ArticleDTO> deleteArticle(
-            @PathVariable UUID id
+            @PathVariable(name = "id") UUID id
     ) {
         articlesService.deleteArticle(id);
         return ResponseEntity.noContent().build();

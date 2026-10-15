@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
-import type { HTMLAttributes } from "react";
-import { motion, useAnimation } from "motion/react";
 import { useDebouncedCallback } from "use-debounce";
-import { cn } from "../../../utils/variants";
 import { apiServerUrls } from "../../../routing/routes";
-import { slugify } from "../../../utils/strings-transforms";
-import Spinner from "../../Spinner";
+import { slugify, slugifyWhileTyping } from "../../../utils/strings-transforms";
 import { fetchAction } from "../../../services/fetchAction";
 import { useArticleStore } from "../../../providers/ArticleStoreProvider";
+import { cn } from "../../../utils/variants";
+import CloseIcon from "../../icons/animated/CloseIcon";
+import CheckIcon from "../../icons/animated/CheckIcon";
+import Spinner from "../../Spinner";
+
+const DEBOUNCE_DURATION = 2000; // ms
 
 export default function ArticleEditorSlug({
   articleId,
@@ -23,50 +25,64 @@ export default function ArticleEditorSlug({
 }) {
   const { slug, isSlugTaken, setSlug, setIsSlugTaken } = useArticleStore();
   const [isChecking, setIsChecking] = React.useState(false);
+  const requestIdRef = React.useRef(0);
 
-  const validateSlug = useDebouncedCallback(async (currentSlug: string) => {
+  const validateSlug = useDebouncedCallback(async (rawSlug: string) => {
+    const currentSlug = slugify(rawSlug);
     if (!currentSlug || currentSlug.length < 5) {
       setIsSlugTaken("empty");
       return;
     }
 
+    const requestId = requestIdRef.current;
+
     setIsChecking(true);
 
     try {
-      const response = await fetchAction(
-        apiServerUrls.article.slug +
-          "/" +
-          currentSlug +
-          "/check" +
-          "&excludeId=" +
-          articleId,
+      const isArticleEdit = articleId ? "?excludeId=" + articleId : "";
+      const URI = apiServerUrls.article.slug.concat(
+        "/",
+        currentSlug,
+        "/check",
+        isArticleEdit,
       );
-      setIsSlugTaken(response.ok ? "invalid" : "valid");
+      const response = await fetchAction(URI);
+
+      // The slug has changed while request was in flight: discard it
+      if (requestId !== requestIdRef.current) return;
+
+      if (!response.ok) {
+        setIsSlugTaken("empty");
+        return;
+      }
+
+      const data: { available: boolean } = response.data;
+
+      setIsSlugTaken(data.available ? "valid" : "invalid");
     } catch (e) {
       console.error("ArticleEditorSlug error (useDebouncedCallback):", e);
-      if (slug) {
-        setIsSlugTaken("invalid");
-      } else {
-        setIsSlugTaken("empty");
-      }
+      setIsSlugTaken("empty");
     } finally {
-      setIsChecking(false);
+      if (requestId === requestIdRef.current) setIsChecking(false);
     }
-  }, 2000);
+  }, DEBOUNCE_DURATION);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = slugify(e.target.value);
-    setSlug(val);
-    if (val.length < 5) setIsSlugTaken("empty");
+    setSlug(slugifyWhileTyping(e.target.value));
+    setIsSlugTaken("empty");
   };
 
   React.useEffect(() => {
+    requestIdRef.current += 1;
+    React.startTransition(() => {
+      setIsChecking(false);
+    });
     validateSlug(slug);
   }, [slug, validateSlug]);
 
   React.useEffect(() => {
     if (defaultVal) {
-      setSlug(defaultVal);
+      setSlug(slugify(defaultVal));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -110,7 +126,7 @@ export default function ArticleEditorSlug({
             <Spinner />
           ) : isSlugTaken === "invalid" ? (
             <span className="text-destructive">
-              <XIcon size={20} />
+              <CloseIcon size={20} />
             </span>
           ) : isSlugValid ? (
             <span className="text-emerald-500">
@@ -122,120 +138,3 @@ export default function ArticleEditorSlug({
     </fieldset>
   );
 }
-
-// CheckIcon
-
-interface CheckIconHandle {
-  startAnimation: () => void;
-  stopAnimation: () => void;
-}
-
-interface CheckIconProps extends HTMLAttributes<HTMLDivElement> {
-  size?: number;
-}
-
-const CheckIcon = React.forwardRef<CheckIconHandle, CheckIconProps>(
-  ({ className, size = 28, ...props }, ref) => {
-    const controls = useAnimation();
-    const isControlledRef = React.useRef(false);
-
-    React.useImperativeHandle(ref, () => {
-      isControlledRef.current = true;
-
-      return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
-      };
-    });
-
-    return (
-      <div className={cn(className)} {...props}>
-        <svg
-          fill="none"
-          height={size}
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          width={size}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <motion.path
-            d="M4 12 9 17L20 6"
-            initial="initial"
-            animate="animate"
-            variants={{
-              initial: { pathLength: 0, opacity: 0 },
-              animate: {
-                pathLength: 1,
-                opacity: 1,
-                transition: { duration: 0.4, ease: "easeOut" },
-              },
-            }}
-          />
-        </svg>
-      </div>
-    );
-  },
-);
-
-CheckIcon.displayName = "CheckIcon";
-
-// XIcon
-
-interface XIconHandle {
-  startAnimation: () => void;
-  stopAnimation: () => void;
-}
-
-interface XIconProps extends HTMLAttributes<HTMLDivElement> {
-  size?: number;
-}
-
-const XIcon = React.forwardRef<XIconHandle, XIconProps>(
-  ({ className, size = 28, ...props }, ref) => {
-    const controls = useAnimation();
-    const isControlledRef = React.useRef(false);
-
-    React.useImperativeHandle(ref, () => {
-      isControlledRef.current = true;
-
-      return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
-      };
-    });
-
-    return (
-      <div className={cn(className)} {...props}>
-        <svg
-          fill="none"
-          height={size}
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          width={size}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <motion.path
-            d="M18 6 6 18"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.path
-            d="m6 6 12 12"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          />
-        </svg>
-      </div>
-    );
-  },
-);
-
-XIcon.displayName = "XIcon";

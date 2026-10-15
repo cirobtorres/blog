@@ -88,7 +88,7 @@ export function A({
       href={href}
       {...props}
       variant="markdown"
-      className="[&_svg]:size-3! [&_svg]:transition-colors [&_svg]:duration-300 [&_svg]:stroke-primary/75! [&_svg]:dark:stroke-primary/75! [&_svg]:group-hover:stroke-primary! [&_svg]:dark:group-hover:stroke-primary!"
+      className="[&_svg]:size-3!" // [&_svg]:transition-colors [&_svg]:duration-300 [&_svg]:stroke-primary/75! [&_svg]:dark:stroke-primary/75! [&_svg]:group-hover:stroke-primary! [&_svg]:dark:group-hover:stroke-primary!
     >
       {children}
     </Link>

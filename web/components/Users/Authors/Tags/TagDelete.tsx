@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "../../../AlertDialog";
 import Spinner from "../../../Spinner";
+import { CloseIcon } from "../../../Icons";
 
 const defaultState: ActionState = {
   ok: false,
@@ -23,7 +24,7 @@ const defaultState: ActionState = {
 };
 
 export default function TagDelete({ tag }: { tag: Tag }) {
-  const { mutateAsync, isPending: isPendingAsync } = useDeleteTag();
+  const { mutateAsync } = useDeleteTag();
   const [, action, isPending] = React.useActionState(async () => {
     const success = (responseStatus: ActionState) => (
       <p>{responseStatus?.success ?? "Tag excluída!"}</p>
@@ -45,28 +46,6 @@ export default function TagDelete({ tag }: { tag: Tag }) {
 
     return promise;
   }, defaultState);
-
-  const aaa = () => {
-    const success = (responseStatus: ActionState) => (
-      <p>{responseStatus?.success ?? "Tag excluída!"}</p>
-    );
-    const error = (responseStatus: ActionState) => (
-      <div className="flex flex-col">
-        <p className="text-sm text-neutral-900 dark:text-neutral-100">
-          Ação não concluída
-        </p>
-        <p className="text-xs text-neutral-500 dark:text-neutral-500">
-          {responseStatus?.error ?? "Ocorreu algum erro"}
-        </p>
-      </div>
-    );
-
-    const promise = mutateAsync({ tagId: tag.id });
-    const result = sonnerPromise(promise);
-    sonnerToastPromise(result, success, error, "Excluindo tag...");
-
-    return promise;
-  };
 
   return (
     <AlertDialog>
@@ -94,10 +73,9 @@ export default function TagDelete({ tag }: { tag: Tag }) {
             className="w-full max-w-30 ml-auto mr-0"
           >
             <Button
+              type="submit"
               variant="destructive"
               className="w-full max-w-30 h-8"
-              // onClick={aaa}
-              // disabled={isPendingAsync}
               disabled={isPending}
             >
               {isPending && <Spinner className="p-1" />} Confirmar
@@ -108,20 +86,3 @@ export default function TagDelete({ tag }: { tag: Tag }) {
     </AlertDialog>
   );
 }
-
-const CloseIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M18 6 6 18" />
-    <path d="m6 6 12 12" />
-  </svg>
-);

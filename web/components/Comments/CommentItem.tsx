@@ -222,11 +222,24 @@ export default function CommentItem({
   return (
     <>
       <div className="flex justify-between items-center">
-        <AvatarName
-          key={comment.user.id}
-          authorName={authorName}
-          authorPicUrl={authorPicUrl}
-        />
+        {comment.editedAt ? (
+          <div className="flex items-center gap-2">
+            <AvatarName
+              key={comment.user.id}
+              authorName={authorName}
+              authorPicUrl={authorPicUrl}
+            />
+            <span className="text-xs font-bold text-neutral-900 dark:text-neutral-500">
+              &#40;editado&#41;
+            </span>
+          </div>
+        ) : (
+          <AvatarName
+            key={comment.user.id}
+            authorName={authorName}
+            authorPicUrl={authorPicUrl}
+          />
+        )}
         {isCommentOwner && !isCommentDeleted && !isCommentBlocked && (
           <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <CommentMenuButton isMenuOpen={isMenuOpen} />
@@ -396,7 +409,7 @@ const CommentReplyButton = ({
       variant="ghost"
       onClick={handleReplyClick}
       className={cn(
-        "h-8 text-neutral-900 dark:text-neutral-100 opacity-100",
+        "h-6 text-neutral-900 dark:text-neutral-100 opacity-100",
         isReplying && "border-primary/50 bg-primary/25", // dark:hover:border-primary/75 dark:hover:bg-primary/35
       )}
     >

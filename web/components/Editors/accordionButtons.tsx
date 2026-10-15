@@ -55,7 +55,7 @@ const Disable = ({
         buttonStyles,
         focusRing,
         buttonSizes,
-        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850",
       )}
       onClick={onDisable}
     >
@@ -124,7 +124,7 @@ const Delete = ({
             buttonStyles,
             focusRing,
             buttonSizes,
-            "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
+            "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850",
           )}
           onClick={handleOpenDialog}
         >
@@ -219,7 +219,7 @@ const MoveDownward = ({
         buttonStyles,
         focusRing,
         buttonSizes,
-        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850",
       )}
       onClick={moveDownward}
     >
@@ -262,7 +262,7 @@ const Drag = ({
         buttonStyles,
         buttonSizes,
         "cursor-move",
-        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850 hover:bg-stone-125 dark:hover:bg-stone-800 dark:hover:text-neutral-100",
+        "transition-all duration-300 dark:text-neutral-500 dark:bg-stone-850",
       )}
     >
       <svg

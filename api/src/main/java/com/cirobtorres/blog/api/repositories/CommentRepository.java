@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,11 +33,22 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
     @Query("""
         SELECT COUNT(c)
         FROM Comment c
-        WHERE c.article.id = :articleId 
+        WHERE c.article.id = :articleId
           AND c.isDeleted = false
           AND c.isBlocked = false
     """)
     long countVisibleCommentsByArticleId(UUID articleId);
 
     List<Comment> findByArticleIdAndParentIsNull(UUID articleId);
+
+    @Modifying
+    @Query("""
+        UPDATE Comment c
+        SET c.likeCount = CAST((SELECT COUNT(l) FROM CommentLike l WHERE l.comment.id = :commentId) AS integer)
+        WHERE c.id = :commentId
+        """)
+    void refreshLikeCount(@Param("commentId") UUID commentId);
+
+    @Query("SELECT c.likeCount FROM Comment c WHERE c.id = :commentId")
+    int findLikeCountById(@Param("commentId") UUID commentId);
 }

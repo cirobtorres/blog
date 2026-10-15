@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
-import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
 import { cn, focusRing, focusWithinRing } from "../utils/variants";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "./Icons";
 
 function Select({
   ...props

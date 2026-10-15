@@ -23,7 +23,7 @@ export const createArticleStore = (init?: Partial<ArticleStateAttr>) =>
     setLoading: (loading) => set({ loading }),
     setTitle: (title) => set({ title }),
     setSubtitle: (subtitle) => set({ subtitle }),
-    setSlug: (slug) => set({ slug: slugify(slug) }),
+    setSlug: (slug) => set({ slug }),
     setIsSlugTaken: (isSlugTaken) => set({ isSlugTaken }),
     openMediaLibrary: (target) => set({ activeMediaTarget: target }),
     selectBanner: (data) => {

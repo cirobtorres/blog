@@ -36,7 +36,7 @@ const CopyToClipBoard = ({
         "inline-flex items-center text-center text-nowrap text-xs font-medium h-7 space-x-2 px-2 py-1.25 max-w-24 border rounded not-dark:shadow transition-[border,background-color,box-shadow] duration-300",
         disable
           ? "cursor-auto text-neutral-900 dark:text-neutral-500 border-stone-300 dark:border-stone-650 bg-stone-100 dark:bg-stone-750"
-          : "cursor-pointer text-neutral-900 dark:text-neutral-100 border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 hover:bg-stone-125 dark:hover:bg-stone-750",
+          : "cursor-pointer text-neutral-900 dark:text-neutral-100 border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800",
         focusRing,
         className,
       )}

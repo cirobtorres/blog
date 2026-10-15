@@ -4,40 +4,7 @@ import React from "react";
 import { cn, focusRing } from "../../utils/variants";
 import { Button } from "../Button";
 import { signIn } from "next-auth/react";
-import { toggleCommentLike } from "../../services/commentLike/toggleCommentLike";
-import { useDebouncedCallback } from "use-debounce";
-
-const DEBOUNCE_DURATION = 2000; // ms
-
-// Registro fora do ciclo de vida do React, indexado por commentId. Se a árvore de comentários remontar este componente no meio da janela
-// de debounce, a intenção do usuário e o último estado confirmado pelo servidor sobrevivem à remontagem — só o timer do debounce em si é perdido,
-// então ao montar de novo nós disparamos a sincronização pendente imediatamente em vez de assumir que "não há nada pendente".
-type PendingLikeState = {
-  liked: boolean; // Intenção do usuário
-  server: { liked: boolean; count: number }; // Último estado confirmado pelo servidor
-  inFlight: boolean;
-  dirty: boolean; // Existe uma intenção ainda não confirmada pelo servidor?
-};
-
-const pendingLikeRegistry = new Map<string, PendingLikeState>();
-
-function getPendingState(
-  commentId: string,
-  initialLiked: boolean,
-  initialCount: number,
-): PendingLikeState {
-  const existing = pendingLikeRegistry.get(commentId);
-  if (existing) return existing;
-
-  const created: PendingLikeState = {
-    liked: initialLiked,
-    server: { liked: initialLiked, count: initialCount },
-    inFlight: false,
-    dirty: false,
-  };
-  pendingLikeRegistry.set(commentId, created);
-  return created;
-}
+import { setCommentLike } from "../../services/commentLike/setCommentLike";
 
 export default function CommentLikeButton({
   comment,
@@ -53,16 +20,13 @@ export default function CommentLikeButton({
   size?: number;
 }) {
   const likeHash = `comment-like-${comment.id}`;
-
-  // Em vez de sempre reinicializar a partir de `comment`, consultamos primeiro se já existe um estado pendente para este comentário.
-  const pending = getPendingState(
-    String(comment.id),
+  const [likedByUser, setLikedByUser] = React.useState<boolean>(
     Boolean(comment.likedByCurrentUser),
-    comment.likeCount ?? 0,
   );
-
-  const [likedByUser, setLikedByUser] = React.useState<boolean>(pending.liked);
-  const [fromServer, setFromServer] = React.useState(pending.server);
+  const [fromServer, setFromServer] = React.useState({
+    liked: Boolean(comment.likedByCurrentUser),
+    count: comment.likeCount ?? 0,
+  });
   const likeCount = Math.max(
     0,
     fromServer.count +
@@ -70,9 +34,9 @@ export default function CommentLikeButton({
   );
   const [isHighlightedLike, setIsHighlightedLike] = React.useState(false);
 
-  const likedRef = React.useRef(pending.liked);
-  const serverRef = React.useRef(pending.server);
-  const inFlightRef = React.useRef(pending.inFlight);
+  const likedRef = React.useRef(fromServer.liked);
+  const serverRef = React.useRef(fromServer);
+  const inFlightRef = React.useRef(false);
 
   React.useEffect(() => {
     const checkHash = () => {
@@ -103,31 +67,23 @@ export default function CommentLikeButton({
     return () => window.removeEventListener("hashchange", checkHash);
   }, [likeHash]);
 
-  const commentIdKey = String(comment.id);
-
   const sync = React.useCallback(async () => {
-    const state = getPendingState(
-      commentIdKey,
-      likedRef.current,
-      serverRef.current.count,
-    );
-
-    if (state.inFlight) return;
-    state.inFlight = true;
+    if (inFlightRef.current) return;
     inFlightRef.current = true;
 
     try {
-      // Enquanto a intenção divergir do servidor, tenta convergir
       while (likedRef.current !== serverRef.current.liked) {
+        const desired = likedRef.current; // Do not revert state; send it instead
+
         try {
-          const result = await toggleCommentLike({ commentId: comment.id });
+          const result = await setCommentLike({
+            commentId: comment.id,
+            liked: desired,
+          });
 
           if (!result.ok || !result.data) {
-            // Rollback
             likedRef.current = serverRef.current.liked;
             setLikedByUser(serverRef.current.liked);
-            state.liked = serverRef.current.liked;
-            state.dirty = false;
             return;
           }
 
@@ -136,55 +92,18 @@ export default function CommentLikeButton({
             count: result.data.likeCount,
           };
           setFromServer(serverRef.current);
-          // O servidor é a fonte da verdade também para quem eventualmente reler este registro após um remount
-          state.server = serverRef.current;
         } catch (error) {
-          // Sem isso, uma exceção escaparia do while sem nunca desfazer o estado otimista
+          // Rollback
           console.error("Falha ao sincronizar like do comentário:", error);
           likedRef.current = serverRef.current.liked;
           setLikedByUser(serverRef.current.liked);
-          state.liked = serverRef.current.liked;
-          state.dirty = false;
           return;
         }
       }
-      // Convergiu: a intenção do usuário já é o que o servidor tem.
-      state.dirty = false;
     } finally {
       inFlightRef.current = false;
-      state.inFlight = false;
     }
-  }, [comment.id, commentIdKey]);
-
-  const debouncedSync = useDebouncedCallback(sync, DEBOUNCE_DURATION);
-
-  React.useEffect(() => {
-    // Se este comentário já tinha uma intenção pendente registrada, retomamos a sincronização imediatamente em vez de deixar o
-    // estado remontado (vindo de `comment`) vencer silenciosamente o clique que o usuário já tinha feito
-    const state = getPendingState(
-      commentIdKey,
-      likedRef.current,
-      serverRef.current.count,
-    );
-    if (state.dirty && !state.inFlight) {
-      likedRef.current = state.liked;
-      serverRef.current = state.server;
-      setLikedByUser(state.liked);
-      setFromServer(state.server);
-      sync();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commentIdKey]);
-
-  React.useEffect(() => {
-    // Garante que uma ação pendente (dentro da janela de debounce) não
-    // seja descartada silenciosamente se o componente desmontar antes do
-    // timer disparar (navegação, ou — agora coberto acima — um remount
-    // puramente do React).
-    return () => {
-      debouncedSync.flush();
-    };
-  }, [debouncedSync]);
+  }, [comment.id]);
 
   const handleLikeOrDislike = async () => {
     if (!isSignedIn) {
@@ -195,15 +114,11 @@ export default function CommentLikeButton({
 
     setIsHighlightedLike(false);
 
-    const next = !likedRef.current; // Evita closure desatualizada (stale closure)
+    const next = !likedRef.current; // Prevents outdated closure (stale closure)
     likedRef.current = next;
-    setLikedByUser(next); // Otimista (visual primeiro, resolve depois)
+    setLikedByUser(next); // Optimistic (visual first, resolve later)
 
-    const state = getPendingState(commentIdKey, next, serverRef.current.count);
-    state.liked = next;
-    state.dirty = next !== serverRef.current.liked;
-
-    debouncedSync();
+    void sync();
   };
 
   return (

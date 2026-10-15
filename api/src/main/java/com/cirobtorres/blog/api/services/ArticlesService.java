@@ -319,6 +319,7 @@ public class ArticlesService {
         articlesRepository.delete(article);
     }
 
+    @Transactional
     public boolean isSlugAvailable(@NonNull ArticleSlugDTO slugDTO, UUID excludeId) {
         String slug = slugDTO.slug();
         if (excludeId != null) {
@@ -327,6 +328,7 @@ public class ArticlesService {
         return !articlesRepository.existsBySlug(slug);
     }
 
+    @Transactional
     public ArticleDTO unpublishArticle(UUID id) {
         Articles article = articlesRepository
                 .findById(id)
@@ -340,6 +342,7 @@ public class ArticlesService {
         return new ArticleDTO(article);
     }
 
+    @Deprecated(forRemoval = true)
     @Transactional
     public ArticleLikeDTO likeArticle(UUID articleId, UUID userId) {
         Articles article = articlesRepository.findById(articleId).orElseThrow(() -> new EntityNotFoundException("Article not found"));
@@ -361,5 +364,23 @@ public class ArticlesService {
         }
         articlesRepository.save(article);
         return new ArticleLikeDTO(liked, article.getLikeCount());
+    }
+
+    @Transactional
+    public ArticleLikeDTO setLike(UUID articleId, UUID userId, boolean liked) {
+        if (!articlesRepository.existsById(articleId)) {
+            throw new EntityNotFoundException("Article not found");
+        }
+        userService.findUserById(userId);
+
+        int changed = liked
+                ? articlesLikeRepository.insertIfAbsent(articleId, userId)
+                : articlesLikeRepository.deleteIfPresent(articleId, userId);
+
+        if (changed > 0) {
+            articlesRepository.refreshLikeCount(articleId);
+        }
+
+        return new ArticleLikeDTO(liked, articlesRepository.findLikeCountById(articleId));
     }
 }

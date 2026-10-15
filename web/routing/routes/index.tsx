@@ -23,6 +23,7 @@ const protectedWebUrls = {
   users: "/users/settings",
   write: "/users/authors/articles",
   media: "/users/authors/media",
+  tag: "/users/authors/tags",
 };
 
 const routeHandlers = {
@@ -42,7 +43,7 @@ const apiServerUrls = {
     slug: API_SERVER + "/articles/slug",
   },
   articleLike: {
-    toggle: API_SERVER + "/articles/like/articleId",
+    root: API_SERVER + "/articles/like/articleId",
   },
   comment: {
     root: API_SERVER + "/comments",

@@ -69,6 +69,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/articles/like/articleId/**").permitAll()
 
                         // ARTICLE
+                        .requestMatchers(HttpMethod.GET, "/articles/slug/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.POST, "/articles/**", "/tags/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.PUT, "/articles/**", "/tags/**").hasAuthority("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/articles/**", "/tags/**").hasAuthority("AUTHOR")

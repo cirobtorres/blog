@@ -2,11 +2,14 @@ package com.cirobtorres.blog.api.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,85 +22,14 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({
-            RefreshTokenAlreadyRotatedException.class,
-            UserUnauthorizedException.class
-    })
-    public ResponseEntity<ErrorResponse> handleUnauthorized(
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(MediaNameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(
             RuntimeException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(
-            UserNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUserExists(
-            UserAlreadyExistsException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorBody);
-    }
-
-    @ExceptionHandler(TooManyRequestsException.class)
-    public ResponseEntity<ErrorResponse> handleTooManyRequests(
-            TooManyRequestsException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.TOO_MANY_REQUESTS.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorBody);
-    }
-
-    @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTokenNotFound(
-            TokenNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
-    }
-
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ErrorResponse> handleTokenExpired(
-            TokenExpiredException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorBody = new ErrorResponse(
-                HttpStatus.GONE.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.GONE).body(errorBody);
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -107,8 +39,11 @@ public class GlobalExceptionHandler {
     ) {
         Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
-                        error -> error.getField(),
-                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value",
+                        FieldError::getField,
+                        error ->
+                                error.getDefaultMessage() != null
+                                ? error.getDefaultMessage()
+                                : "Invalid value",
                         (left, right) -> left
                 ));
         ErrorResponse error = new ErrorResponse(
@@ -126,12 +61,7 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid value for parameter '" + ex.getName() + "'",
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return build(HttpStatus.BAD_REQUEST, "Invalid value for parameter '" + ex.getName() + "'", request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -139,12 +69,7 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Malformed JSON request",
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return build(HttpStatus.BAD_REQUEST, "Malformed JSON request", request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -152,38 +77,28 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.FORBIDDEN.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        return build(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class})
+    @ExceptionHandler({
+            ResourceNotFoundException.class,
+            EntityNotFoundException.class
+    })
     public ResponseEntity<ErrorResponse> handleNotFound(
             RuntimeException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
+    // ----------------------------------------------------------------------------------------------------
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(
             RuntimeException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        log.error("Unhandled exception on {}", request.getRequestURI(), ex);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request);
     }
 
     @ExceptionHandler({IOException.class, Exception.class})
@@ -191,12 +106,8 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal error processing MEDIA: " + ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        log.error("Unhandled exception on {}", request.getRequestURI(), ex);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -204,25 +115,22 @@ public class GlobalExceptionHandler {
             DataIntegrityViolationException ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        log.error("Unhandled exception on {}", request.getRequestURI(), ex);
+        return build(HttpStatus.CONFLICT, "Internal server error", request);
     }
 
-    @ExceptionHandler(InvalidPasswordPolicyException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidPasswordPolicy(
-            InvalidPasswordPolicyException ex,
+    // ----------------------------------------------------------------------------------------------------
+    private ResponseEntity<ErrorResponse> build(
+            HttpStatus status,
+            String message,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                request.getRequestURI()
+        return ResponseEntity.status(status).body(
+                new ErrorResponse(
+                        status.value(),
+                        message,
+                        request.getRequestURI()
+                )
         );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

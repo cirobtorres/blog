@@ -13,10 +13,10 @@ import {
   sonnerToastPromise,
   sonnerPromise,
 } from "../../../../../../utils/sonner";
-import AnimatedIcon from "./AnimatedIcon";
-import Spinner from "../../../../../Spinner";
 import { FieldsetError } from "../../../../../Fieldset";
 import { fetchFileFromUrl } from "../../../../../../utils/media-file-utils";
+import AnimatedIcon from "./AnimatedIcon";
+import Spinner from "../../../../../Spinner";
 
 interface Errors {
   url: string[] | string;

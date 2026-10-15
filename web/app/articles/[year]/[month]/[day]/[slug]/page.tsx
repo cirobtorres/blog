@@ -7,6 +7,16 @@ import Comments from "../../../../../../components/Comments";
 import Header from "../../../../../../components/Header";
 import Footer from "../../../../../../components/Footer";
 import { serverFetch } from "../../../../../../services/serverFetch";
+import {
+  ArticleCard,
+  ArticleCardDate,
+  ArticleCardImage,
+  ArticleCardLink,
+  ArticleCards,
+  ArticleCardSubtitle,
+  ArticleCardTitle,
+} from "../../../../../../components/Article/ArticleCards";
+import { mountURL } from "../../../../../../utils/date";
 
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -80,6 +90,26 @@ export default async function ArticlePageId({
           <ArticleTitle {...article} />
         </React.Suspense>
         <ArticleBody {...article} />
+        <section className="w-full max-w-article-title mx-auto px-3 my-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl">Artigos relacionados</h2>
+          </div>
+          <ArticleCards>
+            <ArticleCardLink key={article.id} href={mountURL(article)}>
+              <ArticleCard id={article.id}>
+                <ArticleCardImage
+                  id={article.id}
+                  src={article.banner.url}
+                  alt={article.banner.alt}
+                  fill
+                />
+                <ArticleCardDate>{article.createdAt}</ArticleCardDate>
+                <ArticleCardTitle>{article.title}</ArticleCardTitle>
+                <ArticleCardSubtitle>{article.subtitle}</ArticleCardSubtitle>
+              </ArticleCard>
+            </ArticleCardLink>
+          </ArticleCards>
+        </section>
         <Comments articleId={article.id} resolvedParams={resolvedParams} />
       </main>
       <Footer />

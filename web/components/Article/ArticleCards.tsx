@@ -52,7 +52,6 @@ export function ArticleCardLink({
       href={href}
       {...props}
       className={cn(
-        // "transition-shadow duration-300 rounded-2xl border border-transparent focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
         "transition-shadow duration-300 border border-stone-300 not-dark:shadow bg-stone-100 dark:border-stone-700 dark:bg-stone-900 focus-visible:border-stone-300 dark:focus-visible:border-stone-700",
         focusRing,
         className,

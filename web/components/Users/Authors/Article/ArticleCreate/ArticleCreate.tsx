@@ -10,7 +10,6 @@ import { buttonVariants, cn } from "../../../../../utils/variants";
 import { sonnerToastPromise, sonnerPromise } from "../../../../../utils/sonner";
 import { FieldsetError } from "../../../../Fieldset";
 import { publishArticleSchema } from "../../../../../services/article/zod-validations";
-import { ButtonPlaceholder } from "../ArticlePopoverButton";
 import postArticle from "../../../../../services/article/postArticle";
 import ArticleEditorSlug from "../../../../Editors/editors/ArticleEditorSlug";
 import ArticleEditorTag from "../../../../Editors/editors/ArticleEditorTag";
@@ -24,6 +23,7 @@ import {
 import { ArticleStoreProvider } from "../../../../../providers/ArticleStoreProvider";
 import { useSession } from "next-auth/react";
 import BlocksInput from "../BlocksInput";
+import { Col, Row } from "../utils";
 
 interface ArticleErrors {
   title?: { errors?: string[] };
@@ -114,12 +114,16 @@ export function ArticleCreate() {
     <ArticleStoreProvider>
       <ArticleMediaManager />
       <section className="w-full max-w-6xl mx-auto px-2 my-6 flex-1 flex flex-col">
-        <form action={action} onSubmit={onSubmit}>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="w-full text-3xl font-extrabold">
-              Escrever novo artigo
-            </h1>
-            <div className="w-full flex justify-end items-center gap-2">
+        <form
+          action={action}
+          onSubmit={onSubmit}
+          className="w-full flex flex-col gap-2"
+        >
+          <Row className="justify-between mb-6">
+            <Col>
+              <h1 className="text-3xl font-extrabold">Escrever novo artigo</h1>
+            </Col>
+            <Col className="flex justify-end items-center gap-2">
               <ArticleButton
                 variant="link"
                 disabled={isPending}
@@ -127,58 +131,85 @@ export function ArticleCreate() {
               >
                 Salvar
               </ArticleButton>
-              <div
-                className={cn(
-                  buttonVariants(),
-                  "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/75",
-                )}
-              >
-                Publicar
-              </div>
-              <ButtonPlaceholder />
-            </div>
-          </div>
+              <PublishPlaceholder />
+              <MenuPlaceholder />
+            </Col>
+          </Row>
           <InputAlerts state={state} />
-          <div className="w-full flex flex-col gap-2">
-            <div className="w-full flex gap-2">
-              <div className="w-full">
-                <ArticleEditorTitle error={!!errors?.title?.errors} />
-                <FieldsetError error={errors?.title?.errors} />
-              </div>
-              <div className="w-full">
-                <ArticleEditorSubtitle
-                  maxLength={200}
-                  error={!!errors?.subtitle?.errors}
-                />
-                <FieldsetError error={errors?.subtitle?.errors} />
-              </div>
-            </div>
-            <div className="w-full flex gap-2">
-              <div className="w-full">
-                <ArticleEditorTag
-                  tags={selectedTags}
-                  setTags={setSelectedTags}
-                  error={!!errors?.tags?.errors}
-                />
-                <FieldsetError error={errors?.tags?.errors} />
-              </div>
-              <div className="w-full">
-                <ArticleEditorSlug error={!!errors?.slug?.errors} />
-                <FieldsetError error={errors?.slug?.errors} />
-              </div>
-            </div>
-            <ArticleBannerButton error={!!errors?.banner?.errors} />
-            <FieldsetError error={errors?.banner?.errors} />
-          </div>
-          <div className="mt-2">
-            <BlocksInput />
-            <BlockList />
-          </div>
-          <div className="mt-2">
-            <AddBlockButton />
-          </div>
+          <Row className="gap-2">
+            <Col>
+              <ArticleEditorTitle error={!!errors?.title?.errors} />
+              <FieldsetError error={errors?.title?.errors} />
+            </Col>
+            <Col>
+              <ArticleEditorSubtitle
+                maxLength={200}
+                error={!!errors?.subtitle?.errors}
+              />
+              <FieldsetError error={errors?.subtitle?.errors} />
+            </Col>
+          </Row>
+          <Row className="gap-2">
+            <Col>
+              <ArticleEditorTag
+                tags={selectedTags}
+                setTags={setSelectedTags}
+                error={!!errors?.tags?.errors}
+              />
+              <FieldsetError error={errors?.tags?.errors} />
+            </Col>
+            <Col>
+              <ArticleEditorSlug error={!!errors?.slug?.errors} />
+              <FieldsetError error={errors?.slug?.errors} />
+            </Col>
+          </Row>
+          <ArticleBannerButton error={!!errors?.banner?.errors} />
+          <FieldsetError error={errors?.banner?.errors} />
+          <BlocksInput />
+          <BlockList />
+          <AddBlockButton />
         </form>
       </section>
     </ArticleStoreProvider>
   );
 }
+
+const PublishPlaceholder = () => {
+  return (
+    <div
+      className={cn(
+        buttonVariants(),
+        "w-full max-w-30 h-8 cursor-auto opacity-50 hover:bg-primary/75",
+      )}
+    >
+      Publicar
+    </div>
+  );
+};
+
+const MenuPlaceholder = () => {
+  return (
+    <div
+      className={cn(
+        buttonVariants({ variant: "outline" }),
+        "cursor-auto size-8 opacity-50",
+      )}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="19" cy="12" r="1" />
+        <circle cx="5" cy="12" r="1" />
+      </svg>
+    </div>
+  );
+};
