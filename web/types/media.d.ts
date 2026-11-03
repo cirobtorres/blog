@@ -1,33 +1,32 @@
-// Comes from Cloudinary
-type Cloudinary = {
-  api_key: string;
-  asset_id: string;
-  public_id: string;
-  version_id: string;
+// Provider-neutral description of a stored file.
+// Mirrors the Spring `StoredObjectDTO` record (storage package); the front-end never sees provider payloads.
+type MediaType = "IMAGE" | "VIDEO" | "AUDIO" | "RAW";
+
+type StoredObject = {
+  key: string;
   url: string;
-  secure_url: string;
-  etag: string;
-  folder: { path: string };
-  format: string;
-  bytes: number;
-  width: number;
-  height: number;
-  original_filename: string;
-  placeholder: false;
-  resource_type: string;
-  signature: string;
-  tags: [];
-  type: string;
-  version: number;
+  size: number | null;
+  extension: string | null;
+  type: MediaType | null;
+  width: number | null;
+  height: number | null;
   duration: number | null;
-  created_at: string;
 };
 
-type CloudinarySave = Cloudinary & {
-  custom_alt: string;
-  custom_caption: string;
-  custom_folder_id: string | null;
-  custom_name: string;
+// What an uploader returns: the fields that are always known right after an upload
+type UploadedObject = StoredObject & {
+  size: number;
+  extension: string;
+  type: MediaType;
+};
+
+// An uploaded object plus the metadata the author typed in the form
+type UploadedMedia = {
+  object: UploadedObject;
+  name: string;
+  alt: string;
+  caption: string;
+  folderId: string | null;
 };
 
 // Comes from server
@@ -38,7 +37,7 @@ type Media = {
   publicId: string;
   url: string;
   extension: string;
-  type: "IMAGE" | "VIDEO" | "AUDIO" | "RAW";
+  type: MediaType;
   size: number;
   width: number;
   height: number;

@@ -11,7 +11,12 @@ import { createFilesOnDb } from "../../../../../../services/media/createFilesOnD
 import { Button } from "../../../../../Button";
 import DialogEmptyContent from "./DialogEmptyContent";
 import DialogCardsContent from "./DialogCardsContent";
-import createFile from "../../../../../../services/cloudinary/createFile";
+import {
+  mediaUploader,
+  createMediaKey,
+  MediaAlreadyExistsError,
+} from "../../../../../../services/storage";
+import findNameConflicts from "../../../../../../services/media/findNameConflicts";
 import validateFiles from "../../../../../../utils/zod-file-validations";
 
 const defaultState: ActionState = {
@@ -34,11 +39,7 @@ export default function AddFilesButton() {
       }
 
       const success = (serverResponse: ActionState) => {
-        const dateSource = Array.isArray(serverResponse.data)
-          ? serverResponse.data[0]?.created_at
-          : new Date();
-
-        const now = convertToLargeDate(new Date(dateSource));
+        const now = convertToLargeDate(new Date());
 
         setOpenStep(null);
         setFiles([]);
@@ -59,12 +60,56 @@ export default function AddFilesButton() {
 
       if (!validation.ok) return validation;
 
-      const uploadLogic = async () => {
-        const uploadPromises = files.map((file, index) =>
-          createFile(file.file, validation.data[index]),
-        );
-        const cloudinaryResults = await Promise.all(uploadPromises);
-        return await createFilesOnDb(cloudinaryResults);
+      const uploadLogic = async (): Promise<ActionState> => {
+        try {
+          // Names are unique (ignoring case) and the storage key no longer depends on them,
+          // so check them BEFORE uploading anything
+          const conflicts = (
+            await findNameConflicts(
+              validation.data.map((d: { customName: string }) => d.customName),
+            )
+          ).map((name) => name.toLowerCase());
+
+          if (conflicts.length > 0) {
+            const nameErrors: Record<string, unknown[]> = {};
+            validation.data.forEach(
+              (d: { customName: string; fileId: string }) => {
+                if (conflicts.includes(d.customName.toLowerCase())) {
+                  nameErrors[d.fileId] = [
+                    {
+                      code: "custom",
+                      message: "Já existe um arquivo com esse nome",
+                      path: ["customName"],
+                    },
+                  ];
+                }
+              },
+            );
+            return { ...defaultState, error: nameErrors };
+          }
+
+          const uploads: UploadedMedia[] = await Promise.all(
+            files.map(async (file, index) => {
+              const metadata = validation.data[index];
+              const object = await mediaUploader.upload(file.file, {
+                key: createMediaKey(),
+              });
+              return {
+                object,
+                name: metadata.customName,
+                alt: metadata.customAlt,
+                caption: metadata.customCaption,
+                folderId: metadata.customFolderId ?? null,
+              };
+            }),
+          );
+          return await createFilesOnDb(uploads);
+        } catch (e) {
+          if (e instanceof MediaAlreadyExistsError) {
+            return { ...defaultState, error: e.message };
+          }
+          throw e;
+        }
       };
 
       const result = uploadLogic();

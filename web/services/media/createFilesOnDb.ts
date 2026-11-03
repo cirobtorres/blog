@@ -5,20 +5,20 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { serverFetch } from "../serverFetch";
 import { auth } from "../../keycloak/auth";
 
-export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
-  const mediaDTOs = cloudinaryResults.map((res) => ({
-    name: res.custom_name,
-    folder: { id: res.custom_folder_id },
-    publicId: res.public_id,
-    url: res.secure_url,
-    extension: res.format,
-    type: res.resource_type.toUpperCase() === "VIDEO" ? "VIDEO" : "IMAGE",
-    size: res.bytes,
-    width: res.width,
-    height: res.height,
-    duration: res.duration || null,
-    alt: res.custom_alt,
-    caption: res.custom_caption,
+export async function createFilesOnDb(uploads: UploadedMedia[]) {
+  const mediaDTOs = uploads.map(({ object, name, alt, caption, folderId }) => ({
+    name,
+    folder: { id: folderId },
+    publicId: object.key,
+    url: object.url,
+    extension: object.extension,
+    type: object.type,
+    size: object.size,
+    width: object.width,
+    height: object.height,
+    duration: object.duration,
+    alt,
+    caption,
   }));
 
   const session = await auth();
@@ -42,9 +42,18 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     cache: "no-store",
   });
 
+  if (response.status === 409) {
+    return {
+      ok: false,
+      success: null,
+      error: "Já existe um arquivo com esse nome.",
+      data: null,
+    };
+  }
+
   if (!response.ok) {
     console.error(
-      "syncWithSpringBoot: Failed to sync data between Cloudinary and Server.",
+      "createFilesOnDb: Failed to register the uploaded files on the server.",
       response.status,
       response.statusText,
     );
@@ -64,6 +73,6 @@ export async function createFilesOnDb(cloudinaryResults: CloudinarySave[]) {
     ok: true,
     success: "Arquivos salvos com sucesso!",
     error: null,
-    data: cloudinaryResults,
+    data: uploads.map((upload) => upload.object),
   };
 }

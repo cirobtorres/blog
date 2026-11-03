@@ -17,6 +17,7 @@ import { FieldsetError } from "../../../../../Fieldset";
 import { fetchFileFromUrl } from "../../../../../../utils/media-file-utils";
 import AnimatedIcon from "./AnimatedIcon";
 import Spinner from "../../../../../Spinner";
+import { routeHandlers } from "../../../../../../routing/routes";
 
 interface Errors {
   url: string[] | string;
@@ -65,7 +66,7 @@ export default function DialogEmptyContent({
 
     try {
       const filePromise = fetchFileFromUrl(
-        `/api/fetch-file?url=${encodeURIComponent(url)}`,
+        `${routeHandlers.fetchFile}?url=${encodeURIComponent(url)}`,
       );
       const result = sonnerPromise(
         filePromise

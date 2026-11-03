@@ -3,48 +3,49 @@ package com.cirobtorres.blog.api.services;
 import com.cirobtorres.blog.api.dtos.*;
 import com.cirobtorres.blog.api.entities.Media;
 import com.cirobtorres.blog.api.enums.FilterQueryParams;
-import com.cirobtorres.blog.api.enums.MediaType;
 import com.cirobtorres.blog.api.exceptions.MediaNameAlreadyExistsException;
 import com.cirobtorres.blog.api.repositories.MediaRepository;
 import com.cirobtorres.blog.api.entities.MediaFolder;
 import com.cirobtorres.blog.api.repositories.MediaFolderRepository;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.api.ApiResponse;
-import com.cloudinary.utils.ObjectUtils;
+import com.cirobtorres.blog.api.repositories.MediaStorage;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class MediaService {
-    private final Cloudinary cloudinary;
+    // Storage keys are minted by whoever uploads as "media/<uuid>"; used to list what is in the storage
+    private static final String MEDIA_KEY_PREFIX = "media/";
+
+    private final MediaStorage mediaStorage;
     private final MediaRepository mediaRepository;
     private final MediaFolderRepository mediaFolderRepository;
-    private final ObjectMapper objectMapper;
 
     public MediaService(
-            Cloudinary cloudinary,
+            MediaStorage mediaStorage,
             MediaRepository mediaRepository,
-            MediaFolderRepository mediaFolderRepository,
-            ObjectMapper objectMapper
+            MediaFolderRepository mediaFolderRepository
     ) {
-        this.cloudinary = cloudinary;
+        this.mediaStorage = mediaStorage;
         this.mediaRepository = mediaRepository;
         this.mediaFolderRepository = mediaFolderRepository;
-        this.objectMapper = objectMapper;
     }
 
     public long countFilesByFolder(String folderPath) {
@@ -57,7 +58,7 @@ public class MediaService {
 
         if (q != null && !q.trim().isEmpty()) {
             spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("publicId")), "%" + q.toLowerCase() + "%"));
+                    cb.like(cb.lower(root.get("name")), "%" + q.toLowerCase() + "%"));
         } else {
             String targetPath = (folderPath == null || folderPath.isEmpty()) ? "Home" : folderPath;
             spec = spec.and((root, query, cb) ->
@@ -79,7 +80,7 @@ public class MediaService {
     public void moveFiles(@Valid @NonNull MediaFilesMoveToDTO mediaFilesMoveToDTO) {
         MediaFolder destination = mediaFilesMoveToDTO.targetFolderId() == null
                 ? mediaFolderRepository.findByPath("/")
-                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
                 : mediaFolderRepository.findById(mediaFilesMoveToDTO.targetFolderId())
                 .orElseThrow(
                         () -> new EntityNotFoundException("Destination folder not found: " + mediaFilesMoveToDTO.targetFolderId())
@@ -97,48 +98,72 @@ public class MediaService {
     }
 
     @Transactional
-    public List<Map<String, Object>> findOrphanFiles(String folderPath) throws Exception {
-        ApiResponse response = cloudinary
-                .api()
-                .resources(
-                        ObjectUtils.asMap(
-                                "type", "upload",
-                                "prefix", folderPath,
-                                "max_results", 500
-                        )
-                );
+    public List<StoredObjectDTO> findOrphanFiles() {
+        // Lists all keys already registered on the database
+        Set<String> localKeys = new HashSet<>(mediaRepository.findAllPublicIds());
 
-        List<Map<String, Object>> cloudinaryResources = objectMapper.convertValue(
-                response.get("resources"),
-                new TypeReference<List<Map<String, Object>>>() {}
-        );
-
-        // Lists all public_ids from ArticlesMediaService
-        List<String> localPublicIds = mediaRepository.findAllPublicIdsByFolderPath(folderPath);
-
-        // Filters all public_ids from Cloudinary that do not exist on ArticlesMediaService
-        return cloudinaryResources
+        // Filters all objects from the storage that are not registered on the database
+        return mediaStorage
+                .list(MEDIA_KEY_PREFIX)
                 .stream()
-                .filter(
-                        res -> !localPublicIds.contains(
-                                res.get("public_id").toString()
-                        )
-                )
+                .filter(object -> !localKeys.contains(object.key()))
                 .toList();
+    }
+
+    /**
+     * Returns the given names that cannot be used: already taken (ignoring case) or repeated within the list.
+     */
+    @Transactional
+    public List<String> findNameConflicts(@NonNull Collection<String> names) {
+        Set<String> seen = new HashSet<>();
+        Set<String> candidates = new HashSet<>();
+        List<String> conflicts = new ArrayList<>();
+
+        for (String name : names) {
+            String lower = normalize(name);
+            if (!seen.add(lower)) {
+                conflicts.add(name); // Repeated inside the same request
+            } else {
+                candidates.add(lower);
+            }
+        }
+
+        if (!candidates.isEmpty()) {
+            Set<String> taken = new HashSet<>(mediaRepository.findExistingLowerNames(candidates));
+            for (String name : names) {
+                if (taken.contains(normalize(name)) && !conflicts.contains(name)) {
+                    conflicts.add(name);
+                }
+            }
+        }
+
+        return conflicts;
     }
 
     @Transactional
     public void saveAll(@NonNull List<MediaDTO> mediaList) {
-        List<String> existingIds = mediaRepository.findAllPublicIds();
+        Set<String> existingKeys = new HashSet<>(mediaRepository.findAllPublicIds());
 
-        List<Media> entitiesToSave = mediaList
+        // Keys already registered are skipped (idempotent import)
+        List<MediaDTO> newMedia = mediaList
                 .stream()
-                .filter(dto -> !existingIds.contains(dto.publicId()))
-                .map(this::convertToEntity)
+                .filter(dto -> !existingKeys.contains(dto.publicId()))
                 .toList();
 
-        if (!entitiesToSave.isEmpty()) {
-            mediaRepository.saveAll(entitiesToSave);
+        if (newMedia.isEmpty()) return;
+
+        List<String> conflicts = findNameConflicts(newMedia.stream().map(MediaDTO::name).toList());
+        if (!conflicts.isEmpty()) {
+            throw new MediaNameAlreadyExistsException(
+                    "A file with name \"" + conflicts.getFirst() + "\" already exists."
+            );
+        }
+
+        try {
+            mediaRepository.saveAllAndFlush(newMedia.stream().map(this::convertToEntity).toList());
+        } catch (DataIntegrityViolationException e) {
+            // Race: another request took the name after the check above (unique index on lower(name))
+            throw new MediaNameAlreadyExistsException("A file with one of these names already exists.");
         }
     }
 
@@ -155,7 +180,7 @@ public class MediaService {
         // MediaFolder
         MediaFolder targetFolder = mediaPutDTO.folder().id() == null
                 ? mediaFolderRepository.findByPath("/")
-                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
                 : mediaFolderRepository.findById(mediaPutDTO.folder().id())
                 .orElseThrow(
                         () -> new EntityNotFoundException(
@@ -163,75 +188,41 @@ public class MediaService {
                         )
                 );
 
-        // Sanitize
-        String newPublicId = mediaPutDTO.name();
+        // Rename: database only. The storage key is immutable, so the file URL never changes
+        String newName = mediaPutDTO.name().trim();
 
-        // Update Cloudinary
-        Map<?, ?> response;
-
-        String oldPublicId = media.getPublicId();
-        boolean hasPathChanged = !oldPublicId.equals(newPublicId);
-
-        if (hasPathChanged) {
-            try {
-                response = cloudinary
-                        .uploader()
-                        .rename(oldPublicId, newPublicId, ObjectUtils.emptyMap());
-            } catch (Exception e) {
-                if (causeMessageContains(e, "already exists")) {
-                    throw new MediaNameAlreadyExistsException(
-                            "A file with name \"" + newPublicId + "\" already exists."
-                    );
-                }
-                if (causeMessageContains(e, "not found")) {
-                    throw new EntityNotFoundException(
-                            "Cloudinary: file not found. public_id={" + oldPublicId + "}"
-                    );
-                }
-                throw new RuntimeException(
-                        "Cloudinary: update fail. public_id={" + oldPublicId + "}", e
+        if (!newName.equals(media.getName())) {
+            // Ignores the media itself, so "yokohama" -> "Yokohama" is allowed
+            if (mediaRepository.existsByNameIgnoreCaseAndIdNot(newName, id)) {
+                throw new MediaNameAlreadyExistsException(
+                        "A file with name \"" + newName + "\" already exists."
                 );
             }
-
-            // Outside try-catch, so it is not overwritten by catch clause
-            if (response == null || !response.containsKey("public_id")) {
-                throw new RuntimeException("Cloudinary update fail: response was empty or invalid.");
-            }
-        } else {
-            response = Map.of("result", "ok", "public_id", oldPublicId);
+            media.setName(newName);
         }
 
         // Update entity
-        Object responsePublicId = response.get("public_id");
-        media.setPublicId(responsePublicId != null ? responsePublicId.toString() : newPublicId);
         media.setFolder(targetFolder);
         media.setAlt(mediaPutDTO.alt());
         media.setCaption(mediaPutDTO.caption());
-        if (response.containsKey("secure_url")) {
-            media.setUrl((String) response.get("secure_url"));
-        }
 
         // Update database
-        mediaRepository.save(media);
+        try {
+            mediaRepository.saveAndFlush(media);
+        } catch (DataIntegrityViolationException e) {
+            // Race: another request took the name after the check above (unique index on lower(name))
+            throw new MediaNameAlreadyExistsException("A file with name \"" + newName + "\" already exists.");
+        }
     }
 
     @Transactional
-    public void deleteMedia(UUID id) throws Exception {
+    public void deleteMedia(UUID id) {
         Media media = mediaRepository.findById(id)
                 .orElseThrow(
                         () -> new EntityNotFoundException("Media id={" + id + "} does not exist.")
                 );
 
-        String resourceType = "image";
-        if (media.getType() == MediaType.VIDEO) resourceType = "video";
-        if (media.getType() == MediaType.RAW) resourceType = "raw";
-
-        Map<?, ?> destroyParams = ObjectUtils.asMap("resource_type", resourceType);
-        Map<?, ?> response = cloudinary.uploader().destroy(media.getPublicId(), destroyParams);
-
-        if (!"ok".equals(response.get("result")) && !"not found".equals(response.get("result"))) {
-            throw new RuntimeException("Cloudinary delete fail: " + response.get("result"));
-        }
+        mediaStorage.delete(new ObjectRefDTO(media.getPublicId(), media.getType()));
 
         mediaRepository.delete(media);
     }
@@ -246,25 +237,12 @@ public class MediaService {
             return;
         }
 
-        for (Media media : mediaList) {
-            try {
-                String resourceType = "image";
-                if (media.getType() == MediaType.VIDEO) resourceType = "video";
-                if (media.getType() == MediaType.RAW) resourceType = "raw";
-
-                Map<?, ?> result = cloudinary.uploader().destroy(
-                        media.getPublicId(),
-                        ObjectUtils.asMap("resource_type", resourceType)
-                );
-
-                if (!"ok".equals(result.get("result")) && !"not found".equals(result.get("result"))) {
-                    throw new RuntimeException("Cloudinary delete fail while deleting media public_id=" + media.getPublicId());
-                }
-            } catch (Exception e) {
-                // Because we are inside a @Transactional, the RuntimeException must be thrown here in order to trigger a rollback
-                throw new RuntimeException("Cloudinary fail on public_id=" + media.getPublicId() + ": ", e);
-            }
-        }
+        // Because we are inside a @Transactional, a StorageException (RuntimeException) triggers a rollback
+        mediaStorage.deleteAll(
+                mediaList.stream()
+                        .map(media -> new ObjectRefDTO(media.getPublicId(), media.getType()))
+                        .toList()
+        );
 
         List<UUID> mediaIds = mediaList.stream().map(Media::getId).toList();
 
@@ -306,12 +284,13 @@ public class MediaService {
     private Media convertToEntity(@NonNull MediaDTO dto) {
         MediaFolder folder = dto.folder().id() == null
                 ? mediaFolderRepository.findByPath("/")
-                    .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
+                .orElseThrow(() -> new EntityNotFoundException("Home folder not found"))
                 : mediaFolderRepository.findById(dto.folder().id())
-                    .orElseThrow(() -> new EntityNotFoundException("MediaFolder not found"));
+                .orElseThrow(() -> new EntityNotFoundException("MediaFolder not found"));
 
         return Media.builder()
                 .folder(folder)
+                .name(dto.name().trim())
                 .publicId(dto.publicId())
                 .url(dto.url())
                 .extension(dto.extension())
@@ -333,7 +312,7 @@ public class MediaService {
 
         return new MediaDTO(
                 entity.getId(),
-                extractNameFromPublicId(entity.getPublicId()),
+                entity.getName(),
                 new MediaFolderDTO(entity.getFolder() != null ? entity.getFolder().getId() : null, folderPath),
                 entity.getPublicId(),
                 entity.getUrl(),
@@ -348,20 +327,7 @@ public class MediaService {
         );
     }
 
-    private String extractNameFromPublicId(String path) {
-        if (path == null || path.isBlank()) return "file";
-        String[] parts = path.split("/");
-        return parts[parts.length - 1];
-    }
-
-    private boolean causeMessageContains(Throwable t, String text) {
-        while (t != null) {
-            if (t.getMessage() != null
-                    && t.getMessage().toLowerCase().contains(text)) {
-                return true;
-            }
-            t = t.getCause();
-        }
-        return false;
+    private static String normalize(String name) {
+        return name.trim().toLowerCase(Locale.ROOT);
     }
 }

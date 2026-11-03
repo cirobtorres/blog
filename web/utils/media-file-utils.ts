@@ -7,7 +7,7 @@ export function VideoThumbnail(file: File): Promise<string> {
     video.playsInline = true;
 
     video.onloadeddata = () => {
-      video.currentTime = 1; // Frame 1
+      video.currentTime = 1;
     };
 
     video.onseeked = () => {
@@ -31,9 +31,4 @@ export async function fetchFileFromUrl(url: string) {
     );
   }
   return response;
-}
-
-export function getOptimizedMediaUrl(url: string, width: number) {
-  if (!url.includes("cloudinary.com")) return url;
-  return url.replace("/upload/", `/upload/c_fill,w_${width},q_auto,f_auto/`);
 }

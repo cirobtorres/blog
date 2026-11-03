@@ -30,6 +30,7 @@ const routeHandlers = {
   login: WEB_URL + "/api/auth/login",
   refresh: WEB_URL + "/api/auth/refresh",
   callback: WEB_URL + "/api/auth/callback",
+  fetchFile: "/api/fetch-file",
 };
 
 const apiServerUrls = {
@@ -55,6 +56,8 @@ const apiServerUrls = {
   media: {
     root: API_SERVER + "/media",
     count: API_SERVER + "/media/count",
+    nameConflicts: API_SERVER + "/media/names/conflicts",
+    syncCheck: API_SERVER + "/media/sync/check",
     syncImport: API_SERVER + "/media/sync/import",
     move: API_SERVER + "/media/move/all",
   },
@@ -80,6 +83,8 @@ const apiBrowserUrls = {
   media: {
     root: `${API_BROWSER}/media`,
     count: `${API_BROWSER}/media/count`,
+    nameConflicts: `${API_BROWSER}/media/names/conflicts`,
+    syncCheck: `${API_BROWSER}/media/sync/check`,
     syncImport: `${API_BROWSER}/media/sync/import`,
     move: `${API_BROWSER}/media/move/all`,
   },

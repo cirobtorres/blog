@@ -3,10 +3,12 @@ package com.cirobtorres.blog.api.configs;
 import com.cirobtorres.blog.api.ApiApplicationProperties;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(proxyBeanMethods = false)
+@ConditionalOnProperty(name = "media.storage.provider", havingValue = "cloudinary", matchIfMissing = true)
 public class CloudinaryConfig {
     private final ApiApplicationProperties apiApplicationProperties;
 

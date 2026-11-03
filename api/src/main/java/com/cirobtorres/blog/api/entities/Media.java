@@ -21,6 +21,10 @@ public class Media {
     @JoinColumn(name = "folder_id")
     private MediaFolder folder;
 
+    // Unique ignoring case; the storage key (publicId) never changes
+    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    private String name;
+
     @Column(name = "public_id", nullable = false, unique = true, columnDefinition = "TEXT")
     private String publicId;
 
@@ -63,6 +67,7 @@ public class Media {
     // BUILDER----------------------------------------------------------------------------------------------------
     private Media(Builder builder) {
         this.folder = builder.folder;
+        this.name = builder.name;
         this.publicId = builder.publicId;
         this.url = builder.url;
         this.extension = builder.extension;
@@ -79,6 +84,7 @@ public class Media {
 
     public static class Builder {
         private MediaFolder folder;
+        private String name;
         private String publicId;
         private String url;
         private String extension;
@@ -92,6 +98,11 @@ public class Media {
 
         public Builder folder(MediaFolder folder) {
             this.folder = folder;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -151,6 +162,9 @@ public class Media {
     // GETTERS / SETTERS------------------------------------------------------------------------------------------
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getPublicId() { return publicId; }
     public void setPublicId(String publicId) { this.publicId = publicId; }

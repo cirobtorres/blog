@@ -5,7 +5,7 @@ type ActionState = {
   data:
     | Record<string, string>
     | Record<Blocks[]>
-    | Cloudinary[]
+    | StoredObject[]
     | PageableTag
     | PageableMedia
     | null;

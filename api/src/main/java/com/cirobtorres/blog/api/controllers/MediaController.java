@@ -1,10 +1,7 @@
 package com.cirobtorres.blog.api.controllers;
 
 import com.cirobtorres.blog.api.ApiApplicationProperties;
-import com.cirobtorres.blog.api.dtos.MediaDeleteAllDTO;
-import com.cirobtorres.blog.api.dtos.MediaDTO;
-import com.cirobtorres.blog.api.dtos.MediaFilesMoveToDTO;
-import com.cirobtorres.blog.api.dtos.MediaPutDTO;
+import com.cirobtorres.blog.api.dtos.*;
 import com.cirobtorres.blog.api.services.MediaService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -53,13 +50,18 @@ public class MediaController {
     }
 
     @GetMapping("sync/check")
-    public ResponseEntity<List<Map<String, Object>>> checkSync(
-            @RequestParam String folder
-    ) throws Exception {
-        return ResponseEntity.ok(mediaService.findOrphanFiles(folder));
+    public ResponseEntity<List<StoredObjectDTO>> checkSync() {
+        return ResponseEntity.ok(mediaService.findOrphanFiles());
     }
 
     // POST
+    @PostMapping("names/conflicts")
+    public ResponseEntity<List<String>> nameConflicts(
+            @RequestBody List<String> names
+    ) {
+        return ResponseEntity.ok(mediaService.findNameConflicts(names));
+    }
+
     @PostMapping("sync/import")
     public ResponseEntity<Void> importMedia(
             @RequestBody List<MediaDTO> mediaList
@@ -73,7 +75,7 @@ public class MediaController {
     public ResponseEntity<Void> put(
             @PathVariable UUID id,
             @RequestBody MediaPutDTO mediaPutDTO
-            ) {
+    ) {
         mediaService.putMedia(id, mediaPutDTO);
         return ResponseEntity.noContent().build();
     }
@@ -98,7 +100,7 @@ public class MediaController {
     @DeleteMapping
     public ResponseEntity<Void> deleteAll(
             @RequestBody MediaDeleteAllDTO fileIdsDTO
-            ) {
+    ) {
         mediaService.deleteMediaAll(fileIdsDTO);
         return ResponseEntity.noContent().build();
     }

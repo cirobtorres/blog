@@ -2,11 +2,11 @@ package com.cirobtorres.blog.api.services;
 
 import com.cirobtorres.blog.api.dtos.*;
 import com.cirobtorres.blog.api.entities.Media;
+import com.cirobtorres.blog.api.exceptions.StorageException;
 import com.cirobtorres.blog.api.repositories.MediaRepository;
 import com.cirobtorres.blog.api.entities.MediaFolder;
 import com.cirobtorres.blog.api.repositories.MediaFolderRepository;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+import com.cirobtorres.blog.api.repositories.MediaStorage;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,21 +17,20 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class MediaFolderService {
-    private final Cloudinary cloudinary;
+    private final MediaStorage mediaStorage;
     private final MediaRepository mediaRepository;
     private final MediaFolderRepository mediaFolderRepository;
 
     public MediaFolderService(
-            Cloudinary cloudinary,
+            MediaStorage mediaStorage,
             MediaRepository mediaRepository,
             MediaFolderRepository mediaFolderRepository
     ) {
-        this.cloudinary = cloudinary;
+        this.mediaStorage = mediaStorage;
         this.mediaRepository = mediaRepository;
         this.mediaFolderRepository = mediaFolderRepository;
     }
@@ -79,21 +78,18 @@ public class MediaFolderService {
     public void deleteFolder(@NonNull UUID id) {
         MediaFolder folderToDelete = mediaFolderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Folder not found: " + id
+                                "Folder not found: " + id
                         )
                 );
 
-        List<String> publicIds = new ArrayList<>();
-        findAllPublicIdsRecursive(folderToDelete, publicIds);
+        List<Media> allMedia = new ArrayList<>();
+        findAllMediaRecursive(folderToDelete, allMedia);
 
-        if (!publicIds.isEmpty()) {
+        if (!allMedia.isEmpty()) {
             try {
-                for (int i = 0; i < publicIds.size(); i += 100) {
-                    List<String> batch = publicIds.subList(i, Math.min(i + 100, publicIds.size()));
-                    cloudinary.api().deleteResources(batch, ObjectUtils.emptyMap());
-                }
-            } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error deleting files from Cloudinary");
+                mediaStorage.deleteAll(toRefs(allMedia));
+            } catch (StorageException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error deleting files from storage", e);
             }
         }
 
@@ -115,17 +111,9 @@ public class MediaFolderService {
             findAllMediaRecursive(folder, allMediaEntities);
         }
 
-        for (Media media : allMediaEntities) {
-            try {
-                Map<?, ?> result = cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
-
-                String status = (String) result.get("result");
-                if (!"ok".equals(status) && !"not found".equals(status)) {
-                    throw new RuntimeException("Cloudinary delete fail while deleting banner of public_id=" + media.getPublicId());
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Transaction aborted. Cloudinary fail: ", e);
-            }
+        // Because we are inside a @Transactional, a StorageException (RuntimeException) triggers a rollback
+        if (!allMediaEntities.isEmpty()) {
+            mediaStorage.deleteAll(toRefs(allMediaEntities));
         }
 
         if (!allMediaEntities.isEmpty()) {
@@ -233,25 +221,24 @@ public class MediaFolderService {
 
     @Transactional
     public List<MediaFoldersDTO> listAllFolders() {
-         return mediaFolderRepository.findAll().stream()
-                 .map(mediaFolder ->
-                         new MediaFoldersDTO(
-                                 mediaFolder.getId(),
-                                 mediaFolder.getParent() != null ?
-                                         mediaFolder.getParent().getId() :
-                                         null,
-                                 mediaFolder.getName(),
-                                 mediaFolder.getPath()
-                         )
-                 )
-                 .toList();
+        return mediaFolderRepository.findAll().stream()
+                .map(mediaFolder ->
+                        new MediaFoldersDTO(
+                                mediaFolder.getId(),
+                                mediaFolder.getParent() != null ?
+                                        mediaFolder.getParent().getId() :
+                                        null,
+                                mediaFolder.getName(),
+                                mediaFolder.getPath()
+                        )
+                )
+                .toList();
     }
 
-    private void findAllPublicIdsRecursive(MediaFolder folder, List<String> publicIds) {
-        folder.getFiles().forEach(media -> publicIds.add(media.getPublicId()));
-        for (MediaFolder subfolder : folder.getSubfolders()) {
-            findAllPublicIdsRecursive(subfolder, publicIds);
-        }
+    private List<ObjectRefDTO> toRefs(List<Media> mediaList) {
+        return mediaList.stream()
+                .map(media -> new ObjectRefDTO(media.getPublicId(), media.getType()))
+                .toList();
     }
 
     private void findAllMediaRecursive(MediaFolder folder, List<Media> mediaCollector) {

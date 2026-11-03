@@ -1,6 +1,6 @@
 import { apiServerUrls } from "../../../../routing/routes";
 import { serverFetch } from "../../../../services/serverFetch";
-import { getOptimizedMediaUrl } from "../../../../utils/media-file-utils";
+import { getOptimizedMediaUrl } from "../../../../services/storage";
 import { buttonVariants, cn } from "../../../../utils/variants";
 import { Link } from "../../../../components/Links";
 import {
