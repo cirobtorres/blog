@@ -4,9 +4,6 @@ services:
     container_name: api
     expose:
       - "8080"
-    # ports:
-    #   - "8080:8080"
-    #   - "9090:9090"
     environment:
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
@@ -30,7 +27,7 @@ services:
       - KEYCLOAK_URL=${KEYCLOAK_URL}
       - KEYCLOAK_REALM=${KEYCLOAK_REALM}
       - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
-      - KEYCLOAK_BLOG_API_CLIENT_ID=${KEYCLOAK_BLOG_API_CLIENT_ID} # TODO (investigar): por algum motivo o Spring Boot não estava necessitando (sem fallback)
+      - KEYCLOAK_BLOG_API_CLIENT_ID=${KEYCLOAK_BLOG_API_CLIENT_ID}
       - KEYCLOAK_BLOG_API_CLIENT_SECRET=${KEYCLOAK_BLOG_API_CLIENT_SECRET}
       - KEYCLOAK_ISSUER=${KEYCLOAK_ISSUER}
     depends_on:
@@ -58,8 +55,6 @@ services:
     container_name: web
     expose:
       - "3000"
-    # ports:
-    #   - "3000:3000"
     networks:
       - local-network
 
@@ -102,20 +97,14 @@ services:
       - KC_HOSTNAME=${KEYCLOAK_URL}
       - KC_HTTP_ENABLED=true
       - KC_PROXY_HEADERS=xforwarded
-    # expose:
-    #   - "8080"
-    # ports:
-    #   - "8085:8080"
+    expose:
+      - "8080"
     depends_on:
       - database
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     networks:
       - local-network
-
-# secrets:
-#   nextauth_secret:
-#     file:
 
 networks:
   local-network:

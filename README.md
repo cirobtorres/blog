@@ -126,4 +126,28 @@ docker run --rm -v keycloak_data:/data -v $(pwd)/keycloak/import:/out alpine cp 
 docker-compose up -d --build
 ```
 
+### Hostinger
+
+Criar uma VPS para testes. Neste tutorial eu uso Dokploy.
+
+#### DNS
+
+- Contratar um domínio
+- Em domínios -> DNS / Nameservers -> SSL: ative o SSL (leva alguns minutos)
+- Configure os registros de DNS. Nesta parte, é melhor pedir ao agente. Basicamente, cada subdomínio precisa ter um registro do tipo `A` (aponta para o endereço IP). Por exemplo: `admin` significa que `www.admin.seu-dominio.com.br` será o apelido do seu Dokploy, para você não ter de entrar diretamente digitando o endereço IP (e também para ter o encrypt SSL/secure HTTPS).
+
+### Dokploy
+
+#### Projeto
+
+- No painel Dokploy, em settings (menu esquerdo), procure por Projects. Essa parte é bem fácil e é autoexplanatória também. Conecte-se ao seu Git, defina suas environments e configure o domains.
+
+#### Github
+
+- Para fazer por Github, já logado ao painel Dokploy, em settings (menu esquerdo), procure `Git`. Use o provedor `Github` e configur ele. É autoexplanatório. Permita os projetos que você queira que o Dokploy tenha acesso para CI/CD.
+
+#### Settings
+
+- Aqui vem o SSL do `www.admin.seu-dominio.com.br`. No Dokploy, menu esquerdo, em settings -> Web Server: registre o domínio (`www.admin.seu-dominio.com.br`), coloque seu email, ative HTTPS e certifique com `Let's Encrypt`.
+
 </details>
