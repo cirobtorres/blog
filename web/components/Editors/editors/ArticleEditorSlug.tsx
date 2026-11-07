@@ -7,8 +7,8 @@ import { slugify, slugifyWhileTyping } from "../../../utils/strings-transforms";
 import { fetchAction } from "../../../services/fetchAction";
 import { useArticleStore } from "../../../providers/ArticleStoreProvider";
 import { cn } from "../../../utils/variants";
-import CloseIcon from "../../icons/animated/CloseIcon";
-import CheckIcon from "../../icons/animated/CheckIcon";
+import CloseIcon from "../../Icons/animated/CloseIcon";
+import CheckIcon from "../../Icons/animated/CheckIcon";
 import Spinner from "../../Spinner";
 
 const DEBOUNCE_DURATION = 2000; // ms

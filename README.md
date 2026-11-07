@@ -104,6 +104,20 @@ POSTGRES_PASSWORD=
 <details>
 <summary style="font-size:20px;font-weight:500">PRODUCTION</summary>
 
+### Keycloak
+
+Exporting Keycloak configuration from dev to production. Obs.: `--users skip` ignore test users.
+
+```sh
+.\kc.bat export --dir .\export --realm my-realm-name --users skip
+```
+
+Creating a docker volume to Keycloak.
+
+```sh
+docker run --rm -v keycloak_data:/data -v $(pwd)/keycloak/import:/out alpine cp /data/export/blog-realm-realm.json /out/
+```
+
 ### .env
 
 #### **Rename .env.example to `.env` and set up your environment.**

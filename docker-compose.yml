@@ -4,29 +4,33 @@ services:
     container_name: api
     expose:
       - "8080"
-    ports:
-      - "8080:8080"
-      - "9090:9090"
+    # ports:
+    #   - "8080:8080"
+    #   - "9090:9090"
     environment:
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
       - API_URL=${API_URL}
-      - POSTGRES_HOST=database
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=database
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MAILER_FROM=${MAILER_FROM}
       - MAILER_HOST=${MAILER_HOST}
       - MAILER_PORT=${MAILER_PORT}
       - MAILER_USERNAME=${MAILER_USERNAME}
       - MAILER_PASSWORD=${MAILER_PASSWORD}
-      - MAILER_FROM=${MAILER_FROM}
-      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - KEYCLOAK_URL=${KEYCLOAK_URL}
       - KEYCLOAK_REALM=${KEYCLOAK_REALM}
       - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
-      - KEYCLOAK_BLOG_API_CLIENT_ID=${KEYCLOAK_BLOG_API_CLIENT_ID}
+      - KEYCLOAK_BLOG_API_CLIENT_ID=${KEYCLOAK_BLOG_API_CLIENT_ID} # TODO (investigar): por algum motivo o Spring Boot não estava necessitando (sem fallback)
       - KEYCLOAK_BLOG_API_CLIENT_SECRET=${KEYCLOAK_BLOG_API_CLIENT_SECRET}
       - KEYCLOAK_ISSUER=${KEYCLOAK_ISSUER}
     depends_on:
@@ -41,17 +45,21 @@ services:
         - WEB_URL=${WEB_URL}
         - API_URL=${API_URL}
         - API_URL_SERVER=${API_URL_SERVER}
-        - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
-        - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+        - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+        - NEXTAUTH_URL=${NEXTAUTH_URL}
         - KEYCLOAK_URL=${KEYCLOAK_URL}
         - KEYCLOAK_REALM=${KEYCLOAK_REALM}
         - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
-        - KEYCLOAK_BLOG_WEB_CLIENT_SECRET=${KEYCLOAK_BLOG_WEB_CLIENT_SECRET}
+    environment:
+      - AUTH_SECRET=${AUTH_SECRET}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - KEYCLOAK_BLOG_WEB_CLIENT_SECRET=${KEYCLOAK_BLOG_WEB_CLIENT_SECRET}
     container_name: web
     expose:
       - "3000"
-    ports:
-    - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     networks:
       - local-network
 
@@ -62,34 +70,47 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - KC_DB_NAME=${KC_DB_NAME}
+      - KC_DB_USERNAME=${KC_DB_USERNAME}
+      - KC_DB_PASSWORD=${KC_DB_PASSWORD}
     expose:
       - "5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
     networks:
       - local-network
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1
+    image: quay.io/keycloak/keycloak:26.6.3
     container_name: keycloak
-    command: start-dev --import-realm
+    command: start --import-realm
     environment:
-      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - DOMAIN=${DOMAIN}
+      - SMTP_FROM=${DOMAIN}
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://database:5432/${POSTGRES_DB}
-      - KC_DB_USERNAME=${POSTGRES_USER}
-      - KC_DB_PASSWORD=${POSTGRES_PASSWORD}
-    expose:
-      - "8080"
-    ports:
-      - "8085:8080"
+      - KC_DB_URL=jdbc:postgresql://database:5432/${KC_DB_NAME}
+      - KC_DB_USERNAME=${KC_DB_USERNAME}
+      - KC_DB_PASSWORD=${KC_DB_PASSWORD}
+      - KC_HOSTNAME=${KEYCLOAK_URL}
+      - KC_HTTP_ENABLED=true
+      - KC_PROXY_HEADERS=xforwarded
+    # expose:
+    #   - "8080"
+    # ports:
+    #   - "8085:8080"
     depends_on:
       - database
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     networks:
       - local-network
+
+# secrets:
+#   nextauth_secret:
+#     file:
 
 networks:
   local-network:
