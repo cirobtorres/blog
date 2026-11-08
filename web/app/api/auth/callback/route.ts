@@ -3,12 +3,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { protectedWebUrls } from "../../../../routing/routes";
 
-const KEYCLOAK_ISSUER = process.env.KEYCLOAK_ISSUER || ""; // dev: http://localhost:8085/realms/blog-realm
+const KEYCLOAK_ISSUER = "https://auth.cirobtorres.com.br/realms/blog-realm";
+// const KEYCLOAK_ISSUER =
+//   process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER ||
+//   "http://localhost:8085/realms/blog-realm";
 const KEYCLOAK_CLIENT_ID =
   process.env.KEYCLOAK_BLOG_WEB_CLIENT_ID || "blog-next";
-const KEYCLOAK_CLIENT_SECRET = process.env.KEYCLOAK_BLOG_WEB_CLIENT_SECRET;
-const APP_URL = process.env.WEB_URL; // http://localhost:3000
-const API_URL = process.env.API_URL; // http://localhost:8080
+const KEYCLOAK_CLIENT_SECRET =
+  process.env.KEYCLOAK_BLOG_WEB_CLIENT_SECRET || "NOT_SAFE";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 type TokenResponse = {
   access_token: string;
