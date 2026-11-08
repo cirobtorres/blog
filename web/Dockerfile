@@ -37,7 +37,6 @@ RUN apk update --no-cache && apk upgrade --no-cache && rm -rf /var/cache/apk/*
 
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 COPY --chown=node:node --from=builder /app/public ./public
 COPY --chown=node:node --from=builder /app/.next/standalone ./
