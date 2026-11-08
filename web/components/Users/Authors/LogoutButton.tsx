@@ -8,6 +8,12 @@ import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { getRequiredAuthorities } from "../../../routing/protected/getRequiredAuthorities";
 
+console.log("process.env.KEYCLOAK_ISSUER", process.env.KEYCLOAK_ISSUER);
+console.log(
+  "process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER",
+  process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER,
+);
+
 export function LogoutButton({ session }: { session: Session }) {
   if (!session || !session.user) redirect("/"); // TODO
   const pathname = usePathname();
