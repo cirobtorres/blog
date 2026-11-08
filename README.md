@@ -1,17 +1,17 @@
 # BLOG
 
-<details>
+<details open=true>
 <summary style="font-size:20px;font-weight:500">DEVELOPMENT</summary>
 
 ### .env
 
-#### For development, you won't need the root .env file. Rename your .env.local.example **.env.local** and set up your environment. For Java Spring Boot I'd recommend IntelliJ community (free). Edit your application configuration and set/import your .env variables.
+- For development, you won't need the root .env file. Rename your .env.local.example **.env.local** and set up your environment. For Java Spring Boot I'd recommend IntelliJ community (free). Edit your application configuration and set/import your .env variables.
 
 ### Keycloak
 
 #### Realm
 
-##### Left pannel > Manage realms > Create Realm. Name it whatever you want. Ex.: blog-realm. Everything from now on must be done inside your realm. Do not forget to navigate to your realm everytime you log in to admin panel. In case you accidently delete admin user, create a new one with code below:
+- Left pannel > Manage realms > Create Realm. Name it whatever you want. Ex.: blog-realm. Everything from now on must be done inside your realm. Do not forget to navigate to your realm everytime you log in to admin panel. In case you accidently delete admin user, create a new one with code below:
 
 ```bash
 ./kc.sh bootstrap-admin user
@@ -21,25 +21,25 @@
 
 #### Realm Settings
 
-##### TODO
+- TODO
 
 #### Clients
 
-##### TODO
+- TODO
 
 #### Real Roles
 
-##### TODO
+- TODO
 
 #### Next.js Client
 
-##### Now, go to: Left pannel > Clients > Create Client
+- Now, go to: Left pannel > Clients > Create Client
 
-- Client ID: name it whatever you want. Ex.: blog-next
-- Root URL: set http://localhost:3000
-- Redirect URIs: set http://localhost:3000/\*
-- Web origins: set http://localhost:3000
-- Admin URL: http://localhost:3000
+1. Client ID: name it whatever you want. Ex.: blog-next
+2. Root URL: set http://localhost:3000
+3. Redirect URIs: set http://localhost:3000/\*
+4. Web origins: set http://localhost:3000
+5. Admin URL: http://localhost:3000
 
 ##### Client Secret: inside Credentials tab. Copy it to your project
 
@@ -101,7 +101,7 @@ POSTGRES_PASSWORD=
 
 </details>
 
-<details>
+<details open=true>
 <summary style="font-size:20px;font-weight:500">PRODUCTION</summary>
 
 ### Keycloak
@@ -126,15 +126,26 @@ docker run --rm -v keycloak_data:/data -v $(pwd)/keycloak/import:/out alpine cp 
 docker-compose up -d --build
 ```
 
+### Docker
+
+- É preciso gerar o volume `Docker` do `Keycloak` para que ele seja lido em `build`. As configurações podem ser feitas durante desenvolvimento e quando tudo estiver pronto o volume precisa ser criado com o comando `CLI` interno do `Keycloak` para exportação, assim:
+
+```sh
+docker exec -it keycloak /opt/keycloak/bin/kc.sh export --dir /opt/keycloak/data/import --realm seu-nome-do-realm --users realm_file
+```
+
+- Se você criou usuários de teste e não quer esses usuários sendo enviados juntos ao `JSON` geral, troque `--users realm_file` por `--users skip`
+- Assim que o arquivo existir, é imprescindível que os `SECRETS` sejam substituídos por variáveis de ambiente, pois eles serão gerados hardcoded no `JSON`. Do contrário não terá como enviá-los para o `Git`.
+
 ### Hostinger
 
 Criar uma VPS para testes. Neste tutorial eu uso Dokploy.
 
 #### DNS
 
-- Contratar um domínio
-- Em domínios -> DNS / Nameservers -> SSL: ative o SSL (leva alguns minutos)
-- Configure os registros de DNS. Nesta parte, é melhor pedir ao agente. Basicamente, cada subdomínio precisa ter um registro do tipo `A` (aponta para o endereço IP). Por exemplo: `admin` significa que `www.admin.seu-dominio.com.br` será o apelido do seu Dokploy, para você não ter de entrar diretamente digitando o endereço IP (e também para ter o encrypt SSL/secure HTTPS).
+- Contratar um domínio;
+- Em domínios -> DNS / Nameservers -> SSL: ative o SSL (leva alguns minutos);
+- Configure os registros de DNS. Nesta parte, é melhor pedir ao agente. Basicamente, cada subdomínio precisa ter um registro do tipo `A` (aponta para o endereço IP). Por exemplo: `admin` significa que `www.admin.seu-dominio.com.br` será o apelido do seu Dokploy, para você não ter de entrar diretamente digitando o endereço IP (e também para ter o encrypt SSL/secure HTTPS). Para este projeto, será necessário repetir o processo para: `admin`, `blog` (prefixo de domínio blog que usei), `api`, `www`, `auth` e `keycloak` (este por precaução). Todos apontam para seu endereço IP.
 
 ### Dokploy
 
