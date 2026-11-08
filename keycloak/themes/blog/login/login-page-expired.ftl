@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${msg("pageExpiredTitle")}</title>
+    <title>Recomeçar o log in</title>
     <#if properties.styles?has_content>
         <#list properties.styles?split(' ') as style>
             <link href="${url.resourcesPath}/${style}" rel="stylesheet" />
@@ -25,7 +25,7 @@
         <#-- Main text -->
         <div class="mt-4 text-center">
             <h1 class="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50">
-                ${msg("pageExpiredTitle")}
+                Recomeçar o log in
             </h1>
             <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
                 Por motivos de segurança, sua sessão de autenticação expirou devido à inatividade.
