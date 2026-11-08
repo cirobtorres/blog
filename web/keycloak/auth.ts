@@ -3,9 +3,9 @@ import Keycloak from "next-auth/providers/keycloak";
 import { JWT } from "next-auth/jwt";
 import { apiServerUrls } from "../routing/routes";
 
-const WEB_CLIENT_ID = process.env.NEXT_PUBLIC_KEYCLOAK_BLOG_WEB_CLIENT_ID;
+const WEB_CLIENT_ID = process.env.KEYCLOAK_BLOG_WEB_CLIENT_ID;
 const WEB_CLIENT_SECRET = process.env.KEYCLOAK_BLOG_WEB_CLIENT_SECRET;
-const ISSUER = process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER;
+const ISSUER = process.env.KEYCLOAK_ISSUER;
 
 console.log("WEB_CLIENT_ID", WEB_CLIENT_ID);
 console.log("WEB_CLIENT_SECRET", !!WEB_CLIENT_SECRET);

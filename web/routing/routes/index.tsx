@@ -1,8 +1,8 @@
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
-const API_SERVER = process.env.API_URL_SERVER || "http://localhost:8080";
+const API_SERVER =
+  process.env.NEXT_PUBLIC_API_URL_SERVER || "http://localhost:8080";
 const API_CLIENT = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
-/** Base URL for browser `fetch` — must use NEXT_PUBLIC_* (API_URL_SERVER is undefined on the client). */
 const API_BROWSER = API_CLIENT;
 const MY_GIT = "https://github.com/cirobtorres";
 const BLOG_GIT = "https://github.com/cirobtorres/blog";
