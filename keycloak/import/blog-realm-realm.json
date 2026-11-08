@@ -1632,7 +1632,7 @@
     "replyTo": "",
     "host": "${env.KC_SMTP_HOST}",
     "from": "${env.KC_SMTP_FROM}",
-    "fromDisplayName": "${KEYCLOAK_FROM_DISPLAY_NAME}",
+    "fromDisplayName": "${env.KC_SMTP_FROM_DISPLAY_NAME}",
     "authType": "basic",
     "connectionTimeout": "10000",
     "user": "${env.KC_SMTP_USERNAME}"
