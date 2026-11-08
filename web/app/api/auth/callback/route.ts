@@ -9,8 +9,8 @@ const KEYCLOAK_CLIENT_ID =
   process.env.KEYCLOAK_BLOG_WEB_CLIENT_ID || "blog-next";
 const KEYCLOAK_CLIENT_SECRET =
   process.env.KEYCLOAK_BLOG_WEB_CLIENT_SECRET || "NOT_SAFE";
-const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const API_URL = process.env.API_URL || "http://localhost:8080";
+const APP_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 console.log("KEYCLOAK_ISSUER", KEYCLOAK_ISSUER);
 console.log("KEYCLOAK_CLIENT_ID", KEYCLOAK_CLIENT_ID);

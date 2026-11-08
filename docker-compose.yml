@@ -45,6 +45,8 @@ services:
         - KEYCLOAK_BLOG_WEB_CLIENT_ID=${KEYCLOAK_BLOG_WEB_CLIENT_ID}
         - AUTH_TRUST_HOST=${AUTH_TRUST_HOST}
     environment:
+      - WEB_URL=${WEB_URL}
+      - API_URL=${API_URL}
       - AUTH_URL=${AUTH_URL}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - AUTH_TRUST_HOST=${AUTH_TRUST_HOST}

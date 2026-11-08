@@ -6,7 +6,7 @@ export async function fetchWithAuth(
   options: RequestInit = {},
 ) {
   const session = await auth();
-  const baseUrl = process.env.API_URL_SERVER;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL_SERVER;
   const headers = new Headers(options.headers);
 
   console.log("fetchWithAuth: baseUrl", baseUrl);
