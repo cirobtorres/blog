@@ -119,7 +119,7 @@ services:
     depends_on:
       - database
     volumes:
-      - ./keycloak/import/blog-realm.json:/opt/keycloak/data/import/blog-realm.json:ro
+      - ./keycloak/import/blog-realm-realm.json:/opt/keycloak/data/import/blog-realm-realm.json:ro
     networks:
       - local-network
 
