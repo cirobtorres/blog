@@ -8,10 +8,6 @@ services:
       - PROFILE_ACTIVE=${PROFILE_ACTIVE}
       - WEB_URL=${WEB_URL}
       - API_URL=${API_URL}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
-      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - POSTGRES_HOST=database
       - SB_DB_NAME=${SB_DB_NAME}
       - SB_DB_USER=${SB_DB_USER}
@@ -123,7 +119,7 @@ services:
     depends_on:
       - database
     volumes:
-      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./keycloak/import/blog-realm.json:/opt/keycloak/data/import/blog-realm.json:ro
     networks:
       - local-network
 
