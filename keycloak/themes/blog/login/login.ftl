@@ -16,7 +16,7 @@
         <div class="h-screen p-1">
           <div class="h-full p-8 overflow-y-auto scrollbar">
             <div class="w-full max-w-125 min-h-full mx-auto flex flex-col justify-center gap-2">
-              <a href="${properties['homeUrl']!'http://localhost:3000/'}" class="ml-0 mr-auto mb-4 text-sm font-medium text-primary/75 underline underline-offset-2 transition-all duration-300 rounded border border-transparent focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+              <a href="/" class="ml-0 mr-auto mb-4 text-sm font-medium text-primary/75 underline underline-offset-2 transition-all duration-300 rounded border border-transparent focus-visible:outline-none dark:focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-stone-100 dark:focus-visible:ring-offset-2 dark:focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                 Home
               </a>
               <div class="mb-8">

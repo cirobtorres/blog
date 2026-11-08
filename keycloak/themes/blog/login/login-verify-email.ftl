@@ -24,7 +24,7 @@
                 Receber novo link
             </a>
 
-            <a href="${properties['homeUrl']!'http://localhost:3000/'}" class="mx-auto font-medium text-primary/75 hover:text-primary dark:hover:text-primary transition-all duration-300 underline underline-offset-2 rounded border border-transparent focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+            <a href="/" class="mx-auto font-medium text-primary/75 hover:text-primary dark:hover:text-primary transition-all duration-300 underline underline-offset-2 rounded border border-transparent focus-visible:outline-none focus-visible:ring-3 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
                 Voltar para home
             </a>
         </div>
