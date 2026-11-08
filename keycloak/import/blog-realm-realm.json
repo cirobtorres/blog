@@ -1631,7 +1631,7 @@
     "port": "${env.KC_SMTP_PORT}",
     "replyTo": "",
     "host": "${env.KC_SMTP_HOST}",
-    "from": "${env.KC_SMTP_FROM}",
+    "from": "${env.KC_SMTP_FROM}@${KC_SMTP_DOMAIN}",
     "fromDisplayName": "${env.KC_SMTP_FROM_DISPLAY_NAME}",
     "authType": "basic",
     "connectionTimeout": "10000",
