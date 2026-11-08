@@ -139,7 +139,12 @@ docker exec -it keycloak /opt/keycloak/bin/kc.sh export --dir /opt/keycloak/data
 
 ### Hostinger
 
-Criar uma VPS para testes. Neste tutorial eu uso Dokploy.
+- Criar uma VPS para testes. Neste tutorial eu uso Dokploy;
+- Dar permissão ao script.
+
+```sh
+chmod +x setup-keycloak.sh
+```
 
 #### DNS
 
