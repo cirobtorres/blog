@@ -22,8 +22,8 @@ export function LogoutButton({ session }: { session: Session }) {
     await signOut({
       redirect: false,
     });
-    const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
-    // const keycloakLogoutUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER}/protocol/openid-connect/logout`; // Requires permission to logout
+    const keycloakLogoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
+    // const keycloakLogoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`; // Requires permission to logout
 
     window.location.href = keycloakLogoutUrl;
   }, null);
