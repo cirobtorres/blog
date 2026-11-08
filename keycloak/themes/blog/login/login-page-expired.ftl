@@ -51,7 +51,7 @@
 
         <#-- Footer -->
         <div class="mt-8 border-t border-neutral-100 pt-4 text-center dark:border-neutral-900">
-            <a href="/" class="text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
+            <a href="https://blog.cirobtorres.com.br" class="text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
                 &larr; Voltar para a aplicação principal
             </a>
         </div>
