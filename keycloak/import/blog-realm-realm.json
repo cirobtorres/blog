@@ -681,7 +681,6 @@
       "redirectUris": [
         "https://blog.cirobtorres.com.br/api/auth/callback/keycloak",
         "https://blog.cirobtorres.com.br/api/auth/callback",
-        "https://blog.cirobtorres.com.br/*",
         "https://blog.cirobtorres.com.br/users/sign-in/validate-email/success"
       ],
       "webOrigins": ["https://blog.cirobtorres.com.br"],

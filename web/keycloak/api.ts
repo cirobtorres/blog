@@ -6,8 +6,10 @@ export async function fetchWithAuth(
   options: RequestInit = {},
 ) {
   const session = await auth();
-  const baseUrl = process.env.API_URL_SERVER || "http://localhost:8080/api";
+  const baseUrl = process.env.API_URL_SERVER;
   const headers = new Headers(options.headers);
+
+  console.log("fetchWithAuth: baseUrl", baseUrl);
 
   if (session?.accessToken) {
     headers.set("Authorization", `Bearer ${session.accessToken}`);
