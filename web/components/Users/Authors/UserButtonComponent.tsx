@@ -43,7 +43,7 @@ export function UserButton() {
         <Border />
         <div className="flex flex-col p-2">
           <ProfileButton />
-          <LogoutButton session={session} />
+          <LogoutButton />
         </div>
       </PopoverContent>
     </Popover>

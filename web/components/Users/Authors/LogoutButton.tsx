@@ -3,8 +3,7 @@
 import React from "react";
 import Spinner from "../../Spinner";
 import { Button } from "../../Button";
-import { redirect, usePathname } from "next/navigation";
-import { Session } from "next-auth";
+import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { getRequiredAuthorities } from "../../../routing/protected/getRequiredAuthorities";
 
@@ -14,24 +13,21 @@ console.log(
   process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER,
 );
 
-export function LogoutButton({ session }: { session: Session }) {
-  if (!session || !session.user) redirect("/"); // TODO
+export function LogoutButton() {
   const pathname = usePathname();
-
   const [, action, isPending] = React.useActionState(async () => {
     const requiredAuthorities = !!getRequiredAuthorities(pathname);
-
     const postLogoutRedirectUri = requiredAuthorities
       ? window.location.origin
       : window.location.href;
 
-    await signOut({
-      redirect: false,
-    });
-    const keycloakLogoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout?id_token_hint=${session.idToken}&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
-    // const keycloakLogoutUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/logout`; // Requires permission to logout
+    const res = await fetch(
+      `/api/auth/federated-logout?redirect=${encodeURIComponent(postLogoutRedirectUri)}`,
+    );
+    const { url } = await res.json();
 
-    window.location.href = keycloakLogoutUrl;
+    await signOut({ redirect: false });
+    window.location.href = url;
   }, null);
 
   return (
