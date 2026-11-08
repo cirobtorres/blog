@@ -3,7 +3,7 @@
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../Popover";
 import { AvatarName } from "../../Avatar";
-import { protectedWebUrls } from "../../../routing/routes";
+import { protectedWebUrls, routeHandlers } from "../../../routing/routes";
 import { cn, focusRing } from "../../../utils/variants";
 import { Link } from "../../Links";
 import { signOut } from "next-auth/react";
@@ -25,27 +25,6 @@ const elStyleItem =
 
 export default function UserSignedIn({ session }: { session: Session }) {
   if (!session || !session.user) redirect("/"); // TODO
-  const pathname = usePathname();
-
-  const [, action, isPending] = React.useActionState(async () => {
-    const requiredAuthorities = !!getRequiredAuthorities(pathname);
-
-    const postLogoutRedirectUri = requiredAuthorities
-      ? window.location.origin
-      : window.location.href;
-
-    await signOut({
-      redirect: false,
-    });
-
-    const keycloakLogoutUrl =
-      `${process.env.KEYCLOAK_ISSUER}` +
-      `/protocol/openid-connect/logout` +
-      `?id_token_hint=${session.idToken}` +
-      `&post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
-
-    window.location.href = keycloakLogoutUrl;
-  }, null);
 
   const { user } = session;
   const isAuthor = user.authorities.some((i) => i.toUpperCase() === "AUTHOR");
@@ -128,13 +107,33 @@ export default function UserSignedIn({ session }: { session: Session }) {
               </Link>
             </div>
           )}
-          <form action={action} className={elStyleWrapper}>
-            <button type="submit" disabled={isPending} className={elStyleItem}>
-              {isPending && <Spinner className="size-4" />} Sair
-            </button>
-          </form>
+          <LogoutButton />
         </PopoverContent>
       </Popover>
     </div>
   );
 }
+
+const LogoutButton = () => {
+  const pathname = usePathname();
+  const [, action, isPending] = React.useActionState(async () => {
+    const requiredAuthorities = !!getRequiredAuthorities(pathname);
+    const postLogoutRedirectUri = requiredAuthorities
+      ? window.location.origin
+      : window.location.href;
+    const res = await fetch(
+      `${routeHandlers.logout}?redirect=${encodeURIComponent(postLogoutRedirectUri)}`,
+    );
+    const { url } = await res.json();
+    await signOut({ redirect: false });
+    window.location.href = url;
+  }, null);
+
+  return (
+    <form action={action} className={elStyleWrapper}>
+      <button type="submit" disabled={isPending} className={elStyleItem}>
+        {isPending && <Spinner className="size-4" />} Sair
+      </button>
+    </form>
+  );
+};

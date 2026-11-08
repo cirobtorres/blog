@@ -12,12 +12,6 @@ const KEYCLOAK_CLIENT_SECRET =
 const APP_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
-console.log("KEYCLOAK_ISSUER", KEYCLOAK_ISSUER);
-console.log("KEYCLOAK_CLIENT_ID", KEYCLOAK_CLIENT_ID);
-console.log("KEYCLOAK_CLIENT_SECRET", !!KEYCLOAK_CLIENT_SECRET);
-console.log("APP_URL", APP_URL);
-console.log("API_URL", API_URL);
-
 type TokenResponse = {
   access_token: string;
   refresh_token?: string;

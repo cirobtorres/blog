@@ -6,12 +6,7 @@ import { Button } from "../../Button";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { getRequiredAuthorities } from "../../../routing/protected/getRequiredAuthorities";
-
-console.log("process.env.KEYCLOAK_ISSUER", process.env.KEYCLOAK_ISSUER);
-console.log(
-  "process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER",
-  process.env.NEXT_PUBLIC_KEYCLOAK_ISSUER,
-);
+import { routeHandlers } from "../../../routing/routes";
 
 export function LogoutButton() {
   const pathname = usePathname();
@@ -20,12 +15,10 @@ export function LogoutButton() {
     const postLogoutRedirectUri = requiredAuthorities
       ? window.location.origin
       : window.location.href;
-
     const res = await fetch(
-      `/api/auth/federated-logout?redirect=${encodeURIComponent(postLogoutRedirectUri)}`,
+      `${routeHandlers.logout}?redirect=${encodeURIComponent(postLogoutRedirectUri)}`,
     );
     const { url } = await res.json();
-
     await signOut({ redirect: false });
     window.location.href = url;
   }, null);
