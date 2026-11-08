@@ -673,7 +673,7 @@
       "description": "",
       "rootUrl": "https://blog.cirobtorres.com.br",
       "adminUrl": "https://blog.cirobtorres.com.br",
-      "baseUrl": "",
+      "baseUrl": "https://blog.cirobtorres.com.br",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
