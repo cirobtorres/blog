@@ -96,7 +96,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.6.3
     container_name: keycloak
-    command: start --import-realm --override-existing-realm
+    command: start --import-realm
     environment:
       - DOMAIN=${DOMAIN}
       - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN}
