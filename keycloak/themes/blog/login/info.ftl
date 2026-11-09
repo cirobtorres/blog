@@ -9,7 +9,8 @@
   <body class="min-h-screen overflow-hidden antialiased bg-stone-100 dark:bg-stone-925">
     <main class="w-full h-full max-w-125 mx-auto z-10 not-dark:shadow">
       <div class="w-full h-full p-8 overflow-y-auto scrollbar flex flex-col justify-center items-center gap-4">
-        <a href="https://blog.cirobtorres.com.br" class="ml-0 mr-auto mb-4 text-sm text-primary/75 dark:text-primary/75 font-medium underline underline-offset-2 hover:text-primary dark:hover:text-primary transition-all duration-300 rounded border border-transparent focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
+        <#assign homeUrl = (client.baseUrl)!properties['homeUrl']!'/'>
+        <a href="${homeUrl}" class="ml-0 mr-auto mb-4 text-sm text-primary/75 dark:text-primary/75 font-medium underline underline-offset-2 hover:text-primary dark:hover:text-primary transition-all duration-300 rounded border border-transparent focus-visible:outline-none focus-visible:ring-2 dark:focus-visible:ring-2 focus-visible:ring-stone-900/25 dark:focus-visible:ring-stone-100 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:border-primary dark:focus-visible:border-primary">
           Home
         </a>
         <div class="flex flex-col gap-2">
